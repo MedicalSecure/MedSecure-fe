@@ -1,0 +1,144 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment: DEV
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build for Development
+        run: npm run build -- --configuration=development
+
+      - name: Upload Dev Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dev-artifact
+          path: dist/FrontendProject/dev
+      
+      - name: Verify Build Artifacts
+        run: ls -l dist/FrontendProject/dev
+
+      - name: Download Dev Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dev-artifact
+          path: dist/FrontendProject/dev
+      
+      - name: Deploy to Dev
+        env:
+          NETLIFY_SITE_NAME: ${{ secrets.NETLIFY_DEV_SITE_NAME }}
+          NETLIFY_OWNER: ${{ secrets.NETLIFY_OWNER }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_DEV_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: | 
+          npm install -g netlify-cli
+          netlify login --auth $NETLIFY_AUTH_TOKEN
+          netlify deploy
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    environment: STAGING
+    needs: deploy-dev
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build for Staging
+        run: npm run build -- --configuration=staging
+
+      - name: Upload Staging Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: staging-artifact
+          path: dist/FrontendProject/staging
+      
+      - name: Verify Build Artifacts
+        run: ls -l dist/FrontendProject/staging
+
+      - name: Download Staging Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: staging-artifact
+          path: dist/FrontendProject/staging
+
+      - name: Deploy to Staging
+        env:
+          NETLIFY_SITE_NAME: ${{ secrets.NETLIFY_STAGING_SITE_NAME }}
+          NETLIFY_OWNER: ${{ secrets.NETLIFY_OWNER }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          npm install -g netlify-cli
+          netlify login --auth $NETLIFY_AUTH_TOKEN
+          netlify deploy --prod
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: PROD
+    needs: deploy-staging
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build for Production
+        run: npm run build -- --configuration=production
+
+      - name: Upload Prod Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: prod-artifact
+          path: dist/FrontendProject/prod
+      
+      - name: Verify Build Artifacts
+        run: ls -l dist/FrontendProject/prod
+
+      - name: Download Prod Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: prod-artifact
+          path: dist/FrontendProject/prod
+      
+      - name: Deploy to Prod/FrontendProject
+        env:
+          NETLIFY_SITE_NAME: ${{ secrets.NETLIFY_PROD_SITE_NAME }}
+          NETLIFY_OWNER: ${{ secrets.NETLIFY_OWNER }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PROD_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          npm install -g netlify-cli
+          netlify login --auth $NETLIFY_AUTH_TOKEN
+          netlify deploy --prod
