@@ -1,0 +1,61 @@
+name: Netlify Prod Deploy
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  prod-deploy:
+    runs-on: ubuntu-latest
+    environment: PROD
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build for prod
+      run: npm run build -- --configuration=production
+
+    - name: Deploy to prod
+      env:
+        NETLIFY_SITE_NAME: ${{ secrets.NETLIFY_PROD_SITE_NAME }}
+        NETLIFY_OWNER: ${{ secrets.NETLIFY_OWNER }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PROD_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      run: |
+        npm install -g netlify-cli
+        netlify login --auth $NETLIFY_AUTH_TOKEN
+        netlify deploy --prod
+
+    - name: Configure Git
+      run: |
+        git config --global user.email "assamtomi@gmail.com"
+        git config --global user.name "AssemToumi"
+
+    - name: Bump Version
+      run: |
+        npm version patch -m "Bump version to %s [skip ci]"
+        git push --follow-tags
+  
+    - name: Create a Release in a GitHub Action
+      uses: comnoco/create-release-action@v2.0.5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false

@@ -1,0 +1,40 @@
+name: CI/CD Frontend
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened] 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+        
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '18.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+  sonarqube-analysis:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@v2.1.1
+        with:
+          args: >
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} 
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
