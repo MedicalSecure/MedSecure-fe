@@ -31,16 +31,16 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dev-artifact
-          path: dist/FrontendProject/dev
+          path: dist/medsecure-fe/dev
       
       - name: Verify Build Artifacts
-        run: ls -l dist/FrontendProject/dev
+        run: ls -l dist/medsecure-fe/dev
 
       - name: Download Dev Artifact
         uses: actions/download-artifact@v2
         with:
           name: dev-artifact
-          path: dist/FrontendProject/dev
+          path: dist/medsecure-fe/dev
       
       - name: Deploy to Dev
         env:
@@ -76,16 +76,16 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: staging-artifact
-          path: dist/FrontendProject/staging
+          path: dist/medsecure-fe/staging
       
       - name: Verify Build Artifacts
-        run: ls -l dist/FrontendProject/staging
+        run: ls -l dist/medsecure-fe/staging
 
       - name: Download Staging Artifact
         uses: actions/download-artifact@v2
         with:
           name: staging-artifact
-          path: dist/FrontendProject/staging
+          path: dist/medsecure-fe/staging
 
       - name: Deploy to Staging
         env:
@@ -121,18 +121,18 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: prod-artifact
-          path: dist/FrontendProject/prod
+          path: dist/medsecure-fe/prod
       
       - name: Verify Build Artifacts
-        run: ls -l dist/FrontendProject/prod
+        run: ls -l dist/medsecure-fe/prod
 
       - name: Download Prod Artifact
         uses: actions/download-artifact@v2
         with:
           name: prod-artifact
-          path: dist/FrontendProject/prod
+          path: dist/medsecure-fe/prod
       
-      - name: Deploy to Prod/FrontendProject
+      - name: Deploy to Prod/medsecure-fe
         env:
           NETLIFY_SITE_NAME: ${{ secrets.NETLIFY_PROD_SITE_NAME }}
           NETLIFY_OWNER: ${{ secrets.NETLIFY_OWNER }}
