@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox'
@@ -32,7 +32,7 @@ import { DialogueComponent } from '../dialogue/dialogue.component';
 export class BacPatientComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource = new MatTableDataSource<bacpatient>(ELEMENT_DATA);
-
+   group_size : number[];
   ngAfterViewInit() {
        this.dataSource.paginator = this.paginator;
        if (this.paginator) {
@@ -70,14 +70,15 @@ export class BacPatientComponent {
         const groupStartIndex = Math.max(0, startIndex - groupedData[bd].length);
         const groupEndIndex = Math.min(group.length, endIndex - groupedData[bd].length);
         currentPageData.push(...group.slice(groupStartIndex, groupEndIndex));
-       console.log(group.length);
       }
+
     }
   }
+  
   length =this.dataSource.data.length;
-  pageSize = 5;
+  pageSize = 10;
   pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  pageSizeOptions = [5,10,20];
 
   hidePageSize = false;
   showPageSizeOptions = false;
@@ -85,7 +86,6 @@ export class BacPatientComponent {
   disabled = false;
 
   pageEvent: PageEvent;
-
   handlePageEvent(e: PageEvent) {
     this.pageEvent = e;
     this.length = e.length;
@@ -513,7 +513,4 @@ const ELEMENT_DATA: bacpatient[] = [
   },
 ];
 
-function onRightClick() {
-  throw new Error('Function not implemented.');
-}
 
