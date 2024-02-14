@@ -1,0 +1,155 @@
+table {
+  width: 100%;
+}
+
+.transparent-button {
+  background-color: transparent;
+  border: none;
+}
+.demo-paginator{
+  position: fixed;
+  left: 60%;
+  bottom: 90%;
+  background-color: transparent;
+  font-weight: bold;
+
+}
+.header-container {
+  display: flex;
+  align-items: center; /* Vertically center align items */
+}
+
+.paginator-buttons {
+  display: flex;
+  align-items: center;
+}
+.more-button {
+  background-color: transparent;
+  border: none;
+  margin-left: 30px;
+}
+
+.image {
+  margin-bottom: 6px;
+}
+
+
+
+
+.header {
+  background-color: blueviolet;
+  font-weight: 700;
+}
+
+.container {
+  background-color: black;
+}
+
+.date {
+  font-weight: bold;
+  size: 50px;
+  margin-top: 5px;
+}
+
+.extended-table td:not(.checkbox-cell) {
+  align-items: center;
+  text-align: center;
+  border: 1px solid #ccc;
+
+}
+
+.header-button {
+  background-color: transparent;
+  border: none;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  height: 100px;
+}
+
+.date {
+  font-size: large;
+  font-weight: bolder;
+  margin-left: 1200px;
+
+}
+
+.custom-table th {
+  background-color: rgb(229, 214, 246);
+}
+
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+
+.example-element-detail {
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  transition: max-height 0.3s;
+  margin: 0 auto;
+  justify-content: space-between;
+
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+  height: 100px;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.example-element-row.example-expanded-row .example-element-detail {
+  height: auto;
+}
+
+
+
+.custom-dialog-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.exemple-checkbox {
+  margin-left: 5px;
+}
+.checkbox-cell {
+  position: relative;
+  left: 175%;
+}

@@ -1,0 +1,10 @@
+<mat-dialog-content class="dialog-content">
+  <p>you can add a note here </p>
+  <mat-form-field>
+    <textarea matInput rows="5" class="matInput"></textarea>
+  </mat-form-field>
+  <mat-dialog-actions class="dialog-actions">
+    <button class="button-1" mat-button (click)="onNoClick()">Cancel</button>
+    <button class="button-2" mat-button [mat-dialog-close]="" cdkFocusInitial>Ok</button>
+  </mat-dialog-actions>
+</mat-dialog-content>
