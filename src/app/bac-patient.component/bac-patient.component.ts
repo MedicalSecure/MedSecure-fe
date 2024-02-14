@@ -70,6 +70,10 @@ export class BacPatientComponent {
         const groupStartIndex = Math.max(0, startIndex - groupedData[bd].length);
         const groupEndIndex = Math.min(group.length, endIndex - groupedData[bd].length);
         currentPageData.push(...group.slice(groupStartIndex, groupEndIndex));
+          this.dataSource = new MatTableDataSource<bacpatient>(Object.values(groupedData[bd]));
+        
+/////////////////////////////////////////////ken bech tbedli 7eja rahou hne ///////////////////////////////////////////////////////////////////////////
+        
       }
 
     }
