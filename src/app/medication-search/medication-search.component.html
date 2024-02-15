@@ -1,0 +1,24 @@
+<mat-card class="filter-card">
+    <mat-card-header>
+      <mat-card-title>Filter By</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-radio-group [(ngModel)]="searchKey">
+        <mat-radio-button value="Nom">Name</mat-radio-button>
+        <mat-radio-button value="Laboratoire">Laboratoire</mat-radio-button>
+        <mat-radio-button value="Indications">Indications</mat-radio-button>
+      </mat-radio-group>
+    </mat-card-content>
+</mat-card>
+
+<mat-form-field class="search-field">
+  <input type="text" placeholder="Search for a medication" matInput [formControl]="searchControl" [matAutocomplete]="auto" value="">
+  <mat-autocomplete #auto="matAutocomplete">
+    <ng-container *ngFor="let medcine of filteredMedcines">
+      <mat-option (click)="openDialog(medcine)" [value]="medcine">
+        {{ getMedcineProperty(medcine) }}
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+</mat-form-field>
+
