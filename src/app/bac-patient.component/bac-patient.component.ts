@@ -2,10 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import {
-  MatDialog
-} from '@angular/material/dialog';
-
+import {MatDialog} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {PageEvent, MatPaginatorModule, MatPaginator} from '@angular/material/paginator';
 import {JsonPipe} from '@angular/common';
@@ -13,7 +10,6 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogueComponent } from '../dialogue/dialogue.component';
-
 @Component({
   selector: 'bac-patient.component',
   styleUrls: ['bac-patient.component.css'],
@@ -45,7 +41,6 @@ export class BacPatientComponent {
           length: ELEMENT_DATA.length
         });
       }
-
   }
   customPaginate(event: PageEvent) {
     const startIndex = event.pageIndex * event.pageSize;
@@ -62,25 +57,24 @@ export class BacPatientComponent {
       }
       groupedData[item.bd].push(item);
     });
-  
     const currentPageData: bacpatient[] = [];
+    let data : bacpatient[] = [];
     for (const bd in groupedData) {
       if (groupedData.hasOwnProperty(bd)) {
         const group = groupedData[bd];
         const groupStartIndex = Math.max(0, startIndex - groupedData[bd].length);
         const groupEndIndex = Math.min(group.length, endIndex - groupedData[bd].length);
         currentPageData.push(...group.slice(groupStartIndex, groupEndIndex));
-          this.dataSource = new MatTableDataSource<bacpatient>(Object.values(groupedData[bd]));
-        
-/////////////////////////////////////////////ken bech tbedli 7eja rahou hne ///////////////////////////////////////////////////////////////////////////
-        
-      }
-
+          }
+    }
+    for (let index = 0; index < data.length; index++) {
+      this.dataSource = new MatTableDataSource<bacpatient>(groupedData[index]);
+      console.log(groupedData[index].length );
+      this.paginator.pageSize = groupedData[index].length ; 
     }
   }
-  
   length =this.dataSource.data.length;
-  pageSize = 10;
+  pageSize = 5;
   pageIndex = 0;
   pageSizeOptions = [5,10,20];
 
