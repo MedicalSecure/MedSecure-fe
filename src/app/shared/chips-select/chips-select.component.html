@@ -1,6 +1,5 @@
 <form >
     <mat-form-field class="example-chip-list" class={{class}} > 
-      <mat-label *ngIf="customLabel">{{ customLabel }}</mat-label>
       <mat-label @if(customLabel) >{{ customLabel }}</mat-label>
       <mat-chip-grid #chipGrid aria-label="object selection " >
         @for (object of selectedObjects; track object) {

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -13,7 +13,8 @@ import {provideNativeDateAdapter} from '@angular/material/core';
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
 })
 export class DatePicker {
-
+  @Input() customTitle:String="Choose a date"
   startDate = new Date();
+
   
 }
