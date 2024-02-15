@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'TharLon';
+    src: url('./assests/Tharlon-Regular.ttf') format('truetype'); /* adjust the path to the location of your font file */
+    /* You can include additional font variations here, such as bold, italic, etc. */
+  }
+  
+  body {
+    font-family: 'TharLon', sans-serif; /* Use TharLon font for the body text */
+  }
