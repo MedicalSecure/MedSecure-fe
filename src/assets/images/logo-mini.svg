@@ -1,0 +1,20 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .blue-circle {
+      fill: #1F3BB3;
+    }
+    .white-text {
+      fill: white;
+      font: bold 150px "Manrope", sans-serif;
+      dominant-baseline: central;
+      text-anchor: middle;
+    }
+  </style>
+
+  <!-- Blue Circle -->
+  <circle cx="100" cy="100" r="100" class="blue-circle"/>
+
+  <!-- White Text inside the Circle -->
+  <text x="100" y="100" class="white-text">M</text>
+</svg>
+
