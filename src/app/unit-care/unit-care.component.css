@@ -1,0 +1,60 @@
+.container {
+  padding: 24px;
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.rooms{
+  display: inline-block;
+
+  gap: 24px;
+  width: 50px;
+  background-color: blueviolet;
+
+}
+
+mat-card {
+  width: calc(100% - 24px); /* Adjust the width as needed */
+  max-width: 500px; /* Adjust the maximum width as needed */
+  margin: 12px; /* Adjust the margin as needed */
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-actions {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.add-button-container {
+  margin-right: 5rem;
+  margin-left: auto;
+  width: 80px;
+  height: 80px;
+}
+.add-button {
+  bottom: 3;
+  width: 80px;
+  height: 80px;
+}
+
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
+  background-size: cover;
+}
+#test {
+  color: green;
+}
