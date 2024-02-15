@@ -1,0 +1,174 @@
+<button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+    {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+  </button>
+<mat-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Patient Details</ng-template>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field style="flex: 0.25">
+          <mat-label>Nom</mat-label>
+          <input
+            matInput
+            placeholder="nom de famille"
+            formControlName="lastCtrl"
+            required
+          />
+        </mat-form-field>
+        <mat-form-field style="flex: 0.25">
+          <mat-label>Prénom</mat-label>
+          <input
+            matInput
+            placeholder="entrer prénom"
+            formControlName="firstCtrl"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field style="flex: 0.25">
+          <mat-label>Age</mat-label>
+          <input type="integer" matInput placeholder="Entrer l'age" required />
+        </mat-form-field>
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-radio-group
+          [(ngModel)]="selectedSexe"
+          (change)="handleSexeChange($event)"
+          aria-label="sexe"
+        >
+          <mat-label>Sexe</mat-label>
+          <mat-radio-button value="1">féminin</mat-radio-button>
+          <mat-radio-button value="2">masculin</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <section class="example-section">
+        <mat-checkbox class="example-margin" [disabled]="selectedSexe !== '1'"
+          >Breastfeeding</mat-checkbox
+        >
+      </section>
+
+      <section class="example-section">
+        <mat-checkbox class="example-margin" [disabled]="selectedSexe !== '1'"
+          >Pregnancy</mat-checkbox
+        >
+      </section>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field style="flex: 0.25">
+          <mat-label>Hauteur (cm)</mat-label>
+          <input
+            type="integer"
+            matInput
+            placeholder="Entrez la hauteur en centimètres"
+            required
+          />
+        </mat-form-field>
+        <mat-form-field style="flex: 0.25">
+          <mat-label>poids (kg)</mat-label>
+          <input
+            type="integer"
+            matInput
+            placeholder="Entrez le poids en kg"
+            required
+          />
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" label="Other.. ">
+    <form [formGroup]="secondFormGroup">
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <input
+            matInput
+            formControlName="secondCtrl"
+            placeholder="do you workout ?"
+            required
+          />
+          <mat-label>Physical activity status</mat-label>
+          <mat-select>
+            @for (activity of activities; track activity) {
+            <mat-option [value]="activity.value">{{
+              activity.viewValue
+            }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            matInput
+            formControlName="secondCtrl"
+            placeholder="which smoker are you ?"
+            required
+          />
+          <mat-label>Smoking status</mat-label>
+          <mat-select>
+            @for (habit of habits; track habit) {
+            <mat-option [value]="habit.value">{{ habit.viewValue }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="thirdFormGroup" label="Vital Signs ">
+    <form [formGroup]="thirdFormGroup">
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label>Blood Pressure</mat-label>
+            <input type="integer" matInput placeholder="mmHg" />
+          </mat-form-field>
+        </form>
+
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label>Blood Glucose level</mat-label>
+            <input
+              matInput
+              placeholder="Blood Glucose level"
+              placeholder="mg/dl"
+            />
+          </mat-form-field>
+        </form>
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label> Oxygen Level</mat-label>
+            <input type="integer" matInput placeholder="poucentage" />
+          </mat-form-field>
+        </form>
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label> Heart Rate</mat-label>
+            <input type="integer" matInput placeholder="BPM" />
+          </mat-form-field>
+        </form>
+      </div>
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <mat-label> Urinary output</mat-label>
+          <input type="integer" matInput placeholder="millitres/day" />
+        </mat-form-field>
+      </form>
+
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-stepper>
