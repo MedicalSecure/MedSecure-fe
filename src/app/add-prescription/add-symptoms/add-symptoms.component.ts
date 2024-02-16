@@ -12,6 +12,7 @@ import {
   multiSelectInputType,
 } from '../../components/dynamic-multiple-selects/dynamic-multiple-selects.component';
 import { SymptomSeverityLevels } from '../../shared/data/add-presc-consts';
+import { HumanBodyViewerComponent } from '../../components/human-body-viewer/human-body-viewer.component';
 
 @Component({
   selector: 'app-add-symptoms',
@@ -23,6 +24,7 @@ import { SymptomSeverityLevels } from '../../shared/data/add-presc-consts';
     DatePicker,
     ShipsSelectComponent,
     DynamicMultipleSelectsComponent,
+    HumanBodyViewerComponent,
   ],
   templateUrl: './add-symptoms.component.html',
   styleUrl: './add-symptoms.component.css',
@@ -41,7 +43,7 @@ export class AddSymptomsComponent {
     console.log('Selected chips:', selectedSymptoms);
     this.multiSelectInputs = selectedSymptoms.map((item: chipType) => {
       return {
-        index:item.index,
+        index: item.index,
         label: item.label,
         options: SymptomSeverityLevels,
         isRequired: true,

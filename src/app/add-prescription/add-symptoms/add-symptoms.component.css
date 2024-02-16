@@ -1,85 +1,13 @@
 .example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
-  }
-  
-  .example-full-width {
-    width: 100%;
-  }
-  
-  td {
-    padding-right: 8px;
-  }
-
-  
-#human-body-container{
-  position: relative;
-}
-
-#body-image {
+  min-width: 150px;
+  max-width: 500px;
   width: 100%;
-  height: auto;
-  
 }
 
-#body-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
+.example-full-width {
   width: 100%;
-  height: 100%;
 }
 
-/* Base styles for paths (adjust as needed) */
-path {
-  fill: transparent;
-  stroke: #666;
-  stroke-width: 2px;
-  cursor: pointer;
-}
-
-/* Hover overlay for visual feedback */
-#hover-overlay {
-  fill: rgba(0, 0, 0, 0.3);
-  transition: fill 0.2s ease-in-out;
-}
-
-/* Hover styles for individual paths */
-#head:hover,
-#torso:hover,
-#left-arm:hover,
-#right-arm:hover,
-#left-leg:hover,
-#right-leg:hover {
-  fill: #007bff;
-  stroke: #007bff;
-  stroke-width: 3px;
-}
-
-/* Optional: Individual area colors */
-#head:hover {
-  fill: #f00; /* Red for Head */
-}
-
-#torso:hover {
-  fill: #0f0; /* Green for Torso */
-}
-
-/* Similar rules for other body parts with desired colors */
-.body-image {
-  height: 482px;
-  max-width: 100%;
-  min-height: 100%;
-  overflow: auto;
-  width: 100%;
-  text-align: center;
-  text-align: -webkit-center;
-}
-
-.body-bg-img{
-  height: 100%;
-  width: 100%;
-  x: 0;
-  y: 0;
+td {
+  padding-right: 8px;
 }
