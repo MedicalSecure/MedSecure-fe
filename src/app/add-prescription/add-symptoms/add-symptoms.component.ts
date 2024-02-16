@@ -3,7 +3,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from '../../shared/date-picker/date-picker.component';
-import { ShipsSelectComponent, chipType } from '../../shared/chips-select/chips-select.component';
+import {
+  ShipsSelectComponent,
+  chipType,
+} from '../../shared/chips-select/chips-select.component';
 import {
   DynamicMultipleSelectsComponent,
   multiSelectInputType,
@@ -26,12 +29,8 @@ import { SymptomSeverityLevels } from '../../shared/data/add-presc-consts';
 })
 export class AddSymptomsComponent {
   @Input()
-  multiSelectInputs: multiSelectInputType[] = [
-    { label: 'Symptom1', options: SymptomSeverityLevels ,isRequired:true},
-    { label: 'Symptom2', options: SymptomSeverityLevels },
-  ];
+  multiSelectInputs: multiSelectInputType[] = [];
 
-  
   selectedInputsChange(selectedInputs: string[]) {
     // Access and use the selected indexes here
     console.log('Selected inputs:', selectedInputs);
@@ -39,6 +38,14 @@ export class AddSymptomsComponent {
 
   selectedChipsChange(selectedSymptoms: chipType[]) {
     // Access and use the selected indexes here
-    //console.log('Selected chips:', selectedSymptoms);
+    console.log('Selected chips:', selectedSymptoms);
+    this.multiSelectInputs = selectedSymptoms.map((item: chipType) => {
+      return {
+        index:item.index,
+        label: item.label,
+        options: SymptomSeverityLevels,
+        isRequired: true,
+      };
+    });
   }
 }

@@ -1,7 +1,7 @@
 <mat-form-field>
     <mat-label>{{customTitle}}</mat-label>
     <input matInput [matDatepicker]="picker" [value]="startDate">
-    <mat-hint>MM/DD/YYYY</mat-hint>
+    @if(showHint){<mat-hint>MM/DD/YYYY</mat-hint>}
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker startView="year" [startAt]="startDate" ></mat-datepicker>
   </mat-form-field>

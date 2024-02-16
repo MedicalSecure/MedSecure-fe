@@ -36,6 +36,7 @@ export class DynamicMultipleSelectsComponent implements OnInit {
 }
 
 export type multiSelectInputType = {
+  index:number;
   label?: string;
   isRequired?: boolean;
   options: Array<string | number>;

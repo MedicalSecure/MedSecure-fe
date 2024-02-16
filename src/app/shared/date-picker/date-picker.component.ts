@@ -14,6 +14,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 })
 export class DatePicker {
   @Input() customTitle:String="Choose a date"
+  @Input() showHint:boolean=true;
   startDate = new Date();
 
   

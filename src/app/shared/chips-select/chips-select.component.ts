@@ -72,18 +72,22 @@ export class ShipsSelectComponent {
     // Emit the updated array to the parent component
     //console.log("emitted")
     this.selectedChipsChange.emit(
+      this.selectedObjects
       //TODO add index of the searched item from database
-      this.selectedObjects.map((value) => {
+      /*       this.selectedObjects.map((value) => {
+        console.log("here")
         return {
           label: value,
           index: 'string',
           value: value,
         };
       })
+    ); */
     );
   }
 
-  selectedObjects: string[] = [];
+  selectedObjects: chipType[] = [];
+  selectedStrings: string[] = [];
 
   @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
 
@@ -102,29 +106,49 @@ export class ShipsSelectComponent {
     const value = (event.value || '').trim();
     // Add our object
     if (value) {
-      this.selectedObjects.push(value);
+      if (!this.selectedStrings.includes(value)) {
+        this.selectedStrings.push(value);
+        this.selectedObjects.push({
+          label: value,
+          index: -1,
+          value: value,
+        });
+        console.log('added ' + value);
+      }
     }
-
     // Clear the input value
     event.chipInput!.clear();
-
     this.ObjectControl.setValue(null);
+    this.onSelectionChange();
   }
 
-  remove(object: string): void {
-    const index = this.selectedObjects.indexOf(object);
-
+  remove(label: string): void {
+    console.log('remove ' + label);
+    this.selectedObjects = this.selectedObjects.filter(
+      (chipObject: chipType) => chipObject.label != label
+    );
+    this.onSelectionChange();
+    console.log('removed ' + label);
+    const index = this.selectedStrings.indexOf(label);
     if (index >= 0) {
-      this.selectedObjects.splice(index, 1);
-      this.announcer.announce(`Removed ${object}`);
+      this.selectedStrings.splice(index, 1);
+      this.announcer.announce(`Removed ${label}`);
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedObjects.push(event.option.viewValue);
-    //console.log(parseInt(event.option.id.substring("mat-option-".length)) )
+    this.selectedStrings.push(event.option.viewValue);
+    console.log(event.option.id)
+    this.selectedObjects.push({
+      label: event.option.viewValue,
+      index: this.AllData.indexOf(event.option.viewValue),
+      //index: parseInt(event.option.id.substring('mat-option-'.length)),
+      value: event.option.viewValue,
+    });
+    
     this.ValueInput.nativeElement.value = '';
     this.ObjectControl.setValue(null);
+    this.onSelectionChange();
   }
 
   private _filter(value: string): string[] {
@@ -138,6 +162,6 @@ export class ShipsSelectComponent {
 
 export type chipType = {
   label: string;
-  index: string;
+  index: number;
   value: string;
 };
