@@ -11,6 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogueComponent } from '../dialogue/dialogue.component';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatGridListModule} from '@angular/material/grid-list';
+
 /**
  * @title Table with pagination
  */
@@ -19,7 +22,7 @@ import { DialogueComponent } from '../dialogue/dialogue.component';
   templateUrl: './test.component.html',
   styleUrl: './test.component.css',
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule , MatPaginatorModule , JsonPipe],
+  imports: [MatTableModule, MatGridListModule,MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule , MatPaginatorModule , JsonPipe],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -35,8 +38,13 @@ export class TestComponent implements AfterViewInit {
   columnsToDisplay = ['add','us', 'room', 'bed', 'patient', 'bd', 'toServe', 'served', 'status', 'note',];
   constructor(public dialog: MatDialog ) { }
   columnsToDisplayMedicines = ['name', 'posology', 'root']
-  expandedElement: bacpatient | null; // Property to track expanded element
+  expandedElement: bacpatient | null; 
+
+  
   selectedIndex: number | null = null; // Property to track selected index
+  toggleExpanded(element: any) {
+    this.expandedElement = this.expandedElement === element ? null : element;
+}
 
   // Method to toggle row expansion
   toggleRowExpansion(element: any, index: number): void {
@@ -72,6 +80,7 @@ interface Medicine {
   name: string;
   posology: string[];
   root: string;
+  dose : number ; 
 }
 interface bacpatient {
   id: number;
@@ -83,7 +92,7 @@ interface bacpatient {
   medicines: Medicine[];
   toServe: string;
   served: string;
-  status: boolean;
+  status: string;
   note: string;
   add: string;
 }
@@ -97,13 +106,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/15/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
     ],
     toServe: 'To serve 1',
     served: 'Served 1',
-    status: false,
+    status: 'On Progress',
     note: 'Note 1',
     add: 'Add 1',
   },
@@ -116,12 +125,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/15/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 2',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
+       toServe: 'To serve 2',
     served: 'Served 2',
-    status: false,
+    status: 'On Progress',
     note: 'Note 2',
     add: 'Add 2',
   },
@@ -134,12 +144,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/15/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],  toServe: 'To serve 3',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
+      toServe: 'To serve 3',
     served: 'Served 3',
-    status: false,
+    status: 'Completed',
     note: 'Note 3',
     add: 'Add 3',
   },
@@ -150,10 +161,14 @@ const ELEMENT_DATA: bacpatient[] = [
     bed: 'Bed4',
     patient: 'Patient4',
     bd: '2/15/2024',
-    medicines: [{ name: 'medicine4', posology: ["12h", "13h", "14h"], root: 'Oral' }],
-    toServe: 'To serve 4',
+    medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],  toServe: 'To serve 4',
     served: 'Served 4',
-    status: false,
+    status: 'On Progress',
     note: 'Note 4',
     add: 'Add 4',
   },
@@ -164,10 +179,15 @@ const ELEMENT_DATA: bacpatient[] = [
     bed: 'Bed5',
     patient: 'Patient5',
     bd: '2/15/2024',
-    medicines: [{ name: 'medicine5', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+ medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 5',
     served: 'Served 5',
-    status: false,
+    status: 'Pending',
     note: 'Note 5',
     add: 'Add 5',
   },
@@ -177,11 +197,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room6',
     bed: 'Bed6',
     patient: 'Patient6',
-    bd: '2/15/2024',
-    medicines: [{ name: 'medicine6', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/15/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 6',
     served: 'Served 6',
-    status: false,
+    status: 'On Progress',
     note: 'Note 6',
     add: 'Add 6',
   },
@@ -193,12 +217,13 @@ const ELEMENT_DATA: bacpatient[] = [
     patient: 'Patient7',
     bd: '2/15/2024',
     medicines: [
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 7',
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],   toServe: 'To serve 7',
     served: 'Served 7',
-    status: false,
+    status: 'Pending',
     note: 'Note 7',
     add: 'Add 7',
   },
@@ -211,12 +236,12 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/15/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 }
     ],    toServe: 'To serve 8',
     served: 'Served 8',
-    status: false,
+    status: 'Completed',
     note: 'Note 8',
     add: 'Add 8',
   },
@@ -227,10 +252,15 @@ const ELEMENT_DATA: bacpatient[] = [
     bed: 'Bed9',
     patient: 'Patient9',
     bd: '2/15/2024',
-    medicines: [{ name: 'medicine9', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 9',
     served: 'Served 9',
-    status: false,
+    status: 'Completed',
     note: 'Note 9',
     add: 'Add 9',
   },
@@ -240,11 +270,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room10',
     bed: 'Bed10',
     patient: 'Patient10',
-    bd: '2/15/2024',
-    medicines: [{ name: 'medicine10', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/15/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 10',
     served: 'Served 10',
-    status: false,
+    status: 'On Progress',
     note: 'Note 10',
     add: 'Add 10',
   },
@@ -254,11 +288,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room11',
     bed: 'Bed11',
     patient: 'Patient11',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine11', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
+    ],
     toServe: 'To serve 11',
     served: 'Served 11',
-    status: false,
+    status: 'Completed',
     note: 'Note 11',
     add: 'Add 11',
   },
@@ -268,11 +306,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room12',
     bed: 'Bed12',
     patient: 'Patient12',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine12', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
+    ],
     toServe: 'To serve 12',
     served: 'Served 12',
-    status: false,
+    status: 'On Progress',
     note: 'Note 12',
     add: 'Add 12',
   },
@@ -282,11 +324,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room13',
     bed: 'Bed13',
     patient: 'Patient13',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine13', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 13',
     served: 'Served 13',
-    status: false,
+    status: 'Completed',
     note: 'Note 13',
     add: 'Add 13',
   },
@@ -296,11 +342,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room14',
     bed: 'Bed14',
     patient: 'Patient14',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine14', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 14',
     served: 'Served 14',
-    status: false,
+    status: 'Completed',
     note: 'Note 14',
     add: 'Add 14',
   },
@@ -310,11 +360,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room15',
     bed: 'Bed15',
     patient: 'Patient15',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine15', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 }
+    ],
     toServe: 'To serve 15',
     served: 'Served 15',
-    status: false,
+    status: 'Pending',
     note: 'Note 15',
     add: 'Add 15',
   },
@@ -324,11 +378,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room16',
     bed: 'Bed16',
     patient: 'Patient16',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine16', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
+    ],
     toServe: 'To serve 16',
     served: 'Served 16',
-    status: false,
+    status: 'On Progress',
     note: 'Note 16',
     add: 'Add 16',
   },
@@ -338,11 +396,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room17',
     bed: 'Bed17',
     patient: 'Patient17',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
+    ],
     toServe: 'To serve 17',
     served: 'Served 17',
-    status: false,
+    status: 'Completed',
     note: 'Note 17',
     add: 'Add 17',
   },
@@ -355,12 +417,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/16/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 18',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' , dose:2 }
+    ],
+        toServe: 'To serve 18',
     served: 'Served 18',
-    status: false,
+    status: 'Completed',
     note: 'Note 18',
     add: 'Add 18',
   },
@@ -370,11 +433,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room19',
     bed: 'Bed19',
     patient: 'Patient19',
-    bd: '2/16/2024',
-    medicines: [{ name: 'medicine19', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/16/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 19',
     served: 'Served 19',
-    status: false,
+    status: 'Pending',
     note: 'Note 19',
     add: 'Add 19',
   },
@@ -387,12 +454,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/16/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 20',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],  
+      toServe: 'To serve 20',
     served: 'Served 20',
-    status: false,
+    status: 'On Progress',
     note: 'Note 20',
     add: 'Add 20',
   },
@@ -405,12 +473,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/17/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 21',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ], 
+      toServe: 'To serve 21',
     served: 'Served 21',
-    status: false,
+    status: 'On Progress',
     note: 'Note 21',
     add: 'Add 21',
   },
@@ -423,12 +492,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/17/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 22',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
+    toServe: 'To serve 22',
     served: 'Served 22',
-    status: false,
+    status: 'Completed',
     note: 'Note 22',
     add: 'Add 22',
   },
@@ -441,13 +511,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/17/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
     ],
         toServe: 'To serve 23',
     served: 'Served 23',
-    status: false,
+    status: 'Completed',
     note: 'Note 23',
     add: 'Add 23',
   },
@@ -460,12 +530,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/17/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 24',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ], 
+     toServe: 'To serve 24',
     served: 'Served 24',
-    status: false,
+    status: 'On Progress',
     note: 'Note 24',
     add: 'Add 24',
   },
@@ -476,10 +547,15 @@ const ELEMENT_DATA: bacpatient[] = [
     bed: 'Bed25',
     patient: 'Patient25',
     bd: '2/17/2024',
-    medicines: [{ name: 'medicine25', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+     medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 25',
     served: 'Served 25',
-    status: false,
+    status: 'Pending',
     note: 'Note 25',
     add: 'Add 25',
   },
@@ -490,10 +566,15 @@ const ELEMENT_DATA: bacpatient[] = [
     bed: 'Bed26',
     patient: 'Patient26',
     bd: '2/17/2024',
-    medicines: [{ name: 'medicine26', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 26',
     served: 'Served 26',
-    status: false,
+    status: 'Completed',
     note: 'Note 26',
     add: 'Add 26',
   },
@@ -503,11 +584,15 @@ const ELEMENT_DATA: bacpatient[] = [
     room: 'Room27',
     bed: 'Bed27',
     patient: 'Patient27',
-    bd: '2/17/2024',
-    medicines: [{ name: 'medicine27', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    bd: '2/17/2024', medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 27',
     served: 'Served 27',
-    status: false,
+    status: 'Completed',
     note: 'Note 27',
     add: 'Add 27',
   },
@@ -520,12 +605,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/17/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 28',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ], 
+     toServe: 'To serve 28',
     served: 'Served 28',
-    status: false,
+    status: 'On Progress',
     note: 'Note 28',
     add: 'Add 28',
   },
@@ -536,10 +622,15 @@ const ELEMENT_DATA: bacpatient[] = [
     bed: 'Bed29',
     patient: 'Patient29',
     bd: '2/17/2024',
-    medicines: [{ name: 'medicine29', posology: ["12h", "13h", "14h"], root: 'Oral' }],
+    medicines: [
+
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ],
     toServe: 'To serve 29',
     served: 'Served 29',
-    status: false,
+    status: 'Pending',
     note: 'Note 29',
     add: 'Add 29',
   },
@@ -552,12 +643,13 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/17/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' }
-    ],    toServe: 'To serve 30',
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+    ], 
+     toServe: 'To serve 30',
     served: 'Served 30',
-    status: false,
+    status: 'Pending',
     note: 'Note 30',
     add: 'Add 30',
   },

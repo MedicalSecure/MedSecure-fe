@@ -39,8 +39,8 @@ mat-form-field {
 .button-1,
 .button-2 {
   border-radius: 20px;
-  background-color: rgb(229, 214, 246);
-  color: rgb(0, 0, 0);
+  background-color: #0650bebc;
+  color: white ;
   width: 150px;
-  height: 50px;
+  height: 35px;
 }
