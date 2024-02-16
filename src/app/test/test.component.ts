@@ -45,15 +45,13 @@ export class TestComponent implements AfterViewInit {
   toggleExpanded(element: any) {
     this.expandedElement = this.expandedElement === element ? null : element;
 }
-
-  // Method to toggle row expansion
   toggleRowExpansion(element: any, index: number): void {
     if (this.expandedElement === element) {
       this.expandedElement = null;
     } else {
       this.expandedElement = element;
     }
-    this.selectedIndex = index; // Set the selected index
+    this.selectedIndex = index; 
   }
   openDialog(): void {
     this.dialog.open(DialogueComponent, {
@@ -62,7 +60,6 @@ export class TestComponent implements AfterViewInit {
   }
  
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
  
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
