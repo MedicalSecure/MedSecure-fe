@@ -170,7 +170,7 @@
         > .nav-link {
           margin: 0;
           &[aria-expanded="true"] {
-            border-radius: 8px 8px 8px 0;
+            border-radius: 8px 8px 0 0;
             background: $sidebar-light-menu-hover-bg;
             color: $sidebar-light-menu-active-color;
           }
