@@ -1,6 +1,6 @@
 <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
-    {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
-  </button>
+  {{ !isLinear ? "Enable linear mode" : "Disable linear mode" }}
+</button>
 <mat-stepper [linear]="isLinear" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
@@ -158,6 +158,86 @@
         </mat-form-field>
       </form>
 
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="fourthFormGroup" label="Allergies">
+    <form [formGroup]="fourthFormGroup">
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <mat-label>Food Allergies</mat-label>
+          <mat-select>
+            <mat-option value="Peanuts">Peanuts</mat-option>
+            <mat-option value="Milk">Milk</mat-option>
+            <mat-option value="Eggs">Eggs</mat-option>
+            <mat-option value="Fish">Fish</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <mat-label>Environmental Allergies</mat-label>
+          <mat-select>
+            <mat-option value="Pollen">Pollen</mat-option>
+            <mat-option value="Dust">Dust</mat-option>
+            <mat-option value="Grass">Grass</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <mat-label>Insect Sting Allergies</mat-label>
+          <mat-select>
+            <mat-option value="bee">Bee venom</mat-option>
+            <mat-option value="ant">Fire ant venom</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <mat-label>Medication Allergies</mat-label>
+          <mat-select>
+            <mat-option value="Penicillin">Penicillin</mat-option>
+            <mat-option value="Aspirin">Aspirin</mat-option>
+            <mat-option value="Ibuprofen">Ibuprofen</mat-option>
+            <mat-option value="Insulin">Insulin</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <mat-label>Skin Allergies</mat-label>
+          <mat-select>
+            <mat-option value="Fragrances">Fragrances</mat-option>
+            <mat-option value="Sunscreen">Sunscreen ingredients</mat-option>
+            <mat-option value="Cosmetics">Cosmetics ingredients</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <mat-label>Pet Allergies</mat-label>
+          <mat-select>
+            <mat-option value="Cat">Cat</mat-option>
+            <mat-option value="Dog">Dog</mat-option>
+            <mat-option value="Rabbit">Rabbit fur</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div style="display: flex; flex-direction: row; gap: 10px">
+        <mat-form-field>
+          <mat-label>Occupational Allergies</mat-label>
+          <mat-select>
+            <mat-option value="chemicals">Cleaning chemicals</mat-option>
+            <mat-option value="Flour">Flour (baker's asthma)</mat-option>
+            <mat-option value="Wood">Wood dust</mat-option>
+            <mat-option value="Latex">Latex (common in healthcare workers)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button matStepperNext>Next</button>
     </form>

@@ -1,0 +1,120 @@
+<style>
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      column-count: 2; /* Adjust the number of columns as needed */
+    }
+  
+    .card {
+      break-inside: avoid-column;
+      width: 100%;
+    }
+  </style>
+  
+  <div style="display: flex; justify-content: flex-end; margin-top: 5px; margin-right: 5px;">
+    <button type="button" class="btn btn-outline-primary" (click)="toggleViewMode()">
+      {{ viewAsTable ? 'View Grid' : 'View Table' }}
+    </button>
+  </div>
+  
+<div style="display: flex; flex-direction: row; gap: 10px">
+  <div class="card text-left">
+    <img class="card-img-top" src="holder.js/100px180/" alt="" />
+    <div class="card-body">
+      <h4 class="card-title">Patient Details</h4>
+      <p class="card-text">ID</p>
+      <p class="card-text">Name</p>
+      <p class="card-text">Age</p>
+      <p class="card-text">Gender</p>
+    </div>
+  </div>
+  <div class="card text-left">
+    <img class="card-img-top" src="holder.js/100px180/" alt="" />
+    <div class="card-body">
+      <h4 class="card-title">Other ..</h4>
+      <p class="card-text">Smoking Status</p>
+      <p class="card-text">Physical activity status</p>
+      <p class="card-text">Age</p>
+    </div>
+  </div>
+  <table *ngIf="viewAsTable" class="table">
+    <thead>
+      <!-- Table header content -->
+    </thead>
+    <tbody>
+        <tr *ngFor="let allergy of allergies">
+          <!-- Table row content -->
+          <td>{{ allergy.name }}</td>
+          <!-- Add more columns as needed -->
+        </tr>
+      </tbody>
+  </table>  
+  
+
+</div>
+<br />
+<div style="display: flex; flex-direction: row; gap: 10px">
+    <div class="card text-left">
+      <img
+        class="card-img-top"
+        src="holder.js/100px180/"
+        alt=""
+      />
+      <div class="card-body">
+        <h4 class="card-title">Height</h4>
+      </div>
+    </div>
+    <div class="card text-left">
+      <img class="card-img-top" src="holder.js/100px180/" alt="" />
+      <div class="card-body">
+        <h4 class="card-title">Diagnosis</h4>
+        <p class="card-text">Normal headache</p>
+        <p class="card-text">Diabetes</p>
+        <p class="card-text">Anemia</p>
+      </div>
+    </div>
+  </div>
+
+<br />
+<div style="display: flex; flex-direction: row; gap: 10px">
+  <div class="card text-left">
+    <img class="card-img-top" src="holder.js/100px180/" alt="" />
+    <div class="card-body">
+      <h4 class="card-title">Latest Visits</h4>
+      <p class="card-text">Normal headache</p>
+      <p class="card-text">Diabetes</p>
+      <p class="card-text">Anemia</p>
+    </div>
+  </div>
+  <div class="card text-left">
+    <img class="card-img-top" src="holder.js/100px180/" alt="" />
+    <div class="card-body">
+      <h4 class="card-title">Current Diagnosis</h4>
+      <p class="card-text">Normal headache</p>
+      <p class="card-text">Diabetes</p>
+      <p class="card-text">Anemia</p>
+    </div>
+  </div>
+  <div class="card text-left">
+    <img class="card-img-top" src="holder.js/100px180/" alt="" />
+    <div class="card-body">
+      <h4 class="card-title">Current Medications</h4>
+      <p class="card-text">Normal headache</p>
+      <p class="card-text">Diabetes</p>
+      <p class="card-text">Anemia</p>
+    </div>
+  </div>
+</div>
+<br />
+<div style="display: flex; flex-direction: row; gap: 10px">
+  <div class="card text-left">
+    <img class="card-img-top" src="holder.js/100px180/" alt="" />
+    <div class="card-body">
+      <h4 class="card-title">Allergies</h4>
+      <p class="card-text">Drug allergy</p>
+      <p class="card-text">Latex Allergy</p>
+      <p class="card-text">Anemia</p>
+    </div>
+  </div>
+</div>

@@ -11,6 +11,9 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatRadioChange } from '@angular/material/radio';
 import MonitorHeartRoundedIcon from '@mui/icons-material/MonitorHeartRounded';
+import {MatListModule} from '@angular/material/list';
+
+// Interfaces
 interface Activity {
   value: string;
   viewValue: string;
@@ -19,6 +22,12 @@ interface Smoking {
   value: string;
   viewValue: string;
 }
+interface Subtask {
+  name: string;
+  completed: boolean;
+  color: string;
+}
+
 @Component({
   selector: 'app-register-form',
   standalone: true,
@@ -31,12 +40,14 @@ interface Smoking {
     MatDatepickerModule,
     MatSlideToggleModule,
     MatRadioModule,
-    MatSelectModule,MatCheckboxModule],
+    MatSelectModule,MatCheckboxModule,MatListModule],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css'
 })
 
 export class RegisterFormComponent {
+  typesOfAllergies: string[] = ['Food Allergies', 'Environmental Allergies', 'Insect Sting Allergies', 'Medication Allergies', 'Skin Allergies','Pet Allergies','Occupational Allergies'];
+  // selectedAllergie: string = '';
   selectedSexe: string = ''; 
 
   handleSexeChange(event: MatRadioChange) {
@@ -66,7 +77,7 @@ export class RegisterFormComponent {
     {value: 'Medium-1', viewValue: 'Medium'},
     {value: 'Heavy-2', viewValue: 'Heavy'},
   ];
-
+  
   constructor(private _formBuilder: FormBuilder) {}
+  
 }
-
