@@ -14,7 +14,7 @@ import {
   MatAutocompleteModule,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
@@ -42,35 +42,45 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 export class ShipsSelectComponent {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
-  @Input() class!: string;
-  @Input() AllData: string[] = [
-    'a',
-    'n',
-    'c',
-    'd',
-    'h',
-    'a',
-    'n',
-    'c',
-    'd',
-    'h',
-    'a',
-    'n',
-    'c',
-    'd',
-    'h',
-    'g',
-  ];
+  @Input() class: string = '';
+  @Input() enableCustomAdditions: boolean = true;
+  @Input() enableQuickSelectFromSuggestions: boolean = true;
+  @Input() AllData: string[] = ['sym1', 'sym2', 'sym22'];
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   ObjectControl = new FormControl('');
   filteredData: Observable<string[]>;
+  filteredDataSubscription!: Subscription;
+  updatedSuggestionList: string[] = [];
+  selectedObjects: chipType[] = [];
+  selectedStrings: string[] = [];
+
+  @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
+  announcer = inject(LiveAnnouncer);
 
   @Output() selectedChipsChange = new EventEmitter<chipType[]>();
 
+  constructor() {
+    this.filteredData = this.ObjectControl.valueChanges.pipe(
+      startWith(null),
+      map((object: string | null) =>
+        object ? this._filter(object) : this.AllData.slice()
+      )
+    );
+  }
+
+  ngOnInit() {
+    this.filteredDataSubscription = this.filteredData.subscribe((data) => {
+      this.updatedSuggestionList = data;
+    });
+  }
+
+  ngOnDestroy() {
+    this.filteredDataSubscription.unsubscribe(); // Prevent memory leaks
+  }
+
   onSelectionChange() {
     // Emit the updated array to the parent component
-    //console.log("emitted")
     this.selectedChipsChange.emit(
       this.selectedObjects
       //TODO add index of the searched item from database
@@ -86,49 +96,31 @@ export class ShipsSelectComponent {
     );
   }
 
-  selectedObjects: chipType[] = [];
-  selectedStrings: string[] = [];
-
-  @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
-
-  announcer = inject(LiveAnnouncer);
-
-  constructor() {
-    this.filteredData = this.ObjectControl.valueChanges.pipe(
-      startWith(null),
-      map((object: string | null) =>
-        object ? this._filter(object) : this.AllData.slice()
-      )
-    );
-  }
-
   add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    // Add our object
-    if (value) {
-      if (!this.selectedStrings.includes(value)) {
-        this.selectedStrings.push(value);
-        this.selectedObjects.push({
-          label: value,
-          index: -1,
-          value: value,
-        });
-        console.log('added ' + value);
+    if (
+      this.enableQuickSelectFromSuggestions == true &&
+      this.updatedSuggestionList.length > 0
+    ) {
+      // add the first suggestion
+      this._addString(this.updatedSuggestionList[0]);
+      event.chipInput!.clear();
+      return;
+    }
+    if (this.enableCustomAdditions === true) {
+      const value = (event.value || '').trim();
+      // Add custom value
+      if (value && !this.selectedStrings.includes(value)) {
+        this._addString(value, -1);
+        event.chipInput!.clear();
       }
     }
-    // Clear the input value
-    event.chipInput!.clear();
-    this.ObjectControl.setValue(null);
-    this.onSelectionChange();
   }
 
   remove(label: string): void {
-    console.log('remove ' + label);
     this.selectedObjects = this.selectedObjects.filter(
       (chipObject: chipType) => chipObject.label != label
     );
     this.onSelectionChange();
-    console.log('removed ' + label);
     const index = this.selectedStrings.indexOf(label);
     if (index >= 0) {
       this.selectedStrings.splice(index, 1);
@@ -137,23 +129,30 @@ export class ShipsSelectComponent {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedStrings.push(event.option.viewValue);
-    console.log(event.option.id)
-    this.selectedObjects.push({
-      label: event.option.viewValue,
-      index: this.AllData.indexOf(event.option.viewValue),
-      //index: parseInt(event.option.id.substring('mat-option-'.length)),
-      value: event.option.viewValue,
-    });
-    
+    this._addString(event.option.viewValue);
+    //const index= parseInt(event.option.id.substring('mat-option-'.length));
+    //this._addString(event.option.viewValue,index)
     this.ValueInput.nativeElement.value = '';
+  }
+
+  private _addString(
+    newValue: string,
+    id: number | undefined = undefined
+  ): void {
+    //find the id from the data array
+    id = id != undefined ? id : this.AllData.indexOf(newValue);
+    this.selectedStrings.push(newValue);
+    this.selectedObjects.push({
+      label: newValue,
+      index: id == undefined ? -1 : id,
+      value: newValue,
+    });
     this.ObjectControl.setValue(null);
     this.onSelectionChange();
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     return this.AllData.filter((object) =>
       object.toLowerCase().includes(filterValue)
     );
@@ -163,5 +162,5 @@ export class ShipsSelectComponent {
 export type chipType = {
   label: string;
   index: number;
-  value: string;
+  value: any;
 };

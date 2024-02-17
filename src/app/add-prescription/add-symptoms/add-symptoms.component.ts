@@ -33,6 +33,10 @@ export class AddSymptomsComponent {
   @Input()
   multiSelectInputs: multiSelectInputType[] = [];
 
+  @Input()
+  multiDiagnosisSelectInputs: multiSelectInputType[] = [];
+
+  dummyData: string[] = ['test1', 'test2', 'k1', 'k2'];
   selectedInputsChange(selectedInputs: string[]) {
     // Access and use the selected indexes here
     console.log('Selected inputs:', selectedInputs);
@@ -42,6 +46,19 @@ export class AddSymptomsComponent {
     // Access and use the selected indexes here
     console.log('Selected chips:', selectedSymptoms);
     this.multiSelectInputs = selectedSymptoms.map((item: chipType) => {
+      return {
+        index: item.index,
+        label: item.label,
+        options: SymptomSeverityLevels,
+        isRequired: true,
+      };
+    });
+  }
+
+  selectedDiagnosisChange(selectedSymptoms: chipType[]) {
+    // Access and use the selected indexes here
+    console.log('Selected chips:', selectedSymptoms);
+    this.multiDiagnosisSelectInputs = selectedSymptoms.map((item: chipType) => {
       return {
         index: item.index,
         label: item.label,

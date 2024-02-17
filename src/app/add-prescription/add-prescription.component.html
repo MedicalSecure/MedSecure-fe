@@ -5,30 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add prescription</title>
   </head>
-  <body class="d-flex flex-row p-md-5 justify-content-center gap-5">
-    <div class="col-8">
+  <body
+    class="d-flex flex-column p-md-2 justify-content-center gap-5 flex-md-row"
+    id="body"
+  >
+    <div class="col-12 col-md-6">
       <app-add-symptoms></app-add-symptoms>
     </div>
-    <div class="d-flex flex-column gap-5 justify-content-center align-middle">
+    <div class="d-flex flex-column gap-2 justify-content-center align-middle">
       <div class="card">
         <div class="card-body py-4 px-5">
           <h4 class="card-title">Current Medication</h4>
-          <ul class="list">
+          <ul class="list ps-5">
             <li>
               <div class="mb-4">
                 <p class="fw-bold fs-5" style="color: #9000ff">
-                  (T5E8) Insulin<span> Permanent</span>
+                  Insulin<span style="color: #0000009d" class="fw-light fs-6">
+                    Permanent</span
+                  >
                 </p>
-                <p style="color: #00000082">
+                <p style="color: #0000009d">
                   600 mg oral tablet<span> Start: 01 Jan 2024</span>
                 </p>
               </div>
             </li>
             <li>
               <div class="mb-2">
-                <p class="fw-bold fs-5" style="color: #9000ff">
-                  (T5E8) Insulin<span> Permanent</span>
-                </p>
+                <p class="fw-bold fs-5" style="color: #9000ff">Doliprane</p>
                 <p style="color: #00000082">
                   600 mg oral tablet<span> Start: 01 Jan 2024</span>
                 </p>
@@ -39,25 +42,60 @@
       </div>
       <div class="card">
         <div class="card-body py-4 px-5">
-          <h4 class="card-title">Current Medication</h4>
-          <ul class="list">
+          <h4 class="card-title">Allergies</h4>
+          <ul class="list ps-5">
             <li>
               <div class="mb-4">
                 <p class="fw-bold fs-5" style="color: #9000ff">
-                  (T5E8) Insulin<span> Permanent</span>
+                  Drug allergy<span
+                    style="color: #0000009d"
+                    class="fw-light fs-6"
+                  >
+                    Chronic</span
+                  >
                 </p>
-                <p style="color: #00000082">
-                  600 mg oral tablet<span> Start: 01 Jan 2024</span>
+                <p style="color: #e007079d" class="fw-bold">
+                  INSULIN<span style="color: #0000009d">
+                    Start: 01 Jan 2024</span
+                  >
                 </p>
               </div>
             </li>
             <li>
-              <div class="mb-2">
+              <div class="mb-4">
                 <p class="fw-bold fs-5" style="color: #9000ff">
-                  (T5E8) Insulin<span> Permanent</span>
+                  Latex allergy<span
+                    style="color: #0000009d"
+                    class="fw-light fs-6"
+                  >
+                    Chronic</span
+                  >
                 </p>
-                <p style="color: #00000082">
-                  600 mg oral tablet<span> Start: 01 Jan 2024</span>
+                <p style="color: #e007079d" class="fw-bold">
+                  <span style="color: #0000009d"> Start: 01 Jan 2024</span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body py-4 px-5">
+          <h4 class="card-title">Personal history</h4>
+          <ul class="list ps-5">
+            <li>
+              <div class="mb-4">
+                <p class="fw-bold fs-5" style="color: #9000ff">
+                  Cardiac surgery<span
+                    style="color: #0000009d"
+                    class="fw-light fs-6"
+                  >
+                  </span>
+                </p>
+                <p style="color: #e007079d" class="fw-bold">
+                  Critical<span style="color: #0000009d">
+                    Date: 01 Jan 2024</span
+                  >
                 </p>
               </div>
             </li>

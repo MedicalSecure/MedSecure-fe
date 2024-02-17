@@ -1,9 +1,12 @@
-<form class="container d-flex card p-3 pt-4 shadow-lg gap-1">
+<form class="container d-flex card pt-3 shadow-lg gap-1">
   <chips-select
     [ObjectName]="'Symptom'"
     [customLabel]="'Symptoms'"
     class="w-100"
     (selectedChipsChange)="selectedChipsChange($event)"
+    [enableCustomAdditions]="false"
+    [enableQuickSelectFromSuggestions]="true"
+    [AllData]="dummyData"
   ></chips-select>
 
   <div class="card-body">
@@ -18,19 +21,13 @@
   <date-picker
     customTitle="Choose start date"
     [showHint]="false"
-    class="mt-4"
+    class=""
   ></date-picker>
 
-  <mat-form-field class="example-full-width">
-    <mat-label>Postal Code</mat-label>
-    <input
-      matInput
-      #postalCode
-      maxlength="5"
-      placeholder="Ex. 94105"
-      value="94043"
-    />
-    <mat-hint align="end">{{ postalCode.value.length }} / 5</mat-hint>
-  </mat-form-field>
+  <chips-select
+    [ObjectName]="'Diagnosis'"
+    [customLabel]="'Diagnosis'"
+    class="w-100"
+    (selectedChipsChange)="selectedDiagnosisChange($event)"
+  ></chips-select>
 </form>
-<div class="py-5 container"></div>

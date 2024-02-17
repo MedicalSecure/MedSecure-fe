@@ -22,17 +22,14 @@ export class HumanBodyViewerComponent {
   }
 
   onBodyPartClick(source: string) {
-    console.log(source);
     if (this.selectedParts.has(source)) {
       this.selectedParts.delete(source);
-      console.log('delete attempt ' + this.selectedParts.has(source));
       return;
     }
     this.selectedParts.add(source);
   }
 
   isPartSelected(source: string): boolean {
-    console.log(' check ' + source);
     return this.selectedParts.has(source);
   }
 }
