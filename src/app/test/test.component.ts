@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogueComponent } from '../dialogue/dialogue.component';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 /**
  * @title Table with pagination
@@ -22,7 +23,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
   templateUrl: './test.component.html',
   styleUrl: './test.component.css',
   standalone: true,
-  imports: [MatTableModule, MatGridListModule,MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule , MatPaginatorModule , JsonPipe],
+  imports: [MatTableModule,MatProgressBarModule ,MatGridListModule,MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule , MatPaginatorModule , JsonPipe],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -35,7 +36,7 @@ export class TestComponent implements AfterViewInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource<bacpatient>(ELEMENT_DATA);
   todayDate: string = new Date().toLocaleDateString();
-  columnsToDisplay = ['add','us', 'room', 'bed', 'patient', 'bd', 'toServe', 'served', 'status', 'note',];
+  columnsToDisplay = ['add', 'room', 'bed', 'patient', 'bd', 'progress','status' ];
   constructor(public dialog: MatDialog ) { }
   columnsToDisplayMedicines = ['name', 'posology', 'root']
   expandedElement: bacpatient | null; 
@@ -53,31 +54,22 @@ export class TestComponent implements AfterViewInit {
     }
     this.selectedIndex = index; 
   }
-  openDialog(): void {
-    this.dialog.open(DialogueComponent, {
-      width: '500px',
-    });
-  }
+
  
   @ViewChild(MatPaginator) paginator: MatPaginator;
  
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.filterDataByPage();
   }
 
-  filterDataByPage() {
-    const filteredData = ELEMENT_DATA.filter(item => item.bd === this.todayDate);
-    this.dataSource.data = filteredData;
-    console.log(this.todayDate);
-    
-  }
+ 
 }
 interface Medicine {
   name: string;
   posology: string[];
   root: string;
   dose : number ; 
+  note: string ; 
 }
 interface bacpatient {
   id: number;
@@ -87,8 +79,8 @@ interface bacpatient {
   patient: string;
   bd: string;
   medicines: Medicine[];
-  toServe: string;
-  served: string;
+  toServe: number;
+  served: number;
   status: string;
   note: string;
   add: string;
@@ -103,551 +95,16 @@ const ELEMENT_DATA: bacpatient[] = [
     bd: '2/15/2024',
     medicines: [
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
+      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 ,note:'' },
+      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2, note:''},
+      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 ,note:''}
     ],
-    toServe: 'To serve 1',
-    served: 'Served 1',
+    toServe: 20,
+    served: 7,
     status: 'On Progress',
     note: 'Note 1',
     add: 'Add 1',
   },
-  {
-    id: 2,
-    us: 3,
-    room: 'Room2',
-    bed: 'Bed2',
-    patient: 'Patient2',
-    bd: '2/15/2024',
-    medicines: [
+  
 
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-       toServe: 'To serve 2',
-    served: 'Served 2',
-    status: 'On Progress',
-    note: 'Note 2',
-    add: 'Add 2',
-  },
-  {
-    id: 3,
-    us: 4,
-    room: 'Room3',
-    bed: 'Bed3',
-    patient: 'Patient3',
-    bd: '2/15/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-      toServe: 'To serve 3',
-    served: 'Served 3',
-    status: 'Completed',
-    note: 'Note 3',
-    add: 'Add 3',
-  },
-  {
-    id: 4,
-    us: 5,
-    room: 'Room4',
-    bed: 'Bed4',
-    patient: 'Patient4',
-    bd: '2/15/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],  toServe: 'To serve 4',
-    served: 'Served 4',
-    status: 'On Progress',
-    note: 'Note 4',
-    add: 'Add 4',
-  },
-  {
-    id: 5,
-    us: 6,
-    room: 'Room5',
-    bed: 'Bed5',
-    patient: 'Patient5',
-    bd: '2/15/2024',
- medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 5',
-    served: 'Served 5',
-    status: 'Pending',
-    note: 'Note 5',
-    add: 'Add 5',
-  },
-  {
-    id: 6,
-    us: 7,
-    room: 'Room6',
-    bed: 'Bed6',
-    patient: 'Patient6',
-    bd: '2/15/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 6',
-    served: 'Served 6',
-    status: 'On Progress',
-    note: 'Note 6',
-    add: 'Add 6',
-  },
-  {
-    id: 7,
-    us: 8,
-    room: 'Room7',
-    bed: 'Bed7',
-    patient: 'Patient7',
-    bd: '2/15/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],   toServe: 'To serve 7',
-    served: 'Served 7',
-    status: 'Pending',
-    note: 'Note 7',
-    add: 'Add 7',
-  },
-  {
-    id: 8,
-    us: 9,
-    room: 'Room8',
-    bed: 'Bed8',
-    patient: 'Patient8',
-    bd: '2/15/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 }
-    ],    toServe: 'To serve 8',
-    served: 'Served 8',
-    status: 'Completed',
-    note: 'Note 8',
-    add: 'Add 8',
-  },
-  {
-    id: 9,
-    us: 10,
-    room: 'Room9',
-    bed: 'Bed9',
-    patient: 'Patient9',
-    bd: '2/15/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 9',
-    served: 'Served 9',
-    status: 'Completed',
-    note: 'Note 9',
-    add: 'Add 9',
-  },
-  {
-    id: 10,
-    us: 11,
-    room: 'Room10',
-    bed: 'Bed10',
-    patient: 'Patient10',
-    bd: '2/15/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 10',
-    served: 'Served 10',
-    status: 'On Progress',
-    note: 'Note 10',
-    add: 'Add 10',
-  },
-  {
-    id: 11,
-    us: 12,
-    room: 'Room11',
-    bed: 'Bed11',
-    patient: 'Patient11',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
-    ],
-    toServe: 'To serve 11',
-    served: 'Served 11',
-    status: 'Completed',
-    note: 'Note 11',
-    add: 'Add 11',
-  },
-  {
-    id: 12,
-    us: 13,
-    room: 'Room12',
-    bed: 'Bed12',
-    patient: 'Patient12',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
-    ],
-    toServe: 'To serve 12',
-    served: 'Served 12',
-    status: 'On Progress',
-    note: 'Note 12',
-    add: 'Add 12',
-  },
-  {
-    id: 13,
-    us: 14,
-    room: 'Room13',
-    bed: 'Bed13',
-    patient: 'Patient13',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 13',
-    served: 'Served 13',
-    status: 'Completed',
-    note: 'Note 13',
-    add: 'Add 13',
-  },
-  {
-    id: 14,
-    us: 15,
-    room: 'Room14',
-    bed: 'Bed14',
-    patient: 'Patient14',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 14',
-    served: 'Served 14',
-    status: 'Completed',
-    note: 'Note 14',
-    add: 'Add 14',
-  },
-  {
-    id: 15,
-    us: 16,
-    room: 'Room15',
-    bed: 'Bed15',
-    patient: 'Patient15',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 }
-    ],
-    toServe: 'To serve 15',
-    served: 'Served 15',
-    status: 'Pending',
-    note: 'Note 15',
-    add: 'Add 15',
-  },
-  {
-    id: 16,
-    us: 17,
-    room: 'Room16',
-    bed: 'Bed16',
-    patient: 'Patient16',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
-    ],
-    toServe: 'To serve 16',
-    served: 'Served 16',
-    status: 'On Progress',
-    note: 'Note 16',
-    add: 'Add 16',
-  },
-  {
-    id: 17,
-    us: 18,
-    room: 'Room17',
-    bed: 'Bed17',
-    patient: 'Patient17',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Otic' , dose:2 }
-    ],
-    toServe: 'To serve 17',
-    served: 'Served 17',
-    status: 'Completed',
-    note: 'Note 17',
-    add: 'Add 17',
-  },
-  {
-    id: 18,
-    us: 19,
-    room: 'Room18',
-    bed: 'Bed18',
-    patient: 'Patient18',
-    bd: '2/16/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Ophthalmic' , dose:2 }
-    ],
-        toServe: 'To serve 18',
-    served: 'Served 18',
-    status: 'Completed',
-    note: 'Note 18',
-    add: 'Add 18',
-  },
-  {
-    id: 19,
-    us: 20,
-    room: 'Room19',
-    bed: 'Bed19',
-    patient: 'Patient19',
-    bd: '2/16/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 19',
-    served: 'Served 19',
-    status: 'Pending',
-    note: 'Note 19',
-    add: 'Add 19',
-  },
-  {
-    id: 20,
-    us: 21,
-    room: 'Room20',
-    bed: 'Bed20',
-    patient: 'Patient20',
-    bd: '2/16/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Inhalation' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],  
-      toServe: 'To serve 20',
-    served: 'Served 20',
-    status: 'On Progress',
-    note: 'Note 20',
-    add: 'Add 20',
-  },
-  {
-    id: 21,
-    us: 22,
-    room: 'Room21',
-    bed: 'Bed21',
-    patient: 'Patient21',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ], 
-      toServe: 'To serve 21',
-    served: 'Served 21',
-    status: 'On Progress',
-    note: 'Note 21',
-    add: 'Add 21',
-  },
-  {
-    id: 22,
-    us: 23,
-    room: 'Room22',
-    bed: 'Bed22',
-    patient: 'Patient22',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 22',
-    served: 'Served 22',
-    status: 'Completed',
-    note: 'Note 22',
-    add: 'Add 22',
-  },
-  {
-    id: 23,
-    us: 24,
-    room: 'Room23',
-    bed: 'Bed23',
-    patient: 'Patient23',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-        toServe: 'To serve 23',
-    served: 'Served 23',
-    status: 'Completed',
-    note: 'Note 23',
-    add: 'Add 23',
-  },
-  {
-    id: 24,
-    us: 25,
-    room: 'Room24',
-    bed: 'Bed24',
-    patient: 'Patient24',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ], 
-     toServe: 'To serve 24',
-    served: 'Served 24',
-    status: 'On Progress',
-    note: 'Note 24',
-    add: 'Add 24',
-  },
-  {
-    id: 25,
-    us: 26,
-    room: 'Room25',
-    bed: 'Bed25',
-    patient: 'Patient25',
-    bd: '2/17/2024',
-     medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 25',
-    served: 'Served 25',
-    status: 'Pending',
-    note: 'Note 25',
-    add: 'Add 25',
-  },
-  {
-    id: 26,
-    us: 27,
-    room: 'Room26',
-    bed: 'Bed26',
-    patient: 'Patient26',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 26',
-    served: 'Served 26',
-    status: 'Completed',
-    note: 'Note 26',
-    add: 'Add 26',
-  },
-  {
-    id: 27,
-    us: 28,
-    room: 'Room27',
-    bed: 'Bed27',
-    patient: 'Patient27',
-    bd: '2/17/2024', medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 27',
-    served: 'Served 27',
-    status: 'Completed',
-    note: 'Note 27',
-    add: 'Add 27',
-  },
-  {
-    id: 28,
-    us: 29,
-    room: 'Room28',
-    bed: 'Bed28',
-    patient: 'Patient28',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ], 
-     toServe: 'To serve 28',
-    served: 'Served 28',
-    status: 'On Progress',
-    note: 'Note 28',
-    add: 'Add 28',
-  },
-  {
-    id: 29,
-    us: 30,
-    room: 'Room29',
-    bed: 'Bed29',
-    patient: 'Patient29',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ],
-    toServe: 'To serve 29',
-    served: 'Served 29',
-    status: 'Pending',
-    note: 'Note 29',
-    add: 'Add 29',
-  },
-  {
-    id: 30,
-    us: 31,
-    room: 'Room30',
-    bed: 'Bed30',
-    patient: 'Patient30',
-    bd: '2/17/2024',
-    medicines: [
-
-      { name: 'medicine17', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 },
-      { name: 'medicine18', posology: ["12h", "13h", "14h"], root: 'Oral' ,dose:2 },
-      { name: 'medicine20', posology: ["12h", "13h", "14h"], root: 'Injection' , dose:2 }
-    ], 
-     toServe: 'To serve 30',
-    served: 'Served 30',
-    status: 'Pending',
-    note: 'Note 30',
-    add: 'Add 30',
-  },
 ];

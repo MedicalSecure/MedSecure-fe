@@ -1,129 +1,118 @@
 <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8 custom-table">
+  
   <ng-container matColumnDef="add">
     <th mat-header-cell *matHeaderCellDef class="header"> </th>
-    <td mat-cell *matCellDef="let element" class="element">
-      <button mat-icon-button class="more-button" (click)="toggleExpanded(element)">
-        <img [src]="expandedElement === element ? 'assets/minus.svg' : 'assets/plus.svg'" alt="more" class="image">
-    </button>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)">
+        <img [src]="expandedElement === element ? 'assets/minus.svg' : 'assets/plus.svg'" alt="more" class="image" style="height: 30px;width: 30px; left: 50%;top: 50%">
     </td>
-    <ng-container matColumnDef="us">
-      <th mat-header-cell *matHeaderCellDef class="header"> US </th>
-      <td mat-cell *matCellDef="let element" class="element"> {{element.us}} </td>
-    </ng-container>
+  </ng-container>
     <ng-container matColumnDef="room">
       <th mat-header-cell *matHeaderCellDef class="header"> Room </th>
-      <td mat-cell *matCellDef="let element" class="element"> {{element.room}} </td>
+      <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{element.room}} </td>
     </ng-container>
     <ng-container matColumnDef="bed">
       <th mat-header-cell *matHeaderCellDef class="header"> Bed </th>
-      <td mat-cell *matCellDef="let element" class="element"> {{element.bed}} </td>
+      <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{element.bed}} </td>
     </ng-container>
     <ng-container matColumnDef="patient">
       <th mat-header-cell *matHeaderCellDef class="header"> Patient </th>
-      <td mat-cell *matCellDef="let element" class="element"> {{element.patient}} </td>
+      <td mat-cell *matCellDef="let element" class="element"(click)="toggleExpanded(element)"> {{element.patient}} </td>
     </ng-container>
     <ng-container matColumnDef="bd">
-      <th mat-header-cell *matHeaderCellDef class="header"> Birth Date </th>
-      <td mat-cell *matCellDef="let element" class="element"> {{element.bd}} </td>
+      <th mat-header-cell *matHeaderCellDef class="header"> Age </th>
+      <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{element.bd}} </td>
     </ng-container>
-    <ng-container matColumnDef="toServe">
-      <th mat-header-cell *matHeaderCellDef class="header"> To Serve </th>
-      <td mat-cell *matCellDef="let element " class="element"> {{element.toServe}} </td>
-    </ng-container>
-    <ng-container matColumnDef="served">
-      <th mat-header-cell *matHeaderCellDef class="header"> Served </th>
-      <td mat-cell *matCellDef="let element" class="element"> {{element.served}} </td>
+     <ng-container matColumnDef="progress">
+      <th mat-header-cell *matHeaderCellDef class="header" > Progress </th>
+      <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)" > 
+        <mat-progress-bar mode="determinate" [value]="(element.served / element.toServe) * 100"></mat-progress-bar>
+      </td>
     </ng-container>
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef class="header"> Status </th>
-      <td mat-cell *matCellDef="let element" >
-        
-        @if ( element.status === "Pending") {
-          <mat-chip class="element mat-chip" style="background-color: rgba(255, 0, 0, 0.2); border: 1px solid red;">{{element.status}}</mat-chip>
+      <th mat-header-cell *matHeaderCellDef class="header" > Status </th>
+      <td mat-cell *matCellDef="let element" (click)="toggleExpanded(element)" >
+
+        @if ( element.status === "Pending...") {
+        <mat-chip class="element mat-chip"
+          style="background-color: rgba(255, 0, 0, 0.05); border: 1px solid red;">{{element.status}}</mat-chip>
         }
         @else if (element.status === "On Progress") {
-          <mat-chip class="element mat-chip" style="background-color: rgba(255, 247, 17, 0.2);border: 1px solid yellow;">{{element.status}}</mat-chip>
+        <mat-chip class="element mat-chip"
+          style="background-color: rgba(255, 247, 17, 0.05);border: 1px solid yellow;">{{element.status}}</mat-chip>
         }
         @else if (element.status === "Completed") {
-          <mat-chip class="element mat-chip" style="background-color: rgba(17, 255, 33, 0.2);border: 1px solid green;">{{element.status}}</mat-chip>
+        <mat-chip class="element mat-chip"
+          style="background-color: rgba(17, 255, 33, 0.05);border: 1px solid green;">{{element.status}}</mat-chip>
         }
       </td>
     </ng-container>
-    <ng-container matColumnDef="note">
-      <th mat-header-cell *matHeaderCellDef class="header"> Note </th>
-      <td mat-cell *matCellDef="let element" class="element">
-        <button mat-icon-button class="transparent-button" (click)="openDialog()">
-          <img src="assets/comment.svg" alt="Add Note" class="image">
-        </button> 
-      </td>
-    </ng-container>
-   
-    </ng-container>
-    <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-        <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <div class="example-element-diagram">
-            <table mat-table [dataSource]="element.medicines" class="mat-elevation-z8 extended-table ">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td class="element name-cell" mat-cell *matCellDef="let medicine" >{{ medicine.name }}</td>
-              </ng-container>
-              <ng-container matColumnDef="posology">
-                <table mat-table [dataSource]="element.medicines.posology  " class="mat-elevation-z8 extended-table-cell ">
-                  <ng-container matColumnDef="posology">
-                    <th mat-header-cell *matHeaderCellDef>Posology</th>
-                    <td class="element posology-cell" mat-cell *matCellDef="let element">
-                      <mat-grid-list cols="2" rowHeight="2:1">
-                        @for (item of element.posology; track $index) {
-                          <mat-grid-tile>
-                            {{ element.posology[$index] }}
-                          </mat-grid-tile>
-                          <mat-grid-tile>
-                            <mat-checkbox class="checkbox"></mat-checkbox>
-                          </mat-grid-tile>
-                        }
-                      </mat-grid-list>
-                    </td>
-                  </ng-container>
-                  
-                  <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
-                </table>
-              </ng-container>
-              <ng-container matColumnDef="root">
-                <th mat-header-cell *matHeaderCellDef>Route</th>
-                <td class="element root-cell" mat-cell *matCellDef="let medicine">
-                  <img [src]="medicine.root === 'Ophthalmic' ? 'assets/eye.svg' :
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+      <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <div class="example-element-diagram">
+          <table mat-table [dataSource]="element.medicines" class="mat-elevation-z8 extended-table ">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td class="element name-cell" mat-cell *matCellDef="let medicine">{{ medicine.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="posology">
+              <table mat-table [dataSource]="element.medicines.posology  "
+                class="mat-elevation-z8 extended-table-cell ">
+                <ng-container matColumnDef="posology">
+                  <th mat-header-cell *matHeaderCellDef>Posology</th>
+                  <td class="element posology-cell" mat-cell *matCellDef="let element">
+                    <mat-grid-list cols="2"  >
+                      @for (item of element.posology; track $index) {
+                      <mat-grid-tile>
+                        {{ element.posology[$index] }}
+                      </mat-grid-tile>
+                      <mat-grid-tile>
+                        <mat-checkbox class="checkbox" style="color: green;"></mat-checkbox>
+                      </mat-grid-tile>
+                      }
+                    </mat-grid-list>
+                  </td>
+                </ng-container>
+                <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
+              </table>
+            </ng-container>
+            <ng-container matColumnDef="root">
+              <th mat-header-cell *matHeaderCellDef>Route</th>
+              <td class="element root-cell" mat-cell *matCellDef="let medicine">
+                <img [src]="medicine.root === 'Ophthalmic' ? 'assets/eye.svg' :
                                medicine.root === 'Otic' ? 'assets/ear.svg' :
                                medicine.root === 'Inhalation' ? 'assets/lungs.svg' :
                                medicine.root === 'Injection' ? 'assets/vaccine.svg' :
-                               medicine.root === 'Oral' ? 'assets/drug.svg' : ''" 
-                       alt="{{medicine.root}}">
-                </td>
-              </ng-container>
-              
-              <ng-container matColumnDef="dose">
-                <th mat-header-cell *matHeaderCellDef>Dose</th>
-                <td class="element dose-cell" mat-cell *matCellDef="let medicine" >{{ medicine.dose }}</td>
-              </ng-container>
-              <tr mat-row *matRowDef="let row; columns: ['name', 'posology', 'root' , 'dose'] "></tr>
-            </table>
-          </div>
-          <div class="example-element-description">
-            {{ element.description }}
-          </div>
+                               medicine.root === 'Oral' ? 'assets/drug.svg' : ''" alt="{{medicine.root}}" style="height: 30px;width: 30px; left: 50%;top: 50%">
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="dose">
+              <th mat-header-cell *matHeaderCellDef>Dose</th>
+              <td class="element dose-cell" mat-cell *matCellDef="let medicine">{{ medicine.dose }}</td>
+            </ng-container>
+            <ng-container matColumnDef="note">
+              <th mat-header-cell *matHeaderCellDef>Note</th>
+              <td class="element note-cell" mat-cell *matCellDef="let medicine">
+                <button mat-icon-button class="more-button">
+                  <img src="assets/note.svg" alt="note" class="image" style="left: 50%;top: 50%">
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['name', 'posology', 'root' , 'dose','note'] "></tr>
+            <tr mat-row *matRowDef="let row; columns: ['name', 'posology', 'root' , 'dose','note'] "></tr>
+          </table>
         </div>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
-      [class.example-expanded-row]="expandedElement === element">
-    </tr>
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-  </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                   showFirstLastButtons
-                   aria-label="Select page of periodic elements">
-    </mat-paginator>
-    
-
-  
+        <div class="example-element-description">
+          {{ element.description }}
+        </div>
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+    [class.example-expanded-row]="expandedElement === element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+</mat-paginator>

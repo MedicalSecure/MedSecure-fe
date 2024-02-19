@@ -28,7 +28,15 @@ table {
   margin-left: 30px;
 
 }
-
+.extended-table th  {
+  color: black;
+  text-align: center;
+  
+}
+.extended-table .mat-column-expandedDetail{
+  height: 100px;
+  width: auto;
+}
 .image {
   margin-bottom: 6px;
 }
@@ -39,26 +47,29 @@ table {
 }
 
 .container {
-  background-color: black;
+  background-color: rgb(150, 83, 83);
 }
 
 .extended-table td:not(.checkbox-cell) {
-  align-items: center;
+   align-items: center;
   text-align: center;
   border: 1px solid #ccc;
 }
-
-.status-chip {
-  background-color: red;
-  color: white; 
+.extended-table td:not(.posology-cell) {
+ width: 25px;
+ height: 50px;
 }
+.checkbox {
+  color: greenyellow;
+}
+
+
+
 .header-button {
   background-color: transparent;
   border: none;
 }
-.mat-chip{
-  background-color: green;
-}
+
 .header-container {
   display: flex;
   align-items: center;
@@ -77,19 +88,17 @@ table {
 }
 
 table .custom-table {
+
   width: 100%;
 }
-.red-chip {
-  background-color: red;
-  color: white; /* Optionally, change text color to white for better visibility */
+table .custom-table td{
+  align-items: center;
+  text-align: center;
 }
-
 table .extended-table {
-
-    background-color: rgb(239, 239, 239);
-    height: auto; 
-  width: auto;
- 
+width:fit-content;
+height: 100px;
+    background-color: rgb(239, 239, 239); 
 }
 
 
@@ -143,14 +152,5 @@ tr.example-element-row:not(.example-expanded-row):active {
   background-color: transparent ; 
 }
 
-.custom-dialog-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
 
-.extended-table td {
-  width: auto;
-}
 
