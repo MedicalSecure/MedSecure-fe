@@ -6,7 +6,7 @@ import { DatePicker } from '../../shared/date-picker/date-picker.component';
 import {
   ShipsSelectComponent,
   chipType,
-} from '../../shared/chips-select/chips-select.component';
+} from '../../components/chips-select/chips-select.component';
 import {
   DynamicMultipleSelectsComponent,
   multiSelectInputType,
