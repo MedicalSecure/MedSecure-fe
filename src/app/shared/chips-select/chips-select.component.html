@@ -3,7 +3,7 @@
     <mat-label @if(customLabel)>{{ customLabel }}</mat-label>
     <mat-chip-grid #chipGrid aria-label="object selection ">
       @for (object of selectedObjects; track object) {
-      <mat-chip-row (removed)="remove(object.label)">
+      <mat-chip-row (removed)="remove(object)">
         {{ object.label }}
         <button matChipRemove [attr.aria-label]="'remove ' + object.label">
           <mat-icon>cancel</mat-icon>
@@ -24,13 +24,11 @@
       #auto="matAutocomplete"
       (optionSelected)="selected($event)"
     >
-      @for (object of filteredData | async; track object) { 
-        @if(selectedStrings.includes(object) == false){
-          <mat-option [value]="object">{{ object }}</mat-option
-      >} 
-    }
-    </mat-autocomplete>
+      @if(ValueInput.value.length >= minimumSearchLength){ @for (object of
+      updatedSuggestionList ; track object) {
 
-  
+      <mat-option [value]="object">{{ object.label }}</mat-option>
+      } }
+    </mat-autocomplete>
   </mat-form-field>
 </form>

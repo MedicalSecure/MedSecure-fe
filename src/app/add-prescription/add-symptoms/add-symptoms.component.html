@@ -5,16 +5,14 @@
     class="w-100"
     (selectedChipsChange)="selectedChipsChange($event)"
     [enableCustomAdditions]="false"
-    [enableQuickSelectFromSuggestions]="true"
-    [AllData]="dummyData"
+    [enableQuickSelectFromSuggestions]="false"
+    [fullData]="dummyData"
+    [minimumSearchLength]="2"
+    [minimumAddedLabelLength]="5"
+    [isStartWithSearch]="true"
   ></chips-select>
 
   <div class="card-body">
-    <app-dynamic-multiple-selects
-      [multiSelectInputs]="multiSelectInputs"
-      [class]="''"
-      (selectedInputsChange)="selectedInputsChange($event)"
-    ></app-dynamic-multiple-selects>
     <app-human-body-viewer></app-human-body-viewer>
   </div>
 

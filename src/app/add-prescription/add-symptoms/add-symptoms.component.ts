@@ -36,7 +36,12 @@ export class AddSymptomsComponent {
   @Input()
   multiDiagnosisSelectInputs: multiSelectInputType[] = [];
 
-  dummyData: string[] = ['test1', 'test2', 'k1', 'k2'];
+  dummyData: chipType[] = [
+    { index: 1, label: 'test', value: '5555' },
+    { index: 9, label: 'test2', value: '54545' },
+    { index: 3, label: 'eeee', value: 555 },
+    { index: 4, label: 'eeee22', value: ['55'] },
+  ];
   selectedInputsChange(selectedInputs: string[]) {
     // Access and use the selected indexes here
     console.log('Selected inputs:', selectedInputs);

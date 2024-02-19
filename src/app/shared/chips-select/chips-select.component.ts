@@ -1,4 +1,4 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, V } from '@angular/cdk/keycodes';
 import {
   Component,
   ElementRef,
@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 /**
  * @title Chips Autocomplete
  */
@@ -37,23 +37,26 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
     MatAutocompleteModule,
     ReactiveFormsModule,
     AsyncPipe,
+    MatTooltipModule,
   ],
 })
 export class ShipsSelectComponent {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
+  @Input() minimumSearchLength: number = 2;
+  @Input() minimumAddedLabelLength: number = 5;
   @Input() class: string = '';
   @Input() enableCustomAdditions: boolean = true;
   @Input() enableQuickSelectFromSuggestions: boolean = true;
-  @Input() AllData: string[] = ['sym1', 'sym2', 'sym22'];
+  @Input() isStartWithSearch: boolean = false;
+  @Input() fullData: chipType[] = [{ index: 1, label: 'test', value: '5555' }];
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  ObjectControl = new FormControl('');
-  filteredData: Observable<string[]>;
+  ObjectControl = new FormControl<string | chipType>('');
+  filteredDataByInput: Observable<chipType[]>;
   filteredDataSubscription!: Subscription;
-  updatedSuggestionList: string[] = [];
+  updatedSuggestionList: chipType[] = [];
   selectedObjects: chipType[] = [];
-  selectedStrings: string[] = [];
 
   @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
   announcer = inject(LiveAnnouncer);
@@ -61,18 +64,22 @@ export class ShipsSelectComponent {
   @Output() selectedChipsChange = new EventEmitter<chipType[]>();
 
   constructor() {
-    this.filteredData = this.ObjectControl.valueChanges.pipe(
+    this.filteredDataByInput = this.ObjectControl.valueChanges.pipe(
       startWith(null),
-      map((object: string | null) =>
-        object ? this._filter(object) : this.AllData.slice()
+      map((object: string | chipType | null) =>
+        object ? this._filter(object) : this.fullData.slice()
       )
     );
   }
 
   ngOnInit() {
-    this.filteredDataSubscription = this.filteredData.subscribe((data) => {
-      this.updatedSuggestionList = data;
-    });
+    this.filteredDataSubscription = this.filteredDataByInput.subscribe(
+      (data) => {
+        this.updatedSuggestionList = data.filter(
+          (item) => !this.selectedObjects.includes(item)
+        );
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -81,81 +88,103 @@ export class ShipsSelectComponent {
 
   onSelectionChange() {
     // Emit the updated array to the parent component
-    this.selectedChipsChange.emit(
-      this.selectedObjects
-      //TODO add index of the searched item from database
-      /*       this.selectedObjects.map((value) => {
-        console.log("here")
-        return {
-          label: value,
-          index: 'string',
-          value: value,
-        };
-      })
-    ); */
-    );
+    this.selectedChipsChange.emit(this.selectedObjects);
   }
 
   add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value.length < this.minimumSearchLength) {
+      /*  TODO : display input error message [ 'customLabel' length must be at least 'this.minimumSearchLength' ] */
+      console.error(
+        this.customLabel +
+          ' length must be at least ' +
+          this.minimumSearchLength +
+          ' to start searching '
+      );
+      return;
+    }
     if (
       this.enableQuickSelectFromSuggestions == true &&
       this.updatedSuggestionList.length > 0
     ) {
       // add the first suggestion
-      this._addString(this.updatedSuggestionList[0]);
+      this._addChipToSelection(this.updatedSuggestionList[0]);
       event.chipInput!.clear();
       return;
     }
-    if (this.enableCustomAdditions === true) {
-      const value = (event.value || '').trim();
-      // Add custom value
-      if (value && !this.selectedStrings.includes(value)) {
-        this._addString(value, -1);
-        event.chipInput!.clear();
+    if (this.enableCustomAdditions === false) return;
+    // Add custom value
+    if (value.length < this.minimumAddedLabelLength) {
+      /*  TODO : display input error message [ 'customLabel' length must be at least 'this.minimumAddedLabelLength' ] */
+      console.error(
+        this.customLabel +
+          ' length must be at least ' +
+          this.minimumAddedLabelLength
+      );
+      return;
+    }
+    // Proceed to Add custom value
+    let isAlreadyRegistered = false;
+    this.selectedObjects.forEach((selectedObject) => {
+      if (value.toLowerCase() == selectedObject.label.toLocaleLowerCase()) {
+        isAlreadyRegistered = true;
+        /*  TODO : display input error message [ 'customLabel' length must be at least 'this.minimumSearchLength' ] */
+        console.error(
+          this.customLabel +
+            ' chips: cant add "' +
+            value +
+            '" : Value already exists  '
+        );
+        return;
       }
+    });
+    const lengthCondition = value.length >= this.minimumAddedLabelLength;
+    if (!isAlreadyRegistered && lengthCondition) {
+      this._addChipToSelection({ index: -1, label: value, value: undefined });
+      event.chipInput!.clear();
     }
   }
 
-  remove(label: string): void {
+  remove(objectToRemove: chipType): void {
     this.selectedObjects = this.selectedObjects.filter(
-      (chipObject: chipType) => chipObject.label != label
+      (chipObject: chipType) => chipObject != objectToRemove
     );
     this.onSelectionChange();
-    const index = this.selectedStrings.indexOf(label);
-    if (index >= 0) {
-      this.selectedStrings.splice(index, 1);
-      this.announcer.announce(`Removed ${label}`);
-    }
+    this.announcer.announce(`Removed ${objectToRemove.label}`);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this._addString(event.option.viewValue);
-    //const index= parseInt(event.option.id.substring('mat-option-'.length));
-    //this._addString(event.option.viewValue,index)
+    this._addChipToSelection(event.option.value);
     this.ValueInput.nativeElement.value = '';
   }
 
-  private _addString(
-    newValue: string,
-    id: number | undefined = undefined
-  ): void {
-    //find the id from the data array
-    id = id != undefined ? id : this.AllData.indexOf(newValue);
-    this.selectedStrings.push(newValue);
-    this.selectedObjects.push({
-      label: newValue,
-      index: id == undefined ? -1 : id,
-      value: newValue,
-    });
+  private _addChipToSelection(newChip: chipType): void {
+    this.selectedObjects.push(newChip);
     this.ObjectControl.setValue(null);
     this.onSelectionChange();
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.AllData.filter((object) =>
-      object.toLowerCase().includes(filterValue)
-    );
+  private _filter(value: string | chipType): chipType[] {
+    const filterValue = typeof value == 'string' ? value : value.label;
+    const filterValueLower = filterValue.toLocaleLowerCase();
+    return this.fullData.filter((object) => {
+      const isResultFound = this.isStartWithSearch
+        ? object.label.toLowerCase().startsWith(filterValueLower)
+        : object.label.toLowerCase().includes(filterValueLower);
+      return isResultFound;
+      /* const isObjectAlreadySelected = this.selectedObjects.includes(object);
+      return isResultFound && !isObjectAlreadySelected; */
+    });
+  }
+
+  private _findByLabel(list: chipType[], searchString: string) {
+    for (let i = 0; i < list.length; i++) {
+      const object = list[i];
+      if (object.label.toLowerCase() == searchString.toLowerCase())
+        return object;
+    }
+    return undefined;
   }
 }
 
