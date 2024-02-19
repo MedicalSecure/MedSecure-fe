@@ -31,8 +31,10 @@ table {
   display: flex;
   align-items: center;
   font-weight: bold;
-  margin-left: 20px;
+  left: 50%;
   margin-bottom: 10px;
+  align-self: center;
+
 }
 
 

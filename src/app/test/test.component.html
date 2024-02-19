@@ -1,6 +1,7 @@
 <div class="header-container">
+ <div class="uc" style="margin-right: 50px;">Unit Care : Emergency Department </div> 
+
     {{ todayDate }}
-    <button class="filter-button" (click)="filterByRoom()">Filter by room</button>
     <button class="filter-button" (click)="filterByStatus()">Filter by Status</button>
     </div>
 <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8 custom-table">
@@ -68,7 +69,8 @@
                 <ng-container matColumnDef="posology">
                   <th mat-header-cell *matHeaderCellDef>Posology</th>
                   <td class="element posology-cell" mat-cell *matCellDef="let element">
-                    <app-schedule ></app-schedule>
+                    
+                    <app-schedule [hoursList]="element.posology" ></app-schedule>
                   </td>
                 </ng-container>
                 <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
@@ -77,11 +79,12 @@
             <ng-container matColumnDef="root">
               <th mat-header-cell *matHeaderCellDef>Route</th>
               <td class="element root-cell" mat-cell *matCellDef="let medicine">
-                <img [src]="medicine.root === 'Ophthalmic' ? 'assets/eye.svg' :
+                <img  [src]="medicine.root === 'Ophthalmic' ? 'assets/eye.svg' :
                                medicine.root === 'Otic' ? 'assets/ear.svg' :
                                medicine.root === 'Inhalation' ? 'assets/lungs.svg' :
                                medicine.root === 'Injection' ? 'assets/vaccine.svg' :
-                               medicine.root === 'Oral' ? 'assets/drug.svg' : ''" alt="{{medicine.root}}" style="height: 30px;width: 30px; left: 50%;top: 50%">
+                               medicine.root === 'Oral' ? 'assets/drug.svg' : ''" 
+                               alt="{{medicine.root}}" style="height: 30px;width: 30px; left: 50%;top: 50%">
               </td>
             </ng-container>
             <ng-container matColumnDef="dose">

@@ -1,22 +1,24 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Posology } from '../../test/test.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 
 @Component({
   selector: 'app-schedule',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule , MatGridListModule],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.css'
 })
 export class ScheduleComponent implements OnInit {
    todayDate: string = new Date().toLocaleDateString();
   @Input() selectedHours: any[] = [];
-  @Input() daysOfWeek: string[] = [this.todayDate];
   @Input() hoursListEmitter: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Input() keyDownEvent: EventEmitter<any> = new EventEmitter<any>();
   @Input() posologieValue: any;
   showChoices: boolean = true;
+  @Input() hoursList : Posology[][]
 
   ngOnInit(): void {
     this.setDesiredHours();
@@ -60,23 +62,8 @@ if (!isNaN(parsedQuantity)) {
     }
     return '';
   }
-  hoursList: any[] = [
-    [
-      { hour: '08', value: '8', quantity: '1' },
-      { hour: '12', value: '12', quantity: '1' },
-      { hour: '17', value: '17', quantity: '-' },
-      { hour: '18', value: '18', quantity: '1' },
-      { hour: '19', value: '19', quantity: '-' },
-      { hour: '20', value: '20', quantity: '1' },
-      { hour: '21', value: '21', quantity: '-' },
-      { hour: '22', value: '22', quantity: '1' },
-  
-      { hour: '00', value: '00', quantity: '1' },
-    ],
-  ];
-
   setDesiredHours(): void {
-    const desiredHours = [8, 12, 17, 22, 0];
+    const desiredHours = [8, 12, 17, 22, 0 ,1];
     for (const hourArray of this.hoursList) {
       const filteredHours = hourArray.filter((hourObj : any) =>
         desiredHours.includes(parseInt(hourObj.value, 10))
