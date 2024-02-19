@@ -1,0 +1,39 @@
+[
+    {
+      "id": 1,
+      "nom": "Dupont",
+      "prenom": "Jean",
+      "age": 35,
+      "genre": "Homme",
+      "adresse": "123 rue de la Paix",
+      "ville": "Paris",
+      "pays": "France",
+      "numéro de téléphone": "0123456789",
+      "email": "jean.dupont@example.com"
+    },
+    {
+      "id": 2,
+      "nom": "Martin",
+      "prenom": "Marie",
+      "age": 28,
+      "genre": "Femme",
+      "adresse": "456 avenue des Roses",
+      "ville": "Lyon",
+      "pays": "France",
+      "numéro de téléphone": "0987654321",
+      "email": "marie.martin@example.com"
+    },
+    {
+      "id": 3,
+      "nom": "Garcia",
+      "prenom": "Carlos",
+      "age": 45,
+      "genre": "Homme",
+      "adresse": "789 calle de la Luna",
+      "ville": "Madrid",
+      "pays": "Espagne",
+      "numéro de téléphone": "1122334455",
+      "email": "carlos.garcia@example.com"
+    }
+  ]
+  

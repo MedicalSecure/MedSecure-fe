@@ -1,0 +1,16 @@
+[
+    {
+      "startDate": "2024-02-20T08:00:00",
+      "endDate": "2024-02-20T10:00:00",
+      "patientName": "John Doe",
+      "repetition": "every_day",
+      "treatment": "Some treatment information"
+    },
+    {
+      "startDate": "2024-02-21T09:30:00",
+      "endDate": "2024-02-21T11:30:00",
+      "patientName": "Jane Smith",
+      "repetition": "none",
+      "treatment": "Some other treatment information"}
+    ]
+  

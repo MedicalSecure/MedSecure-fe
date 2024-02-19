@@ -1,0 +1,88 @@
+h3 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333; /* Couleur du texte */
+  background-color: #f0f0f0; /* Couleur de fond */
+  padding: 10px; /* Espacement intérieur */
+  text-align: center; 
+  }
+pre {
+    background-color: #f5f5f5;
+    padding: 15px;
+  }
+
+ng-template{
+  font-size: 8px; 
+}
+.small-modal-body {
+ width: 200px; /* ou toute autre valeur de largeur souhaitée */
+ height:200px; /* ou toute autre valeur de hauteur souhaitée */
+  overflow-y: auto; /* Ajoute une barre de défilement verticale si nécessaire */
+}
+
+.btn {
+  border-radius: 5px; /* Bordures arrondies pour tous les boutons */
+}
+.btn-ok{
+  background-color:rgb(195, 189, 189)
+}
+.btn-ok:hover {
+  background-color: lightgreen; /* Couleur lorsque le curseur survole le bouton OK */
+}
+.btn-cancel{
+  background-color:rgb(195, 189, 189)
+}
+.btn-cancel:hover {
+  background-color: lightcoral; /* Couleur lorsque le curseur survole le bouton Cancel */
+}
+.close{
+  background-color: rgb(213, 56, 56);
+}
+
+.example-chip-list {
+  width: 100%;
+}
+
+.modal-dialog {
+  max-width: 500px; 
+}
+
+.modal-content {
+  padding: 20px; 
+}
+
+.modal-body {
+  max-height: calc(100vh - 200px); 
+  overflow-y: auto; 
+}
+
+
+.example-chip-list {
+  width: 100%;
+  
+}
+
+.mat-form-field {
+  margin-right: 12px;
+}
+
+.modal-dialog {
+  max-width: unset !important; /* Définit la largeur maximale de la fenêtre modale */
+  margin: 30px auto; /* Centre la fenêtre modale */
+  overflow: hidden; /* Cache tout débordement */
+}
+.modal-dialog.modal-sm {
+  max-width: 300px; /* Définit la largeur maximale de la fenêtre modale */
+}
+
+.modal-body {
+  max-height: none; /* Permet à la fenêtre modale de s'adapter dynamiquement à la taille du contenu */
+  overflow-y: auto; /* Active uniquement la barre de défilement verticale si nécessaire */
+}
+
+.confirmation-alert {
+  background-color: #f8d7da; /* Couleur de fond rouge */
+  border-color: #f5c6cb; /* Couleur de bordure rouge */
+  color: #721c24; /* Couleur du texte rouge foncé */
+}

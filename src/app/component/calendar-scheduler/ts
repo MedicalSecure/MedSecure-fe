@@ -1,0 +1,562 @@
+import {Component,ChangeDetectionStrategy,ViewChild,TemplateRef,Input, Output, EventEmitter, input, OnInit } from '@angular/core';
+import {startOfDay,endOfDay,subDays,addDays,endOfMonth,isSameDay,isSameMonth,addHours, isToday, isAfter,} from 'date-fns';
+import { Subject } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {CalendarEvent,CalendarEventAction,CalendarEventTimesChangedEvent,CalendarView,} from 'angular-calendar';
+import { EventColor } from 'calendar-utils';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { CalendarDateFormatter } from 'angular-calendar';
+import { HttpClientModule } from '@angular/common/http';
+import { CalendarA11y } from 'angular-calendar';
+import { CalendarUtils } from 'angular-calendar';
+import { FlatpickrDefaults } from 'angularx-flatpickr';
+import { CalendarEventTitleFormatter } from 'angular-calendar';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { ElementRef, inject} from '@angular/core';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {MatIconModule} from '@angular/material/icon';
+import {AsyncPipe} from '@angular/common';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { HttpClient } from '@angular/common/http';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {provideNativeDateAdapter} from '@angular/material/core';
+
+import { VisiteService } from '../../service/visite.service';
+import { Visite } from '../../model/visite.model';
+
+export enum ActionType { get ,add,edit,delete}
+
+const colors: Record<string, EventColor> = {
+  red: {
+    primary: '#ad2121',
+    secondary: '#FAE3E3',
+  },
+  blue: {
+    primary: '#1e90ff',
+    secondary: '#D1E8FF',
+  },
+  yellow: {
+    primary: '#e3bc08',
+    secondary: '#FDF1BA',
+  },
+};
+
+@Component({
+  selector: 'app-calendar-view',
+  standalone: true,
+  imports: [
+    MatFormFieldModule, MatInputModule,
+    CommonModule,
+    FormsModule,
+    NgbModalModule,
+    FlatpickrModule,
+    HttpClientModule,
+    CalendarModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    MatFormFieldModule, MatInputModule, MatSelectModule,HttpClientModule,FormsModule 
+  ],
+  providers: [
+    { provide: DateAdapter, useFactory: adapterFactory },
+    { provide: CalendarDateFormatter, useClass: CalendarDateFormatter },
+    CalendarUtils,
+    FlatpickrDefaults,
+    CalendarA11y,
+    CalendarEventTitleFormatter,provideNativeDateAdapter(),VisiteService
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: 'calendar-scheduler.component.html',
+  styleUrl: './calendar-scheduler.component.css',
+})
+
+
+export class CalendarShedulerComponent implements OnInit {
+
+  @Input() events: CalendarEvent[]= [];;
+  @ViewChild('modalContent', { static: true }) modalContent!: TemplateRef<any>;
+  @Output() eventClicked = new EventEmitter<CalendarEvent>();
+
+
+
+  
+
+  jsonData: any;
+
+  ngOnInit(): void {
+    console.log("Events in CalendarShedulerComponent: ", this.events);
+    this.generateActions();
+    this.addAddEventToDaysWithEvents();
+ 
+   
+  } 
+
+ 
+
+
+  addAddEventToDaysWithEvents() {
+    const daysWithEvents: Date[] = [];
+    const today = startOfDay(new Date()); // Get start of today
+
+    // Find unique days with events starting from today
+    this.events.forEach(event => {
+      const eventDate = startOfDay(event.start);
+      if (isAfter(eventDate, today) || isSameDay(eventDate, today)) { // Check if event is today or in the future
+        if (!daysWithEvents.some(day => isSameDay(day, eventDate))) {
+          daysWithEvents.push(eventDate);
+        }
+      }
+    });
+
+    // Add events for days starting from today
+    daysWithEvents.forEach(day => {
+      const eventExists = this.events.some(existingEvent =>
+        isSameDay(startOfDay(existingEvent.start), day) && existingEvent.title === 'Ajouter événements'
+      );
+      if (!eventExists) {
+        this.events.push({
+          start: day,
+          title: 'Ajouter événements chadha',
+          color: { ...colors['yellow'] },
+          actionType: [ActionType.add],
+          allDay: true,
+        
+          
+        });
+      }
+    });
+}
+
+
+  generateActions(): void {
+    this.events.forEach(event => {
+      event.actions = [];
+
+      if (event.actionType.includes(ActionType.get)) {
+        event.actions.push({
+          label: '<i class="fa-solid fa-eye"></i>',
+          a11yLabel: 'get',
+          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+              this.handleEvent('readed', event);
+              this.modalTitle = 'Read Data';
+              this.modalbutton = 'OK';
+          }
+      });
+      }
+   
+      if (event.actionType.includes(ActionType.add)) {
+        event.actions.push({
+          label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+          a11yLabel: 'add',
+          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+              this.handleEvent('Created', event);
+              this.modalTitle = 'Create Data';
+              this.modalbutton = 'Create';
+          }
+      });
+      }
+  
+      if (event.actionType.includes(ActionType.edit)) {
+        event.actions.push({
+          label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+          a11yLabel: 'Edit',
+          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+            this.handleEvent('Edited', event);
+            this.modalTitle = 'Edited Data';
+            this.modalbutton = 'Edite';
+          }
+        });
+      }
+  
+      if (event.actionType.includes(ActionType.delete)) {
+        event.actions.push({
+          label: '<i class="fas fa-fw fa-trash-alt"></i>',
+          a11yLabel: 'Delete',
+          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+            this.handleEvent('Deleted', event);
+            this.modalTitle = ' Deleted Data';
+            this.modalbutton = 'delete';
+          }
+        });
+      }
+    });
+  
+    console.log("Actions generated successfully");
+  }
+  
+//   addAnotherEvent(): void {
+//     const today = startOfDay(new Date());
+//     const newEvent: CalendarEvent = {
+//       start: today,
+//       title: 'Ajouter événements non',
+//       color: { ...colors['yellow'] },
+//       actionType: [ActionType.add],
+//       allDay: true,
+//     };
+//     this.events.push(newEvent);
+//   }
+  
+//   addEventsForExistingDates(): void {
+//     const existingDates = this.getExistingDates();
+
+//     existingDates.forEach(date => {
+//       this.addEventForDate(date);
+//     });
+//   }
+
+
+
+  
+// addEventForDate(date: Date): void {
+//     const newEvent: CalendarEvent = {
+//       start: startOfDay(date),
+//       title: 'Ajouter événements xxxx',
+//       color: { ...colors['yellow'] },
+//       actionType: [ActionType.add],
+//       allDay: true,
+     
+//     };
+//     this.events.push(newEvent);
+//   }
+  getExistingDates(): Date[] {
+    const existingDates: Date[] = [];
+
+    this.events.forEach(event => {
+      if (event.start && !existingDates.some(day => isSameDay(day, event.start))) {
+        existingDates.push(event.start);
+      }
+    });
+
+    return existingDates;
+  }
+
+
+
+  getDaysWithEvents(): Date[] {
+    const daysWithEvents: Date[] = [];
+  
+    this.events.forEach(event => {
+      if (event.start && !daysWithEvents.some(day => isSameDay(day, event.start))) {
+        daysWithEvents.push(event.start);
+      }
+    });
+  
+    return daysWithEvents;
+  }
+  
+  
+
+
+
+  view: CalendarView = CalendarView.Month;
+
+  CalendarView = CalendarView;
+
+  viewDate: Date = new Date();
+
+  modalData: {
+    action: string;
+    event: CalendarEvent<any>;
+  } = { action: '', event: {} as CalendarEvent<any> };
+
+  
+
+  refresh = new Subject<void>();
+
+  handleEventClick(event: CalendarEvent) {
+    this.eventClicked.emit(event);
+  }
+
+  activeDayIsOpen: boolean = true;
+
+  
+
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    const today = startOfDay(new Date());
+    if (date < today){
+        if(events.length === 0)
+     {
+      console.log('impossible de trouve événement pour cette date');
+    } 
+    else{
+      this.viewDate = date;
+     
+    }
+  
+    }
+   else {
+    if(events.length === 0){
+      console.log('Ajouter événement pour cette date');
+      this.modal.open(this.modalContent);
+        } 
+        else {
+          if (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) {
+            this.activeDayIsOpen = false;
+          } else {
+            this.activeDayIsOpen = true;
+           }
+           this.viewDate = date;
+        }   
+     
+    }
+  }
+
+
+
+    
+  
+
+  eventTimesChanged({
+    event,
+    newStart,
+    newEnd,
+  }: CalendarEventTimesChangedEvent): void {
+    this.events = this.events.map((iEvent) => {
+      if (iEvent === event) {
+        return {
+          ...event,
+          start: newStart,
+          end: newEnd,
+        };
+      }
+      return iEvent;
+    });
+    this.handleEvent('Dropped or resized', event);
+  }
+
+  modalTitle: string = '';
+  modalbutton: string = '';
+
+  // handleEvent(action: string, event: CalendarEvent): void {
+    
+  //   this.modalData = { event, action };
+  //   this.modalData = { event, action };
+  //   switch (action) {
+  //       case 'readed':
+  //           this.modalTitle = 'Read Data';
+  //           this.modalbutton = 'OK';
+  //           // Logique pour l'action de lecture (get) ici
+  //           break;
+  //       case 'Created':
+  //           this.modalTitle = 'Create Data';
+  //           this.modalbutton = 'Create';
+  //           // Logique pour l'action de création (add) ici
+  //           break;
+  //       case 'Edited':
+  //           this.modalTitle = 'Edited Data';
+  //           this.modalbutton = 'Edit';
+  //           // Logique pour l'action de modification (edit) ici
+  //           break;
+  //       case 'Deleted':
+  //           this.modalTitle = 'Deleted Data';
+  //           this.modalbutton = 'Delete';
+  //           // Logique pour l'action de suppression (delete) ici
+  //           break;
+  //       default:
+  //           // Par défaut, considérer la création de données
+  //           this.modalTitle = 'Create Data';
+  //           this.modalbutton = 'Create';
+  //           break;
+            
+  //   }
+  //   this.modal.open(this.modalContent);
+  // }
+  handleEvent(action: ActionType, event: CalendarEvent): void {
+    switch (action) {
+      case ActionType.get:
+        this.modalTitle = 'Read Data';
+        this.modalbutton = 'OK';
+        break;
+      case ActionType.add:
+        this.modalTitle = 'Create Data';
+        this.modalbutton = 'Create';
+        break;
+      case ActionType.edit:
+        this.modalTitle = 'Edit Data';
+        this.modalbutton = 'Edit';
+        break;
+      case ActionType.delete:
+        this.modalTitle = 'Delete Data';
+        this.modalbutton = 'Delete';
+        break;
+    }
+  
+    // Si l'action est 'get', nous affichons le modal de lecture pour cet événement
+    if (action === ActionType.get) {
+      this.actionType = action;
+      this.modalData = { event, action };
+      this.modal.open(this.modalContent);
+    } else {
+      // Si l'action n'est pas 'get', nous mettons à jour l'action en fonction de l'événement sélectionné
+      const eventType = event.actions.find(action => action.a11yLabel === 'Edit');
+      if (eventType) {
+        this.actionType = ActionType.edit;
+      } else {
+        this.actionType = ActionType.delete;
+      }
+      this.modalData = { event, action: this.actionType };
+      this.modal.open(this.modalContent);
+    }
+  }
+  
+  
+  
+  
+
+  // updateModalTitle(): void {
+  //   switch (this.actionType) {
+  //     case ActionType.get:
+  //       this.modalTitle = 'Read Data';
+  //       break;
+  //     case ActionType.add:
+  //       this.modalTitle = 'Create Data';
+  //       break;
+  //     case ActionType.edit:
+  //       this.modalTitle = 'Edit Data';
+  //       break;
+  //     case ActionType.delete:
+  //       this.modalTitle = 'Delete Data';
+  //       break;
+  //     default:
+  //       this.modalTitle = 'Read Data';
+  //       break;
+  //   }
+  // }
+
+  // updateModalbutton(): void {
+  //   switch (this.actionType) {
+  //     case ActionType.get:
+  //       this.modalbutton = 'OK';
+  //       break;
+  //     case ActionType.add:
+  //       this.modalbutton = 'Create';
+  //       break;
+  //     case ActionType.edit:
+  //       this.modalbutton = 'Edit ';
+  //       break;
+  //     case ActionType.delete:
+  //       this.modalbutton = 'Delete';
+  //       break;
+      
+  //   }
+  // }
+
+  confirmDelete(): void {
+    // Logique pour la confirmation de suppression
+  }
+
+
+  addEvent(): void {
+    this.events = [
+      ...this.events,
+      {
+        title: 'New event',
+        start: startOfDay(new Date()),
+        end: endOfDay(new Date()),
+        color: colors['red'],
+        actionType : [ActionType.add],
+        draggable: true,
+        resizable: {
+          beforeStart: true,
+          afterEnd: true,
+        },
+      },
+    ];
+  }
+
+  deleteEvent(eventToDelete: CalendarEvent) {
+    this.events = this.events.filter((event) => event.id !== eventToDelete.id);
+  }
+  
+
+  setView(view: CalendarView) {
+    this.view = view;
+  }
+
+  closeOpenMonthViewDay() {
+    this.activeDayIsOpen = false;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  announcer = inject(LiveAnnouncer);
+
+
+
+
+  constructor(private modal: NgbModal,private visiteService: VisiteService) {
+    this.modalData = { action: '', event: {} as CalendarEvent<any> };
+
+   
+  }
+
+//creer
+newVisit: any = {}; // Propriété pour stocker les données du nouveau visiteur
+
+  // Autres méthodes et propriétés de votre composant...
+
+  submitAddForm() {
+    // Logique pour soumettre le formulaire d'ajout de visite
+    // Vous pouvez utiliser les données de this.newVisit pour envoyer les informations au serveur ou pour effectuer d'autres actions nécessaires.
+    console.log('New Visit:', this.newVisit);
+    
+    // Par exemple, vous pouvez appeler un service pour ajouter la visite à votre base de données
+    this.visiteService.addVisite(this.newVisit).subscribe(response => {
+      // Réponse de l'ajout de la visite, vous pouvez gérer cela en fonction de vos besoins
+      console.log('Visit added successfully:', response);
+      // Réinitialiser les données du nouveau visiteur après l'ajout
+      this.newVisit = {};
+      // Fermer le modal ou effectuer d'autres actions nécessaires
+      this.closeModal();
+    }, error => {
+      // Gérer les erreurs en cas d'échec de l'ajout de la visite
+      console.error('Error adding visit:', error);
+      // Vous pouvez afficher un message d'erreur ou prendre d'autres mesures appropriées
+    });
+  }
+
+  closeModal() {
+    // Logique pour fermer le modal
+    this.modal.dismissAll();
+  }
+
+
+
+
+
+
+
+ 
+
+}
+
+  
+
+

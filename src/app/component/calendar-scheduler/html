@@ -1,0 +1,271 @@
+<div class="row text-center">
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div
+        class="btn btn-primary"
+        mwlCalendarPreviousView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()"
+      >
+        Previous
+      </div>
+      <div
+        class="btn btn-outline-secondary"
+        mwlCalendarToday
+        [(viewDate)]="viewDate"
+      >
+        Today
+      </div>
+      <div
+        class="btn btn-primary"
+        mwlCalendarNextView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()"
+      >
+        Next
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div
+        class="btn btn-primary"
+        (click)="setView(CalendarView.Month)"
+        [class.active]="view === CalendarView.Month"
+      >
+        Month
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="setView(CalendarView.Week)"
+        [class.active]="view === CalendarView.Week"
+      >
+        Week
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="setView(CalendarView.Day)"
+        [class.active]="view === CalendarView.Day"
+      >
+        Day
+      </div>
+    </div>
+  </div>
+</div>
+<br />
+<div [ngSwitch]="view" >
+  <mwl-calendar-month-view
+    *ngSwitchCase="CalendarView.Month"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view
+    *ngSwitchCase="CalendarView.Week"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-week-view>
+  <mwl-calendar-day-view 
+    *ngSwitchCase="CalendarView.Day"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-day-view>
+</div>
+<!-- <button class="btn btn-primary float-end" (click)="addEvent()">
+  Add new
+</button> -->
+<br /><br /><br />
+
+<!-- <h3>Edit events</h3>
+<div class="clearfix"></div>
+<table class="table table-bordered" >
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Primary color</th>
+      <th>Secondary + text color</th>
+      <th>Starts at</th>
+      <th>Ends at</th>
+      <th>Remove</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+
+
+
+    <tr *ngFor="let event of events">
+      <td>
+        <input
+          type="text"
+          class="form-control"
+
+          [(ngModel)]="event.title"
+          (keyup)="refresh.next()"
+        />
+      </td>
+      <td>
+        <input
+          type="color"
+          *ngIf="event.color"
+          [(ngModel)]="event.color.primary"
+          (change)="refresh.next()"
+        />
+      </td>
+      <td>
+        <input
+          type="color"
+          *ngIf="event.color"
+          [(ngModel)]="event.color.secondary"
+          (change)="refresh.next()"
+        />
+        <input
+          type="color"
+          *ngIf="event.color"
+          [(ngModel)]="event.color.secondary"
+          (change)="refresh.next()"
+        />
+      </td>
+      <td>
+        <input
+          class="form-control"
+          type="text"
+          mwlFlatpickr
+          [(ngModel)]="event.start"
+          (ngModelChange)="refresh.next()"
+          [altInput]="true"
+          [convertModelValue]="true"
+          [enableTime]="true"
+          dateFormat="Y-m-dTH:i"
+          altFormat="F j, Y H:i"
+          placeholder="Not set"
+        />
+      </td>
+      <td>
+        <input
+          class="form-control"
+          type="text"
+          mwlFlatpickr
+          [(ngModel)]="event.end"
+          (ngModelChange)="refresh.next()"
+          [altInput]="true"
+          [convertModelValue]="true"
+          [enableTime]="true"
+          dateFormat="Y-m-dTH:i"
+          altFormat="F j, Y H:i"
+          placeholder="Not set"
+        />
+      </td>
+      <td>
+
+
+        <button class="btn btn-danger" (click)="deleteEvent(event)">
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table> -->
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-calendar-plus"></i> Create an Event</h4>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="eventTitle" class="mr-2"><i class="fas fa-heading"></i> Event Title</label>
+      <input type="text" class="form-control" id="eventTitle">
+    </div>
+    <br />
+    <div class="form-group">
+      <label for="startDate" class="mr-2"><i class="far fa-calendar-alt"></i> Start Date</label>
+      <input type="datetime-local" class="form-control" id="startDate">
+    </div>
+    <br />
+    <div class="form-group">
+      <label for="endDate" class="mr-2"><i class="far fa-calendar-alt"></i> End Date</label>
+      <input type="datetime-local" class="form-control" id="endDate">
+    </div>
+    <br />
+    <div class="form-group">
+      <label for="position" class="mr-2"><i class="fas fa-map-marker-alt"></i> Position</label>
+      <input type="text" class="form-control" id="position">
+    </div>
+    <br />
+    <div class="form-group">
+      <form>
+        <mat-form-field class="example-chip-list">
+          <mat-label>Participants</mat-label>
+          <mat-chip-grid #chipGrid aria-label="patient selection">
+            @for (patient of patients; track patient) {
+              <mat-chip-row (removed)="remove(patient)">
+                {{patient}}
+                <button matChipRemove [attr.aria-label]="'remove ' + patient">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input placeholder="New patient..." #patientInput [formControl]="patientCtrl"
+            [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"/>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            @for (patient of filteredpatients | async; track patient) {
+              <mat-option [value]="patient">{{patient}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+  
+   </div>
+    <br />
+    <div class="form-group">
+      <label for="repetition"><i class="fas fa-redo-alt"></i> Repeat</label>
+      <div class="input-group">
+        <select class="form-control" id="repetition">
+          <option value="none" data-icon="fas fa-times">Does not repeat</option>
+          <option value="every_day" data-icon="fas fa-calendar-day">Every day</option>
+          <option value="every_weekday" data-icon="fas fa-calendar-alt">Every weekday</option>
+          <option value="every_week" data-icon="fas fa-calendar-week">Every week</option>
+        </select>
+     
+      </div>
+    </div>
+    
+    
+    
+    <br />
+    <div class="form-group">
+      <label for="description" class="mr-2"><i class="fas fa-file-alt"></i> Description</label>
+      <textarea class="form-control" id="description" rows="3"></textarea>
+    </div>
+    <br />
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-cancel" (click)="close()"><i class="fas fa-times"></i> Cancel</button>
+    <button type="button" class="btn btn-ok"><i class="fas fa-check"></i> Create</button>
+  </div>
+</ng-template>
