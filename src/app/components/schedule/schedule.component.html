@@ -10,20 +10,20 @@
                                 <div class="card mr-1 w-3 h-3 mb-4 cursor-pointer bg-primary color-white"
                                     style="width: 3rem; height: 3rem;"
                                     *ngFor="let currentitem of currenthours; let itemIndex = index">
-                                  <div class="card-header p-0 text-center">
-                                    <p class="font-weight-normal text-white mb-0">{{ currentitem.hour }} H</p>
-                                  </div>
-                                  <div class="card-body p-0 text-center">
-                                    <input
-                                        class="form-control text-center" style="padding: 0%;" [value]="formatNumber(currentitem.quantity)"
-                                        type="text" />
-                                  </div>
-                                  <div class="card-body p-0 text-center " style="margin-top: -10px; transform: scale(1.2);" >
-                                    <input
-                                    type="checkbox" class="form-check-input" [checked]="currentitem.isSelected" (change)="toggleCheckbox(currentitem)" />
-                                  </div>
+                                    <div class="card-header p-0 text-center">
+                                        <p class="font-weight-normal text-white mb-0">{{ currentitem.hour }} H</p>
+                                    </div>
+                                    <div class="card-body p-0 text-center">
+                                        <input class="form-control text-center" style="padding: 0%;"
+                                            [value]="formatNumber(currentitem.quantity)" type="text" />
+                                    </div>
+                                    <div class="card-body p-0 text-center "
+                                        style="margin-top: -10px; transform: scale(1.2);">
+                                        <input type="checkbox" class="form-check-input"
+                                            [checked]="currentitem.isSelected" (change)="toggleCheckbox(currentitem)" />
+                                    </div>
                                 </div>
-                              </ng-container>
+                            </ng-container>
                         </div>
                     </td>
                 </ng-container>
@@ -51,18 +51,20 @@
                                             *ngFor="let currentitem of currenthours; let itemIndex = index"
                                             (click)="handleClickEvent(currentitem, hourIndex, itemIndex)">
                                             <div class="card-header p-0 text-center">
-                                                <p class="mb-0"
-                                                    class="font-weight-normal text-white">{{ currentitem.hour }} H</p>
+                                                <p class="mb-0" class="font-weight-normal text-white">{{
+                                                    currentitem.hour }} H</p>
                                             </div>
                                             <div class="card-body p-0 text-center">
                                                 <input (keydown)="onKeyDown($event, hourIndex, itemIndex)"
-                                                    class="form-control text-center" style="padding: 0%;" [value]="formatNumber(currentitem.quantity)"
-                                                    type="text" />
-                                                   </div>
-                                            <div class="card-body p-0 text-center " style="margin-top: -10px; transform: scale(1.2);">
-                                                <input
-                                                type="checkbox" class="form-check-input" [checked]="currentitem.isSelected" (change)="toggleCheckbox(currentitem)" />
-                                              </div>
+                                                    class="form-control text-center" style="padding: 0%;"
+                                                    [value]="formatNumber(currentitem.quantity)" type="text" />
+                                            </div>
+                                            <div class="card-body p-0 text-center "
+                                                style="margin-top: -10px; transform: scale(1.2);">
+                                                <input type="checkbox" class="form-check-input"
+                                                    [checked]="currentitem.isSelected"
+                                                    (change)="toggleCheckbox(currentitem)" />
+                                            </div>
                                         </div>
                                     </ng-container>
                                 </div>
@@ -74,8 +76,7 @@
         </div>
     </div>
     <div class="ml-auto ml-auto-with-margin">
-        <button type="button" class="btn btn-outline-primary m-2" data-bs-toggle="button"
-            (click)="toggleChoices()">
+        <button type="button" class="btn btn-outline-primary m-2" data-bs-toggle="button" (click)="toggleChoices()">
             <img *ngIf="showChoices" width="25px"
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABeklEQVR4nO2WO0vDUBiGH2213oYq4iioxUkHf0BRf4BODrq4qiA4ObhFOojiLji6OYiDmz9AcNKh+AtEBwfxAoIVKwfeQAwxSZsTKiUPhORLzuU953yXQEZGMupNXO0pIA7tIaAbWAQ20xbQqXse2AcugA6gAHwCX0BfwKCODQGXwBswJPteHUuyjyVqENgApnyTOEkFXKlhWfYKsAAMxOhbDxERW8CkVhfFCFABboD3gHBzkjphf8i3JeA1It6bFlDSud+FTP6twc6BWY9YK0dQkKc/69m/7e7Kt/+YJLETGkYVdn4qnpUbuoAD22Ho0gMM85tbDWK23XCYViJaBWqKeS/u9rsh+ZSWgLIEnFoctCEBeaD3P5TjcaDYKgEn6mD8oSXsAI/AWsz2xjG3gD1bAnIh/wQo+x2pVCOfqemK4z+xKAJzSko5FZ4P5Qjz7kXHZDKkYRdYj6gjDfGgCSZkV7XCadnLwHxAyrbGGXANzMges7m9GRmGH3QyqrAt7JlaAAAAAElFTkSuQmCC">
 

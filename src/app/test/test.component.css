@@ -1,5 +1,5 @@
 table {
-  width: 100%;
+  width: fit-content;
 }
 
 .transparent-button {
@@ -16,9 +16,23 @@ table {
 
 }
 
+.filter-button {
+  margin-left: 20px;
+  background-color: #0650bebc;
+  border-radius: 20px;
+  color: white;
+  border-color: transparent;
+  height: 40px;
+  width: fit-content;
+  font-weight: bold;
+}
+
 .header-container {
   display: flex;
   align-items: center;
+  font-weight: bold;
+  margin-left: 20px;
+  margin-bottom: 10px;
 }
 
 
@@ -32,7 +46,6 @@ table {
 .extended-table th {
   color: black;
   text-align: center;
-
 }
 
 .extended-table .mat-column-expandedDetail {
@@ -59,6 +72,11 @@ table {
   border: 1px solid #ccc;
 }
 
+.extended-table .mat-column-expandedDetail {
+  height: min-content;
+  width: 200px;
+}
+
 .checkbox {
   color: greenyellow;
 }
@@ -70,11 +88,7 @@ table {
   border: none;
 }
 
-.header-container {
-  display: flex;
-  align-items: center;
-  height: 100px;
-}
+
 
 .date {
   font-size: large;
