@@ -1,6 +1,7 @@
 @font-face {
   font-family: "TharLon";
-  src: url("./assests/Tharlon-Regular.ttf") format("truetype"); /* adjust the path to the location of your font file */
+  src: url("../../../assets/fonts/Tharlon/Tharlon-Regular.ttf")
+    format("truetype"); /* adjust the path to the location of your font file */
   /* You can include additional font variations here, such as bold, italic, etc. */
 }
 

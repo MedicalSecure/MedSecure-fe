@@ -1,16 +1,5 @@
 <form class="container d-flex card pt-3 shadow-lg gap-1">
-  <chips-select
-    [ObjectName]="'Symptom'"
-    [customLabel]="'Symptoms'"
-    class="w-100"
-    (selectedChipsChange)="selectedChipsChange($event)"
-    [enableCustomAdditions]="false"
-    [enableQuickSelectFromSuggestions]="false"
-    [fullData]="dummyData"
-    [minimumSearchLength]="2"
-    [minimumAddedLabelLength]="5"
-    [isStartWithSearch]="true"
-  ></chips-select>
+  
 
   <div class="card-body">
     <app-human-body-viewer></app-human-body-viewer>

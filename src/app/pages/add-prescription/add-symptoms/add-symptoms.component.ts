@@ -2,17 +2,14 @@ import { Component, Input } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { DatePicker } from '../../shared/date-picker/date-picker.component';
-import {
-  ShipsSelectComponent,
-  chipType,
-} from '../../components/chips-select/chips-select.component';
+import { DatePicker } from '../../../shared/date-picker/date-picker.component';
+import { ShipsSelectComponent } from '../../../components/chips-select/chips-select.component';
 import {
   DynamicMultipleSelectsComponent,
   multiSelectInputType,
-} from '../../components/dynamic-multiple-selects/dynamic-multiple-selects.component';
-import { SymptomSeverityLevels } from '../../shared/data/add-presc-consts';
-import { HumanBodyViewerComponent } from '../../components/human-body-viewer/human-body-viewer.component';
+} from '../../../components/dynamic-multiple-selects/dynamic-multiple-selects.component';
+import { SymptomSeverityLevels } from '../../../shared/data/add-presc-consts';
+import { HumanBodyViewerComponent } from '../../../components/human-body-viewer/human-body-viewer.component';
 
 @Component({
   selector: 'app-add-symptoms',
@@ -36,7 +33,7 @@ export class AddSymptomsComponent {
   @Input()
   multiDiagnosisSelectInputs: multiSelectInputType[] = [];
 
-  dummyData: chipType[] = [
+  dummyData: any[] = [
     { index: 1, label: 'test', value: '5555' },
     { index: 9, label: 'test2', value: '54545' },
     { index: 3, label: 'eeee', value: 555 },
@@ -47,10 +44,10 @@ export class AddSymptomsComponent {
     console.log('Selected inputs:', selectedInputs);
   }
 
-  selectedChipsChange(selectedSymptoms: chipType[]) {
+  selectedChipsChange(selectedSymptoms: any[]) {
     // Access and use the selected indexes here
     console.log('Selected chips:', selectedSymptoms);
-    this.multiSelectInputs = selectedSymptoms.map((item: chipType) => {
+    this.multiSelectInputs = selectedSymptoms.map((item: any) => {
       return {
         index: item.index,
         label: item.label,
@@ -60,10 +57,10 @@ export class AddSymptomsComponent {
     });
   }
 
-  selectedDiagnosisChange(selectedSymptoms: chipType[]) {
+  selectedDiagnosisChange(selectedSymptoms: any[]) {
     // Access and use the selected indexes here
     console.log('Selected chips:', selectedSymptoms);
-    this.multiDiagnosisSelectInputs = selectedSymptoms.map((item: chipType) => {
+    this.multiDiagnosisSelectInputs = selectedSymptoms.map((item: any) => {
       return {
         index: item.index,
         label: item.label,

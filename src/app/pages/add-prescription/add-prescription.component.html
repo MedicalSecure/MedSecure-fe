@@ -9,10 +9,21 @@
     class="d-flex flex-column p-md-2 justify-content-center gap-5 flex-md-row"
     id="body"
   >
-    <div class="col-12 col-md-6">
-      <app-add-symptoms></app-add-symptoms>
-    </div>
+    <!-- cards container -->
     <div class="d-flex flex-column gap-2 justify-content-center align-middle">
+      <chips-select
+        [ObjectName]="'Symptom'"
+        [customLabel]="'Symptoms'"
+        class="w-100"
+        (selectedChipsChange)="selectedChipsChange($event)"
+        [enableCustomAdditions]="true"
+        [enableQuickSelectFromSuggestions]="true"
+        [fullData]="dummyData"
+        [minimumSearchLength]="3"
+        [minimumAddedLabelLength]="5"
+        [isStartWithSearch]="true"
+      ></chips-select>
+      <!-- Current medication card -->
       <div class="card">
         <div class="card-body py-4 px-5">
           <h4 class="card-title">Current Medication</h4>
@@ -40,6 +51,7 @@
           </ul>
         </div>
       </div>
+      <!-- Allergies card -->
       <div class="card">
         <div class="card-body py-4 px-5">
           <h4 class="card-title">Allergies</h4>
@@ -79,6 +91,7 @@
           </ul>
         </div>
       </div>
+      <!-- Personal history card -->
       <div class="card">
         <div class="card-body py-4 px-5">
           <h4 class="card-title">Personal history</h4>
@@ -102,6 +115,10 @@
           </ul>
         </div>
       </div>
+    </div>
+    <!-- main body card -->
+    <div class="col-12 col-sm-5">
+      <app-add-symptoms></app-add-symptoms>
     </div>
   </body>
 </html>

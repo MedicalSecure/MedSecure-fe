@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { Page1Component } from './pages/page1/page1.component';
-import { AddPrescriptionComponent } from './add-prescription/add-prescription.component';
+import { AddPrescriptionComponent } from './pages/add-prescription/add-prescription.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
