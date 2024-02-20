@@ -43,30 +43,32 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class ShipsSelectComponent {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
+  @Input() searchPropertyName: string = 'label';
   @Input() minimumSearchLength: number = 2;
   @Input() minimumAddedLabelLength: number = 5;
   @Input() class: string = '';
   @Input() enableCustomAdditions: boolean = true;
   @Input() enableQuickSelectFromSuggestions: boolean = true;
   @Input() isStartWithSearch: boolean = false;
-  @Input() fullData: chipType[] = [{ index: 1, label: 'test', value: '5555' }];
+  @Input() fullData: any[] = [{ index: 1, label: 'test', value: '5555' }];
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  ObjectControl = new FormControl<string | chipType>('');
-  filteredDataByInput: Observable<chipType[]>;
+  ObjectControl = new FormControl<string | any>('');
+  filteredDataByInput: Observable<any[]>;
   filteredDataSubscription!: Subscription;
-  updatedSuggestionList: chipType[] = [];
-  selectedObjects: chipType[] = [];
+  updatedSuggestionList: any[] = [];
+  selectedObjects: any[] = [];
+  private _isAdditionEnabled: boolean = false;
 
   @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
   announcer = inject(LiveAnnouncer);
 
-  @Output() selectedChipsChange = new EventEmitter<chipType[]>();
+  @Output() selectedChipsChange = new EventEmitter<onChipsSelectionEmitType>();
 
   constructor() {
     this.filteredDataByInput = this.ObjectControl.valueChanges.pipe(
       startWith(null),
-      map((object: string | chipType | null) =>
+      map((object: string | any | null) =>
         object ? this._filter(object) : this.fullData.slice()
       )
     );
@@ -80,20 +82,30 @@ export class ShipsSelectComponent {
         );
       }
     );
+    this._verifySearchPropertyName();
   }
 
   ngOnDestroy() {
     this.filteredDataSubscription.unsubscribe(); // Prevent memory leaks
   }
 
-  onSelectionChange() {
+  onSelectionChange(
+    lastAddedItem: object | undefined,
+    lastSelectedItem: object | undefined,
+    lastRemovedItem: object | undefined
+  ) {
     // Emit the updated array to the parent component
-    this.selectedChipsChange.emit(this.selectedObjects);
+    this.selectedChipsChange.emit({
+      SelectedObjectList: this.selectedObjects,
+      lastAddedItem,
+      lastSelectedItem,
+      lastRemovedItem,
+    } as onChipsSelectionEmitType);
   }
 
   add(event: MatChipInputEvent): void {
+    if (this._isAdditionEnabled === false) return;
     const value = (event.value || '').trim();
-
     if (value.length < this.minimumSearchLength) {
       /*  TODO : display input error message [ 'customLabel' length must be at least 'this.minimumSearchLength' ] */
       console.error(
@@ -127,7 +139,7 @@ export class ShipsSelectComponent {
     // Proceed to Add custom value
     let isAlreadyRegistered = false;
     this.selectedObjects.forEach((selectedObject) => {
-      if (value.toLowerCase() == selectedObject.label.toLocaleLowerCase()) {
+      if (value.toLowerCase() == this._getStringToCompareTo(selectedObject)) {
         isAlreadyRegistered = true;
         /*  TODO : display input error message [ 'customLabel' length must be at least 'this.minimumSearchLength' ] */
         console.error(
@@ -141,55 +153,131 @@ export class ShipsSelectComponent {
     });
     const lengthCondition = value.length >= this.minimumAddedLabelLength;
     if (!isAlreadyRegistered && lengthCondition) {
-      this._addChipToSelection({ index: -1, label: value, value: undefined });
+      this._addChipToSelection({ [this.searchPropertyName]: value }, true);
       event.chipInput!.clear();
     }
   }
 
-  remove(objectToRemove: chipType): void {
+  remove(objectToRemove: any): void {
     this.selectedObjects = this.selectedObjects.filter(
-      (chipObject: chipType) => chipObject != objectToRemove
+      (chipObject: any) => chipObject != objectToRemove
     );
-    this.onSelectionChange();
-    this.announcer.announce(`Removed ${objectToRemove.label}`);
+    this.onSelectionChange(undefined, undefined, objectToRemove);
+    this.announcer.announce(
+      `Removed ${objectToRemove[this.searchPropertyName]}`
+    );
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this._addChipToSelection(event.option.value);
-    this.ValueInput.nativeElement.value = '';
+    if (!this.selectedObjects.includes(event.option.value)) {
+      this._addChipToSelection(event.option.value);
+      this.ValueInput.nativeElement.value = '';
+    }
   }
 
-  private _addChipToSelection(newChip: chipType): void {
+  setIsAdditionEnabled(isAdditionEnabled: boolean) {
+    this._isAdditionEnabled = isAdditionEnabled;
+  }
+
+  private _addChipToSelection(newChip: any, isAdded = false): void {
     this.selectedObjects.push(newChip);
     this.ObjectControl.setValue(null);
-    this.onSelectionChange();
+    let lastAddedItem, lastSelectedItem;
+    if (isAdded) lastAddedItem = newChip;
+    else lastSelectedItem = newChip;
+    this.onSelectionChange(lastAddedItem, lastSelectedItem, undefined);
   }
 
-  private _filter(value: string | chipType): chipType[] {
-    const filterValue = typeof value == 'string' ? value : value.label;
-    const filterValueLower = filterValue.toLocaleLowerCase();
+  private _filter(value: string | any): any[] {
+    let filterValueLower = this._getStringToCompareTo(value);
     return this.fullData.filter((object) => {
+      let stringCasted = this._getStringToCompareTo(object);
       const isResultFound = this.isStartWithSearch
-        ? object.label.toLowerCase().startsWith(filterValueLower)
-        : object.label.toLowerCase().includes(filterValueLower);
+        ? stringCasted.startsWith(filterValueLower)
+        : stringCasted.includes(filterValueLower);
       return isResultFound;
       /* const isObjectAlreadySelected = this.selectedObjects.includes(object);
       return isResultFound && !isObjectAlreadySelected; */
     });
   }
 
-  private _findByLabel(list: chipType[], searchString: string) {
-    for (let i = 0; i < list.length; i++) {
-      const object = list[i];
-      if (object.label.toLowerCase() == searchString.toLowerCase())
-        return object;
+  private _getStringToCompareTo(object: any): string {
+    let extractedString = '';
+    if (typeof object === 'string') extractedString = object;
+    else if (typeof object[this.searchPropertyName] === 'string') {
+      extractedString = object[this.searchPropertyName];
+    } else {
+      extractedString = object[this.searchPropertyName].toString();
     }
-    return undefined;
+    return extractedString.toLocaleLowerCase();
+  }
+
+  private _verifySearchPropertyName(): void {
+    if (!this.fullData || this.fullData.length == 0) return;
+    if (!this.fullData[0].hasOwnProperty(this.searchPropertyName)) {
+      throw new TypeError(
+        'chip select: ' +
+          this.customLabel +
+          " the provided data doesn't contain the searchPropertyName : " +
+          this.searchPropertyName
+      );
+    }
+    let searchablePropertyType =
+      typeof this.fullData[0][this.searchPropertyName];
+    if (!(searchablePropertyType in ['number', 'string'])) {
+      throw new TypeError(
+        'chip select: ' +
+          this.customLabel +
+          ' the provided searchPropertyName ( ' +
+          this.searchPropertyName +
+          " ) isn't of type String Or Number"
+      );
+    }
   }
 }
 
-export type chipType = {
-  label: string;
-  index: number;
-  value: any;
+export type onChipsSelectionEmitType = {
+  SelectedObjectList: any[];
+  lastAddedItem?: any;
+  lastSelectedItem?: any;
+  lastRemovedItem?: any;
 };
+
+/* 
+// usage: parent component : 
+
+ dummyData: any[] = [
+    { index: 1, label: 'test', value: 5555, x: [] },
+    { index: 9, label: 'test2', value: 54545 },
+    { index: 3, label: 'eeee', value: 555 },
+    { index: 4, label: 'eeee22', value: 55 },
+    { index: 4, label: 'eeeegegege22', value: 55 },
+  ];
+  selectedChipsChange(result: onChipsSelectionEmitType) {
+    // Access and use the selected indexes here
+    if (result.lastAddedItem) {
+      console.log('added custom item :', result.lastAddedItem);
+    } else if (result.lastSelectedItem) {
+      console.log('added item from search :', result.lastSelectedItem);
+    } else if (result.lastRemovedItem) {
+      console.log('removed item :', result.lastRemovedItem);
+    }
+    console.log('updated Selected chips:', result.SelectedObjectList);
+  }
+
+//  usage: parent Template : 
+
+<chips-select
+      [ObjectName]="'Symptom'"
+      [customLabel]="'Symptoms'"
+      class="w-100"
+      (selectedChipsChange)="selectedChipsChange($event)"
+      [enableCustomAdditions]="true"
+      [enableQuickSelectFromSuggestions]="true"
+      [fullData]="dummyData"
+      [minimumSearchLength]="2"
+      [minimumAddedLabelLength]="5"
+      [isStartWithSearch]="true"
+      [searchPropertyName]="'label'"
+    ></chips-select>
+*/
