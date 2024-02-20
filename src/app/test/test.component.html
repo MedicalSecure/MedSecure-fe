@@ -84,20 +84,12 @@
                                alt="{{medicine.root}}" style="height: 30px;width: 30px; left: 50%;top: 50%">
               </td>
             </ng-container>
-            <ng-container matColumnDef="dose">
-              <th mat-header-cell *matHeaderCellDef>Dose</th>
-              <td class="element dose-cell" mat-cell *matCellDef="let medicine">{{ medicine.dose }}</td>
-            </ng-container>
+          
             <ng-container matColumnDef="note">
               <th mat-header-cell *matHeaderCellDef>Note</th>
-              <td class="element note-cell" mat-cell *matCellDef="let medicine">
-                <textarea name="note" id="note" cols="15" rows="3"></textarea>
-                <br>
-                <button class="submit-button" style="background-color: #0650bebc; border-radius: 10px; color: white; border-color: transparent;">Submit</button>
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['name', 'posology', 'root' , 'dose','note'] "></tr>
-            <tr mat-row *matRowDef="let row; columns: ['name', 'posology', 'root' , 'dose','note'] "></tr>
+              </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['name', 'posology', 'root' ] "></tr>
+            <tr mat-row *matRowDef="let row; columns: ['name', 'posology', 'root'] "></tr>
           </table>
         </div>
         <div class="example-element-description">
