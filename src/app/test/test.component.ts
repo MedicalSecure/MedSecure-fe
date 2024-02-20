@@ -5,7 +5,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -15,6 +14,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScheduleComponent } from "../components/schedule/schedule.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
 /**
  * @title Table with pagination
  */
@@ -30,26 +30,32 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [MatTableModule, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatPaginatorModule, JsonPipe, ScheduleComponent]
+  imports: [MatTableModule,MatSortModule,MatSort,MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent]
 })
 export class TestComponent implements AfterViewInit {
   checkednumber: Number = 0;
   checkedItems: any[] = []; // Array to store the checked items
 
-  filterByStatus() {
-    const statusOrder: Record<string, number> = { 'Completed': 0, 'On Progress': 1, 'Pending...': 2 };
-    this.dataSource.data = ELEMENT_DATA.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
-  }
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<bacpatient>(ELEMENT_DATA.sort((a, b) => a.room - b.room));
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
   todayDate: string = new Date().toLocaleDateString();
   columnsToDisplay = ['add', 'room', 'bed', 'patient', 'age', 'progress', 'status'];
-  constructor(public dialog: MatDialog) { }
+
   columnsToDisplayMedicines = ['name', 'posology', 'root']
   expandedElement: bacpatient | null;
   selectedIndex: number | null = null;
+
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor() {
+    // Assuming you have data for patients
+   // Your patient data here
+  }
   toggleExpanded(element: any) {
     this.expandedElement = this.expandedElement === element ? null : element;
+  }
+  compare(a: number | string, b: number | string, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
   toggleRowExpansion(element: any, index: number): void {
     if (this.expandedElement === element) {
@@ -59,19 +65,22 @@ export class TestComponent implements AfterViewInit {
     }
     this.selectedIndex = index;
   }
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+   
+  }
+  
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
     if (!this.checkedItems[element.id]) {
       this.checkedItems[element.id] = [];
     }
-    
     this.checkedItems[element.id].push(checkedNumber);
     this.checkednumber = Object.values(this.checkedItems).flat().length;
-  
     let allCheckBoxNumber: number = 0;
     element.medicines.forEach(medicine => {
       allCheckBoxNumber += medicine.posology[0].length;
@@ -90,7 +99,6 @@ export class TestComponent implements AfterViewInit {
     }
   }
 }
-  
 interface Medicine {
   name: string;
   posology: Posology[][];
