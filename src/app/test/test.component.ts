@@ -33,6 +33,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [MatTableModule, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatPaginatorModule, JsonPipe, ScheduleComponent]
 })
 export class TestComponent implements AfterViewInit {
+  checkednumber: Number = 0;
+  checkedItems: any[] = []; // Array to store the checked items
+
   filterByStatus() {
     const statusOrder: Record<string, number> = { 'Completed': 0, 'On Progress': 1, 'Pending...': 2 };
     this.dataSource.data = ELEMENT_DATA.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
@@ -45,8 +48,9 @@ export class TestComponent implements AfterViewInit {
   columnsToDisplayMedicines = ['name', 'posology', 'root']
   expandedElement: bacpatient | null;
   selectedIndex: number | null = null;
-  toggleExpanded(element: any) {this.expandedElement = this.expandedElement === element ? null : element;
-}
+  toggleExpanded(element: any) {
+    this.expandedElement = this.expandedElement === element ? null : element;
+  }
   toggleRowExpansion(element: any, index: number): void {
     if (this.expandedElement === element) {
       this.expandedElement = null;
@@ -61,7 +65,28 @@ export class TestComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-
+  onCheckEmitted(checkedNumber: Number, element: bacpatient) {
+    this.checkedItems.push(checkedNumber);
+    this.checkednumber = this.checkedItems.length;
+    let allCheckBoxNumber: number = 0;
+    
+    element.medicines.forEach(medicine => {
+      allCheckBoxNumber = medicine.posology[0].length + allCheckBoxNumber;
+    });
+    console.log(this.checkednumber);
+    console.log("___________________");
+    if (this.checkednumber !== 0) {
+      const patientToUpdate = this.dataSource.data.find(patient => patient.id == element.id);
+      if (patientToUpdate) {
+        patientToUpdate.status = 'On Progress';
+        if (this.checkednumber === allCheckBoxNumber) {
+          patientToUpdate.status = 'Completed';
+          this.checkedItems = [];
+          this.checkednumber = 0
+        }
+      }
+    }
+  }
 }
 interface Medicine {
   name: string;

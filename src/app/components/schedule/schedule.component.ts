@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Posology } from '../../test/test.component';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -17,6 +17,10 @@ export class ScheduleComponent implements OnInit {
   @Input() hoursListEmitter: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Input() keyDownEvent: EventEmitter<any> = new EventEmitter<any>();
   @Input() posologieValue: any;
+  @Output() checkEmmiter: EventEmitter<Number> = new EventEmitter<Number>();
+  @Output() checkStatusEmmiter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+  checkednumber:number =0;
+  fullyChecked:boolean = false ;
   showChoices: boolean = true;
   @Input() hoursList : Posology[][]
 
@@ -76,5 +80,9 @@ if (!isNaN(parsedQuantity)) {
   }
   toggleCheckbox(currentitem: any) {
     currentitem.isSelected = !currentitem.isSelected;
+    if(currentitem.isSelected){
+      this.checkednumber++;
+      this.checkEmmiter.emit(this.checkednumber);
+    }
 }
 }

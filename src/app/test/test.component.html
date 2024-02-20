@@ -68,9 +68,8 @@
                 class="mat-elevation-z8 extended-table-cell ">
                 <ng-container matColumnDef="posology">
                   <th mat-header-cell *matHeaderCellDef>Posology</th>
-                  <td class="element posology-cell" mat-cell *matCellDef="let element">
-                    
-                    <app-schedule [hoursList]="element.posology" ></app-schedule>
+                  <td class="element posology-cell" mat-cell *matCellDef="let elementt">
+                    <app-schedule [hoursList]="elementt.posology" (checkEmmiter)="onCheckEmitted($event , element) "></app-schedule>
                   </td>
                 </ng-container>
                 <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
