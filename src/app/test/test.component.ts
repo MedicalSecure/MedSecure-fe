@@ -64,30 +64,33 @@ export class TestComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
-
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
-    this.checkedItems.push(checkedNumber);
-    this.checkednumber = this.checkedItems.length;
-    let allCheckBoxNumber: number = 0;
+    if (!this.checkedItems[element.id]) {
+      this.checkedItems[element.id] = [];
+    }
     
+    this.checkedItems[element.id].push(checkedNumber);
+    this.checkednumber = Object.values(this.checkedItems).flat().length;
+  
+    let allCheckBoxNumber: number = 0;
     element.medicines.forEach(medicine => {
-      allCheckBoxNumber = medicine.posology[0].length + allCheckBoxNumber;
+      allCheckBoxNumber += medicine.posology[0].length;
     });
     console.log(this.checkednumber);
-    console.log("___________________");
-    if (this.checkednumber !== 0) {
+    if (this.checkedItems[element.id].length !== 0) {
       const patientToUpdate = this.dataSource.data.find(patient => patient.id == element.id);
       if (patientToUpdate) {
         patientToUpdate.status = 'On Progress';
-        if (this.checkednumber === allCheckBoxNumber) {
+        if (this.checkedItems[element.id].length === allCheckBoxNumber) {
           patientToUpdate.status = 'Completed';
-          this.checkedItems = [];
-          this.checkednumber = 0
+          this.checkedItems[element.id] = [];
+          this.checkednumber = Object.values(this.checkedItems).flat().length;
         }
       }
     }
   }
 }
+  
 interface Medicine {
   name: string;
   posology: Posology[][];

@@ -18,8 +18,7 @@
                                     </div>
                                     <div class="card-body p-0 text-center "
                                         style="margin-top: -10px; transform: scale(1.2);">
-                                        <input type="checkbox" class="form-check-input"
-                                            [checked]="currentitem.isSelected" (change)="toggleCheckbox(currentitem )" />
+                                        <input type="checkbox" class="form-check-input" [checked]="currentitem.isSelected" (change)="toggleCheckbox(currentitem)" [disabled]="currentitem.isSelected" />
                                     </div>
                                 </div>
                             </ng-container>
