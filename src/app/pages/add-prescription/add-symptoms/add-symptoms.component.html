@@ -1,6 +1,4 @@
 <form class="container d-flex card pt-3 shadow-lg gap-1">
-  
-
   <div class="card-body">
     <app-human-body-viewer></app-human-body-viewer>
   </div>
@@ -10,11 +8,4 @@
     [showHint]="false"
     class=""
   ></date-picker>
-
-  <chips-select
-    [ObjectName]="'Diagnosis'"
-    [customLabel]="'Diagnosis'"
-    class="w-100"
-    (selectedChipsChange)="selectedDiagnosisChange($event)"
-  ></chips-select>
 </form>

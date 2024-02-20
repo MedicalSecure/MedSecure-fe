@@ -56,17 +56,4 @@ export class AddSymptomsComponent {
       };
     });
   }
-
-  selectedDiagnosisChange(selectedSymptoms: any[]) {
-    // Access and use the selected indexes here
-    console.log('Selected chips:', selectedSymptoms);
-    this.multiDiagnosisSelectInputs = selectedSymptoms.map((item: any) => {
-      return {
-        index: item.index,
-        label: item.label,
-        options: SymptomSeverityLevels,
-        isRequired: true,
-      };
-    });
-  }
 }
