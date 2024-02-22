@@ -1,24 +1,36 @@
-<mat-card class="filter-card">
-    <mat-card-header>
-      <mat-card-title>Filter By</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-radio-group [(ngModel)]="searchKey">
-        <mat-radio-button value="Nom">Name</mat-radio-button>
-        <mat-radio-button value="Laboratoire">Laboratoire</mat-radio-button>
-        <mat-radio-button value="Indications">Indications</mat-radio-button>
-      </mat-radio-group>
-    </mat-card-content>
-</mat-card>
+<div class=" d-flex gap-5 justify-content-center ">
+    <mat-chip-listbox [(ngModel)]="searchKey">
+        <mat-chip-option value="Nom" selected>Name</mat-chip-option>
+        <mat-chip-option value="Laboratoire">Pathologie</mat-chip-option>
+        <mat-chip-option value="Indications">SubstanceActive</mat-chip-option>
+    </mat-chip-listbox>
+    <div class="d-flex flex-column gap-5">
+        
 
-<mat-form-field class="search-field">
-  <input type="text" placeholder="Search for a medication" matInput [formControl]="searchControl" [matAutocomplete]="auto" value="">
-  <mat-autocomplete #auto="matAutocomplete">
-    <ng-container *ngFor="let medcine of filteredMedcines">
-      <mat-option (click)="openDialog(medcine)" [value]="medcine">
-        {{ getMedcineProperty(medcine) }}
-      </mat-option>
-    </ng-container>
-  </mat-autocomplete>
-</mat-form-field>
 
+
+        <div class="search-field">
+            <input type="text" placeholder="Search for medication" matInput [formControl]="searchControl"
+                [matAutocomplete]="auto" style="min-width: 30rem;">
+            <mat-autocomplete autoActiveFirstOption  #auto="matAutocomplete">
+                <mat-option *ngFor="let medcine of filteredMedcines" (click)="openDialog(medcine)" [value]="medcine">
+                    {{ getMedcineProperty(medcine) }}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
+        @if(selectedMedcines.length){
+            <div class="mt-3 ">
+                <h3>Selected Medicines:</h3>
+                <div *ngFor="let medcine of selectedMedcines" class="medicine-item d-flex gap-2 align-middle justify-content-center">
+                    <p id="medicine-paragraph">{{ medcine }}</p>
+                    <input type="text" placeholder="Enter Posologie">
+                    <button mat-icon-button (click)="removeMedcine(medcine)">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </div>
+            </div>}
+        
+    </div>
+
+    
+</div>

@@ -1,45 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { MatSelectModule } from '@angular/material/select';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatCardModule } from '@angular/material/card';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MedicationService } from './medication.service';
-import { MedicationDetailsDialogComponent } from '../medication-details-dialog/medication-details-dialog.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+
 
 
 @Component({
   selector: 'app-search-medicaments',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCheckboxModule, MatListModule, MatButtonModule, MatAutocompleteModule, MatDialogModule, ReactiveFormsModule, MatRadioModule, MatCardModule],
+  imports: [MatChipsModule, MatIconModule, MatSelectModule, MatFormFieldModule,CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule ],
   templateUrl: './medication-search.component.html',
-  styleUrl: './medication-search.component.css'
+  styleUrl: './medication-search.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MedicationSearchComponent implements OnInit {
   searchControl = new FormControl();
+  searchKeys: string[] = ['Nom', 'Laboratoire', 'Indications'];
   searchKey: string = 'Nom';
   medcines: any[] = [];
   filteredMedcines: any[] = [];
-  selectedMedcine: any;
+  selectedMedcines: string[] = []; 
 
-  constructor(private medicationService: MedicationService, public dialog: MatDialog) {}
+  constructor(private medicationService: MedicationService) {}
 
   ngOnInit(): void {
-      this.medicationService.getMedications().subscribe(data => {
-          this.medcines = data.medcines.medcine;
-      });
+    this.medicationService.getMedications().subscribe(data => {
+      this.medcines = data.medcines.medcine;
+    });
 
-      this.searchControl.valueChanges.subscribe(searchTerm => {
-          this.filteredMedcines = this.filterMedcines(searchTerm);
-      });
+    this.searchControl.valueChanges.subscribe(searchTerm => {
+      this.filteredMedcines = this.filterMedcines(searchTerm);
+    });
   }
 
   filterMedcines(searchTerm: string): any[] {
@@ -53,24 +51,32 @@ export class MedicationSearchComponent implements OnInit {
   }
 
   openDialog(medcine: any): void {
-  this.selectedMedcine = medcine;
-  this.searchControl.setValue(''); // Clear the value of the search input field
-  const dialogRef = this.dialog.open(MedicationDetailsDialogComponent, {
-    data: { medcine }
-  });
+    const selectedMedcine = this.getMedcineProperty(medcine);
+    if (!this.selectedMedcines.includes(selectedMedcine)) {
+      this.selectedMedcines.push(selectedMedcine);
+    }
+    this.searchControl.setValue(''); // Clear the value of the search input field
   }
 
   getMedcineProperty(medcine: any): string {
-      // Return the property based on the selected key
-      switch (this.searchKey) {
-          case 'Nom':
-              return medcine.Nom;
-          case 'Laboratoire':
-              return medcine.Laboratoire;
-          case 'Indications':
-              return medcine.Indications;
-          default:
-              return '';
-      }
+    // Return the property based on the selected key
+    switch (this.searchKey) {
+      case 'Nom':
+        return medcine.Nom;
+      case 'Laboratoire':
+        return medcine.Laboratoire;
+      case 'Indications':
+        return medcine.Indications;
+      default:
+        return '';
+    }
   }
+
+  removeMedcine(medcine: string): void {
+    const index = this.selectedMedcines.indexOf(medcine);
+    if (index !== -1) {
+      this.selectedMedcines.splice(index, 1);
+    }
+  }
+  
 }
