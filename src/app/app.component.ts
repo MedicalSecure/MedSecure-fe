@@ -15,11 +15,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent {
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
   title = 'medsecure-fe';
 
-  events: CalendarEvent[] = [];
-  selectedDate: Date = new Date();
-  
 
 }
