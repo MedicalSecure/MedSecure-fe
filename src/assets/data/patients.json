@@ -34,6 +34,54 @@
       "pays": "Espagne",
       "numéro de téléphone": "1122334455",
       "email": "carlos.garcia@example.com"
+    },
+    {
+      "id": 4,
+      "nom": "Chadha",
+      "prenom": "Jamel",
+      "age": 24,
+      "genre": "Femme",
+      "adresse": "123 rue de la Paix",
+      "ville": "Gabes",
+      "pays": "Tunisie",
+      "numéro de téléphone": "0123456789",
+      "email": "jean.dupont@example.com"
+    },
+    {
+      "id":5,
+      "nom": "Jouri",
+      "prenom": "Jamel",
+      "age": 3,
+      "genre": "Femme",
+      "adresse": "123 rue de la Paix",
+      "ville": "Gabes",
+      "pays": "Tunisie",
+      "numéro de téléphone": "0123456789",
+      "email": "jean.dupont@example.com"
+    },
+    {
+      "id": 6,
+      "nom": "Jouri",
+      "prenom": "Jamel",
+      "age": 3,
+      "genre": "Femme",
+      "adresse": "123 rue de la Paix",
+      "ville": "Gabes",
+      "pays": "Tunisie",
+      "numéro de téléphone": "0123456789",
+      "email": "jean.dupont@example.com"
+    },
+    {
+      "id": 7,
+      "nom": "chayma",
+      "prenom": "Jamel",
+      "age": 25,
+      "genre": "Femme",
+      "adresse": "123 rue de la Paix",
+      "ville": "Gabes",
+      "pays": "Tunisie",
+      "numéro de téléphone": "0123456789",
+      "email": "jean.dupont@example.com"
     }
   ]
   

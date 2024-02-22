@@ -1,16 +1,85 @@
 [
-    {
-      "startDate": "2024-02-20T08:00:00",
-      "endDate": "2024-02-20T10:00:00",
-      "patientName": "John Doe",
-      "repetition": "every_day",
-      "treatment": "Some treatment information"
-    },
-    {
-      "startDate": "2024-02-21T09:30:00",
-      "endDate": "2024-02-21T11:30:00",
-      "patientName": "Jane Smith",
-      "repetition": "none",
-      "treatment": "Some other treatment information"}
-    ]
-  
+  {
+    "start": "2024-02-20T00:00:00",
+    "end": "2024-02-20T00:00:00",
+    "title": "event 2",
+    "color": { "primary": "#1e90ff", "secondary": "#D1E8FF" },
+    "actionType": ["get"] ,
+    "patient": "Alice",
+    "repetition": "every_week",
+    "treatment": "Another treatment"
+  },
+  {
+    "start": "2024-02-12T00:00:00",
+    "end": "2024-02-12T00:00:00",
+    "title": "event 1",
+    "color": { "primary": "#e3bc08", "secondary": "#FDF1BA" },
+    "actionType": ["get"],
+    "allDay": true ,
+    "patient": "Bob",
+    "repetition": "every_day",
+    "treatment": "Some treatment for Bob"
+  },
+  {
+    "start": "2024-02-18T00:00:00",
+    "end": "2024-02-18T00:00:00",
+    "title": "event 3",
+    "color": { "primary": "#008000", "secondary": "#90EE90" },
+    "actionType": ["get"],
+    "allDay": true,
+    "patient": "Charlie",
+    "repetition": "every_month",
+    "treatment": "Monthly checkup"
+  },
+  {
+    "start": "2024-02-16T04:00:00",
+    "end": "2024-02-16T08:00:00",
+    "title": "event 4",
+    "color": { "primary": "#FFA500", "secondary": "#FFDAB9" },
+    "actionType": ["get"],
+    "resizable": { "beforeStart": true, "afterEnd": true },
+    "draggable": true ,
+    "patient": "Eve",
+    "repetition": "every_week",
+    "treatment": "Weekly checkup"
+  },
+  {
+    "start": "2024-02-16T12:00:00",
+    "end": "2024-02-16T16:00:00",
+    "title": "event 5",
+    "color": { "primary": "#FFC0CB", "secondary": "#FFB6C1" },
+    "actionType": ["get"],
+    "resizable": { "beforeStart": true, "afterEnd": true },
+    "draggable": true
+  },
+  {
+    "start": "2024-02-22T12:00:00",
+    "end": "2024-02-22T16:00:00",
+    "title": "event 8",
+    "color": { "primary": "#FFC0CB", "secondary": "#FFB6C1" },
+    "actionType": ["edit", "delete"],
+    "resizable": { "beforeStart": true, "afterEnd": true },
+    "draggable": true,
+     "patient": "Frank",
+    "repetition": "every_month",
+     "treatment": "Monthly treatment"
+  },
+  {
+    "start": "2024-02-25T12:00:00",
+    "end": "2024-02-25T16:00:00",
+    "title": "event 9",
+    "color": { "primary": "#FFC0CB", "secondary": "#FFB6C1" },
+    "actionType": ["edit", "delete"],
+    "resizable": { "beforeStart": true, "afterEnd": true },
+    "draggable": true
+  },
+  {
+    "start": "2024-02-26T12:00:00",
+    "end": "2024-02-26T16:00:00",
+    "title": "chadha jamel",
+    "color": { "primary": "#FFC0CB", "secondary": "#FFB6C1" },
+    "actionType": ["edit", "delete"],
+    "resizable": { "beforeStart": true, "afterEnd": true },
+    "draggable": true
+  }
+]

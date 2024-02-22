@@ -1,0 +1,165 @@
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { CalendarEvent, CalendarEventAction } from 'angular-calendar';
+import { addDays, addHours, endOfMonth, startOfDay, subDays } from 'date-fns';
+import { ActionType, CalendarShedulerComponent } from './component/calendar-scheduler/calendar-scheduler.component';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { EventColor } from 'calendar-utils';
+const colors: Record<string, EventColor> = {
+  red: {
+    primary: '#ad2121',
+    secondary: '#FAE3E3',
+  },
+  blue: {
+    primary: '#1e90ff',
+    secondary: '#D1E8FF',
+  },
+  yellow: {
+    primary: '#e3bc08',
+    secondary: '#FDF1BA',
+  },
+};
+
+
+
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CalendarShedulerComponent],
+  schemas: [NO_ERRORS_SCHEMA],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+
+})
+export class AppComponent {
+
+  constructor(private http: HttpClient) { }
+  title = 'medsecure-fe';
+  events: CalendarEvent[] = [];
+
+  ngOnInit() {
+    this.http.get<any[]>('assets/data/visits.json').subscribe(data => {
+      this.events = data.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+        title: event.title,
+        color: colors[event.color],
+        actionType: event.actionType.map((type: string) => ActionType[type as keyof typeof ActionType]),
+       patient: event.patient,
+       repetition: event.repetition,
+      treatment: event.treatment
+
+      }));
+      console.log("Voici les données chargées à partir du fichier JSON :", this.events);
+    });
+  }
+}
+
+
+
+
+
+
+  
+
+  // events: BackPatientCalendarEvent[] = [
+  //   {
+  //     start: startOfDay(new Date()),
+  //     title: 'event 2',
+  //     color: { ...colors['blue'] },
+  //     actionType: [ActionType.edit, ActionType.delete],
+  //   },
+  //   {
+  //     start: addDays(startOfDay(new Date('2024-02-12')), 2),
+  //     end: addDays(startOfDay(new Date('2024-02-12')), 2),
+  //     title: 'event 1',
+     
+  //     actionType: [ActionType.get],
+  //     color: { ...colors['pink'] },
+  //     allDay: true,
+  //   },
+  //   {
+  //     start: addDays(startOfDay(new Date('2024-02-18')), 3),
+  //     end: addDays(startOfDay(new Date('2024-02-18')), 3),
+  //     title: 'event 3',
+  //     actionType: [ActionType.edit, ActionType.delete],
+  //     color: { ...colors['green'] },
+  //     allDay: true,
+  //   },
+  //   {
+  //     start: addHours(startOfDay(new Date('2024-02-16')), 4),
+  //     end: addHours(startOfDay(new Date('2024-02-16')), 8),
+  //     title: 'event 4',
+  //     color: { ...colors['orange'] },
+  //     actionType: [ActionType.get],
+  //     resizable: {
+  //       beforeStart: true,
+  //       afterEnd: true,
+
+  //     },
+  //     draggable: true,
+
+  //   },
+  //   {
+  //     start: addHours(startOfDay(new Date('2024-02-16')), 12),
+  //     end: addHours(startOfDay(new Date('2024-02-16')), 16),
+  //     title: 'event 5',
+  //     color: { ...colors['pink'] },
+  //     actionType: [ActionType.get],
+  //     resizable: {
+  //       beforeStart: true,
+  //       afterEnd: true,
+  //     },
+  //     draggable: true,
+
+  //   },
+  //   {
+  //     start: addHours(startOfDay(new Date('2024-02-22')), 12),
+  //     end: addHours(startOfDay(new Date('2024-02-22')), 16),
+  //     title: 'event 8',
+  //     color: { ...colors['pink'] },
+  //     actionType: [ActionType.edit, ActionType.delete],
+  //     resizable: {
+  //       beforeStart: true,
+  //       afterEnd: true,
+  //     },
+  //     draggable: true,
+
+  //   },
+  //   {
+  //     start: addHours(startOfDay(new Date('2024-02-25')), 12),
+  //     end: addHours(startOfDay(new Date('2024-02-25')), 16),
+  //     title: 'event 9',
+
+  //     color: { ...colors['pink'] },
+  //     actionType: [ActionType.edit, ActionType.delete],
+  //     resizable: {
+  //       beforeStart: true,
+  //       afterEnd: true,
+  //     },
+  //     draggable: true,
+
+  //   },
+  //   {
+  //     start: addHours(startOfDay(new Date('2024-02-26')), 12),
+  //     end: addHours(startOfDay(new Date('2024-02-26')), 16),
+  //     title: 'efgfgfg',
+  //     color: { ...colors['pink'] },
+  //     actionType: [ActionType.edit,ActionType.delete],
+  //     resizable: {
+  //       beforeStart: true,
+  //       afterEnd: true,
+  //     },
+  //     draggable: true,
+
+  //   },
+  // ];
+
+
+
+
+
+

@@ -1,8 +1,8 @@
-import {Component,ChangeDetectionStrategy,ViewChild,TemplateRef,Input, Output, EventEmitter, input, OnInit } from '@angular/core';
+import {Component,ChangeDetectionStrategy,ViewChild,TemplateRef,Input, Output, EventEmitter, input, OnInit, AfterViewInit } from '@angular/core';
 import {startOfDay,endOfDay,subDays,addDays,endOfMonth,isSameDay,isSameMonth,addHours, isToday, isAfter,} from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {CalendarEvent,CalendarEventAction,CalendarEventTimesChangedEvent,CalendarView,} from 'angular-calendar';
+import {CalendarDayViewComponent, CalendarEvent,CalendarEventAction,CalendarEventTimesChangedEvent,CalendarView,} from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -31,11 +31,11 @@ import { HttpClient } from '@angular/common/http';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {provideNativeDateAdapter} from '@angular/material/core';
-
 import { VisiteService } from '../../service/visite.service';
-import { Visite } from '../../model/visite.model';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
 
-export enum ActionType { get ,add,edit,delete}
 
 const colors: Record<string, EventColor> = {
   red: {
@@ -52,6 +52,7 @@ const colors: Record<string, EventColor> = {
   },
 };
 
+export enum ActionType { get ,add,edit,delete}
 @Component({
   selector: 'app-calendar-view',
   standalone: true,
@@ -70,14 +71,13 @@ const colors: Record<string, EventColor> = {
     ReactiveFormsModule,
     AsyncPipe,
     MatFormFieldModule, MatInputModule, MatSelectModule,HttpClientModule,FormsModule ,
+    MatButtonModule, MatDividerModule, MatIconModule,MatRadioModule,MatChipsModule,MatFormFieldModule, MatInputModule, MatSelectModule
   ],
   providers: [
     { provide: DateAdapter, useFactory: adapterFactory },
     { provide: CalendarDateFormatter, useClass: CalendarDateFormatter },
-    CalendarUtils,
-    FlatpickrDefaults,
-    CalendarA11y,
-    CalendarEventTitleFormatter,provideNativeDateAdapter(),VisiteService
+    CalendarUtils,FlatpickrDefaults,CalendarA11y,CalendarEventTitleFormatter,
+    provideNativeDateAdapter(),VisiteService
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'calendar-scheduler.component.html',
@@ -86,28 +86,102 @@ const colors: Record<string, EventColor> = {
 
 
 export class CalendarShedulerComponent implements OnInit {
-
-  @Input() events: CalendarEvent[]= [];;
+  view: CalendarView = CalendarView.Month;
+  viewday: CalendarView = CalendarView.Day;
+  @Input() events: CalendarEvent[]= [];
+  @Input() selectedDate: Date = new Date()
   @ViewChild('modalContent', { static: true }) modalContent!: TemplateRef<any>;
   @Output() eventClicked = new EventEmitter<CalendarEvent>();
+  @ViewChild('todayButton') todayButton!: ElementRef;
 
+  refresh = new Subject<void>();
+  CalendarView = CalendarView;
+  viewDate: Date = new Date();
+  activeDayIsOpen: boolean = true;
+  modalTitle: string = '';
+  modalbutton: string = '';
+  modalAction: string = '';
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  announcer = inject(LiveAnnouncer);
+  patients !: any[];
+  filteredPatients !: any[];
+  searchQuery: string = '';
+  selectedPatient: any;
+  selectedTime: string = ''; 
 
+  modalData: {action: string;event: CalendarEvent<any>;} =
+   { action: '', event: {} as CalendarEvent<any> };
 
-  
-
-  jsonData: any;
+   constructor(private modal: NgbModal,private http: HttpClient) {
+    this.modalData = { action: '', event: {} as CalendarEvent<any> };
+  }
+ 
+  triggerTodayClick() {
+    if (this.todayButton) {
+      this.todayButton.nativeElement.click();
+    } else {
+      console.error("Today button not found");
+    }
+  }
 
   ngOnInit(): void {
-    console.log("Events in CalendarShedulerComponent: ", this.events);
-    this.generateActions();
-    this.addAddEventToDaysWithEvents();
-    // this.http.get<any[]>('assets/data/visits.json').subscribe(data => {
-    //   this.events = data;
-    // });
-  } 
-
+   this.loadEvents();
+   this.loadPatients();
+   console.log("Events in CalendarShedulerComponent: ", this.events);  
+   
+}
  
+  loadPatients(){
+   
+    this.http.get<any[]>('assets/data/patients.json').subscribe(
+      data => {
+        this.patients = data;
+        this.filteredPatients = data;
+        console.log('JSON file dataPatients:', data);
+      },
+      error => {
+        console.error('Error loading JSON file:', error);
+      }
+    );
+   
+  }
 
+  search(): void {
+    this.filteredPatients = this.patients.filter(patient =>
+      patient.nom.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      patient.prenom.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+
+  loadEvents() {
+    this.http.get<any[]>('assets/data/visits.json').subscribe(
+      data => {
+        this.events = data.map(event => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end),
+          patient :event.patient ,
+          repetition : event.repetition,
+          treatment :event.treatment,
+          actionType: event.actionType.map((type: number) => ActionType[type]),
+          actions: event.actions,
+         
+        }));
+        this.generateActions();
+        this.addAddEventToDaysWithEvents();
+        console.log('Events loaded:', this.events);
+        this.triggerTodayClick();
+      },
+      error => {
+        console.error('Error loading events:', error);
+      }
+    );
+  }
+  selectPatient(patient: any): void {
+    // Logique pour sélectionner un patient
+    console.log('Patient selected:', patient);
+    // Vous pouvez faire d'autres actions ici, comme définir la valeur de selectedPatient
+  }
 
   addAddEventToDaysWithEvents() {
     const daysWithEvents: Date[] = [];
@@ -126,12 +200,12 @@ export class CalendarShedulerComponent implements OnInit {
     // Add events for days starting from today
     daysWithEvents.forEach(day => {
       const eventExists = this.events.some(existingEvent =>
-        isSameDay(startOfDay(existingEvent.start), day) && existingEvent.title === 'Ajouter événements'
+        isSameDay(startOfDay(existingEvent.start), day) && existingEvent.title === 'Create an appointment'
       );
       if (!eventExists) {
         this.events.push({
           start: day,
-          title: 'Ajouter événements',
+          title: 'Create an appointment',
           color: { ...colors['yellow'] },
           actionType: [ActionType.add],
           allDay: true,
@@ -142,14 +216,13 @@ export class CalendarShedulerComponent implements OnInit {
     });
 }
 
-
   generateActions(): void {
     this.events.forEach(event => {
       event.actions = [];
 
       if (event.actionType.includes(ActionType.get)) {
         event.actions.push({
-          label: '<i class="fa-solid fa-eye"></i>',
+          label: '<i class="fa-regular fa-eye"></i>',
           a11yLabel: 'get',
           onClick: ({ event }: { event: CalendarEvent<any> }): void => {
             this.handleEvent('readed', event);
@@ -160,7 +233,7 @@ export class CalendarShedulerComponent implements OnInit {
    
       if (event.actionType.includes(ActionType.add)) {
         event.actions.push({
-          label: '<i class="fa-solid fa-plus"></i>',
+          label: '<i class="fa-solid fa-plus "></i>',
           a11yLabel: 'add',
           onClick: ({ event }: { event: CalendarEvent<any> }): void => {
             this.handleEvent('Created', event);
@@ -171,7 +244,7 @@ export class CalendarShedulerComponent implements OnInit {
   
       if (event.actionType.includes(ActionType.edit)) {
         event.actions.push({
-          label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+          label: '<i class="fas fa-pencil-alt"></i>',
           a11yLabel: 'Edit',
           onClick: ({ event }: { event: CalendarEvent<any> }): void => {
             this.handleEvent('Edited', event);
@@ -195,42 +268,10 @@ export class CalendarShedulerComponent implements OnInit {
     });
   
     console.log("Actions generated successfully");
+    
   }
   
-//   addAnotherEvent(): void {
-//     const today = startOfDay(new Date());
-//     const newEvent: CalendarEvent = {
-//       start: today,
-//       title: 'Ajouter événements non',
-//       color: { ...colors['yellow'] },
-//       actionType: [ActionType.add],
-//       allDay: true,
-//     };
-//     this.events.push(newEvent);
-//   }
-  
-//   addEventsForExistingDates(): void {
-//     const existingDates = this.getExistingDates();
 
-//     existingDates.forEach(date => {
-//       this.addEventForDate(date);
-//     });
-//   }
-
-
-
-  
-// addEventForDate(date: Date): void {
-//     const newEvent: CalendarEvent = {
-//       start: startOfDay(date),
-//       title: 'Ajouter événements xxxx',
-//       color: { ...colors['yellow'] },
-//       actionType: [ActionType.add],
-//       allDay: true,
-     
-//     };
-//     this.events.push(newEvent);
-//   }
   getExistingDates(): Date[] {
     const existingDates: Date[] = [];
 
@@ -243,8 +284,6 @@ export class CalendarShedulerComponent implements OnInit {
 
     return existingDates;
   }
-
-
 
   getDaysWithEvents(): Date[] {
     const daysWithEvents: Date[] = [];
@@ -259,27 +298,8 @@ export class CalendarShedulerComponent implements OnInit {
     return daysWithEvents;
   }
   
-  
-
-
-
-  view: CalendarView = CalendarView.Month;
-
-  CalendarView = CalendarView;
-
-  viewDate: Date = new Date();
-
-  modalData: {
-    action: string;
-    event: CalendarEvent<any>;
-  } = { action: '', event: {} as CalendarEvent<any> };
-
-  
-
-  refresh = new Subject<void>();
-  
   handleEventClick(event: CalendarEvent) {
-    if (event.title === 'Ajouter événements') {
+    if (event.title === 'Create an appointment') {
       // Si le titre de l'événement est "Ajouter événements chadha", déclencher l'action de création
       this.handleEvent('Created', event);
     } else {
@@ -288,11 +308,6 @@ export class CalendarShedulerComponent implements OnInit {
     }
   }
   
-  
-  activeDayIsOpen: boolean = true;
-
-  
-
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     const today = startOfDay(new Date());
     if (date < today){
@@ -314,7 +329,7 @@ export class CalendarShedulerComponent implements OnInit {
 
         //erreur
         start: date,
-        actionType: ['add'] // Ajoutez ici les autres propriétés nécessaires
+        actionType: [ActionType.add] // Ajoutez ici les autres propriétés nécessaires
       };
       // Passer le nouvel événement à handleEvent
       this.handleEvent('Created', newEvent);
@@ -327,14 +342,9 @@ export class CalendarShedulerComponent implements OnInit {
            }
            this.viewDate = date;
         }   
-     
+        this.selectedDate = date
     }
   }
-
-
-
-    
-  
 
   eventTimesChanged({
     event,
@@ -354,46 +364,6 @@ export class CalendarShedulerComponent implements OnInit {
     this.handleEvent('Dropped or resized', event);
   }
 
-  modalTitle: string = '';
-  modalbutton: string = '';
-  modalAction: string = '';
-  // handleEvent(action: string, event: CalendarEvent): void {
-    
-  //   this.modalData = { event, action };
-    
-  //   switch (action) {
-  //       case 'readed':
-  //           this.modalTitle = 'Read Data';
-  //           this.modalbutton = 'OK';
-            
-  //           // Logique pour l'action de lecture (get) ici
-  //           break;
-  //       case 'Created':
-  //           this.modalTitle = 'Create Data';
-  //           this.modalbutton = 'Create';
-  //           this.createVisit
-  //           // Logique pour l'action de création (add) ici
-  //           break;
-  //       case 'Edited':
-  //           this.modalTitle = 'Edited Data';
-  //           this.modalbutton = 'Edit';
-  //           // Logique pour l'action de modification (edit) ici
-  //           break;
-  //       case 'Deleted':
-  //           this.modalTitle = 'Deleted Data';
-  //           this.modalbutton = 'Delete';
-  //           // Logique pour l'action de suppression (delete) ici
-  //           break;
-  //       default:
-  //           // Par défaut, considérer la création de données
-  //           this.modalTitle = 'Create Data';
-  //           this.modalbutton = 'Create';
-  //           break;
-            
-  //   }
-  //   this.modal.open(this.modalContent);
-  //   console.log(event,action)
-  // }
   handleEvent(action: string, event: CalendarEvent): void {
   this.modalData = { event, action };
 
@@ -405,7 +375,7 @@ export class CalendarShedulerComponent implements OnInit {
       // Logique pour l'action de lecture (get) ici
       break;
     case 'Created':
-      this.modalTitle = 'Create Data';
+      this.modalTitle = 'Create an appointment';
       this.modalbutton = 'Create';
       this.modalAction = 'add';
       // Appel à la fonction createVisit()
@@ -414,9 +384,7 @@ export class CalendarShedulerComponent implements OnInit {
       this.modalTitle = 'Edited Data';
       this.modalbutton = 'Edit';
       this.modalAction = 'edit';
- 
-      
-      // Logique pour l'action de modification (edit) ici
+
       break;
     case 'Deleted':
       this.modalTitle = 'Deleted Data';
@@ -435,8 +403,6 @@ export class CalendarShedulerComponent implements OnInit {
   console.log(event, action);
 }
 
-
-
 confirmDelete(): void {
   // Logique pour confirmer la suppression
   if (confirm('Voulez-vous vraiment supprimer cet événement ?')) {
@@ -446,31 +412,48 @@ confirmDelete(): void {
   }
 }
 
+  // addEvent(): void {
+  //   this.events = [
+  //     ...this.events,
+  //     {
+  //       title: 'New event',
+  //       start: startOfDay(new Date()),
+  //       end: endOfDay(new Date()),
+  //       color: colors['red'],
+  //       actionType : [ActionType.add],
+  //       draggable: true,
+  //       resizable: {
+  //         beforeStart: true,
+  //         afterEnd: true,
+  //       },
+        
+  //     },
+  //   ];
+  // }
 
   addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors['red'],
-        actionType : [ActionType.add],
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
-        
-      },
-    ];
+    // Logique d'ajout d'événement
+    const newEvent: CalendarEvent = {
+      title: 'Nouvel événement',
+      start: new Date(),
+      end: new Date(),
+      color: colors['red'],
+      actionType: [ActionType.add],
+      draggable: true,
+      resizable: {
+        beforeStart: true,
+        afterEnd: true,
+      }
+    };
+
+    this.events.push(newEvent);
+
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
     this.events = this.events.filter((event) => event !== eventToDelete);
   }
   
-
   setView(view: CalendarView) {
     this.view = view;
   }
@@ -478,7 +461,6 @@ confirmDelete(): void {
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
   }
-
 
   performAction(): void {
     switch (this.modalAction) {
@@ -494,87 +476,51 @@ confirmDelete(): void {
         this.saveFormData2(); 
         break;
       case 'delete':
-        this.confirmDelete(); // Exemple de confirmation de suppression
+        this.confirmDelete(); 
         break;
       default:
-        // Par défaut, fermer simplement le modal
         this.closeModal();
         break;
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-
-  announcer = inject(LiveAnnouncer);
-
-
-
-
-  constructor(private modal: NgbModal,private http: HttpClient) {
-    this.modalData = { action: '', event: {} as CalendarEvent<any> };
-    
-
-  }
-
-
-
 
   closeModal() {
     // Logique pour fermer le modal
     this.modal.dismissAll();
   }
 
-
-
-  newVisit: Visite = {
-    startDate: new Date(),
-    endDate: new Date(),
-    patientName: '',
-    repetition: '',
-    treatment: ''
-  };
-
-
-  // createVisit(visit: Visite): void {
-  //   this.visiteService.createVisit(visit).subscribe(() => {
-  //     console.log('Visite créée avec succès.');
-  //     // Actualisez la liste des événements ou effectuez d'autres opérations nécessaires
-  //   });
-  // }
-  
   saveFormData(): void {
-    const startDate = (document.getElementById('startDate') as HTMLInputElement).value;
-    const endDate = (document.getElementById('endDate') as HTMLInputElement).value;
+    const startDate = new Date((document.getElementById('startDate') as HTMLInputElement).value);
+    const endDate = new Date((document.getElementById('endDate') as HTMLInputElement).value);
     const patientName = (document.getElementById('patientName') as HTMLInputElement).value;
     const repetition = (document.getElementById('repetition') as HTMLSelectElement).value;
     const treatment = (document.getElementById('treatment') as HTMLTextAreaElement).value;
   
-    const formData = {
-      startDate: startDate,
-      endDate: endDate,
-      patientName: patientName,
+  
+    const formData:CalendarEvent =
+    {
+      start: startDate,
+      end: endDate,
+      patient:patientName,
       repetition: repetition,
-      treatment: treatment
-    };
-  
-    // Récupérez le contenu actuel du fichier JSON
+      treatment: treatment,
+      title: 'Evenement avec' + patientName,
+      color: { ...colors['pink'] },
+
+      actionType: [], 
+      resizable: {
+        beforeStart: true,
+        afterEnd: true,
+      },
+      draggable: true,
+
+    }
+ 
     this.http.get<any[]>('assets/data/visits.json').subscribe((data: any[]) => {
-      // Ajoutez les nouvelles données au contenu existant
       const updatedData = [...data, formData];
-  
-      // Écrivez les données mises à jour dans le fichier JSON
+
       this.http.put('assets/data/visits.json', updatedData).subscribe(response => {
-        console.log('Données enregistrées avec succès !',updatedData);
+        console.log('Données enregistrées avec succès !', updatedData);
         this.modal.dismissAll();
       }, error => {
         console.error('Erreur lors de l\'enregistrement des données : ', error);
@@ -582,6 +528,23 @@ confirmDelete(): void {
     });
   }
 
+  editEvent(formData: CalendarEvent): void {
+    const index = this.events.findIndex(event => event.id === formData.id);
+    if (index !== -1) {
+      this.events[index] = formData;
+
+      this.http.get<any[]>('assets/data/visits.json').subscribe((data: any[]) => {
+        const updatedData = data.map(event => (event.id === formData.id ? formData : event));
+
+        this.http.put('assets/data/visits.json', updatedData).subscribe(response => {
+          console.log('Données mises à jour avec succès !', updatedData);
+          this.modal.dismissAll();
+        }, error => {
+          console.error('Erreur lors de la mise à jour des données : ', error);
+        });
+      });
+    }
+  }
 
   saveFormData2(): void {
     const startDate = (document.getElementById('startDate') as HTMLInputElement).value;
@@ -593,6 +556,7 @@ confirmDelete(): void {
       endDate: endDate,
   
     };
+    
   
     // Récupérez le contenu actuel du fichier JSON
     this.http.get<any[]>('assets/data/visits.json').subscribe((data: any[]) => {
@@ -631,25 +595,68 @@ confirmDelete(): void {
   //     console.error('Erreur lors de la lecture du fichier JSON de visites:', error);
   //   });
   // }
-  selectedEvent: any;
-  selectEvent(event: any) {
-    this.selectedEvent = event;
+
+  button1Color: string = '#BFC0C3';
+  button2Color: string = '#BFC0C3';
+  button1Text: string = '#000000'; 
+  button2Text: string = '#000000'
+  showAvailabilityField: boolean = false;
+
+
+  changeButtonColors(buttonClicked: number) {
+    if (buttonClicked === 1) {
+      this.button1Color = '#3B539B';
+      this.button2Color = '#BFC0C3';
+      this.button1Text = '#ffffff'; 
+      this.button2Text = '#000000'; 
+      this.showAvailabilityField = true; 
+    } else if (buttonClicked === 2) {
+      this.button1Color = '#BFC0C3'; // Réinitialise la couleur du bouton 1
+      this.button2Color = '#4560B3';
+      this.button1Text = '#000000'; // Réinitialise la couleur de texte pour le bouton 1
+      this.button2Text = '#ffffff';
+      this.showAvailabilityField = false; 
+
+    }
+  }
+
+  button1Color2: string = '#BFC0C3';
+  button2Color2: string = '#BFC0C3';
+  button1Text2: string = '#000000'; // Couleur de texte par défaut pour le bouton 1
+  button2Text2: string = '#000000';
+  showNewPatientField : boolean = false;
+  changeButtonColors2(buttonClicked: number) {
+    if (buttonClicked === 1) {
+      this.button1Color2 = '#3B539B';
+      this.button2Color2 = '#BFC0C3';
+      this.button1Text2 = '#ffffff'; 
+      this.button2Text2 = '#000000'; 
+    
+      
+    } else if (buttonClicked === 2) {
+      this.button1Color2 = '#BFC0C3'; // Réinitialise la couleur du bouton 1
+      this.button2Color2 = '#4560B3';
+      this.button1Text2 = '#000000'; // Réinitialise la couleur de texte pour le bouton 1
+      this.button2Text2 = '#ffffff';
+      this.showNewPatientField = true;
+      this.addNewPatient();
+    
+    }
   }
 
 
+  addNewPatient(): void {
+    // Logique pour ajouter un nouveau patient
+    console.log("Ajout d'un nouveau patient en cours...");
+  }
+
+  dayClickedaffiche({ date }: { date: Date }): void {
+    
+    this.selectedDate = date;
+  }
+  }
 
 
-
-
-
-
-
-
-
-
- 
-
-}
 
   
 
