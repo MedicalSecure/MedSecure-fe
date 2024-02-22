@@ -42,7 +42,7 @@ export class TestComponent implements AfterViewInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   todayDate: string = new Date().toLocaleDateString();
-  dateToShow : string ; 
+  dateToShow: string;
   columnsToDisplay = ['add', 'room', 'bed', 'patient', 'age', 'progress', 'status'];
   columnsToDisplayMedicines = ['name', 'posology', 'root']
   expandedElement: bacpatient | null;
@@ -56,18 +56,15 @@ export class TestComponent implements AfterViewInit {
     this.dataSource.data = filteredData;
   }
   onLeftButtonClick() {
-    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()-1));
-    this.today.setDate(this.today.getDate()-1)
-   
-this.todayDate = this.today.toLocaleDateString();
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate() - 1));
+    this.today.setDate(this.today.getDate() - 1);
+    this.todayDate = this.today.toLocaleDateString();
 
   }
   onRightButtonClick() {
-    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()+1));
-    this.today.setDate(this.today.getDate()+1)
-this.todayDate = this.today.toLocaleDateString();
-
-    
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate() + 1));
+    this.today.setDate(this.today.getDate() + 1)
+    this.todayDate = this.today.toLocaleDateString();
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialogComponent, {
