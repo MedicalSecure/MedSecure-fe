@@ -1,17 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Posology } from '../../test/test.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-
+import { MatDialog } from '@angular/material/dialog';
+import { DialogOverviewExampleDialogComponent } from '../../dialog-overview-example-dialog/dialog-overview-example-dialog.component';
 
 @Component({
   selector: 'app-schedule',
   standalone: true,
-  imports: [CommonModule , MatGridListModule],
+  imports: [CommonModule , MatGridListModule ],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.css'
 })
 export class ScheduleComponent implements OnInit {
+
    todayDate: string = new Date().toLocaleDateString();
   @Input() selectedHours: any[] = [];
   @Input() hoursListEmitter: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -23,6 +25,8 @@ export class ScheduleComponent implements OnInit {
   fullyChecked:boolean = false ;
   showChoices: boolean = true;
   @Input() hoursList : Posology[][]
+
+
 
   ngOnInit(): void {
     this.setDesiredHours();
@@ -86,3 +90,4 @@ if (!isNaN(parsedQuantity)) {
     }
 }
 }
+

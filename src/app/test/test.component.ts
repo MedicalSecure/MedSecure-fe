@@ -14,10 +14,11 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScheduleComponent } from "../components/schedule/schedule.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
-/**
- * @title Table with pagination
- */
+import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { MessageComponent } from "../message/message.component";
+import { MatTabsModule } from '@angular/material/tabs';
+import { DialogOverviewExampleDialogComponent } from '../dialog-overview-example-dialog/dialog-overview-example-dialog.component';
+
 @Component({
   selector: 'table-pagination-example',
   templateUrl: './test.component.html',
@@ -30,26 +31,52 @@ import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [MatTableModule,MatSortModule,MatSort,MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent]
+  imports: [MatTableModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, MessageComponent]
 })
 export class TestComponent implements AfterViewInit {
-  checkednumber: Number = 0;
-  checkedItems: any[] = []; // Array to store the checked items
 
+
+  today: Date = new Date();
+  checkednumber: Number = 0;
+  checkedItems: any[] = [];
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   todayDate: string = new Date().toLocaleDateString();
+  dateToShow : string ; 
   columnsToDisplay = ['add', 'room', 'bed', 'patient', 'age', 'progress', 'status'];
-
   columnsToDisplayMedicines = ['name', 'posology', 'root']
   expandedElement: bacpatient | null;
   selectedIndex: number | null = null;
-
+  servingDay: Date[];
+  tomorrow = new Date();
+  yesterday = new Date();
   @ViewChild(MatSort) sort: MatSort;
+  constructor(public dialog: MatDialog) {
+    const filteredData = ELEMENT_DATA.filter(item => new Date(item.servingDate).toLocaleDateString() === this.todayDate);
+    this.dataSource.data = filteredData;
+  }
+  onLeftButtonClick() {
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()-1));
+    this.today.setDate(this.today.getDate()-1)
+   
+this.todayDate = this.today.toLocaleDateString();
 
-  constructor() {
-    // Assuming you have data for patients
-   // Your patient data here
+  }
+  onRightButtonClick() {
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()+1));
+    this.today.setDate(this.today.getDate()+1)
+this.todayDate = this.today.toLocaleDateString();
+
+    
+  }
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialogComponent, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
   toggleExpanded(element: any) {
     this.expandedElement = this.expandedElement === element ? null : element;
@@ -65,16 +92,16 @@ export class TestComponent implements AfterViewInit {
     }
     this.selectedIndex = index;
   }
-
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    this.tomorrow.setDate(this.tomorrow.getDate() + 1);
+    this.yesterday.setDate(this.yesterday.getDate() - 1);
   }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-   
   }
-  
+
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
     if (!this.checkedItems[element.id]) {
       this.checkedItems[element.id] = [];
@@ -125,6 +152,7 @@ interface bacpatient {
   status: string;
   note: string;
   add: string;
+  servingDate: Date;
 }
 const ELEMENT_DATA = [
   {
@@ -169,7 +197,8 @@ const ELEMENT_DATA = [
     served: 7,
     status: 'Pending...',
     note: 'Note 1',
-    add: 'Add 1'
+    add: 'Add 1',
+    servingDate: new Date()
   },
   {
     id: 2,
@@ -212,7 +241,8 @@ const ELEMENT_DATA = [
     served: 5,
     status: 'Pending...',
     note: 'Note 2',
-    add: 'Add 2'
+    add: 'Add 2',
+    servingDate: new Date()
   },
   {
     id: 3,
@@ -255,7 +285,8 @@ const ELEMENT_DATA = [
     served: 6,
     status: 'Pending...',
     note: 'Note 3',
-    add: 'Add 3'
+    add: 'Add 3',
+    servingDate: new Date()
   },
   {
     id: 4,
@@ -298,7 +329,8 @@ const ELEMENT_DATA = [
     served: 4,
     status: 'Pending...',
     note: 'Note 4',
-    add: 'Add 4'
+    add: 'Add 4',
+    servingDate: new Date()
   },
   {
     id: 5,
@@ -341,7 +373,8 @@ const ELEMENT_DATA = [
     served: 6,
     status: 'Pending...',
     note: 'Note 5',
-    add: 'Add 5'
+    add: 'Add 5',
+    servingDate: new Date()
   },
   {
     id: 6,
@@ -384,7 +417,8 @@ const ELEMENT_DATA = [
     served: 3,
     status: 'Pending...',
     note: 'Note 6',
-    add: 'Add 6'
+    add: 'Add 6',
+    servingDate: new Date()
   },
   {
     id: 7,
@@ -427,7 +461,8 @@ const ELEMENT_DATA = [
     served: 5,
     status: 'Pending...',
     note: 'Note 7',
-    add: 'Add 7'
+    add: 'Add 7',
+    servingDate: new Date()
   },
   {
     id: 8,
@@ -470,7 +505,8 @@ const ELEMENT_DATA = [
     served: 4,
     status: 'Pending...',
     note: 'Note 8',
-    add: 'Add 8'
+    add: 'Add 8',
+    servingDate: new Date()
   },
   {
     id: 9,
@@ -513,7 +549,8 @@ const ELEMENT_DATA = [
     served: 4,
     status: 'Pending...',
     note: 'Note 9',
-    add: 'Add 9'
+    add: 'Add 9',
+    servingDate: new Date()
   },
   {
     id: 10,
@@ -556,6 +593,96 @@ const ELEMENT_DATA = [
     served: 3,
     status: 'Pending...',
     note: 'Note 10',
-    add: 'Add 10'
+    add: 'Add 10',
+    servingDate: new Date()
   },
+  {
+    id: 12,
+    room: 104,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(21)
+  },
+  {
+    id: 11,
+    room: 103,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(23)
+  },
+
 ];

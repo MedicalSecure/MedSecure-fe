@@ -16,16 +16,6 @@ table {
 
 }
 
-.filter-button {
-  margin-left: 20px;
-  background-color: #0650bebc;
-  border-radius: 20px;
-  color: white;
-  border-color: transparent;
-  height: 40px;
-  width: fit-content;
-  font-weight: bold;
-}
 
 .header-container {
   display: flex;
@@ -52,7 +42,7 @@ table {
 
 .extended-table .mat-column-expandedDetail {
   height: 100px;
-  width: auto;
+  width: 100px;
 }
 
 .image {
@@ -74,9 +64,9 @@ table {
   border: 1px solid #ccc;
 }
 
-.extended-table .mat-column-expandedDetail {
+.extended-table .mat-column-posology {
   height: min-content;
-  width: 200px;
+  width: 450px;
 }
 
 .checkbox {
@@ -95,14 +85,11 @@ table {
 .date {
   font-size: large;
   font-weight: bolder;
-  margin-left: 1200px;
+ position: relative;
+ 
 
 }
 
-.custom-table th {
-  background-color: #0650bebc;
-  color: white;
-}
 
 table .custom-table {
 
@@ -115,8 +102,8 @@ table .custom-table td {
 }
 
 table .extended-table {
-  width: fit-content;
-  height: 100px;
+  width:fit-content;
+  height:auto;
   background-color: rgb(239, 239, 239);
 }
 
