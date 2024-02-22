@@ -5,8 +5,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AddUnitCareDialogComponent } from '../add-unit-care-dialog/add-unit-care-dialog.component';
-import { DataService } from '../data.service';
+import { AddUnitCareDialogComponent } from '../../components/add-unit-care-dialog/add-unit-care-dialog.component';
+import { SideRoomsComponent } from "../../components/side-rooms/side-rooms.component";
+
 
 type CardContent = {
   title: string;
@@ -18,21 +19,22 @@ type RoomContent = {
 };
 
 @Component({
-  selector: 'app-unit-care',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatToolbarModule,
-    CommonModule,
-    MatIconModule,
-    AddUnitCareDialogComponent
-  ],
-  templateUrl: './unit-care.component.html',
-  styleUrl: './unit-care.component.css',
+    selector: 'app-unit-care',
+    standalone: true,
+    templateUrl: './unit-care.component.html',
+    styleUrl: './unit-care.component.css',
+    imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatToolbarModule,
+        CommonModule,
+        MatIconModule,
+        SideRoomsComponent
+    ]
 })
 export class UnitCareComponent {
+
 addCard($event: Event) {
 throw new Error('Method not implemented.');
 }
@@ -40,7 +42,7 @@ throw new Error('Method not implemented.');
   rooms = signal<RoomContent[]>([]);
 
 
-  constructor(private dialog: MatDialog,private dataService: DataService) {
+  constructor(private dialog: MatDialog,) {
     const cards: CardContent[] = [];
     for (let i = 0; i < 6; i++) {
       cards.push({
@@ -65,9 +67,7 @@ throw new Error('Method not implemented.');
 
 
 ngOnInit() {
-  this.dataService.submittedData$.subscribe(data => {
-    // Update the cards array with the submitted data
-  });
+
 }
 
 

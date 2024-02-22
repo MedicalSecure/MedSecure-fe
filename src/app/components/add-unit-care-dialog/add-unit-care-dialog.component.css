@@ -8,3 +8,8 @@
   flex: 1;
   margin-right: 30px; /* Adjust as needed for spacing between columns */
 }
+
+img{
+  width:24px;
+   height:24px
+}

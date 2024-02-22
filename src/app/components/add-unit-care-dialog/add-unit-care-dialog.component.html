@@ -1,0 +1,118 @@
+<div class="col-lg-12 grid-margin stretch-card m-0 rounded-circle">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Add Unit Care</h4>
+
+      <form class="forms-sample">
+        <div class="form-group">
+          <label for="Title">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="Title"
+            placeholder="Title"
+            style="height: 40px"
+          />
+        </div>
+        <div class="form-group">
+          <label for="Description">Description</label>
+          <textarea
+            class="form-control"
+            id="Description"
+            placeholder="Description"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="Type">Type </label>
+          <mat-select
+            placeholder="Type"
+            class="form-control"
+            style="height: 45px"
+            [(value)]="selected"
+          >
+            <mat-option value="none">None</mat-option>
+            <mat-option  value="general">
+             <img src="\assets\icons\General_medical_department.svg" alt="" class="rounded-circle">
+              general
+            </mat-option>
+            <mat-option  value="Intensive" [ngClass]="'d-flex justify-content-between col-12'">
+                <img src="\assets\icons\pediatrics-svgrepo-com.svg" alt="" class="rounded-circle" >   Intensive
+            </mat-option>
+            <mat-option  value="Coronary">
+
+              Coronary
+            </mat-option>
+            <mat-option  value="Surgical">
+
+              Surgical
+            </mat-option>
+            <mat-option  value="Pediatric">
+
+              Pediatric
+            </mat-option>
+            <mat-option>
+
+              Obstetrics
+            </mat-option>
+          </mat-select>
+        </div>
+        <hr class="mb-0"/>
+        <div class="form-row align-middle">
+          <p class="card-description my-auto">Add rooms</p>
+          <span>
+            <button
+              class="float-left"
+              mat-icon-button
+              color="warn"
+              aria-label="Remove/clear"
+              (click)="deleteItem(i)"
+              matTooltip="Remove"
+            >
+              <mat-icon>highlight_off</mat-icon>
+            </button>
+            <button
+              class="float-left"
+              mat-icon-button
+              color="primary"
+              aria-label="Add"
+              (click)="addItem()"
+              matTooltip="Add"
+            >
+              <mat-icon>add_circle_outline</mat-icon>
+            </button>
+          </span>
+        </div>
+
+        <div class="form-row" *ngFor="let room of getRooms(); let i = index">
+          <div class="form-group form-column">
+            <label for="Room-Number">Room-Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="Room-Number"
+              placeholder="Room-Number"
+              style="height: 40px"
+              [formControl]="$any(room)"
+              NumbersOnly
+            />
+          </div>
+
+          <div class="form-group form-column">
+            <label for="Room-status">Room-Status</label>
+            <select class="form-select" style="height: 40px">
+              <option value="1">none</option>
+              <option value="2" style="color: green">activated </option>
+              <option value="3" style="color: red">desactivated</option>
+              <option value="4" style="color: orange">en progress</option>
+            </select>
+          </div>
+        </div>
+        <hr />
+
+        <button type="submit" class="btn btn-primary me-2">Submit</button>
+        <button class="btn btn-light" (click)="onCancelClick()">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
