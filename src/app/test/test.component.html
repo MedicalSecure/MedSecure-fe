@@ -10,6 +10,10 @@
     <button style="background-color: transparent; border-color: transparent;" (click)="onRightButtonClick()">
       <img src="assets/right_arrow_icon.svg" alt="right_arrow"> 
     </button>
+    <mat-form-field style="width:300px; margin-left: 50px; height: 70px;" >
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="Filter($event)"  placeholder="Ex. ium" #input style="width: 300px; color: gray">
+    </mat-form-field>
   </div>
 
     </div>

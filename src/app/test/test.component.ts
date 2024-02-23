@@ -98,7 +98,10 @@ export class TestComponent implements AfterViewInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
+  Filter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
     if (!this.checkedItems[element.id]) {
       this.checkedItems[element.id] = [];
@@ -635,6 +638,358 @@ const ELEMENT_DATA = [
     status: 'Pending...',
     note: 'Note 10',
     add: 'Add 10',
+    servingDate: new Date().setDate(22)
+  },
+  {
+    id: 12,
+    room: 104,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(22)
+  },
+  {
+    id: 12,
+    room: 104,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(22)
+  },
+  {
+    id: 11,
+    room: 103,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(24)
+  },
+  {
+    id: 11,
+    room: 103,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(24)
+  },
+  {
+    id: 11,
+    room: 103,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(24)
+  },
+  {
+    id: 11,
+    room: 103,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(25)
+  },
+  {
+    id: 11,
+    room: 103,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
+    servingDate: new Date().setDate(25)
+  },
+  {
+    id: 11,
+    room: 103,
+    bed: 10,
+    patient: 'Patient10',
+    age: 65,
+    medicines: [
+      {
+        name: 'medicine28', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      },
+      {
+        name: 'medicine29', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Injection', dose: 1, note: ''
+      },
+      {
+        name: 'medicine30', posology: [
+          [
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+          ]
+        ], root: 'Oral', dose: 1, note: ''
+      }
+    ],
+    toServe: 11,
+    served: 3,
+    status: 'Pending...',
+    note: 'Note 10',
+    add: 'Add 10',
     servingDate: new Date().setDate(21)
   },
   {
@@ -679,7 +1034,7 @@ const ELEMENT_DATA = [
     status: 'Pending...',
     note: 'Note 10',
     add: 'Add 10',
-    servingDate: new Date().setDate(23)
+    servingDate: new Date().setDate(21)
   },
 
 ];
