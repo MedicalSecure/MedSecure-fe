@@ -20,15 +20,18 @@
 
 }
 .extended-table .mat-column-posology{
+margin-left: 50px;
 
-width: fit-content;
-min-height: 500px;
+height: fit-content;
 }
+.extended-table .mat-column-root{
+  width: 20%;
 
-table .extended-table td {
-  width: 200px;
+  }
+  .extended-table .mat-column-name{
+    width: 20%;
   
-}
+    }
 .more-button {
   background-color: transparent;
   border: none;
@@ -74,7 +77,7 @@ table .extended-table td {
 }
 
 
-.date {
+table .custom-table .mat-column-header .date {
   font-size: large;
   font-weight: bolder;
  position: relative;
@@ -83,7 +86,7 @@ table .extended-table td {
 }
 
 table .extended-table {
-  background-color: rgb(239, 239, 239);
+  background-color: rgba(239, 239, 239, 0);
 
  
 }
@@ -119,7 +122,7 @@ tr.example-element-row:not(.example-expanded-row):active {
   font-weight: bold;
   font-size: 40px;
   line-height: normal;
-  height: auto;
+  height: fit-content;
 }
 
 .example-element-description {

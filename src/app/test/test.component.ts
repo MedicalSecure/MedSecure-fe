@@ -115,6 +115,18 @@ export class TestComponent implements AfterViewInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+  calculateAge(birthdate: Date): number {
+    const today = new Date();
+    const birth = new Date(birthdate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+  
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+  
+    return age;
+  }
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
     if (!this.checkedItems[element.id]) {
       this.checkedItems[element.id] = [];
@@ -159,7 +171,7 @@ export interface bacpatient {
   room: number;
   bed: number;
   patient: string;
-  age: number;
+  birthday: Date;
   medicines: Medicine[];
   toServe: number;
   served: number;
@@ -174,7 +186,7 @@ export const ELEMENT_DATA = [
     room: 101,
     bed: 1,
     patient: 'rahma',
-    age: 40,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine1', posology: [
@@ -184,6 +196,8 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
+            
+          
           ]
         ], root: 'Injection', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry","Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
 
@@ -220,7 +234,7 @@ export const ELEMENT_DATA = [
     room: 102,
     bed: 2,
     patient: 'mehrez',
-    age: 30,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine4', posology: [
@@ -230,7 +244,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 3 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note: []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine5', posology: [
@@ -249,7 +263,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 15,
@@ -264,7 +278,7 @@ export const ELEMENT_DATA = [
     room: 101,
     bed: 3,
     patient: 'nejma',
-    age: 45,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine7', posology: [
@@ -283,7 +297,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine9', posology: [
@@ -293,7 +307,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 2 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 18,
@@ -308,7 +322,7 @@ export const ELEMENT_DATA = [
     room: 102,
     bed: 4,
     patient: 'morjana',
-    age: 50,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine10', posology: [
@@ -318,7 +332,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine11', posology: [
@@ -337,7 +351,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 12,
@@ -348,319 +362,11 @@ export const ELEMENT_DATA = [
     servingDate: new Date()
   },
   {
-    id: 5,
-    room: 101,
-    bed: 5,
-    patient: 'anber',
-    age: 35,
-    medicines: [
-      {
-        name: 'medicine13', posology: [
-          [
-            { hour: '08', value: '8', quantity: 2 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '17', value: '17', quantity: 2 },
-            { hour: '22', value: '22', quantity: 2 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine14', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine15', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 2 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 17,
-    served: 6,
-    status: 'Pending...',
-    note: 'Note 5',
-    add: 'Add 5',
-    servingDate: new Date()
-  },
-  {
-    id: 6,
-    room: 102,
-    bed: 6,
-    patient: 'sushi',
-    age: 45,
-    medicines: [
-      {
-        name: 'medicine16', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine17', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine18', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 10,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 6',
-    add: 'Add 6',
-    servingDate: new Date()
-  },
-  {
-    id: 7,
-    room: 101,
-    bed: 7,
-    patient: 'leo',
-    age: 50,
-    medicines: [
-      {
-        name: 'medicine19', posology: [
-          [
-            { hour: '08', value: '8', quantity: 2 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '17', value: '17', quantity: 2 },
-            { hour: '22', value: '22', quantity: 2 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine20', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine21', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 2 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 16,
-    served: 5,
-    status: 'Pending...',
-    note: 'Note 7',
-    add: 'Add 7',
-    servingDate: new Date()
-  },
-  {
-    id: 8,
-    room: 102,
-    bed: 8,
-    patient: 'luna',
-    age: 55,
-    medicines: [
-      {
-        name: 'medicine22', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine23', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine24', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 13,
-    served: 4,
-    status: 'Pending...',
-    note: 'Note 8',
-    add: 'Add 8',
-    servingDate: new Date()
-  },
-  {
-    id: 9,
-    room: 101,
-    bed: 9,
-    patient: 'mimi',
-    age: 60,
-    medicines: [
-      {
-        name: 'medicine25', posology: [
-          [
-            { hour: '08', value: '8', quantity: 2 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '17', value: '17', quantity: 2 },
-            { hour: '22', value: '22', quantity: 2 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine26', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine27', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 2 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 14,
-    served: 4,
-    status: 'Pending...',
-    note: 'Note 9',
-    add: 'Add 9',
-    servingDate: new Date()
-  },
-  {
-    id: 10,
-    room: 102,
-    bed: 10,
-    patient: 'rookie',
-    age: 65,
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date()
-  },
-  {
-    id: 12,
-    room: 104,
-    bed: 10,
-    patient: 'valentino',
-    age: 65,
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(22)
-  },
-  {
     id: 12,
     room: 104,
     bed: 10,
     patient: 'vasco',
-    age: 65,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -670,7 +376,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine29', posology: [
@@ -679,7 +385,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine30', posology: [
@@ -689,51 +395,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(22)
-  },
-  {
-    id: 12,
-    room: 104,
-    bed: 10,
-    patient: 'loubana',
-    age: 65,
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 11,
@@ -748,7 +410,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'nono',
-    age: 65,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -758,7 +420,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine29', posology: [
@@ -767,7 +429,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine30', posology: [
@@ -777,51 +439,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(24)
-  },
-  {
-    id: 11,
-    room: 103,
-    bed: 10,
-    patient: 'lotfi',
-    age: 65,
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note : []
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 11,
@@ -836,7 +454,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'candy',
-    age: 65,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -846,7 +464,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine29', posology: [
@@ -855,7 +473,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine30', posology: [
@@ -865,7 +483,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 11,
@@ -880,7 +498,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'roukaya',
-    age: 65,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -890,7 +508,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine29', posology: [
@@ -899,7 +517,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine30', posology: [
@@ -909,7 +527,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 11,
@@ -924,7 +542,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'fanta',
-    age: 65,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -934,7 +552,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine29', posology: [
@@ -943,7 +561,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine30', posology: [
@@ -953,7 +571,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 11,
@@ -968,7 +586,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'kamou',
-    age: 65,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -978,7 +596,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine29', posology: [
@@ -987,7 +605,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine30', posology: [
@@ -997,7 +615,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 11,
@@ -1012,7 +630,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'gustavo',
-    age: 65,
+    bd:new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -1022,7 +640,7 @@ export const ELEMENT_DATA = [
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       },
       {
         name: 'medicine29', posology: [
@@ -1031,7 +649,7 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note : []
+        ], root: 'Injection', dose: 1, note: ''
       },
       {
         name: 'medicine30', posology: [
@@ -1041,7 +659,7 @@ export const ELEMENT_DATA = [
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note : []
+        ], root: 'Oral', dose: 1, note: ''
       }
     ],
     toServe: 11,
