@@ -4,12 +4,11 @@ import { RegisterViewComponent } from './register-view/register-view.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { Page1Component } from './pages/page1/page1.component';
 
-
-    
-    export const routes: Routes = [
-        { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-        { path: 'register', component:RegisterFormComponent },
-        { path: 'register-view', component:RegisterViewComponent },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'page1', component: Page1Component } ,
+export const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'register', component: RegisterFormComponent },
+  
+  { path: 'register-view', component: RegisterViewComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'page1', component: Page1Component },
 ];
