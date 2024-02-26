@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-import { MessageComponent } from './message/message.component';
-
+import{CommentComponent} from './comment/comment.component'
 import{TestComponent} from './test/test.component'
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { Page1Component } from './pages/page1/page1.component';
@@ -9,7 +8,7 @@ export const routes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'page1', component: Page1Component } ,
     { path: 'bac-patient', component: TestComponent} ,
-    { path: 'message', component: MessageComponent} ,
+    { path: 'comment', component: CommentComponent} ,
     
     
 ];
