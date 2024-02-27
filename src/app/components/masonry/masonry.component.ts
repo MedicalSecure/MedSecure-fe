@@ -31,7 +31,9 @@ export class MasonryComponent implements OnInit {
       { title: 'Card 1', description: 'Description 1', height: 150, width: 200 },
       { title: 'Card 2', description: 'Description 2', height: 200, width: 250 },
       { title: 'Card 3', description: 'Description 3', height: 180, width: 180 },
-      // Add more items as needed
+      { title: 'Card 3', description: 'Description 3', height: 180, width: 180 },
+      { title: 'Card 3', description: 'Description 3', height: 180, width: 180 },
+      { title: 'Card 3', description: 'Description 3', height: 180, width: 180 },
     ];
   }
 }
