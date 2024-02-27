@@ -20,6 +20,7 @@ export class HumanBodyViewerComponent {
   toggleSwitchView() {
     this.isFrontSideChosen = !this.isFrontSideChosen;
   }
+  toggleSkinSelection() {}
 
   onBodyPartClick(source: string) {
     if (this.selectedParts.has(source)) {

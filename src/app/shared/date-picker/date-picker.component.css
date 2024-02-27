@@ -1,0 +1,11 @@
+.mat-form-field.error {
+  border-color: red; /* Or any preferred error color */
+}
+
+.mat-form-field.error .mat-form-field-label {
+  color: red; /* Or any preferred error text color */
+}
+
+.mat-form-field.error .mat-error {
+  display: block; /* Ensure error message visibility */
+}

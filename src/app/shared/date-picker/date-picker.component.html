@@ -1,8 +1,22 @@
-<mat-form-field>
-    <mat-label>{{customTitle}}</mat-label>
-    <input matInput [matDatepicker]="picker" [value]="startDate">
-    @if(showHint){<mat-hint>MM/DD/YYYY</mat-hint>}
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker startView="year" [startAt]="startDate" ></mat-datepicker>
-  </mat-form-field>
-  
+<mat-form-field [className]="class">
+  <mat-label>{{ customTitle }}</mat-label>
+  <input
+    matInput
+    (dateChange)="handleDateChange($event)"
+    [matDatepicker]="picker"
+    [value]="startDate"
+    [matDatepickerFilter]="filterFunction"
+  />
+  @if(showHint){<mat-hint>MM/DD/YYYY</mat-hint>}
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker
+    #picker
+    startView="month"
+    [startAt]="startDate"
+  ></mat-datepicker>
+</mat-form-field>
+@if(errorMessage!=''){<mat-error
+  style="margin-top: -1.4rem"
+  class="fw-semibold"
+  >{{ "Error : " + errorMessage }}</mat-error
+>}

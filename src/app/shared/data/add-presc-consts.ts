@@ -1,1 +1,1 @@
-export const SymptomSeverityLevels:string[]=["Mild", "Moderate","Severe"];
+export const SymptomSeverityLevels:string[]=["Mild", "Moderate","Severe"]

@@ -305,25 +305,26 @@
     </svg>
     }
   </div>
-  <div class="d-flex flex-column justify-content-center align-middle">
+  <div
+    class="d-flex flex-column justify-content-center align-middle col-1 gap-0"
+  >
     <button
       type="button"
-      name=""
       title="Turn around"
       (click)="toggleSwitchView()"
-      id=""
-      class="btn btn-outline-primary btn-lg btn-block d-flex align-middle"
+      class="btn btn-outline-primary"
+      id="bodyViewer-btn"
     >
-      <mat-icon>swap_horiz</mat-icon>
+      <mat-icon id="bodyViewer-btn-icon">swap_horiz</mat-icon>
+    </button>
+    <button
+      type="button"
+      title="Skin"
+      (click)="toggleSkinSelection()"
+      class="btn btn-outline-primary"
+      id="bodyViewer-btn"
+    >
+      <p id="bodyViewer-btn-icon" class="fs-6">skin</p>
     </button>
   </div>
-</div>
-<div class="d-flex flex-row justify-content-center align-middle mt-3">
-  @if(selectedParts.size){
-  <p>
-    selected parts : @for(part of selectedParts;track part){
-    <span> {{ part }},</span>
-    }
-  </p>
-  }
 </div>

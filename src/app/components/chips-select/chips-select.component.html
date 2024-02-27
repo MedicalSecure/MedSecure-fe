@@ -1,9 +1,13 @@
 <form>
   <mat-form-field class="example-chip-list" class="{{ class }}">
-    <mat-label @if(customLabel)>{{ customLabel }}</mat-label>
+    @if(customLabel){<mat-label>{{ customLabel }}</mat-label
+    >}
     <mat-chip-grid #chipGrid aria-label="object selection ">
       @for (object of selectedObjects; track object) {
-      <mat-chip-row (removed)="remove(object)">
+      <mat-chip-row
+        (removed)="remove(object)"
+        (click)="onClickSelectedChip(object)"
+      >
         {{ object[searchPropertyName] }}
         <button
           matChipRemove

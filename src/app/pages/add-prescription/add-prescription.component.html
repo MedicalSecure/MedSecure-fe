@@ -1,3 +1,10 @@
+<!-- 
+  remove start date from symptoms
+  change sig to android time pickers
+  dosage unit => remove list + autoSelect from medication choose
+ remove associated diagnosis
+
+-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,121 +12,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add prescription</title>
   </head>
-  <body
-    class="d-flex flex-column p-md-2 justify-content-center gap-5 flex-md-row"
-    id="body"
-  >
-    <!-- cards container -->
-    <div class="d-flex flex-column gap-2 justify-content-center align-middle">
-      <chips-select
-        [ObjectName]="'Symptom'"
-        [customLabel]="'Symptoms'"
-        class="w-100"
-        (selectedChipsChange)="selectedChipsChange($event)"
-        [enableCustomAdditions]="true"
-        [enableQuickSelectFromSuggestions]="true"
-        [fullData]="dummyData"
-        [minimumSearchLength]="2"
-        [minimumAddedLabelLength]="5"
-        [isStartWithSearch]="true"
-        [searchPropertyName]="'label'"
-      ></chips-select>
-      <!-- Current medication card -->
-      <div class="card">
-        <div class="card-body py-4 px-5">
-          <h4 class="card-title">Current Medication</h4>
-          <ul class="list ps-5">
-            <li>
-              <div class="mb-4">
-                <p class="fw-bold fs-5" style="color: #9000ff">
-                  Insulin<span style="color: #0000009d" class="fw-light fs-6">
-                    Permanent</span
-                  >
-                </p>
-                <p style="color: #0000009d">
-                  600 mg oral tablet<span> Start: 01 Jan 2024</span>
-                </p>
-              </div>
-            </li>
-            <li>
-              <div class="mb-2">
-                <p class="fw-bold fs-5" style="color: #9000ff">Doliprane</p>
-                <p style="color: #00000082">
-                  600 mg oral tablet<span> Start: 01 Jan 2024</span>
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- Allergies card -->
-      <div class="card">
-        <div class="card-body py-4 px-5">
-          <h4 class="card-title">Allergies</h4>
-          <ul class="list ps-5">
-            <li>
-              <div class="mb-4">
-                <p class="fw-bold fs-5" style="color: #9000ff">
-                  Drug allergy<span
-                    style="color: #0000009d"
-                    class="fw-light fs-6"
-                  >
-                    Chronic</span
-                  >
-                </p>
-                <p style="color: #e007079d" class="fw-bold">
-                  INSULIN<span style="color: #0000009d">
-                    Start: 01 Jan 2024</span
-                  >
-                </p>
-              </div>
-            </li>
-            <li>
-              <div class="mb-4">
-                <p class="fw-bold fs-5" style="color: #9000ff">
-                  Latex allergy<span
-                    style="color: #0000009d"
-                    class="fw-light fs-6"
-                  >
-                    Chronic</span
-                  >
-                </p>
-                <p style="color: #e007079d" class="fw-bold">
-                  <span style="color: #0000009d"> Start: 01 Jan 2024</span>
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- Personal history card -->
-      <div class="card">
-        <div class="card-body py-4 px-5">
-          <h4 class="card-title">Personal history</h4>
-          <ul class="list ps-5">
-            <li>
-              <div class="mb-4">
-                <p class="fw-bold fs-5" style="color: #9000ff">
-                  Cardiac surgery<span
-                    style="color: #0000009d"
-                    class="fw-light fs-6"
-                  >
-                  </span>
-                </p>
-                <p style="color: #e007079d" class="fw-bold">
-                  Critical<span style="color: #0000009d">
-                    Date: 01 Jan 2024</span
-                  >
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+  <body>
+    <!-- in-body navigator -->
+    <div
+      class="d-flex align-items-center justify-content-center border-bottom px-4"
+      style="background-color: #f4f5f7"
+    >
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item align-self-center">
+          <button
+            id="home-tab"
+            data-bs-toggle="tab"
+            aria-controls="overview"
+            (click)="SwitchToStep(0)"
+            [className]="
+              'nav-link ps-0 m-0 py-2' + (stepNumber == 0 && ' active bg-white')
+            "
+          >
+            Patient information
+          </button>
+        </li>
+        <li class="nav-item align-self-center">
+          <button
+            id="profile-tab"
+            data-bs-toggle="tab"
+            (click)="SwitchToStep(1)"
+            [className]="
+              'nav-link m-0 py-2' + (stepNumber == 1 && ' active bg-white')
+            "
+          >
+            Diagnostic
+          </button>
+        </li>
+        <li class="nav-item align-self-center">
+          <button
+            id="contact-tab"
+            data-bs-toggle="tab"
+            [attr.aria-selected]="stepNumber === 2"
+            (click)="SwitchToStep(2)"
+            [className]="
+              'nav-link m-0 b-0 py-2 ' + (stepNumber == 2 && ' active bg-white')
+            "
+          >
+            Medication
+          </button>
+        </li>
+      </ul>
     </div>
-    <!-- main body card -->
-    <div class="col-12 col-sm-5">
-      <app-add-symptoms></app-add-symptoms>
+
+    <!-- human body card -->
+    <div [className]="stepNumber != 0 && 'd-none'"><app-patient-select /></div>
+    <div [className]="stepNumber != 1 && 'd-none'">
+      <app-add-symptoms
+        (onPageChangeEvent)="onPageChangeEvent($event, 1)"
+        (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
+      />
+    </div>
+    <div [className]="stepNumber != 2 && 'd-none'">
+      <app-prescribe-medication (onBackClick)="SwitchToStep(1)" />
     </div>
   </body>
 </html>
