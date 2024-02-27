@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatDividerModule} from '@angular/material/divider';
+import { DatepickerRangePopupComponent } from "../datepicker-range-popup/datepicker-range-popup.component";
 
 @Component({
-  selector: 'app-parts-of-day',
-  standalone: true,
-  imports: [CommonModule, MatDividerModule],
-  templateUrl: './parts-of-day.component.html',
-  styleUrl: './parts-of-day.component.css'
+    selector: 'app-parts-of-day',
+    standalone: true,
+    templateUrl: './parts-of-day.component.html',
+    styleUrl: './parts-of-day.component.css',
+    imports: [CommonModule, MatDividerModule, DatepickerRangePopupComponent]
 })
 export class PartsOfDayComponent implements OnInit{
 
