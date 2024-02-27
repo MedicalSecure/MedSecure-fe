@@ -1,0 +1,18 @@
+<p>masonry works!</p>
+<ngx-masonry>
+    <div ngxMasonryItem class="masonry-item" *ngFor="let item of masonryItems">
+        <div class="card" [ngStyle]="{ 'height.px': item.height, 'width.px': item.width }">
+            <div class="card-header">
+                <h4 class="card-title">{{ item.title }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="card-body">
+                    <p class="card-description">{{ item.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</ngx-masonry>
+
+
+   

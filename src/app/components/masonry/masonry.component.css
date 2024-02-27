@@ -1,0 +1,6 @@
+.masonry-item {
+    /* Add your styling for each masonry item here */
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
