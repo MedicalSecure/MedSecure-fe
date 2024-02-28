@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { CalendarShedulerComponent } from '../../components/calendar-scheduler/calendar-scheduler.component';
+import { CalendarEventType, CalendarShedulerComponent } from '../../components/calendar-scheduler/calendar-scheduler.component';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { CalendarShedulerComponent } from '../../components/calendar-scheduler/c
 })
 export class Visits  {
   
-  events: CalendarEvent[] = [];
+  events: CalendarEventType[] = [];
   selectedDate: Date = new Date();
   formData: any = {};
   selectedTime: string = '';

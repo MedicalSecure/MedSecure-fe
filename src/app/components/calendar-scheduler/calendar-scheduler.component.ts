@@ -1,8 +1,8 @@
-import {Component,ChangeDetectionStrategy,ViewChild,TemplateRef,Input,Output,EventEmitter,OnInit, } from '@angular/core';
+import { AfterViewInit, Component, ChangeDetectionStrategy, ViewChild, TemplateRef, Input, Output, EventEmitter, OnInit, } from '@angular/core';
 import { startOfDay, isSameDay, isAfter } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {CalendarEvent,CalendarEventTimesChangedEvent, CalendarView,} from 'angular-calendar';
+import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarView, } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -33,12 +33,16 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { AppointmentComponent } from '../appointment/appointment.component'
-const colors: Record<string, EventColor> = {
-  red: {primary: '#ad2121', secondary: '#FAE3E3',},
-  blue: {primary: '#1e90ff',secondary: '#D1E8FF',},
-  yellow: {primary: '#e3bc08',secondary: '#FDF1BA',},};
+import { CalendarMonthViewDay } from 'angular-calendar';
 
-export enum ActionType {get,add,edit,delete,}
+
+const colors: Record<string, EventColor> = {
+  red: { primary: '#ad2121', secondary: '#FAE3E3', },
+  blue: { primary: '#1e90ff', secondary: '#D1E8FF', },
+  yellow: { primary: '#e3bc08', secondary: '#FDF1BA', },
+};
+
+export enum ActionType { get, add, edit, delete, }
 @Component({
   selector: 'app-calendar-view',
   standalone: true,
@@ -69,13 +73,13 @@ export enum ActionType {get,add,edit,delete,}
     MatChipsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule, 
+    MatSelectModule,
     AppointmentComponent
   ],
   providers: [
     { provide: DateAdapter, useFactory: adapterFactory },
     { provide: CalendarDateFormatter, useClass: CalendarDateFormatter },
-    CalendarUtils,FlatpickrDefaults,CalendarA11y,CalendarEventTitleFormatter, provideNativeDateAdapter(),
+    CalendarUtils, FlatpickrDefaults, CalendarA11y, CalendarEventTitleFormatter, provideNativeDateAdapter()
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'calendar-scheduler.component.html',
@@ -85,7 +89,10 @@ export enum ActionType {get,add,edit,delete,}
 export class CalendarShedulerComponent implements OnInit {
   view: CalendarView = CalendarView.Month;
   viewday: CalendarView = CalendarView.Day;
+ // @Input() events: CalendarEventType[] = [];
   @Input() events: CalendarEvent[] = [];
+
+  CastedEvents=this.events as CalendarEventType[];
   @Input() selectedDate: Date = new Date();
   @Input() selectedTime: string = '';
   @Input() formData: any = {
@@ -96,13 +103,13 @@ export class CalendarShedulerComponent implements OnInit {
     avaibility: ''
   };
   @ViewChild('modalContent', { static: true }) modalContent!: TemplateRef<any>;
-  @Output() eventClicked = new EventEmitter<CalendarEvent>();
+  @Output() eventClicked = new EventEmitter<CalendarEventType>();
   @ViewChild('todayButton') todayButton!: ElementRef;
-  @Output() modalData: { action: string; event: CalendarEvent<any> } = {
+  @Output() modalData: { action: string; event: CalendarEventType<any> } = {
     action: '',
-    event: {} as CalendarEvent<any>,
+    event: {} as CalendarEventType<any>,
   };
-  selectedEvent: CalendarEvent<any> | undefined;
+  selectedEvent: CalendarEventType<any> | undefined;
   refresh = new Subject<void>();
   CalendarView = CalendarView;
   viewDate: Date = new Date();
@@ -141,7 +148,7 @@ export class CalendarShedulerComponent implements OnInit {
 
 
   constructor(private modal: NgbModal, private http: HttpClient) {
-    this.modalData = { action: '', event: {} as CalendarEvent<any> };
+    this.modalData = { action: '', event: {} as CalendarEventType<any> };
   }
 
   modalOpen: boolean = true;
@@ -165,9 +172,11 @@ export class CalendarShedulerComponent implements OnInit {
   ngOnInit(): void {
     this.loadEvents();
     this.loadPatients();
-    console.log('Events in CalendarShedulerComponent: ', this.events);
     this.formData = { ...this.modalData };
+
   }
+
+
 
   loadPatients() {
     this.http.get<any[]>('assets/data/patients.json').subscribe(
@@ -201,7 +210,7 @@ export class CalendarShedulerComponent implements OnInit {
   loadEvents() {
     this.http.get<any[]>('assets/data/visits.json').subscribe(
       (data) => {
-        this.events = data.map((event) => ({
+        this.CastedEvents = data.map((event) => ({
           ...event,
           start: new Date(event.start),
           end: new Date(event.end),
@@ -216,7 +225,7 @@ export class CalendarShedulerComponent implements OnInit {
         }));
         this.generateActions();
         this.addAddEventToDaysWithEvents();
-        console.log('Events loaded:', this.events);
+        console.log('Events loaded:', this.CastedEvents);
         this.triggerTodayClick();
       },
       (error) => {
@@ -229,7 +238,6 @@ export class CalendarShedulerComponent implements OnInit {
     if (this.selectedPatient === patient) {
       this.selectedPatient = null;
     } else {
-      // Sinon, sélectionnez le patient
       this.selectedPatient = patient;
       this.formData.patient = patient.nom + ' ' + patient.prenom;
       console.log('Patient selected:', this.formData.patient);
@@ -239,7 +247,7 @@ export class CalendarShedulerComponent implements OnInit {
   addAddEventToDaysWithEvents() {
     const daysWithEvents: Date[] = [];
     const today = startOfDay(new Date());
-    this.events.forEach((event) => {
+    this.CastedEvents.forEach((event) => {
       const eventDate = startOfDay(event.start);
       if (isAfter(eventDate, today) || isSameDay(eventDate, today)) {
         if (!daysWithEvents.some((day) => isSameDay(day, eventDate))) {
@@ -248,13 +256,13 @@ export class CalendarShedulerComponent implements OnInit {
       }
     });
     daysWithEvents.forEach((day) => {
-      const eventExists = this.events.some(
+      const eventExists = this.CastedEvents.some(
         (existingEvent) =>
           isSameDay(startOfDay(existingEvent.start), day) &&
           existingEvent.title === 'Create an appointment'
       );
       if (!eventExists) {
-        this.events.push({
+        this.CastedEvents.push({
           start: day,
           title: 'Create an appointment',
           color: { ...colors['yellow'] },
@@ -266,14 +274,14 @@ export class CalendarShedulerComponent implements OnInit {
   }
 
   generateActions(): void {
-    this.events.forEach((event) => {
+    this.CastedEvents.forEach((event) => {
       event.actions = [];
 
       if (event.actionType.includes(ActionType.get)) {
         event.actions.push({
           label: '<i class="fa-solid fa-stethoscope"></i>',
           a11yLabel: 'get',
-          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+          onClick: ({ event }: { event: CalendarEventType<any> }): void => {
             this.handleEvent('readed', event);
           },
         });
@@ -283,7 +291,7 @@ export class CalendarShedulerComponent implements OnInit {
         event.actions.push({
           label: '<i class="fa-solid fa-plus "></i>',
           a11yLabel: 'add',
-          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+          onClick: ({ event }: { event: CalendarEventType<any> }): void => {
             this.handleEvent('Created', event);
           },
         });
@@ -294,7 +302,7 @@ export class CalendarShedulerComponent implements OnInit {
         event.actions.push({
           label: '<i class="fas fa-pencil-alt"></i>',
           a11yLabel: 'Edit',
-          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+          onClick: ({ event }: { event: CalendarEventType<any> }): void => {
             this.handleEvent('Edited', event);
           },
         });
@@ -304,7 +312,7 @@ export class CalendarShedulerComponent implements OnInit {
         event.actions.push({
           label: '<i class="fas fa-fw fa-trash-alt"></i>',
           a11yLabel: 'Delete',
-          onClick: ({ event }: { event: CalendarEvent<any> }): void => {
+          onClick: ({ event }: { event: CalendarEventType<any> }): void => {
             this.handleEvent('Deleted', event);
           },
         });
@@ -317,7 +325,7 @@ export class CalendarShedulerComponent implements OnInit {
   getExistingDates(): Date[] {
     const existingDates: Date[] = [];
 
-    this.events.forEach((event) => {
+    this.CastedEvents.forEach((event) => {
       if (
         event.start &&
         !existingDates.some((day) => isSameDay(day, event.start))
@@ -332,7 +340,7 @@ export class CalendarShedulerComponent implements OnInit {
   getDaysWithEvents(): Date[] {
     const daysWithEvents: Date[] = [];
 
-    this.events.forEach((event) => {
+    this.CastedEvents.forEach((event) => {
       //erreur
       if (
         event.start &&
@@ -345,7 +353,8 @@ export class CalendarShedulerComponent implements OnInit {
     return daysWithEvents;
   }
 
-  handleEventClick(event: CalendarEvent) {
+  handleEventClick(event: any): void  {
+    console.log(event)
     if (event.title === 'Create an appointment') {
       this.selectedEvent = event;
       this.handleEvent('Created', event);
@@ -354,8 +363,12 @@ export class CalendarShedulerComponent implements OnInit {
     }
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+  // dayClicked({ date, events }: { date: Date; events: CalendarEventType[] }): void {
+  dayClicked({ day }: { day: CalendarMonthViewDay<any> }): void {
     const today = startOfDay(new Date());
+    const date = day.date;
+    const events = day.events;
+  
     if (date < today) {
       if (events.length === 0) {
         console.log('impossible de trouve événement pour cette date');
@@ -365,7 +378,7 @@ export class CalendarShedulerComponent implements OnInit {
     } else {
       if (events.length === 0) {
         console.log('Ajouter événement pour cette date');
-        const newEvent: CalendarEvent<any> = {
+        const newEvent: CalendarEventType<any> = {
           title: 'Ajouter événement pour cette date',
           start: date,
           patient: this.modalData.event.patient,
@@ -374,7 +387,7 @@ export class CalendarShedulerComponent implements OnInit {
           avaibility: this.modalData.event.avaibility,
           description: this.modalData.event.description,
           duration: this.modalData.event.duration,
-          actionType: [ActionType.edit, ActionType.delete], 
+          actionType: [ActionType.edit, ActionType.delete],
         };
         this.handleEvent('Created', newEvent);
       } else {
@@ -397,19 +410,19 @@ export class CalendarShedulerComponent implements OnInit {
     this.events = this.events.map((iEvent) => {
       if (iEvent === event) {
         return {
-          ...event,
+          ...event as CalendarEventType,
           start: newStart,
           end: newEnd,
         };
       }
       return iEvent;
     });
-    this.handleEvent('Dropped or resized', event);
+    this.handleEvent('Dropped or resized', event as CalendarEventType);
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
+  handleEvent(action: string, event: CalendarEventType): void {
     this.modalData = { event, action };
-
+    console.log('fffffffff',this.modalData )
     switch (action) {
       case 'readed':
         this.modalTitle = 'Read Data';
@@ -453,7 +466,7 @@ export class CalendarShedulerComponent implements OnInit {
   }
 
   addEvent(): void {
-    const newEvent: CalendarEvent = {
+    const newEvent: CalendarEventType = {
       title: 'Nouvel événement',
       start: new Date(),
       end: new Date(),
@@ -466,14 +479,14 @@ export class CalendarShedulerComponent implements OnInit {
       },
     };
 
-    this.events.push(newEvent);
+    this.CastedEvents.push(newEvent);
 
   }
 
-  deleteEvent(eventToDelete: CalendarEvent) {
+  deleteEvent(eventToDelete: CalendarEventType) {
     console.log('Événement à supprimer :', eventToDelete);
-    this.events = this.events.filter((event) => event !== eventToDelete);
-    console.log('Événements après suppression :', this.events);
+    this.CastedEvents = this.CastedEvents.filter((event) => event !== eventToDelete);
+    console.log('Événements après suppression :', this.CastedEvents);
   }
 
   setView(view: CalendarView) {
@@ -517,7 +530,7 @@ export class CalendarShedulerComponent implements OnInit {
           (response) => {
             console.log('Données enregistrées avec succès !', updatedData);
 
-            const newEvent: CalendarEvent = {
+            const newEvent: CalendarEventType = {
               start: this.selectedDate,
               patient: this.formData.patient,
               typevisits: this.formData.typevisits,
@@ -538,7 +551,7 @@ export class CalendarShedulerComponent implements OnInit {
             };
 
             this.modal.dismissAll()
-            this.events.push(newEvent); 
+            this.CastedEvents.push(newEvent);
           },
           (error) => {
             console.error(
@@ -584,7 +597,7 @@ export class CalendarShedulerComponent implements OnInit {
   }
 
   timeClickedaffiche({ date }: { date: Date }): void {
-  
+
     const currentTime = new Date();
 
     const formattedTime = this.formatTime(currentTime);
@@ -626,14 +639,14 @@ export class CalendarShedulerComponent implements OnInit {
 
   updateEventData(formData: any): void {
     this.modalData.event = { ...this.modalData.event, ...formData };
-    this.events = this.events.map((event) => {
+    this.CastedEvents = this.CastedEvents.map((event) => {
       if (event.id === this.modalData.event.id) {
         return { ...event, ...this.modalData.event };
       } else {
         return event;
       }
     });
-    this.saveToFile(this.events);
+    this.saveToFile(this.CastedEvents);
     this.closeModal();
   }
 
@@ -675,4 +688,39 @@ export class CalendarShedulerComponent implements OnInit {
 
 
 
+}
+
+export interface EventAction {
+  id?: string | number;
+  label: string;
+  cssClass?: string;
+  a11yLabel?: string;
+  onClick({ event, sourceEvent, }: {
+    event: CalendarEventType;
+    sourceEvent: MouseEvent | KeyboardEvent;
+  }): any;
+}
+export interface CalendarEventType <MetaType = any>  {
+
+  typevisits?: any;
+  disponibilite?: any;
+  avaibility?: any;
+  description?: any;
+  duration?: any;
+  actionType: ActionType[];
+  patient?: any;
+  id?: string | number;
+  start: Date;
+  end?: Date;
+  title: string;
+  color?: EventColor;
+  actions?: EventAction[];
+  allDay?: boolean;
+  cssClass?: string;
+  resizable?: {
+    beforeStart?: boolean;
+    afterEnd?: boolean;
+  };
+  draggable?: boolean;
+  meta?: MetaType;
 }

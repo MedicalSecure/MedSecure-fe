@@ -63,10 +63,10 @@
   <mwl-calendar-month-view
     *ngSwitchCase="CalendarView.Month"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="CastedEvents"
     [refresh]="refresh"
     [activeDayIsOpen]="activeDayIsOpen"
-    (dayClicked)="dayClicked($event.day)"
+    (dayClicked)="dayClicked($event)"
     (eventClicked)="handleEventClick($event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
@@ -74,7 +74,7 @@
   <mwl-calendar-week-view
     *ngSwitchCase="CalendarView.Week"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="CastedEvents"
     [refresh]="refresh"
     (eventClicked)="handleEventClick($event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
@@ -83,9 +83,8 @@
   <mwl-calendar-day-view
     *ngSwitchCase="CalendarView.Day"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="CastedEvents"
     [refresh]="refresh"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-day-view>
@@ -101,11 +100,11 @@
   (eventUpdated)="updateEventData($event)"
   [modalTitle]="modalTitle"
   [modalAction]="modalAction"
-  [modalData]="modalData" 
+  [modalData]="modalData"
   [modalbutton]="modalbutton"
   [selectedDate]="selectedDate"
   [selectedTime]="selectedTime"
   ></app-appointment>
-
 </ng-template>
 
+<!-- (eventClicked)="handleEvent('Clicked', $events)" -->

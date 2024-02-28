@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, TemplateRef, EventEmitter } from '@angular/core';
-import { CalendarEvent } from 'angular-calendar';
+
 import { HttpClient } from '@angular/common/http';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CalendarEventType } from '../calendar-scheduler/calendar-scheduler.component';
 
 
 @Component({
@@ -51,7 +52,7 @@ export class AppointmentComponent implements OnInit {
   };
   @Input() selectedDate: Date = new Date();
 
-  @Input() modalData: { event: CalendarEvent<any> } = { event: {} as CalendarEvent<any> };
+  @Input() modalData: { event: CalendarEventType<any> } = { event: {} as CalendarEventType<any> };
   @Input() selectedTime: string = '';
   @ViewChild('modalContent') modalContent!: TemplateRef<any>;
   @Output() eventDeleted: EventEmitter<any> = new EventEmitter<any>();
@@ -130,7 +131,7 @@ export class AppointmentComponent implements OnInit {
 
 
   saveFormData(formData: any) {
-    const newEvent: CalendarEvent = {
+    const newEvent: CalendarEventType = {
       start: this.selectedDate,
       patient: this.formData.patient,
       typevisits: this.formData.typevisits,
