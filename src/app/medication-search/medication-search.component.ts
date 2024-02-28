@@ -60,6 +60,7 @@ export class MedicationSearchComponent implements OnInit {
   openDialog(medcine: Medcine): void {
     if (!this.selectedMedcines.includes(medcine)) {
       this.selectedMedcines.push(medcine);
+      this.emitSelectedMedcines();
     }
     this.searchControl.setValue('');
   }
@@ -77,18 +78,18 @@ export class MedicationSearchComponent implements OnInit {
     }
   }
 
-  onSelectionChange(lastAddedItem: Medcine | undefined, lastRemovedItem: Medcine | undefined) {
-    if (lastAddedItem) {
-      this.selectedMedcines.push(lastAddedItem);
-    }
-    if (lastRemovedItem) {
-      const index = this.selectedMedcines.indexOf(lastRemovedItem);
-      if (index !== -1) {
-        this.selectedMedcines.splice(index, 1);
-      }
-    }
-    this.emitSelectedMedcines();
-  }
+  // onSelectionChange(lastAddedItem: Medcine | undefined, lastRemovedItem: Medcine | undefined) {
+  //   if (lastAddedItem) {
+  //     this.selectedMedcines.push(lastAddedItem);
+  //   }
+  //   if (lastRemovedItem) {
+  //     const index = this.selectedMedcines.indexOf(lastRemovedItem);
+  //     if (index !== -1) {
+  //       this.selectedMedcines.splice(index, 1);
+  //     }
+  //   }
+  //   this.emitSelectedMedcines();
+  // }
 
   removeMedcine(medcine: Medcine): void {
     const index = this.selectedMedcines.indexOf(medcine);

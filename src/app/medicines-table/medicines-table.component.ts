@@ -50,13 +50,18 @@ export class MedicinesTableComponent implements OnInit {
   importExcelData() {
     this.communicationService.importExcel$.subscribe(data => {
       const workbook = XLSX.read(data, { type: 'binary' });
-      const firstSheetName = workbook.SheetNames[0];
+      const sheetNames = workbook.SheetNames;
+      
+      // Assuming only the first sheet is processed
+      const firstSheetName = sheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
+      
+      // Convert Excel data to JSON
       const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
+  
       // Extract Excel headers
       const excelHeaders = jsonData[0];
-
+  
       // Open the popup dialog for column mapping
       const dialogRef = this.dialog.open(ColumnMappingDialogComponent, {
         width: '500px',
@@ -67,7 +72,7 @@ export class MedicinesTableComponent implements OnInit {
           columnMappings: this.columnMappings,
         }
       });
-
+  
       // Subscribe to dialog closed event to get mapped columns
       dialogRef.afterClosed().subscribe(mappedColumns => {
         if (mappedColumns) {
@@ -87,9 +92,9 @@ export class MedicinesTableComponent implements OnInit {
       });
     });
   }
-
+  
   mapColumns(mappedColumns: any) {
-    const mappedData = this.excelData.map((row: any[]) => {
+    const mappedData = this.excelData.slice(1).map((row: any[]) => {
       const mappedRow: any = {};
       this.excelHeaders.forEach((header, index) => {
         const displayedColumn = mappedColumns[header];
@@ -102,6 +107,7 @@ export class MedicinesTableComponent implements OnInit {
   
     this.dataSource.data = mappedData;
   }
+  
 
 
   
