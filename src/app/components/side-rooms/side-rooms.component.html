@@ -1,20 +1,136 @@
-<div>
-  <nav class="sidebar sidebar-offcanvas" >
-    <form class="form-inline">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-search"></i></span>
-        </div>
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      </div>
-    </form>
+<div class="content-wrap p-2" style="border:1px solid;border-color: rgba(0, 0, 0, 0.073);">
 
-    <ul class="list-group">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Morbi leo risus</li>
-      <li class="list-group-item">Porta ac consectetur ac</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-  </nav>
+          <form class="form-inline">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
+              </div>
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            </div>
+          </form>
+          <br>
+          <h4 class="card-title">Add Unit Care</h4>
+
+          <form class="forms-sample">
+            <div class="form-group">
+              <label for="Title">Title</label>
+              <input
+                type="text"
+                class="form-control"
+                id="Title"
+                placeholder="Title"
+                style="height: 40px"
+              />
+            </div>
+            <div class="form-group">
+              <label for="Description">Description</label>
+              <textarea
+                class="form-control"
+                id="Description"
+                placeholder="Description"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="Type">Type </label>
+              <mat-select
+                placeholder="Type"
+                class="form-control"
+                style="height: 45px"
+                [(value)]="selected"
+              >
+                <mat-option value="none">None</mat-option>
+                <mat-option  value="general">
+                 <img src="\assets\icons\General_medical_department.svg" alt="" class="rounded-circle">
+                  general
+                </mat-option>
+                <mat-option  value="Intensive" >
+                    <img src="" alt="" class="rounded-circle" >   Intensive
+                </mat-option>
+                <mat-option  value="Coronary">
+
+                  Coronary
+                </mat-option>
+                <mat-option  value="Surgical">
+
+                  Surgical
+                </mat-option>
+                <mat-option  value="Pediatric">
+
+                  Pediatric
+                </mat-option>
+                <mat-option>
+
+                  Obstetrics
+                </mat-option>
+              </mat-select>
+            </div>
+            <hr class="mb-0"/>
+            <div style="display: flex; align-items: center">
+              <h6 class="card-description my-auto">Add rooms</h6>
+
+              <div style="margin-left: auto;">
+                <button
+                  class="float-left"
+                  mat-icon-button
+                  color="warn"
+                  aria-label="Remove/clear"
+                  (click)="deleteItem(i)"
+                  matTooltip="Remove"
+                >
+                  <mat-icon>highlight_off</mat-icon>
+                </button>
+                <button
+                  class="float-left"
+                  mat-icon-button
+                  color="primary"
+                  aria-label="Add"
+                  (click)="addItem()"
+                  matTooltip="Add"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+
+
+            <div class="form-row" *ngFor="let room of getRooms(); let i = index">
+              <div class="form-group form-column">
+                <label for="Room-Number">Room-Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Room-Number"
+                  placeholder="Room-Number"
+                  style="height: 40px"
+                  [formControl]="$any(room)"
+                  NumbersOnly
+                />
+              </div>
+
+              <!-- <div class="form-group form-column">
+                <label for="Room-status">Room-Status</label>
+                <select class="form-select" style="height: 40px">
+                  <option value="1">none</option>
+                  <option value="2" style="color: green">activated </option>
+                  <option value="3" style="color: red">desactivated</option>
+                  <option value="4" style="color: orange">en progress</option>
+                </select>
+              </div> -->
+            </div>
+            <hr />
+            <p class="card-description my-auto">Affect Personnel</p>
+            <input class="form-control mr-sm-2" type="search"
+             placeholder="Search" aria-label="Search"
+             [ngModel]="searchQuery"
+             (ngModelChange)="filterPersonnel()" autofocus />
+
+             <br>
+
+            <button type="submit" class="btn btn-primary me-2">Submit</button>
+            <button class="btn btn-light" >Cancel</button>
+          </form>
+
+
+
 </div>

@@ -1,60 +1,19 @@
 .container {
   padding: 24px;
-}
-
-.responsive-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 24px;
-}
-
-.rooms{
-  display: inline-block;
-
-  gap: 24px;
-  width: 50px;
-  background-color: blueviolet;
-
-}
-
-mat-card {
-  width: calc(100% - 24px); /* Adjust the width as needed */
-  max-width: 500px; /* Adjust the maximum width as needed */
-  margin: 12px; /* Adjust the margin as needed */
-}
-
-.card-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
 }
 
-.card-actions {
-  position: absolute;
-  top: 0px;
-  right: 0px;
+.card {
+  width: calc(33.33% - 8px); /* 33.33% pour que trois cartes s'affichent par ligne, -8px pour l'espace entre les cartes */
+  margin-bottom: 16px; /* Ajoute un espace en bas de chaque carte */
 }
 
-.add-button-container {
-  margin-right: 5rem;
-  margin-left: auto;
-  width: 80px;
-  height: 80px;
-}
-.add-button {
-  bottom: 3;
-  width: 80px;
-  height: 80px;
+.template-demo img {
+  margin-right: 10px; /* Espacement horizontal entre les images */
 }
 
-.example-card {
-  max-width: 400px;
-}
-
-.example-header-image {
-  background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
-  background-size: cover;
-}
-#test {
-  color: green;
+.image-pers{
+  text-align: center; display: inline-block; margin-right: 10px;
 }

@@ -1,22 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AddUnitCareDialogComponent } from '../../components/add-unit-care-dialog/add-unit-care-dialog.component';
 import { SideRoomsComponent } from "../../components/side-rooms/side-rooms.component";
-
-
-type CardContent = {
-  title: string;
-  description: string;
-};
-type RoomContent = {
-  Number: string;
-  status: string;
-};
+import { cardData } from '../../card-data';
 
 @Component({
     selector: 'app-unit-care',
@@ -24,10 +11,7 @@ type RoomContent = {
     templateUrl: './unit-care.component.html',
     styleUrl: './unit-care.component.css',
     imports: [
-        MatCardModule,
         MatButtonModule,
-        MatDialogModule,
-        MatToolbarModule,
         CommonModule,
         MatIconModule,
         SideRoomsComponent
@@ -35,53 +19,31 @@ type RoomContent = {
 })
 export class UnitCareComponent {
 
-addCard($event: Event) {
-throw new Error('Method not implemented.');
-}
-  cards = signal<CardContent[]>([]);
-  rooms = signal<RoomContent[]>([]);
+ cards=cardData;
 
 
-  constructor(private dialog: MatDialog,) {
-    const cards: CardContent[] = [];
-    for (let i = 0; i < 6; i++) {
-      cards.push({
-        title: `Unit ${i + 1}`,
-        description: `Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. `,
-      });
+  constructor() {}
+
+
+  getButtonClass(index: number): string {
+    switch(index) {
+      case 0:
+        return 'btn btn-primary';
+      case 1:
+        return 'btn btn-secondary';
+      case 2:
+        return 'btn btn-success';
+      default:
+        return 'btn btn-default'; // Add more cases if needed
     }
+  }
 
-    this.cards.set(cards);
+  selectedCard: any;
 
-    const rooms: RoomContent[] = [];
-    for (let i = 0; i < 8; i++) {
-      rooms.push({
-        Number: `520 `,
-        status: `activated `,
-      });
-    }
-
-    this.rooms.set(rooms);
+  showRooms(card: any) {
+    this.selectedCard = card;
   }
 
 
 
-ngOnInit() {
-
-}
-
-
-
-
-  openAddDialog(): void {
-    const dialogRef = this.dialog.open(AddUnitCareDialogComponent);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const updatedCards = this.cards() || []; // Get the current value of cards
-        updatedCards.push(result); // Add the new card
-        this.cards.set(updatedCards); // Set the updated cards array
-      }
-    });
-  }
 }
