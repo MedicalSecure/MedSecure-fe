@@ -7,7 +7,7 @@ import { provideDaterangepickerLocale } from "ngx-daterangepicker-bootstrap";
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), 
-              provideDaterangepickerLocale({separator: ' - ', applyLabel: 'Okay',}), 
+  providers: [provideRouter(routes),
+              provideDaterangepickerLocale({separator: ' - ', applyLabel: 'Okay',}),
               provideAnimationsAsync()]
 };

@@ -1,136 +1,142 @@
-<div class="content-wrap p-2" style="border:1px solid;border-color: rgba(0, 0, 0, 0.073);">
+<div
+class="content-wrap p-2"
+style="border: 1px solid; border-color: rgba(0, 0, 0, 0.073);;"
+>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span  class="form-control"><i class="fa fa-search"></i></span>
+      </div>
+      <input
+        class="form-control"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+    </div>
 
-          <form class="form-inline">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fa fa-search"></i></span>
-              </div>
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            </div>
-          </form>
-          <br>
-          <h4 class="card-title">Add Unit Care</h4>
+  <br />
+  <h4 class="card-title">Add Unit Care</h4>
 
-          <form class="forms-sample">
-            <div class="form-group">
-              <label for="Title">Title</label>
-              <input
-                type="text"
-                class="form-control"
-                id="Title"
-                placeholder="Title"
-                style="height: 40px"
-              />
-            </div>
-            <div class="form-group">
-              <label for="Description">Description</label>
-              <textarea
-                class="form-control"
-                id="Description"
-                placeholder="Description"
-              ></textarea>
-            </div>
+  <form class="forms-sample">
+    <div class="form-group">
+      <label for="Title">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="Title"
+        placeholder="Title"
+        style="height: 40px"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Description">Description</label>
+      <textarea
+        class="form-control"
+        id="Description"
+        placeholder="Description"
+      ></textarea>
+    </div>
 
-            <div class="form-group">
-              <label for="Type">Type </label>
-              <mat-select
-                placeholder="Type"
-                class="form-control"
-                style="height: 45px"
-                [(value)]="selected"
-              >
-                <mat-option value="none">None</mat-option>
-                <mat-option  value="general">
-                 <img src="\assets\icons\General_medical_department.svg" alt="" class="rounded-circle">
-                  general
-                </mat-option>
-                <mat-option  value="Intensive" >
-                    <img src="" alt="" class="rounded-circle" >   Intensive
-                </mat-option>
-                <mat-option  value="Coronary">
+    <div class="form-group">
+      <label for="Type">Type </label>
+      <mat-select
+        placeholder="Type"
+        class="form-control"
+        style="height: 45px"
+        [(value)]="selected"
+      >
+        <mat-option value="none">None</mat-option>
+        <mat-option value="general">
+          <img
+            src="\assets\icons\General_medical_department.svg"
+            alt=""
+            class="rounded-circle"
+          />
+          general
+        </mat-option>
+        <mat-option value="Intensive">
+          <img src="" alt="" class="rounded-circle" /> Intensive
+        </mat-option>
+        <mat-option value="Coronary"> Coronary </mat-option>
+        <mat-option value="Surgical"> Surgical </mat-option>
+        <mat-option value="Pediatric"> Pediatric </mat-option>
+        <mat-option> Obstetrics </mat-option>
+      </mat-select>
+    </div>
+    <hr class="mb-0" />
+    <div style="display: flex; align-items: center">
+      <h6 class="card-description my-auto">Add rooms</h6>
 
-                  Coronary
-                </mat-option>
-                <mat-option  value="Surgical">
+      <div style="margin-left: auto">
 
-                  Surgical
-                </mat-option>
-                <mat-option  value="Pediatric">
+        <button
+          class="float-left"
+          mat-icon-button
+          color="primary"
+          aria-label="Add"
+          matTooltip="Add"
+          (click)="addPassenger()"
+        >
+          <mat-icon>add_circle_outline</mat-icon>
+        </button>
+      </div>
+    </div>
+    <form [formGroup]="form">
+      <div formArrayName="passenger">
+        <div *ngFor="let passengerGroup of passenger.controls; let i = index" [formGroupName]="i" >
+          <div style="display: flex; align-items: center">
+            <input type="text"
+            class="form-control"
+             formControlName="roomNumber"
+              placeholder="room-number" />
+            <div style="margin-left: auto">
+            <button
+            class="float-left"
+            mat-icon-button
+            color="warn"
+            aria-label="Remove/clear"
+            (click)="removePassenger(i)"
+            matTooltip="Remove"
+          >
+            <mat-icon>highlight_off</mat-icon>
+          </button>
+        </div>
+          </div>
+          @if(passengerGroup.get('roomNumber')?.value.length > 0){
+            <p>
+              add equipment
+            </p>
+            <select formControlName="roomType" [id]="'Equipment-' + i" >
+              <option value="">Select Equipment</option>
+              <option *ngFor="let equipment of equipmentData" [value]="equipment.id">{{ equipment.name }}</option>
+              <!-- Ajoutez d'autres options ici -->
+            </select>
+          }
 
-                  Pediatric
-                </mat-option>
-                <mat-option>
+        </div>
+      </div>
+    </form>
+    <hr />
+    <p class="card-description my-auto">Affect Personnel</p>
+    <div class="form-group">
 
-                  Obstetrics
-                </mat-option>
-              </mat-select>
-            </div>
-            <hr class="mb-0"/>
-            <div style="display: flex; align-items: center">
-              <h6 class="card-description my-auto">Add rooms</h6>
-
-              <div style="margin-left: auto;">
-                <button
-                  class="float-left"
-                  mat-icon-button
-                  color="warn"
-                  aria-label="Remove/clear"
-                  (click)="deleteItem(i)"
-                  matTooltip="Remove"
-                >
-                  <mat-icon>highlight_off</mat-icon>
-                </button>
-                <button
-                  class="float-left"
-                  mat-icon-button
-                  color="primary"
-                  aria-label="Add"
-                  (click)="addItem()"
-                  matTooltip="Add"
-                >
-                  <mat-icon>add_circle_outline</mat-icon>
-                </button>
-              </div>
-            </div>
-
-
-            <div class="form-row" *ngFor="let room of getRooms(); let i = index">
-              <div class="form-group form-column">
-                <label for="Room-Number">Room-Number</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="Room-Number"
-                  placeholder="Room-Number"
-                  style="height: 40px"
-                  [formControl]="$any(room)"
-                  NumbersOnly
-                />
-              </div>
-
-              <!-- <div class="form-group form-column">
-                <label for="Room-status">Room-Status</label>
-                <select class="form-select" style="height: 40px">
-                  <option value="1">none</option>
-                  <option value="2" style="color: green">activated </option>
-                  <option value="3" style="color: red">desactivated</option>
-                  <option value="4" style="color: orange">en progress</option>
-                </select>
-              </div> -->
-            </div>
-            <hr />
-            <p class="card-description my-auto">Affect Personnel</p>
-            <input class="form-control mr-sm-2" type="search"
-             placeholder="Search" aria-label="Search"
-             [ngModel]="searchQuery"
-             (ngModelChange)="filterPersonnel()" autofocus />
-
-             <br>
-
-            <button type="submit" class="btn btn-primary me-2">Submit</button>
-            <button class="btn btn-light" >Cancel</button>
-          </form>
+      <chips-select
+      class="form-control"
+        [ObjectName]="'personnel'"
+        [customLabel]="'personnel'"
+        class="w-100"
+        (selectedChipsChange)="selectedChipsChange($event)"
+        [enableCustomAdditions]="false"
+        [enableQuickSelectFromSuggestions]="true"
+        [fullData]="personnels"
+        [minimumSearchLength]="2"
+        [isStartWithSearch]="true"
+        [searchPropertyName]="'name'"
+      ></chips-select>
+    </div>
 
 
-
+    <button type="submit" class="btn btn-primary me-2">Submit</button>
+    <button class="btn btn-light">Cancel</button>
+  </form>
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ShipsSelectComponent, onChipsSelectionEmitType } from '../chips-select/chips-select.component';
+import { personnel } from '../../personnel-data';
 import {
   AbstractControl,
   FormArray,
@@ -13,12 +16,9 @@ import {
   FormControl,
   FormGroup,
 } from '@angular/forms';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-export interface Section {
-  name: string;
-  updated: Date;
-}
+
+
 
 @Component({
   selector: 'app-side-rooms',
@@ -29,54 +29,70 @@ export interface Section {
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    ShipsSelectComponent
    ],
   templateUrl: './side-rooms.component.html',
   styleUrl: './side-rooms.component.css'
 })
 export class SideRoomsComponent {
   selected = '';
-  title: string = '';
   description: string = '';
-  FormData!: FormGroup;
-  imageControl = new FormControl();
-
+  form!: FormGroup;
+  selectedPersonnels:any[]=[];
   i: any;
+  personnels=personnel;
 
-  constructor(private builder: FormBuilder,)
-   {}
 
-  ngOnInit() {
-    this.FormData = this.builder.group({
-      rooms: this.builder.array([this.builder.control(null)]),
-    });
-  }
 
-  addItem() {
-    (this.FormData.get('rooms') as FormArray).push(this.builder.control(null));
-  }
-  deleteItem(index: any) {
-    (this.FormData.get('rooms') as FormArray).removeAt(index);
-  }
-
-  getRooms(): AbstractControl[] {
-    return (<FormArray>this.FormData.get('rooms')).controls;
-  }
-  personnel = [
-    { name: 'Daniel Martinez',  },
-    { name: 'Olivia Garcia', },
-    { name: 'William Rodriguez' }
+  equipmentData = [
+    { id: 1, name: 'Equipment 1' },
+    { id: 2, name: 'Equipment 2' },
+    { id: 3, name: 'Equipment 3' }
   ];
-  filteredPersonnel: any[] | undefined;
-  searchQuery!: string;
 
-  filterPersonnel() {
-    if (!this.searchQuery) {
-      this.filteredPersonnel = this.personnel;
-    } else {
-      this.filteredPersonnel = this.personnel.filter(person =>
-        person.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
+  get passenger(): FormArray {
+    return this.form.get('passenger') as FormArray;
   }
+
+  addPassenger() {
+    this.passenger.push(
+      new FormGroup({
+        roomNumber: new FormControl(''),
+
+      })
+    );
+  }
+
+  removePassenger(index: number) {
+    this.passenger.removeAt(index);
+  }
+
+  constructor()
+   {this.form = new FormGroup({
+    passenger: new FormArray([
+      new FormGroup({
+        roomNumber: new FormControl(''),
+      })
+    ])
+  });}
+
+
+  selectedChipsChange(result: onChipsSelectionEmitType) {
+    // Access and use the selected indexes here
+    if (result.lastAddedItem) {
+      console.log('added custom item :', result.lastAddedItem);
+    } else if (result.lastSelectedItem) {
+      console.log('added item from search :', result.lastSelectedItem);
+    } else if (result.lastRemovedItem) {
+      console.log('removed item :', result.lastRemovedItem);
+    }
+    console.log('updated Selected chips:', result.SelectedObjectList);
+    this.selectedPersonnels=result.SelectedObjectList;
+
+  }
+
+
+
+
 }
 
