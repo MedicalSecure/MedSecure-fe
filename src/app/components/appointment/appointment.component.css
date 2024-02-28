@@ -1,0 +1,47 @@
+.row.mb-3 > .col {
+    display: flex;
+  }
+  .mr-2 {
+    margin-right: 10px; 
+  }
+  .duration-select {
+    width: 100px; 
+  }
+  
+.description-input {
+    flex: 1;
+    height: 30px;
+  }
+  .radio-label {
+    margin-right: 20px; 
+  }
+
+.form-check-inline + .form-check-inline {
+    margin-left: 20px; 
+  }
+
+
+.form-check-input{
+    margin-left: 10px; 
+}
+
+.duration-select {
+  appearance: none;
+  padding: 8px; 
+  color: black;
+  background-color: rgb(209, 209, 209);
+}
+
+
+.duration-select option:checked {
+  background-color: #f0f0f0; 
+  font-weight: bold;
+  color: black; 
+}
+section {
+  display: table;
+}
+.example-button-row {
+  display: table-cell;
+  padding: 0;
+}

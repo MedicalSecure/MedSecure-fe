@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { CalendarShedulerComponent } from '../../component/calendar-scheduler/calendar-scheduler.component';
+import { CalendarShedulerComponent } from '../../components/calendar-scheduler/calendar-scheduler.component';
+
 
 @Component({
   selector: 'app-visits-home-page',
   standalone: true,
   imports: [CalendarShedulerComponent],
-  templateUrl: './visits-home-page.component.html',
-  styleUrl: './visits-home-page.component.css'
+  templateUrl: './visits.component.html',
+  styleUrl: './visits.component.css'
 })
-export class VisitsHomePageComponent {
+export class Visits  {
   
   events: CalendarEvent[] = [];
   selectedDate: Date = new Date();
-  
-
+  formData: any = {};
+  selectedTime: string = '';
 }

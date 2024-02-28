@@ -2,7 +2,7 @@ import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { IndexComponent } from "./pages/index/index.component";
 import { CalendarEvent, CalendarEventAction } from 'angular-calendar';
-import { CalendarShedulerComponent  } from './component/calendar-scheduler/calendar-scheduler.component';
+import { CalendarShedulerComponent  } from './components/calendar-scheduler/calendar-scheduler.component';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
