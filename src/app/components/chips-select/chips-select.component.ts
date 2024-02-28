@@ -98,7 +98,7 @@ export class ShipsSelectComponent {
     this.selectedChipsChange.emit({
       SelectedObjectList: this.selectedObjects,
       lastAddedItem,
-      lastSelectedItem,
+      //lastSelectedItem,
       lastRemovedItem,
     } as onChipsSelectionEmitType);
   }

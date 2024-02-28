@@ -1,0 +1,78 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chip-search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chip-list {
+  margin-right: 20px; /* Adjust the space between chip list and search field */
+}
+
+.search-field {
+  position: relative;
+}
+
+.selected-medicines {
+  margin-top: 20px;
+}
+
+
+input[type="text"] {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-left: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  color: red; /* Change color on hover */
+}
+
+#medicine-paragraph{
+  padding: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.mat-chip-listbox-container {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.mat-chip-listbox {
+  display: inline-block;
+}
+
+@media screen and (max-width: 600px) {
+  .mat-chip-listbox-container .mat-chip-listbox {
+      flex-basis: 100%;
+      max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .search-field {
+      width: 100%;
+      max-width: 100%;
+  }
+
+  .search-field .search-icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+  }
+}

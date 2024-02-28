@@ -1,0 +1,40 @@
+<div class="d-flex gap-5 justify-content-center">
+    <div class="mat-chip-listbox-container">
+        <mat-chip-listbox [(ngModel)]="searchKey">
+            <mat-chip-option value="Nom" selected>Name</mat-chip-option>
+            <mat-chip-option value="Laboratoire">Pathologie</mat-chip-option>
+            <mat-chip-option value="Indications">SubstanceActive</mat-chip-option>
+        </mat-chip-listbox>
+    </div>
+  
+    <div class="d-flex flex-column gap-5">
+        <div class="search-field" style="position: relative;">
+            <input type="text" placeholder="Search for medication" matInput [formControl]="searchControl"
+                [matAutocomplete]="auto" style="min-width: 30rem; padding-right: 40px;"
+                (keypress)="handleKeyPress($event)">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let medcine of filteredMedcines | async" (click)="openDialog(medcine)" [value]="medcine">
+                    {{ getMedcineProperty(medcine) }}
+                </mat-option>
+            </mat-autocomplete>
+            <button mat-icon-button matSuffix style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%);">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+        
+        <div *ngIf="selectedMedcines.length > 0" class="mt-3 mb-5">
+            <h3>Selected Medicines:</h3>
+            <div *ngFor="let medcine of selectedMedcines" class="medicine-item" style="margin-bottom: 10px;">
+                <p style="color: blue; margin-bottom: 5px;">
+                    <strong>- Nom:</strong> <mark><strong>{{ medcine.Nom }}</strong></mark>
+                    <strong>- Dosage:</strong> <mark><strong>{{ medcine.Dosage }}</strong></mark>
+                    <strong>- Forme:</strong> <mark><strong>{{ medcine.Forme }}</strong></mark>
+                </p>
+                <input type="text" placeholder="Enter Posologie">
+                <button mat-icon-button (click)="removeMedcine(medcine)" style="margin-left: 5px;">
+                    <mat-icon style="color: red;">cancel</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+<div class="container-fluid">
+  <!-- Button trigger modal -->
+  <label for="fileInputPharmacy" class="btn btn-primary btn-lg">Import </label>
+  <input
+    type="file"
+    label="Import"
+    id="fileInputPharmacy"
+    style="display: none"
+    (change)="importExcelData($event)"
+    accept=".xls, .xlsx"
+  />
+
+  <div
+    class="modal fade"
+    style="background-color: rgba(0, 0, 0, 0.7)"
+    id="exampleModal"
+    tabindex="8"
+    [style]="
+      isShowImportModal ? 'display:block;opacity:100' : 'display:none;opacity:0'
+    "
+    (click)="onClickCloseModal()"
+  >
+    <div class="modal-dialog" role="document" (click)="stopPropagation($event)">
+      <div class="modal-content">
+        <div class="modal-header p-2">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Import and map data
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="onClickCloseModal()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          @for(dbColumn of dbHeaders;track $index){
+          <div class="d-flex justify-content-center align-middle mt-2">
+            <p class="col-6">{{ dbColumn }}</p>
+
+            <select [(ngModel)]="columnMappings[dbColumn]" class="form-control">
+              @for(impHeader of importedDataHeaders;track impHeader){
+              <option [value]="impHeader">
+                {{ impHeader }}
+              </option>
+              }
+            </select>
+          </div>
+          }
+          <div class="modal-footer p-3">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="onClickCloseModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onClickFinishModal()"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
