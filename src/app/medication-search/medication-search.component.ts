@@ -1,106 +1,117 @@
 import { MatSelectModule } from '@angular/material/select';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { Medcine } from './medcine.model';
+import { Medications } from './medication.model';
 import { MedicationService } from './medication.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
 
-
-
 @Component({
   selector: 'app-medication-search',
   standalone: true,
-  imports: [MatChipsModule, MatIconModule, MatSelectModule, MatFormFieldModule,CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatOptionModule ],
+  imports: [
+    MatChipsModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatOptionModule,
+    
+  ],
   templateUrl: './medication-search.component.html',
   styleUrl: './medication-search.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MedicationSearchComponent implements OnInit {
   searchControl = new FormControl();
   searchKeys: string[] = ['Nom', 'Laboratoire', 'Indications'];
   searchKey: string = 'Nom';
-  medcines: Medcine[] = [];
-  filteredMedcines: Observable<Medcine[]>; // Initialize filteredMedcines as an array
-  selectedMedcines: Medcine[] = [];
-  
-  @Output() searchMedicationsChange = new EventEmitter<Medcine[]>();
+  Medications: Medications[] = [];
+  filteredMedications: Observable<Medications[]>;
+  selectedMedications: Medications[] = [];
+
+  @Output() searchMedicationsChange = new EventEmitter<Medications[]>();
 
   constructor(private medicationService: MedicationService) {
-    this.filteredMedcines = this.searchControl.valueChanges.pipe(
+    this.filteredMedications = this.searchControl.valueChanges.pipe(
       startWith(''),
-      map(searchTerm => this.filterMedcines(searchTerm))
+      map((searchTerm) => this.filterMedications(searchTerm))
     );
   }
 
   ngOnInit(): void {
-    this.medicationService.getMedications().subscribe(data => {
-      this.medcines = data.medcines.medcine;
+    this.medicationService.getMedications().subscribe((data) => {
+      this.Medications = data.Medications.medication;
     });
   }
 
-  filterMedcines(searchTerm: string): Medcine[] {
+  filterMedications(searchTerm: string): Medications[] {
     if (typeof searchTerm !== 'string' || searchTerm.trim() === '') {
       return [];
     } else {
-      return this.medcines.filter(medcine =>
-        medcine[this.searchKey]?.toLowerCase().includes(searchTerm.toLowerCase())
+      return this.Medications.filter((medication) =>
+        medication[this.searchKey]
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())
       );
     }
   }
 
-  openDialog(medcine: Medcine): void {
-    if (!this.selectedMedcines.includes(medcine)) {
-      this.selectedMedcines.push(medcine);
-      this.emitSelectedMedcines();
+  openDialog(medication: Medications): void {
+    if (!this.selectedMedications.includes(medication)) {
+      this.selectedMedications.push(medication);
+      this.emitSelectedMedications();
     }
     this.searchControl.setValue('');
   }
 
-  getMedcineProperty(medcine: Medcine): string {
+  onSelectionChange(event: MatChipListboxChange) {
+    this.searchKey = event.source.value
+    this.emitSelectedMedications();
+  }
+
+  getmedicationProperty(medication: Medications): string {
     switch (this.searchKey) {
       case 'Nom':
-        return medcine['Nom']; // Use square brackets for dynamic properties
+        return medication['Nom']; // Use square brackets for dynamic properties
       case 'Laboratoire':
-        return medcine['Laboratoire']; // Use square brackets for dynamic properties
+        return medication['Laboratoire']; // Use square brackets for dynamic properties
       case 'Indications':
-        return medcine['Indications']; // Use square brackets for dynamic properties
+        return medication['Indications']; // Use square brackets for dynamic properties
       default:
         return '';
     }
   }
 
-  // onSelectionChange(lastAddedItem: Medcine | undefined, lastRemovedItem: Medcine | undefined) {
-  //   if (lastAddedItem) {
-  //     this.selectedMedcines.push(lastAddedItem);
-  //   }
-  //   if (lastRemovedItem) {
-  //     const index = this.selectedMedcines.indexOf(lastRemovedItem);
-  //     if (index !== -1) {
-  //       this.selectedMedcines.splice(index, 1);
-  //     }
-  //   }
-  //   this.emitSelectedMedcines();
-  // }
-
-  removeMedcine(medcine: Medcine): void {
-    const index = this.selectedMedcines.indexOf(medcine);
+  removemedication(medication: Medications): void {
+    const index = this.selectedMedications.indexOf(medication);
     if (index !== -1) {
-      this.selectedMedcines.splice(index, 1);
-      this.emitSelectedMedcines();
+      this.selectedMedications.splice(index, 1);
+      this.emitSelectedMedications();
     }
   }
 
-  private emitSelectedMedcines(): void {
-    this.searchMedicationsChange.emit(this.selectedMedcines);
+  private emitSelectedMedications(): void {
+    this.searchMedicationsChange.emit(this.selectedMedications);
   }
 
   // Function to handle Enter key press
@@ -111,9 +122,3 @@ export class MedicationSearchComponent implements OnInit {
     }
   }
 }
-
-  
-
-  
-
-

@@ -11,9 +11,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './medication-list.component.css'
 })
 export class MedicationListComponent {
-  medcine: any;
+  medication: any;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.medcine = this.data.medcine;
+    this.medication = this.data.medication;
   }
 }
