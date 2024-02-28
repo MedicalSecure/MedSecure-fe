@@ -1,24 +1,29 @@
-<div class="date">
-  <button style="background-color: transparent; border-color: transparent;" (click)="onLeftButtonClick()">
-    <img src="assets/left_arrow_icon.svg" alt="left_arrow">
-  </button>
-  {{ todayDate }}
-  <button style="background-color: transparent; border-color: transparent;" (click)="onRightButtonClick()">
-    <img src="assets/right_arrow_icon.svg" alt="right_arrow">
-  </button>
-</div>
+
 <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8 custom-table">
   <ng-container matColumnDef="header">
     <div class="date" style="display: flex; align-items: flex-start;">
       <th mat-header-cell *matHeaderCellDef [attr.colspan]="columnsToDisplay.length">
-        <mat-chip class="uc" style="margin-right: 50px;">
+        <mat-chip class="uc" style="margin-right: 20px;">
           Unit Care: Emergency Department
         </mat-chip>
-        <mat-form-field  appearance="outline"
-style="width: 600px;  position: relative; border-radius: 50px; margin-top: 10px ">
-<input style="width:500px;   border-radius: 50px;" matInput (keyup)="Filter($event)" placeholder="Search..."
-  #input style="width: 200px; color: gray">
-</mat-form-field>
+        <mat-form-field appearance="outline"
+          style="width: 300px;  position: relative; border-radius: 50px; margin-top: 20px ; ">
+          <input style="width:300px;   border-radius: 50px;" matInput (keyup)="Filter($event)" placeholder="Search..."
+            #input style="width: 200px; color: gray">
+        </mat-form-field>
+        <mat-form-field  appearance="outline" style="position: relative;  margin-left:10px ; width: 300px; background-color: transparent; color: transparent; border-color: transparent;">
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="picker" #dateInput (dateChange)="changeDate(dateInput.value)">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button style="background-color: transparent; border-color: transparent;" (click)="onLeftButtonClick()">
+          <img src="assets/left_arrow_icon.svg" alt="left_arrow">
+        </button>
+        {{ todayDate }}
+        <button style="background-color: transparent; border-color: transparent;" (click)="onRightButtonClick()">
+          <img src="assets/right_arrow_icon.svg" alt="right_arrow">
+        </button>
       </th>
     </div>
     <tr mat-header-row *matHeaderRowDef="['header']"></tr>
@@ -44,9 +49,10 @@ style="width: 600px;  position: relative; border-radius: 50px; margin-top: 10px 
   </ng-container>
   <ng-container matColumnDef="age">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Age </th>
-    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)">  {{ calculateAge(element.bd) }}
-      <img src="assets/info.svg" alt="info" class="image" style="height: 15px; width: 15px; margin-top:5px; margin-left: 5px;"
-      matTooltip={{element.bd}}>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{
+      calculateAge(element.bd) }}
+      <img src="assets/info.svg" alt="info" class="image"
+        style="height: 15px; width: 15px; margin-top:5px; margin-left: 5px;" matTooltip={{element.bd}}>
     </td>
   </ng-container>
   <ng-container matColumnDef="progress">
@@ -75,27 +81,23 @@ style="width: 600px;  position: relative; border-radius: 50px; margin-top: 10px 
   <ng-container matColumnDef="expandedDetail">
     <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
       <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-        <div class="example-element-diagram" >
+        <div class="example-element-diagram">
           <table mat-table [dataSource]="element.medicines" class="mat-elevation-z0 extended-table "
             style="border: 1px solid rgba(0, 0, 0, 0.155);">
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef>Name</th>
-              <div>
-                <td class="element name-cell" mat-cell *matCellDef="let medicine">
-                  {{ medicine.name }}
-                  <img src="assets/info.svg" alt="info" class="image" style="height: 20px; width: 20px;"
-                    matTooltip="bla bla bla bla bla ">
-                </td>
-              </div>
+              <td class="element name-cell" mat-cell *matCellDef="let medicine" style="position: relative; top: 0%;">
+                <h5 style="font-weight: bold;">{{ medicine.name }}</h5>
+              </td>
             </ng-container>
             <ng-container matColumnDef="posology">
-              <table mat-table [dataSource]="element.medicines.posology " class="mat-elevation-z8 extended-table-cell " >
+              <table mat-table [dataSource]="element.medicines.posology " class="mat-elevation-z8 extended-table-cell ">
                 <ng-container matColumnDef="posology">
                   <th mat-header-cell *matHeaderCellDef>Posology</th>
-                  <div style="margin-left: 100px ;">
-                    <td class="element posology-cell" mat-cell *matCellDef="let elementt" style="height: fit-content">
+                  <div>
+                    <td class="element posology-cell" mat-cell *matCellDef="let elementt">
                       <app-schedule [hoursList]="elementt.posology"
-                        (checkEmmiter)="onCheckEmitted($event , element)"></app-schedule>
+                        (checkEmmiter)="onCheckEmitted($event, element)"></app-schedule>
                       <app-comment [note]="elementt.note"></app-comment>
                     </td>
                   </div>

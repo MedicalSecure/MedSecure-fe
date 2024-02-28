@@ -1,13 +1,13 @@
 
-import { AfterViewInit, Component, ViewChild ,Input, OnInit} from '@angular/core';
+import { AfterViewInit, Component, ViewChild, Input, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { JsonPipe } from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,28 +23,30 @@ import { DialogOverviewExampleDialogComponent } from '../dialog-overview-example
 import { CommentComponent } from "../comment/comment.component";
 
 @Component({
-    selector: 'table-pagination-example',
-    templateUrl: './test.component.html',
-    styleUrl: './test.component.css',
-    standalone: true,
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({ height: '0px', minHeight: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ],
-    imports: [MatTableModule, MatIconModule ,MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, MessageComponent, CommentComponent]
+  selector: 'table-pagination-example',
+  templateUrl: './test.component.html',
+  styleUrl: './test.component.css',
+  standalone: true,
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
+  imports: [MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, MessageComponent, CommentComponent]
 })
 export class TestComponent implements AfterViewInit {
+
   today: Date = new Date();
   checkednumber: Number = 0;
   checkedItems: any[] = [];
+  selectedDate: Date = new Date();
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   todayDate: string = new Date().toLocaleDateString();
   dateToShow: string;
-  columnsToDisplay = ['add','room', 'bed', 'patient', 'age', 'progress', 'status'];
+  columnsToDisplay = ['add', 'room', 'bed', 'patient', 'age', 'progress', 'status'];
   columnsToDisplayMedicines = ['name', 'posology', 'root']
   expandedElement: bacpatient | null;
   selectedIndex: number | null = null;
@@ -52,6 +54,13 @@ export class TestComponent implements AfterViewInit {
   tomorrow = new Date();
   yesterday = new Date();
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('picker') picker: MatDatepicker<Date>;
+  changeDate(selectedDate: string) {
+    this.todayDate = selectedDate;
+    this.today.setDate(new Date(selectedDate).getDate());
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()));
+
+  }
   uniqueRooms: any;
   constructor(public dialog: MatDialog) {
     const filteredData = ELEMENT_DATA.filter(item => new Date(item.servingDate).toLocaleDateString() === this.todayDate);
@@ -106,6 +115,8 @@ export class TestComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
     this.tomorrow.setDate(this.tomorrow.getDate() + 1);
     this.yesterday.setDate(this.yesterday.getDate() - 1);
+
+
   }
 
   applyFilter(filterValue: string) {
@@ -120,11 +131,11 @@ export class TestComponent implements AfterViewInit {
     const birth = new Date(birthdate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-  
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
       age--;
     }
-  
+
     return age;
   }
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
@@ -150,7 +161,7 @@ export class TestComponent implements AfterViewInit {
       }
     }
   }
-  
+
 }
 export interface Medicine {
   name: string;
@@ -186,7 +197,7 @@ export const ELEMENT_DATA = [
     room: 101,
     bed: 1,
     patient: 'rahma',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine1', posology: [
@@ -196,10 +207,16 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
-            
-          
+
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
+
+
           ]
-        ], root: 'Injection', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry","Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], root: 'Injection', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
 
       },
       {
@@ -207,6 +224,12 @@ export const ELEMENT_DATA = [
           [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 3 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '08', value: '8', quantity: 1 },
+            { hour: '12', value: '12', quantity: 3 },
+            { hour: '17', value: '17', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 2 },
           ]
@@ -217,6 +240,12 @@ export const ELEMENT_DATA = [
           [
             { hour: '12', value: '12', quantity: 2 },
             { hour: '22', value: '22', quantity: 3 },
+            { hour: '00', value: '00', quantity: 1 },
+
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Injection', dose: 2, note: []
@@ -234,7 +263,7 @@ export const ELEMENT_DATA = [
     room: 102,
     bed: 2,
     patient: 'mehrez',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine4', posology: [
@@ -243,6 +272,12 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '17', value: '17', quantity: 3 },
             { hour: '22', value: '22', quantity: 1 },
+
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Oral', dose: 1, note: ''
       },
@@ -252,8 +287,14 @@ export const ELEMENT_DATA = [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 1 },
             { hour: '00', value: '00', quantity: 1 },
+
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Injection', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry","Lorem Ipsum is simply dummy text of the printing and typesetting industry","Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], root: 'Injection', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
       {
         name: 'medicine6', posology: [
@@ -261,6 +302,12 @@ export const ELEMENT_DATA = [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Oral', dose: 1, note: ''
@@ -278,7 +325,7 @@ export const ELEMENT_DATA = [
     room: 101,
     bed: 3,
     patient: 'nejma',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine7', posology: [
@@ -287,8 +334,13 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 2 },
             { hour: '17', value: '17', quantity: 2 },
             { hour: '22', value: '22', quantity: 2 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry","Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], root: 'Oral', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
       {
         name: 'medicine8', posology: [
@@ -296,7 +348,13 @@ export const ELEMENT_DATA = [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
+
         ], root: 'Injection', dose: 1, note: ''
       },
       {
@@ -306,6 +364,11 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 2 },
             { hour: '22', value: '22', quantity: 1 },
             { hour: '00', value: '00', quantity: 2 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Oral', dose: 1, note: ''
       }
@@ -322,7 +385,7 @@ export const ELEMENT_DATA = [
     room: 102,
     bed: 4,
     patient: 'morjana',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine10', posology: [
@@ -331,7 +394,13 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
+
         ], root: 'Oral', dose: 1, note: ''
       },
       {
@@ -339,6 +408,11 @@ export const ELEMENT_DATA = [
           [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Injection', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
@@ -349,6 +423,11 @@ export const ELEMENT_DATA = [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Oral', dose: 1, note: ''
@@ -366,7 +445,7 @@ export const ELEMENT_DATA = [
     room: 104,
     bed: 10,
     patient: 'vasco',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -375,6 +454,11 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Oral', dose: 1, note: ''
       },
@@ -383,6 +467,11 @@ export const ELEMENT_DATA = [
           [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Injection', dose: 1, note: ''
@@ -393,6 +482,11 @@ export const ELEMENT_DATA = [
             { hour: '08', value: '8', quantity: 1 },
             { hour: '12', value: '12', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
+            { hour: '00', value: '00', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
             { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Oral', dose: 1, note: ''
@@ -410,7 +504,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'nono',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -419,6 +513,11 @@ export const ELEMENT_DATA = [
             { hour: '12', value: '12', quantity: 1 },
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
+            { hour: '01', value: '1', quantity: 3 },
+            { hour: '08', value: '8', quantity: 3 },
+            { hour: '12', value: '12', quantity: 1 },
+            { hour: '22', value: '22', quantity: 2 },
+            { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Oral', dose: 1, note: ''
       },
@@ -454,7 +553,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'candy',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -498,7 +597,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'roukaya',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -542,7 +641,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'fanta',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -586,7 +685,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'kamou',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [
@@ -630,7 +729,7 @@ export const ELEMENT_DATA = [
     room: 103,
     bed: 10,
     patient: 'gustavo',
-    bd:new Date('2000-05-13'),
+    bd: new Date('2000-05-13'),
     medicines: [
       {
         name: 'medicine28', posology: [

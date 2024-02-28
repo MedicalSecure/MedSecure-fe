@@ -21,8 +21,6 @@
 }
 .extended-table .mat-column-posology{
 margin-left: 50px;
-
-height: fit-content;
 }
 .extended-table .mat-column-root{
   width: 20%;
@@ -59,9 +57,11 @@ height: fit-content;
   background-color: rgb(150, 83, 83);
 }
 
-.extended-table td {
+.extended-table td{
   align-items: center;
   text-align: center;
+  height: auto;
+
 }
 
 
@@ -77,13 +77,6 @@ height: fit-content;
 }
 
 
-table .custom-table .mat-column-header .date {
-  font-size: large;
-  font-weight: bolder;
- position: relative;
- 
-
-}
 
 table .extended-table {
   background-color: rgba(239, 239, 239, 0);
