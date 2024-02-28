@@ -1,0 +1,43 @@
+<p class="m-4">masonry works!</p>
+<ngx-masonry>
+    <div ngxMasonryItem *ngFor="let item of masonryItems">
+        <div class="card m-2" [ngStyle]="{ 'height.px': item.height, 'width.px': item.width }">
+            <div class="card-header">
+                <h4 class="card-title">{{ item.title }}</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-description">{{ item.description }}</p>
+            </div>
+        </div>
+    </div>
+</ngx-masonry>
+
+
+
+<h1 class="m-4">Masonry - Initialize in HTML</h1>
+
+<div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 160 }'>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2 grid-item--height2"></div>
+  <div class="grid-item grid-item--height3"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item grid-item--width3"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item grid-item--width2 grid-item--height3"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2 grid-item--height2"></div>
+  <div class="grid-item grid-item--width2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height3"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+</div>
