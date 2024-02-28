@@ -14,6 +14,7 @@ import {
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { HumanBodyViewerComponent } from '../../../components/human-body-viewer/human-body-viewer.component';
 import { CommonModule } from '@angular/common';
+import { patientType } from '../patient-select/patient-select.component';
 
 @Component({
   selector: 'app-add-symptoms',
@@ -33,6 +34,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './add-symptoms.component.css',
 })
 export class AddSymptomsComponent {
+  @Input()
+  selectedPatient: patientType | undefined;
   maxSymptomsStartDate: Date = new Date();
   @Output() onSelectedDiagnosisChange =
     new EventEmitter<onChipsSelectionEmitType>();

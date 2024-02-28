@@ -26,7 +26,7 @@
             aria-controls="overview"
             (click)="SwitchToStep(0)"
             [className]="
-              'nav-link ps-0 m-0 py-2' + (stepNumber == 0 && ' active bg-white')
+              'nav-link ps-3 m-0 py-2' + (stepNumber == 0 && ' active bg-white')
             "
           >
             Patient information
@@ -60,16 +60,38 @@
       </ul>
     </div>
 
+    @if(selectedPatient){
+    <div class="d-flex gap-3 pt-2 justify-content-center" style="height: 2rem">
+      <p style="margin: 0" class="align-self-center">Selected Patient :</p>
+      <span class="text-primary fw-bold align-self-center">
+        SN : {{ selectedPatient.sn }} | {{ selectedPatient.name }} -
+        {{ selectedPatient.age }} years</span
+      >
+      <mat-icon class="align-self-center" (click)="onSelectPatient(undefined)"
+        >close</mat-icon
+      >
+    </div>
+    }
+
     <!-- human body card -->
-    <div [className]="stepNumber != 0 && 'd-none'"><app-patient-select /></div>
+    <div [className]="stepNumber != 0 && 'd-none'">
+      <app-patient-select
+        [(selectedPatient)]="selectedPatient"
+        (selectedPatientChange)="onSelectPatient($event)"
+      />
+    </div>
     <div [className]="stepNumber != 1 && 'd-none'">
       <app-add-symptoms
         (onPageChangeEvent)="onPageChangeEvent($event, 1)"
         (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
+        [selectedPatient]="selectedPatient"
       />
     </div>
     <div [className]="stepNumber != 2 && 'd-none'">
-      <app-prescribe-medication (onBackClick)="SwitchToStep(1)" />
+      <app-prescribe-medication
+        (onBackClick)="SwitchToStep(1)"
+        [selectedPatient]="selectedPatient"
+      />
     </div>
   </body>
 </html>

@@ -1,8 +1,12 @@
 import { Component, EventEmitter } from '@angular/core';
 import { AddSymptomsComponent } from './add-symptoms/add-symptoms.component';
-import { PatientSelectComponent } from './patient-select/patient-select.component';
+import {
+  PatientSelectComponent,
+  patientType,
+} from './patient-select/patient-select.component';
 import { PrescribeMedicationComponent } from './prescribe-medication/prescribe-medication.component';
 import { onChipsSelectionEmitType } from '../../components/chips-select/chips-select.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-add-prescription',
@@ -11,16 +15,26 @@ import { onChipsSelectionEmitType } from '../../components/chips-select/chips-se
     AddSymptomsComponent,
     PatientSelectComponent,
     PrescribeMedicationComponent,
+    MatIcon,
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 2;
+  stepNumber: number = 0;
   selectedDiagnosis: any = [];
-
+  selectedPatient: patientType | undefined;
   prevStep() {
     this.stepNumber--;
+  }
+
+  onSelectPatient(patient: patientType | undefined) {
+    if (patient != undefined) {
+      this.nextStep();
+    } else {
+      this.selectedPatient = undefined;
+      this.stepNumber = 0;
+    }
   }
 
   SwitchToStep(index: number) {
@@ -45,6 +59,9 @@ export class AddPrescriptionComponent {
   }
 
   _validatePageSwitch(index: number): Boolean {
+    if (index > 0) {
+      if (this.selectedPatient == undefined) return false;
+    }
     return true;
   }
 }

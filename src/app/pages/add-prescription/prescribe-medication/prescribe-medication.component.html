@@ -33,6 +33,9 @@
         >Warning : Medication not compatible</mat-error
       >}
 
+      <!-- part of day -->
+
+      <!--       <app-parts-of-day></app-parts-of-day> -->
       <!-- quantity and period -->
       <div class="d-flex gap-1 mb-2 justify-content-evenly">
         <!-- quantity -->
@@ -117,20 +120,6 @@
           >
             Permanent
           </p>
-          <!-- <div class="d-flex align-content-center">
-            <mat-checkbox
-              formControlName="isPermanent"
-              class="text-dark"
-              (change)="onIsPermanentChange()"
-              style="font-size: 0.2rem"
-            ></mat-checkbox>
-            <div
-              style="margin-left: -0.6rem; padding-top: 0.55rem"
-              class="align-middle"
-            >
-              Perm
-            </div>
-          </div> -->
         </div>
       </div>
       <!-- frequency -->
@@ -205,6 +194,13 @@
                   margin-right: 0.05rem;
                 "
                 (click)="onClickDayHour(hour)"
+                [title]="
+                  getMedicationHourByHour(hour) == null
+                    ? 'not selected'
+                    : getMedicationHourByHour(hour)?.isBeforeFood
+                    ? 'Before food'
+                    : 'after Food'
+                "
               >
                 {{ hour < 10 ? "0" + hour.toString() : hour }}
               </button>
@@ -215,40 +211,13 @@
              " -->
             </div>
           </div>
-
-          <div
-            class="border border-black p-2 pt-3 position-relative align-items-start"
-          >
-            <p
-              class="position-absolute px-1 bg-white fit-content text-info"
-              style="z-index: 10; top: -0.7em; left: 1em"
-            >
-              Template
-            </p>
-
-            <div style="font-size: 0.86rem">
-              Before food
-              <button
-                class="bg-info border hourCircleBtn"
-                style="font-size: 0.86rem"
-              >
-                {{ "BF" }}
-              </button>
-            </div>
-            <div style="font-size: 0.86rem">
-              After food
-              <button
-                class="bg-primary text-light border hourCircleBtn"
-                style="margin-left: 0.75rem; font-size: 0.86rem"
-              >
-                {{ "AF" }}
-              </button>
-            </div>
+          <div class="d-flex align-items-center ms-1">
+            <mat-icon class="text-danger">warning</mat-icon>
           </div>
         </div>
       </div>
 
-      <!--   <div
+      <div
         class="border border-black p-2 pt-3 position-relative align-items-start d-flex gap-2 justify-content-center"
       >
         <p
@@ -272,12 +241,13 @@
           After food
           <button
             class="bg-primary text-light border hourCircleBtn"
-            style=" font-size: 0.86rem"
+            style="font-size: 0.86rem"
           >
             {{ "AF" }}
           </button>
         </div>
-      </div> -->
+      </div>
+
       <!-- consumption period: - Number + icons + Day/Week/Month button -->
       <!--       <div
         class="border border-black p-1 pt-2 mt-2 d-flex flex-wrap justify-content-around position-relative"
@@ -451,9 +421,9 @@
                 class="text-dark fw-bold"
                 style="font-size: small; margin-top: -0.2rem"
               >
-                {{ medication.dispenseValue + " " + medication.dispenseUnit }} 
+                {{ medication.dispenseValue + " " + medication.dispenseUnit }}
                 @if(true){
-                  {{getNewlyPrescribedMedicationSig(medication)}}
+                {{ getNewlyPrescribedMedicationSig(medication) }}
                 }
               </p>
               @if(medication.isForceOrder){

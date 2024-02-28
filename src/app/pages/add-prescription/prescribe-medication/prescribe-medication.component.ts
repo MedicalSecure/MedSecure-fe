@@ -5,6 +5,7 @@ import {
 } from '../../../components/chips-select/chips-select.component';
 import { DatePicker } from '../../../shared/date-picker/date-picker.component';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+
 import { MatInputModule } from '@angular/material/input';
 import {
   FormBuilder,
@@ -24,6 +25,8 @@ import { SYRINGE_ICON } from '../../../../assets/icons/icons';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { R } from '@angular/cdk/keycodes';
+import { PartsOfDayComponent } from '../../../components/parts-of-day/parts-of-day.component';
+import { patientType } from '../patient-select/patient-select.component';
 
 @Component({
   selector: 'app-prescribe-medication',
@@ -44,11 +47,14 @@ import { R } from '@angular/cdk/keycodes';
     CommonModule,
     MatCardModule,
     MatDatepickerModule,
+    PartsOfDayComponent,
   ],
   templateUrl: './prescribe-medication.component.html',
   styleUrl: './prescribe-medication.component.css',
 })
 export class PrescribeMedicationComponent {
+  @Input()
+  selectedPatient: patientType | undefined;
   @Output() onBackClick = new EventEmitter<void>();
   SelectedMedicationUnit: string = 'Unit';
   syringeIcon: string = SYRINGE_ICON;
@@ -99,6 +105,8 @@ export class PrescribeMedicationComponent {
     consumptionDays: 7,
     isForceOrder: false,
     administrationHours: new Set<medicationHourType>(),
+    dispenseCaution: '',
+    comments: [],
   };
   dayHoursBoundaries: DayHoursBoundaries = {
     Morning: [5, 6, 7, 8, 9, 10, 11],
@@ -283,7 +291,7 @@ export class PrescribeMedicationComponent {
   }
 
   getHourClass(hourNumber: number): string {
-    let medicationHour = this._getMedicationHourByHour(hourNumber);
+    let medicationHour = this.getMedicationHourByHour(hourNumber);
     if (medicationHour === null) return 'bg-white border ';
 
     return medicationHour.isBeforeFood
@@ -294,7 +302,7 @@ export class PrescribeMedicationComponent {
   onClickDayHour(hourNumber: number) {
     const CurrentMedication = this.Medication.getRawValue() as medicationType;
     const currentSelectedHours = CurrentMedication.administrationHours;
-    let medicationHour = this._getMedicationHourByHour(hourNumber);
+    let medicationHour = this.getMedicationHourByHour(hourNumber);
     if (medicationHour === null) {
       currentSelectedHours.add({
         hour: hourNumber,
@@ -352,9 +360,7 @@ export class PrescribeMedicationComponent {
     return result;
   }
 
-  private _getMedicationHourByHour(
-    hourNumber: number
-  ): medicationHourType | null {
+  getMedicationHourByHour(hourNumber: number): medicationHourType | null {
     const CurrentMedication = this.Medication.getRawValue() as medicationType;
     let medicationHour: medicationHourType | null = null;
     CurrentMedication.administrationHours.forEach((element) => {
@@ -395,6 +401,8 @@ export type medicationType = {
   consumptionDays: number;
   isForceOrder: boolean;
   administrationHours: Set<medicationHourType>;
+  dispenseCaution: string;
+  comments: Array<string>;
 };
 interface DayHoursBoundaries {
   [category: string]: number[]; // Use index signature for dynamic categories
