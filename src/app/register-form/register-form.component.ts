@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-
+import { RouterModule } from '@angular/router';
 // Interfaces
 
 interface Activity {
@@ -45,8 +45,7 @@ export interface Symptom {
 @Component({
   selector: 'app-register-form',
   standalone: true,
-  imports: [CommonModule
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css',
 })

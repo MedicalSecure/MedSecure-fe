@@ -1,4 +1,7 @@
 <div class="content-wrapper">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <button type="button" class="btn btn-outline-primary btn-sm" [routerLink]="[ '/', 'register-view']" routerLinkActive="active" >Liste des Patients</button>
+</div>
   <div class="row">
     <div class="multisteps-form__progress">
       <button
@@ -41,11 +44,11 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <div class="row">
+     
         <div class="wizard-container" style="height: 470px; overflow-y: auto">
           <!--step 1-->
           <div class="wizard-step" [class.active]="currentStep === 1">
-            <!-- Content for step 1 goes here -->
+            <!-- Content for step 1 goes here 
             <form class="forms-sample">
             <div class="form-group">
               <input
@@ -179,7 +182,52 @@
                 </ul>
               </div>
             </div>
-          </form>
+          </form>-->
+          
+            
+                
+                    
+                        
+                            <h4 class="card-title"></h4>
+                            <p class="card-description">
+                            </p>
+                            <form class="forms-sample">
+                              <div class="mb-3 d-flex flex-wrap justify-content-around">
+                                <div class="mr-2">
+                                  <label for="exampleInputPatientname">Patient name:</label>
+                                  <input type="text" class="form-control form-control-sm" id="exampleInputPatientname" placeholder="name">
+                                </div>
+                                <div class="mr-2">
+                                  <label for="exampleInputage">Age :</label>
+                                  <input type="number" class="form-control form-control-sm" id="exampleInputage" placeholder="age">
+                                </div>
+                              </div>
+                              <div class="mb-3 d-flex flex-wrap justify-content-around">
+                                <div class="mr-2">
+                                  <label for="exampleInputH">Height:</label> 
+                                  <input type="number" class="form-control form-control-sm" id="height" placeholder="Entrez la hauteur (cm)" formControlName="height" required>
+                                </div>
+                                <div class="mr-2">
+                                  <label for="exampleInputW">Weight:</label>
+                                  <input type="number" class="form-control form-control-sm" id="weight" placeholder="Entrez le poids en (kg)" formControlName="weight" required>
+                                </div>
+                              </div>
+                              <div class="mb-3 d-flex flex-wrap justify-content-around">
+                                <div class="mr-2">
+                                  <label for="exampleInputage">Activity Status:</label>
+                                </div>
+                                <div class="mr-2">
+                                  <input type="text" class="form-control form-control-sm" id="activity" formControlName="activity" placeholder="Do you workout?" required list="activityOptions">
+                                  <datalist id="activityOptions">
+                                    <option *ngFor="let activity of activities" [value]="activity.viewValue"></option>
+                                  </datalist>
+                                </div>
+                              </div>
+                            </form>
+                            
+                            
+                            
+                            
         </div>
 
           <!--step 2-->
@@ -264,8 +312,7 @@
             </ul>
           </div>
         </div>
-      </div>
-      <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-start">
         <div class="col-12 col-lg-8 mb-4">
           <button type="button" class="btn btn-outline-success" (click)="onPrevClick()">
             Previous
@@ -275,6 +322,8 @@
           </button>
         </div>
       </div>
+      </div>
+      
     </div>
   </div>
-</div>
+

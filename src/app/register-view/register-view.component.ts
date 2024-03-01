@@ -1,101 +1,53 @@
-
-import { FlexLayoutModule } from '@angular/flex-layout'; 
-import { MatIconModule } from '@angular/material/icon';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatCardModule } from '@angular/material/card';
-import { RouterModule } from '@angular/router';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { Router, RouterModule } from '@angular/router';
 
 
-export interface Allergies {
-  AllergyType: string;
-  Trigger: string;
-  previousTreatments: string;
-  ReactionSeverity: string;
+export interface PeriodicElement {
+  name: string;
+  ID: number;
+  age: number;
+  status : boolean;
+  
 }
 
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
-
-export interface Card {
-  id: number;
-  text: string;
-  postDate: Date;
-  availability: number;
-  desc: string;
-}
-
-interface Pin {
-  id: number;
-  title: string;
-  description: string;
-}
-
-const ELEMENT_DATA: Allergies[] = [
-  { AllergyType: '', Trigger: 'Hydrogen', previousTreatments: '', ReactionSeverity: 'H' },
-  { AllergyType: '', Trigger: 'Helium', previousTreatments: '', ReactionSeverity: 'He' },
-  { AllergyType: '', Trigger: 'Lithium', previousTreatments: '', ReactionSeverity: 'Li' },
-  { AllergyType: '', Trigger: 'Beryllium', previousTreatments: '', ReactionSeverity: 'Be' },
+const ELEMENT_DATA: PeriodicElement[] = [
+  {ID: 1, name: 'Haide', age: 37 , status : true},
+  {ID: 2, name: 'helen', age:60 , status :true},
+  {ID: 3, name: 'liam', age: 7 , status :true},
+  {ID: 4, name: 'Bery', age:56 , status :false},
+  {ID: 5, name: 'Big', age: 55 , status :true},
+  {ID: 6, name: 'Carol', age: 66 , status :true},
+  {ID: 7, name: 'Nissrine', age: 29 , status :true},
+  {ID: 8, name: 'oliver', age: 19 , status :false},
+  {ID: 9, name: 'Florence', age: 44 , status :true},
+  {ID: 10, name: 'Neon', age: 20 , status :true},
 ];
+
 
 @Component({
   standalone : true,
   selector: 'app-register-view',
   templateUrl: './register-view.component.html',
   styleUrls: ['./register-view.component.css'],
-  imports: [RouterModule],
-  providers: [MatIconModule, MatTableModule, MatSortModule, MatGridListModule,FlexLayoutModule, MatCardModule],
+  imports: [RouterModule,MatFormFieldModule, MatInputModule, MatTableModule],
+  providers: [],
 })
 export class RegisterViewComponent {
-
-  // Tableau
-  displayedColumns: string[] = ['AllergyType', 'Trigger', 'previousTreatments', 'ReactionSeverity'];
-  dataSource = ELEMENT_DATA;
-
-  // Grid
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 1, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 2, color: 'lightgreen' },
-    { text: 'Three', cols: 1, rows: 1, color: 'lightpink' },
-    { text: 'Four', cols: 2, rows: 1, color: '#DDBDF1' },
-  ];
-
-  pins: Pin[] = [
-    { id: 1, title: 'Title 1', description: 'Description 1' },
-    { id: 2, title: 'Title 2', description: 'Description 2' },
-    // Add more pins as needed
-  ];
-
-  renderPins() {
-    const pinsContainer = document.getElementById('pins-container');
-
-    if (pinsContainer) {
-      pinsContainer.innerHTML = '';
-
-      this.pins.forEach(pin => {
-        const pinElement = document.createElement('div');
-        pinElement.classList.add('pin');
-
-        const titleElement = document.createElement('h2');
-        titleElement.textContent = pin.title;
-
-        const descriptionElement = document.createElement('p');
-        descriptionElement.textContent = pin.description;
-
-        pinElement.appendChild(titleElement);
-        pinElement.appendChild(descriptionElement);
-        pinsContainer.appendChild(pinElement);
-      });
-    }
+  getStatusLabel(element: PeriodicElement): string {
+    return element.status === false ? '<label class="badge badge-danger">Out</label>' : '<label class="badge badge-success">Resident</label>';
   }
 
+  displayedColumns: string[] = ['ID', 'name', 'age','status'];
+    dataSource = new MatTableDataSource(ELEMENT_DATA);
+  
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+    
   constructor(private router: Router) {}
 
   ngOnInit() {}
