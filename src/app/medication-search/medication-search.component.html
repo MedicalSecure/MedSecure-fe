@@ -1,44 +1,84 @@
-<div class="d-flex gap-5 justify-content-center">
-    <div class="mat-chip-listbox-container">
-        <mat-chip-listbox [value]="searchKey" (change)="onSelectionChange($event)">
-            <mat-chip-option value="Nom" checked>Name</mat-chip-option>
-            <mat-chip-option value="Laboratoire">Pathologie</mat-chip-option>
-            <mat-chip-option value="Indications">SubstanceActive</mat-chip-option>
+<div class="d-flex justify-content-center">
+  <div class="d-flex flex-column gap-5">
+    <div class="search-field position-relative mt-1">
+      <input
+        type="text"
+        placeholder="Search for medication"
+        matInput
+        [formControl]="searchControl"
+        [matAutocomplete]="auto"
+        class="form-control custom-width-rem custom-height custom-border-style custom-padding-right"
+        (keypress)="handleKeyPress($event)"
+      />
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <ng-container
+          *ngFor="
+            let medication of filteredMedications | async;
+            let last = last
+          "
+        >
+          <mat-option (click)="openDialog(medication)" [value]="medication">
+            {{ getMedicationProperty(medication) }}
+          </mat-option>
+          <div *ngIf="!last" class="dropdown-divider"></div>
+        </ng-container>
+      </mat-autocomplete>
+      <button
+        mat-icon-button
+        matSuffix
+        class="position-absolute top-50 bg-transparent"
+        style="right: 10px; transform: translateY(-50%); border: none"
+      >
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+
+    <div>
+      <div
+        class="mat-chip-listbox-container d-flex">
+        <strong><p style="font-size: x-large">Je cherche par:</p></strong>
+        <mat-chip-listbox
+          [value]="searchKey"
+          (change)="onSelectionChange($event)"
+        >
+          <mat-chip-option value="Nom">Name</mat-chip-option>
+          <mat-chip-option value="Laboratoire">Pathologie</mat-chip-option>
+          <mat-chip-option value="Indications">SubstanceActive</mat-chip-option>
         </mat-chip-listbox>
+      </div>
+
+      <div
+        class="mat-chip-listbox-container d-flex mt-5">
+        <strong><p style="font-size: x-large">Je cherche par:</p></strong>
+        <mat-chip-listbox
+          [value]="searchKey"
+          (change)="onSelectionChange($event)"
+        >
+          <mat-chip-option value="pn">Patient Name</mat-chip-option>
+          <mat-chip-option value="dn">DN</mat-chip-option>
+          <mat-chip-option value="pid">Patiend ID</mat-chip-option>
+          <mat-chip-option value="rd">Registration Date</mat-chip-option>
+          <mat-chip-option value="cin">CIN</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
     </div>
-    
-  
-    <div class="d-flex flex-column gap-5">
-        <div class="search-field position-relative mt-1">
-            <input type="text" placeholder="Search for medication" matInput [formControl]="searchControl"
-                [matAutocomplete]="auto" class="form-control custom-width-rem custom-height custom-border-style custom-padding-right"
-                (keypress)="handleKeyPress($event)">
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <ng-container *ngFor="let medication of filteredMedications | async; let last = last">
-                        <mat-option (click)="openDialog(medication)" [value]="medication">
-                            {{ getmedicationProperty(medication) }}
-                        </mat-option>
-                        <div *ngIf="!last" class="dropdown-divider"></div>
-                    </ng-container>
-                </mat-autocomplete>
-            <button mat-icon-button matSuffix class="position-absolute top-50 bg-transparent" style="right: 10px; transform: translateY(-50%); border:none;">
-                <mat-icon>search</mat-icon>
-            </button>
-        </div>
-        
-        <div *ngIf="selectedMedications.length > 0" class="mt-3 mb-5">
-            <h3>Selected Medicines:</h3>
-            <div *ngFor="let medication of selectedMedications" class="medication-item mb-3">
-                <p class="text-blue mb-0">
-                    <strong>- Nom:</strong> <mark><strong>{{ medication.Nom }}</strong></mark>
-                    <strong>- Dosage:</strong> <mark><strong>{{ medication.Dosage }}</strong></mark>
-                    <strong>- Forme:</strong> <mark><strong>{{ medication.Forme }}</strong></mark>
-                </p>
-                <input type="text" placeholder="Enter Posologie" class="form-control">
-                <button mat-icon-button (click)="removemedication(medication)" class="ms-2">
-                    <mat-icon class="text-danger">cancel</mat-icon>
-                </button>
-            </div>
-        </div>
+
+    <div *ngIf="selectedMedications.length > 0" class="mt-3 mb-5">
+      <h3>Selected Medicines:</h3>
+      <div
+        *ngFor="let medication of selectedMedications"
+        class="medication-item mb-3"
+      >
+      <p class="text-primary mb-0 gap-5">
+        <mat-icon style="margin-right: 5px;">medical_services</mat-icon>
+        <strong style="margin-right: 5px;">- Nom:</strong>
+        <mark><strong>{{ medication.Nom }}</strong></mark>
+        <strong style="margin-right: 5px;">- Dosage:</strong>
+        <mark><strong>{{ medication.Dosage }}</strong></mark>
+        <strong style="margin-right: 5px;">- Quantity:</strong>
+        <mark><strong>{{ medication.Quantity }}</strong></mark>
+      </p>
+      </div>
     </div>
+  </div>
 </div>

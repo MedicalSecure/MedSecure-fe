@@ -44,7 +44,7 @@ import { MatOptionModule } from '@angular/material/core';
 export class MedicationSearchComponent implements OnInit {
   searchControl = new FormControl();
   searchKeys: string[] = ['Nom', 'Laboratoire', 'Indications'];
-  searchKey: string = 'Nom';
+  searchKey: string = '';
   Medications: Medications[] = [];
   filteredMedications: Observable<Medications[]>;
   selectedMedications: Medications[] = [];
@@ -62,6 +62,10 @@ export class MedicationSearchComponent implements OnInit {
     this.medicationService.getMedications().subscribe((data) => {
       this.Medications = data.Medications.medication;
     });
+  }
+
+  search(value: string) {
+    console.log(value);
   }
 
   filterMedications(searchTerm: string): Medications[] {
@@ -89,14 +93,14 @@ export class MedicationSearchComponent implements OnInit {
     this.emitSelectedMedications();
   }
 
-  getmedicationProperty(medication: Medications): string {
+  getMedicationProperty(medication: Medications): string {
     switch (this.searchKey) {
       case 'Nom':
-        return medication['Nom']; // Use square brackets for dynamic properties
+        return medication['Nom'];
       case 'Laboratoire':
-        return medication['Laboratoire']; // Use square brackets for dynamic properties
+        return medication['Laboratoire']; 
       case 'Indications':
-        return medication['Indications']; // Use square brackets for dynamic properties
+        return medication['Indications']; 
       default:
         return '';
     }
