@@ -41,12 +41,7 @@ export class AddSymptomsComponent {
     new EventEmitter<onChipsSelectionEmitType>();
   @Output() onPageChangeEvent = new EventEmitter<number>();
 
-  onClickNextEvent() {
-    this.onPageChangeEvent.emit(1);
-  }
-  onClickBackEvent(): void {
-    this.onPageChangeEvent.emit(-1);
-  }
+
   symptomsData = [
     { index: 1, label: 'Fever', value: 1 },
     { index: 2, label: 'Cough', value: 2 },

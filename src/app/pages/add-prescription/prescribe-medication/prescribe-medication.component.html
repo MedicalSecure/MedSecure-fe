@@ -36,342 +36,76 @@
       <!-- part of day -->
       <app-parts-of-day></app-parts-of-day>
 
-      <!-- quantity and period -->
-      <div class="d-flex gap-1 mb-2 justify-content-evenly">
-        <!-- quantity -->
-        <div
-          class="border border-black d-flex flex-wrap justify-content-around position-relative w-fit-content px-1"
-          style="min-height: 4rem; padding-top: 0.2rem"
-        >
-          <p
-            class="position-absolute px-2 bg-white fit-content"
-            style="z-index: 10; top: -0.8em; left: 1em"
-          >
-            Quantity*
-          </p>
-          <div
-            class="input-group p-0 d-flex align-items-center justify-content-between col-12 px-md-1"
-          >
-            <div
-              class="input-group p-0 d-flex align-items-center"
-              style="width: fit-content"
-            >
-              <mat-icon
-                class="m-1 me-1 fs-3 w-auto h-auto"
-                (click)="onModifyQuantity(-1)"
-                >remove_circle_outline</mat-icon
-              >
-              <input
-                type="number"
-                style="
-                  max-width: 2rem;
-                  width: fit-content;
-                  border: 0;
-                  text-align: center;
-                "
-                class="form-control p-2 fs-6 fw-semibold"
-                aria-describedby="basic-addon2"
-                matInput
-                formControlName="dispenseValue"
-              />
-
-              <mat-icon
-                class="m-1 mx-1 fs-3 w-auto h-auto"
-                (click)="onModifyQuantity(1)"
-                >add_circle_outline</mat-icon
-              >
-            </div>
-            <div class="input-group-append self ms-1">
-              <span class="input-group-text text-dark">{{ initialUnit }}</span>
-            </div>
-          </div>
-        </div>
-        <!-- period -->
-        <div
-          class="border border-black p-2 pt-3 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center"
-          [formGroup]="EndDate"
-        >
-          <p
-            class="position-absolute px-2 bg-white fit-content"
-            style="z-index: 10; top: -0.8em; left: 1em"
-          >
-            Period*
-          </p>
-          <div class="input-group p-0 py-1" style="max-width: fit-content">
-            <div class="input-group-days">
-              <input
-                type="text"
-                class="form-control p-1 pe-5 text-end fs-6 fw-semibold"
-                aria-describedby="basic-addon2"
-                type="number"
-                formControlName="consumptionDays"
-                (change)="setIsPermanentToFalse()"
-              />
-              <div class="input-days text-primary">.days</div>
-            </div>
-          </div>
-          <p
-            [ngClass]="
-              EndDate.getRawValue().isPermanent
-                ? 'btn btn-primary text-light m-0 px-2'
-                : 'btn btn-outline-primary m-0 px-2'
-            "
-            (click)="onIsPermanentChange()"
-          >
-            Permanent
-          </p>
-        </div>
-      </div>
-      <!-- frequency -->
-      <!--       <div
-        class="border border-black p-1 pt-2 d-flex flex-wrap justify-content-around position-relative"
-        [formGroup]="EndDate"
-      >
-        <p
-          class="position-absolute px-2 bg-white fit-content"
-          style="z-index: 10; top: -0.8em; left: 1em"
-        >
-          Frequency*
-        </p>
-        <div class="d-flex flex-wrap gap-2 ms-auto justify-content-center my-2">
-          <div
-            *ngFor="let i of [0, 1, 2, 3]"
-            class="d-flex justify-content-between"
-            style="gap: 0.2rem"
-          >
-            <button
-              *ngFor="let j of [0, 1, 2, 3, 4, 5]"
-              [ngClass]="getHourClass(i * 6 + j)"
-              style="
-                border-radius: 2rem;
-                padding: 0.2rem;
-                padding-top: 0.15rem;
-                padding-bottom: 0.15rem;
-              "
-              (click)="onClickDayHour(i * 6 + j)"
-            >
-              {{ i * 6 + j < 10 ? "0" + (i * 6 + j).toString() : i * 6 + j }}
-            </button>
-          </div>
-        </div>
-      </div>
- -->
-      <!-- frequency -->
+      <!-- period -->
       <div
-        class="border border-black p-1 pt-2 d-flex flex-wrap justify-content-around position-relative"
+        class="border border-black p-2 mt-1 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center"
         [formGroup]="EndDate"
       >
         <p
           class="position-absolute px-2 bg-white fit-content"
-          style="z-index: 10; top: -0.8em; left: 1em"
+          style="z-index: 2; top: -0.8em; left: 1em"
         >
-          Frequency*
+          Period*
         </p>
-        <div class="d-flex flex-wrap gap-2 ms-auto justify-content-start my-2">
-          <div
-            *ngFor="let category of dayHoursBoundariesKeys"
-            class="d-flex justify-content-between"
-            style="gap: 0.2rem"
-          >
-            <div
-              class="border border-black p-2 pt-3 d-flex flex-wrap justify-content-around position-relative align-items-center"
-              [formGroup]="EndDate"
-            >
-              <p
-                class="position-absolute px-1 bg-white fit-content text-info"
-                style="z-index: 10; top: -0.7em; left: 1em"
-              >
-                {{ category }}
-              </p>
-              <button
-                *ngFor="let hour of dayHoursBoundaries[category]"
-                [ngClass]="getHourClass(hour)"
-                style="
-                  border-radius: 2rem;
-                  padding: 0.2rem;
-                  padding-top: 0.15rem;
-                  padding-bottom: 0.15rem;
-                  margin-right: 0.05rem;
-                "
-                (click)="onClickDayHour(hour)"
-                [title]="
-                  getMedicationHourByHour(hour) == null
-                    ? 'not selected'
-                    : getMedicationHourByHour(hour)?.isBeforeFood
-                    ? 'Before food'
-                    : 'after Food'
-                "
-              >
-                {{ hour < 10 ? "0" + hour.toString() : hour }}
-              </button>
-              <!--         [ngClass]="
-               getHourClass(i * 6 + j - 1)
-                 ? 'bg-info border border-0 '
-                 : 'border border-info bg-white'
-             " -->
-            </div>
-          </div>
-          <div class="d-flex align-items-center ms-1">
-            <mat-icon class="text-danger">warning</mat-icon>
-          </div>
-        </div>
+
+        <app-datepicker-range-popup></app-datepicker-range-popup>
+        <app-toggle-button
+          [on]="EndDate.getRawValue().isPermanent ? true : false"
+          [showLabels]="true"
+          onText="Permanent"
+          offText="Permanent"
+          (changed)="onIsPermanentChange()"
+          [containerClass]="{ width: '8rem' }"
+        ></app-toggle-button>
       </div>
 
+      <!-- Additional information -->
+      @if(commentsList.length >0){
       <div
-        class="border border-black p-2 pt-3 position-relative align-items-start d-flex gap-2 justify-content-center"
-      >
-        <p
-          class="position-absolute px-1 bg-white fit-content text-info"
-          style="z-index: 10; top: -0.6em; left: 1em"
-        >
-          Template
-        </p>
-
-        <div style="font-size: 0.86rem">
-          Before food
-          <button
-            class="bg-info border hourCircleBtn"
-            style="font-size: 0.86rem"
-          >
-            {{ "BF" }}
-          </button>
-        </div>
-        <p>|</p>
-        <div style="font-size: 0.86rem">
-          After food
-          <button
-            class="bg-primary text-light border hourCircleBtn"
-            style="font-size: 0.86rem"
-          >
-            {{ "AF" }}
-          </button>
-        </div>
-      </div>
-
-      <!-- consumption period: - Number + icons + Day/Week/Month button -->
-      <!--       <div
-        class="border border-black p-1 pt-2 mt-2 d-flex flex-wrap justify-content-around position-relative"
+        class="border border-black p-2 mt-1 p-2 p-lg-3 position-relative"
         [formGroup]="EndDate"
       >
         <p
           class="position-absolute px-2 bg-white fit-content"
-          style="z-index: 10; top: -0.8em; left: 1em"
+          style="z-index: 2; top: -0.8em; left: 1em"
         >
-          consumption period*
+          Additional information*
         </p>
-        <div
-          class="input-group my-2 p-2 py-1"
-          style="
-            max-width: fit-content;
-            background-color: rgba(0, 174, 255, 0.07);
-            border-radius: 1rem;
-            height: 2.4rem;
-          "
-        >
+        <div>
+          @for(comment of commentsList;track $index){
           <div
-            class="input-group p-0 d-flex align-items-center"
-            style="width: fit-content"
+            class="d-flex align-items-center justify-content-around col-12 gap-2 py-1"
           >
-            <mat-icon class="m-1 me-1 fs-4 w-auto h-auto"
-              >remove_circle_outline</mat-icon
+            <label
+              for=""
+              [ngClass]="comment.labelClass"
+              [ngStyle]="comment.labelStyle"
+              >{{ comment.label ? comment.label : "Comment" }}</label
             >
-            <input
-              type="number"
-              style="
-                width: 2rem;
-                border: 0;
-                text-align: center;
-                background-color: rgba(0, 174, 255, 0.007);
-              "
+            <textarea
               class="form-control p-2"
-              aria-describedby="basic-addon2"
-              matInput
-              formControlName="consumptionDays"
-            />
-
-            <mat-icon class="m-1 ms-1 fs-4 w-auto h-auto"
-              >add_circle_outline</mat-icon
+              style="height: 3rem"
+              name=""
+              id=""
+              type="text"
+              [value]="comment.content"
+              (change)="onCommentChange($event, comment)"
+            ></textarea>
+            <mat-icon
+              (click)="onRemoveComment(comment)"
+              class="text-danger pointer"
+              >delete</mat-icon
             >
           </div>
-        </div>
-        <div
-          class="btn-group h-75 align-self-center d-flex align-items-center justify-content-center gap-1"
-          role="group"
-          aria-label=""
-        >
-          <button
-            type="button"
-            class="btn btn-outline-primary px-3 m-0 fw-bold"
-          >
-            Day
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-primary px-3 m-0 fw-bold"
-          >
-            Week
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-primary px-3 m-0 fw-bold"
-          >
-            Month
-          </button>
-        </div>
-      </div> -->
-
-      <!-- Two buttons : before and after Food -->
-      <!--       <div class="btn-group" role="group" aria-label="">
-        <button
-          type="button"
-          class="btn btn-outline-primary d-flex align-content-center justify-content-center gap-2"
-        >
-          <mat-icon> fastfood</mat-icon>
-          <span>Before food</span>
-        </button>
-        <button
-          type="button"
-          class="btn btn-outline-primary d-flex align-content-center justify-content-center gap-2"
-        >
-          <span>After food</span>
-          <mat-icon> fastfood</mat-icon>
-        </button>
-      </div> -->
-      <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-3">
-        <div class="w-100 d-flex align-content-center justify-content-around">
-          <div><mat-icon style="font-size: rem">add_comment</mat-icon></div>
-          <button
-            type="button"
-            [className]="getAppendMedicationButtonLabel().class"
-            (click)="onClickAppendMedication()"
-          >
-            {{ getAppendMedicationButtonLabel().label }}
-          </button>
-        </div>
-        <div class="d-flex flex-row-reverse gap-1 w-100">
-          <button
-            type="button"
-            [className]="getFinishButtonLabel().class"
-            (click)="onClickFinish()"
-          >
-            {{ getFinishButtonLabel().label }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-warning col-6 m-0"
-            (click)="onClickBackEvent()"
-          >
-            Back
-          </button>
+          }
         </div>
       </div>
+      }
     </form>
   </div>
 
   <!-- Cards right side -->
-  <div
-    class="d-flex flex-column gap-2 justify-content-center align-middle col-12 col-md-4 col-lg-5"
-  >
+  <div class="d-flex flex-column gap-2 col-12 col-md-4 col-lg-5">
     <div class="card mb-2 py-2">
       <!-- Current Added medications card -->
       @if(mainAddedMedications.length >0){
@@ -492,5 +226,21 @@
       </div>
     </div>
     <!-- end cards container -->
+  </div>
+</div>
+<div style="position: absolute; bottom: 0; right: 0; z-index: 4; width: 38vw">
+  <div class="d-flex justify-content-start">
+    <div class="d-flex align-content-center justify-content-around gap-2 w-75">
+      <div title="Add comment" (click)="onAddComment()">
+        <i class="fa fa-commenting icon-flipped fs-4"></i>
+      </div>
+      <button
+        type="button"
+        [className]="getAppendMedicationButtonLabel().class"
+        (click)="onClickAppendMedication()"
+      >
+        {{ getAppendMedicationButtonLabel().label }}
+      </button>
+    </div>
   </div>
 </div>

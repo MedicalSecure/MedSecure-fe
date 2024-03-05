@@ -10,7 +10,7 @@ export class FilterPatientByNameAndSnPipe implements PipeTransform {
       return items;
     }
     searchTerm = searchTerm.toLowerCase();
-
+    // TODO add filter by bday
     return items.filter((item) => {
       let newItem = { sn: item.sn, name: item.name };
       return Object.values(newItem).some((value: any) =>

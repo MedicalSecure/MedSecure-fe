@@ -27,6 +27,9 @@ import { MatCardModule } from '@angular/material/card';
 import { R } from '@angular/cdk/keycodes';
 import { PartsOfDayComponent } from '../../../components/parts-of-day/parts-of-day.component';
 import { patientType } from '../patient-select/patient-select.component';
+import { DatepickerRangePopupComponent } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
+import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
+import { styleClass } from '../../../types';
 
 @Component({
   selector: 'app-prescribe-medication',
@@ -48,6 +51,8 @@ import { patientType } from '../patient-select/patient-select.component';
     MatCardModule,
     MatDatepickerModule,
     PartsOfDayComponent,
+    DatepickerRangePopupComponent,
+    ToggleButtonComponent,
   ],
   templateUrl: './prescribe-medication.component.html',
   styleUrl: './prescribe-medication.component.css',
@@ -81,7 +86,15 @@ export class PrescribeMedicationComponent {
   isSelectedForceOrder: boolean = false;
   isFilteredForceOrder: boolean = false;
   isEditingMode: boolean = false;
+  isCautionEnabled: boolean = false;
   initialUnit: string = this.dosageUnits[0];
+  commentsList: commentType[] = [];
+  cautionComment: commentType = {
+    id: undefined,
+    label: 'Caution',
+    content: '',
+    labelClass: 'text-warning fw-bold',
+  };
   selected!: Date | null;
   public start: Date = new Date('10/07/2017');
   public end: Date = new Date('11/25/2017');
@@ -149,6 +162,7 @@ export class PrescribeMedicationComponent {
       startWith(''),
       map((value) => this._filter(value || ''))
     );
+    this.isCautionEnabled && this.commentsList.unshift(this.cautionComment);
   }
 
   onStartDateInputChange(newDate: Date | null): void {
@@ -178,6 +192,20 @@ export class PrescribeMedicationComponent {
       ...this.Medication.getRawValue(),
       consumptionDays: this.EndDate.getRawValue().consumptionDays,
     });
+  }
+
+  onIsCautionEnabledChange() {
+    this.isCautionEnabled = !this.isCautionEnabled;
+    if (this.isCautionEnabled) {
+      // Add the caution to the beginning of the array
+      this.commentsList.unshift(this.cautionComment);
+    } else {
+      // Remove caution from the array if it exists
+      const index = this.commentsList.indexOf(this.cautionComment);
+      if (index !== -1) {
+        this.commentsList.splice(index, 1);
+      }
+    }
   }
 
   onIsPermanentChange() {
@@ -219,6 +247,30 @@ export class PrescribeMedicationComponent {
     );
   }
 
+  onAddComment() {
+    if (this.commentsList.length > 0) {
+      let lastElement = this.commentsList.at(this.commentsList.length - 1);
+      if (lastElement?.content != '')
+        this.commentsList.push({
+          id: undefined,
+          label: 'Comment',
+          content: '',
+        });
+    } else if (this.commentsList.length == 0)
+      this.commentsList.push({ id: undefined, label: 'Comment', content: '' });
+  }
+
+  onCommentChange(event: any, comment: commentType) {}
+
+  onRemoveComment(comment: commentType) {
+    if (comment === this.cautionComment) {
+      this.onIsCautionEnabledChange();
+      return;
+    }
+    this.commentsList = this.commentsList.filter((item) => {
+      return item != comment;
+    });
+  }
   onSelectedMedicationChange(group: any) {
     this.Medication.setValue({
       ...this.Medication.getRawValue(),
@@ -228,7 +280,7 @@ export class PrescribeMedicationComponent {
     this.isSelectedForceOrder = group.option.group.label === 'out of stock';
   }
 
-  getFinishButtonLabel(): { label: string; class: string } {
+  getNextButtonLabel(): { label: string; class: string } {
     if (this.isFilteredForceOrder || this.isSelectedForceOrder) {
       return {
         label: 'Finish with Order',
@@ -283,7 +335,10 @@ export class PrescribeMedicationComponent {
       });
       this.isEditingMode = false;
       if (this.isFilteredForceOrder === false)
-        this.isFilteredForceOrder = CurrentMedication.isForceOrder;
+        this.isFilteredForceOrder =
+          CurrentMedication.isForceOrder == undefined
+            ? false
+            : CurrentMedication.isForceOrder;
     }
   }
   onClickBackEvent(): void {
@@ -394,15 +449,15 @@ export const _filterMedication = (opt: string[], value: string): string[] => {
 
 export type medicationType = {
   medicationId: string;
-  SIG: string;
+  name: string;
   dispenseValue: number;
   dispenseUnit: string;
   startDate: Date;
   consumptionDays: number;
-  isForceOrder: boolean;
+  isForceOrder?: boolean;
   administrationHours: Set<medicationHourType>;
-  dispenseCaution: string;
-  comments: Array<string>;
+  dispenseCaution?: string;
+  comments: Array<commentType>;
 };
 interface DayHoursBoundaries {
   [category: string]: number[]; // Use index signature for dynamic categories
@@ -410,4 +465,11 @@ interface DayHoursBoundaries {
 export type medicationHourType = {
   hour: number;
   isBeforeFood: boolean;
+};
+export type commentType = {
+  id?: string;
+  label?: string;
+  content: string;
+  labelClass?: string;
+  labelStyle?: styleClass;
 };

@@ -1,12 +1,27 @@
-@font-face {
-  font-family: "TharLon";
-  src: url("../../../assets/fonts/Tharlon/Tharlon-Regular.ttf")
-    format("truetype"); /* adjust the path to the location of your font file */
-  /* You can include additional font variations here, such as bold, italic, etc. */
+#add-prescription-body {
+  font-family: "Manrope", sans-serif;
+}
+.container-scroll {
+  display: flex;
+  flex-direction: column;
+  height: 82vh; /* Takes the available viewport height */
+}
+@media (max-width: 576px) {
+  /* CSS rules for extra small devices */
+  .container-scroll {
+    height: 87vh; /* Takes the available viewport height */
+  }
+}
+@media (min-width: 576px) and (max-width: 768px) {
+  /* CSS rules for small devices */
+  .container-scroll {
+    height: 85vh; /* Takes the available viewport height */
+  }
 }
 
-body {
-  font-family: "TharLon", sans-serif; /* Use TharLon font for the body text */
+.content {
+  flex: 1; /* Takes remaining space */
+  overflow-y: auto; /* Enables vertical scrollbar if content overflows */
 }
 
 .example-headers-align .mat-expansion-panel-header-description {

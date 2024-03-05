@@ -1,7 +1,7 @@
 <div
   class="d-flex flex-column p-sm-2 justify-content-center gap-5 gap-sm-3 flex-sm-row-reverse"
 >
-  <div class="col-12 col-sm-6 p-0">
+  <div class="col-12 col-sm-6 p-0" id="test-height">
     <form class="container d-flex card py-2 shadow-sm gap-1">
       <app-human-body-viewer></app-human-body-viewer>
     </form>
@@ -36,22 +36,5 @@
       [isStartWithSearch]="false"
       [searchPropertyName]="'label'"
     ></chips-select>
-
-    <div class="d-flex flex-row-reverse gap-1 col-12">
-      <button
-        type="button"
-        class="btn btn-outline-success w-100 py-2"
-        (click)="onClickNextEvent()"
-      >
-        Next
-      </button>
-      <button
-        type="button"
-        class="btn btn-outline-warning w-100"
-        (click)="onClickBackEvent()"
-      >
-        Back
-      </button>
-    </div>
   </div>
 </div>

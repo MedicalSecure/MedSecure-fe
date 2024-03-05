@@ -5,16 +5,17 @@
  remove associated diagnosis
 
 -->
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add prescription</title>
-  </head>
-  <body>
+<div id="add-prescription-body" class="container-scroll bg-white">
+  <div class="content">
+    <app-wizard-header
+      (currentStepChange)="SwitchToStep($event)"
+      [switchCondition]="selectedPatient != undefined"
+      [currentStep]="stepNumber"
+      [size]="3"
+      [IconSizeRatio]="0.6"
+    ></app-wizard-header>
     <!-- in-body navigator -->
-    <div
+    <!--     <div
       class="d-flex align-items-center justify-content-center border-bottom px-4"
       style="background-color: #f4f5f7"
     >
@@ -59,39 +60,74 @@
         </li>
       </ul>
     </div>
-
-    @if(selectedPatient){
+ -->
+    @if(selectedPatient && stepNumber!=0){
     <div class="d-flex gap-3 pt-2 justify-content-center" style="height: 2rem">
       <p style="margin: 0" class="align-self-center">Selected Patient :</p>
       <span class="text-primary fw-bold align-self-center">
         SN : {{ selectedPatient.sn }} | {{ selectedPatient.name }} -
         {{ selectedPatient.age }} years</span
       >
-      <mat-icon class="align-self-center" (click)="onSelectPatient(undefined)"
+      <mat-icon
+        class="align-self-center"
+        (click)="onSelectPatientChange(undefined)"
         >close</mat-icon
       >
     </div>
     }
 
     <!-- human body card -->
-    <div [className]="stepNumber != 0 && 'd-none'">
-      <app-patient-select
-        [(selectedPatient)]="selectedPatient"
-        (selectedPatientChange)="onSelectPatient($event)"
-      />
+    <div>
+      <div [className]="stepNumber != 1 && 'd-none'">
+        <app-patient-select
+          [(selectedPatient)]="selectedPatient"
+          (selectedPatientChange)="onSelectPatientChange($event)"
+        />
+      </div>
+      <div [className]="stepNumber != 2 && 'd-none'">
+        <app-add-symptoms
+          (onPageChangeEvent)="onPageChangeEvent($event, 2)"
+          (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
+          [selectedPatient]="selectedPatient"
+        />
+      </div>
+      <div [className]="stepNumber != 3 && 'd-none'">
+        <app-prescribe-medication
+          (onBackClick)="SwitchToStep(2)"
+          [selectedPatient]="selectedPatient"
+        />
+      </div>
+      <div [className]="selectedPatient == undefined && 'd-none'">
+        <app-patient-info-cards></app-patient-info-cards>
+      </div>
     </div>
-    <div [className]="stepNumber != 1 && 'd-none'">
-      <app-add-symptoms
-        (onPageChangeEvent)="onPageChangeEvent($event, 1)"
-        (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
-        [selectedPatient]="selectedPatient"
-      />
+  </div>
+  <div
+    class="d-flex justify-content-start"
+    style="
+      position: absolute;
+      bottom: 0;
+      background-color: #f4f5f7;
+      width: 90vw;
+      z-index: 2;
+      min-height: 2.2rem;
+    "
+  >
+    <div class="d-flex gap-1 col-7 col-lg-5 m-0">
+      <button
+        type="button"
+        [className]="backButtonContent.class"
+        (click)="onClickBackEvent()"
+      >
+        {{ backButtonContent.label }}
+      </button>
+      <button
+        type="button"
+        [className]="nextButtonContent.class"
+        (click)="onClickNextEvent()"
+      >
+        {{ nextButtonContent.label }}
+      </button>
     </div>
-    <div [className]="stepNumber != 2 && 'd-none'">
-      <app-prescribe-medication
-        (onBackClick)="SwitchToStep(1)"
-        [selectedPatient]="selectedPatient"
-      />
-    </div>
-  </body>
-</html>
+  </div>
+</div>

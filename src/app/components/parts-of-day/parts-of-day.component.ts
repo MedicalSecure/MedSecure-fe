@@ -1,153 +1,169 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatDividerModule} from '@angular/material/divider';
-import { DatepickerRangePopupComponent } from "../datepicker-range-popup/datepicker-range-popup.component";
+import { MatDividerModule } from '@angular/material/divider';
+import { DatepickerRangePopupComponent } from '../datepicker-range-popup/datepicker-range-popup.component';
 
 @Component({
-    selector: 'app-parts-of-day',
-    standalone: true,
-    templateUrl: './parts-of-day.component.html',
-    styleUrl: './parts-of-day.component.css',
-    imports: [CommonModule, MatDividerModule, DatepickerRangePopupComponent]
+  selector: 'app-parts-of-day',
+  standalone: true,
+  templateUrl: './parts-of-day.component.html',
+  styleUrl: './parts-of-day.component.css',
+  imports: [CommonModule, MatDividerModule, DatepickerRangePopupComponent],
 })
 export class PartsOfDayComponent implements OnInit {
-  @Input() selectedHours: any[] = [];
-
-  hoursList: any[] = [
-    [
-      { hour: '06' },
-      { hour: '07' },
-      { hour: '08' },
-      { hour: '09' },
-      { hour: '10' },
-      { hour: '11' },
-      { hour: '12' },
-      { hour: '13' },
-      { hour: '14' },
-      { hour: '15' },
-      { hour: '16' },
-      { hour: '17' },
-      { hour: '18' },
-      { hour: '19' },
-      { hour: '20' },
-      { hour: '21' },
-      { hour: '22' },
-      { hour: '23' },
-      { hour: '00' },
-      { hour: '01' },
-      { hour: '02' },
-      { hour: '03' },
-      { hour: '04' },
-      { hour: '05' },
-    ],
+  @Input()
+  partsOfDayHours: hourType[][] = [
+    // Late Night
+    [{ hour: '00' }, { hour: '01' }, { hour: '02' }],
+    // Pre-Dawn/Dawn
+    [{ hour: '03' }, { hour: '04' }, { hour: '05' }],
+    // Early Morning
+    [{ hour: '06' }, { hour: '07' }, { hour: '08' }],
+    // Mid-Morning
+    [{ hour: '09' }, { hour: '10' }, { hour: '11' }],
+    // Noon/Midday
+    [{ hour: '12' }],
+    // Afternoon
+    [{ hour: '13' }, { hour: '14' }, { hour: '15' }],
+    // Mid-Afternoon
+    [{ hour: '16' }, { hour: '17' }],
+    // Evening
+    [{ hour: '18' }, { hour: '19' }, { hour: '20' }, { hour: '21' }],
+    // Dusk
+    [{ hour: '22' }, { hour: '23' }],
+  ];
+  private _partsOfDayNames: string[] = [
+    // Late Night
+    'Late Night',
+    // Pre-Dawn/Dawn
+    'Pre-Dawn/Dawn',
+    // Early Morning
+    'Early Morning',
+    // Mid-Morning
+    'Mid-Morning',
+    // Noon/Midday
+    'Noon/Midday',
+    // Afternoon
+    'Afternoon',
+    // Mid-Afternoon
+    'Mid-Afternoon',
+    // Evening
+    'Evening',
+    // Dusk
+    'Dusk',
+  ];
+  private _hourClasses: string[] = [
+    'bg-dark',
+    'bg-info',
+    'bg-info',
+    'bg-success',
+    'bg-warning',
+    'bg-primary',
+    'bg-danger',
+    'bg-warning',
+    'bg-danger',
+    'bg-dark',
   ];
 
-  ngOnInit(): void {
-    this.setDesiredHours();
+  ngOnInit(): void {}
+
+  onClick(
+    partOfDayIndex: number,
+    hourIndex: number,
+    increment: number,
+    HourObject: hourType,
+    isBeforeFood: boolean
+  ) {
+    let newHourObject = this.getUpdatedHourValue(
+      HourObject,
+      increment,
+      isBeforeFood
+    );
+    //this.applyHourModification(partOfDayIndex, hourIndex, newHourObject);
   }
 
-  setDesiredHours(): void {
-    const desiredHours = [
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-      22, 23, 0,
-    ];
-
-    for (const hourArray of this.hoursList) {
-      const filteredHours = hourArray.filter((hourObj: any) =>
-        desiredHours.includes(parseInt(hourObj.hour))
-      );
-      this.selectedHours.push(filteredHours);
-    }
+  onScroll(
+    partOfDayIndex: number,
+    hourIndex: number,
+    event: WheelEvent,
+    HourObject: hourType,
+    isBeforeFood: boolean = false
+  ) {
+    let increment = event.deltaY < 0 ? 1 : -1;
+    let newHourObject = this.getUpdatedHourValue(
+      HourObject,
+      increment,
+      isBeforeFood
+    );
+    console.log(newHourObject);
+    this.applyHourModification(partOfDayIndex, hourIndex, newHourObject);
   }
 
-  toggleCheckbox(currentitem: any) {
-    currentitem.isSelected = !currentitem.isSelected;
-  }
-
-  onFocus(item: number) {
-    console.log(item);
-  }
-
-  getBackgroundColor(hour: number): string {
-    if (hour >= 0 && hour < 3) {
-      // Late Night
-      return 'bg-dark';
-    } else if (hour >= 3 && hour < 6) {
-      // Pre-Dawn/Dawn
-      return 'bg-info';
-    } else if (hour >= 6 && hour < 9) {
-      // Early Morning
-      return 'bg-info';
-    } else if (hour >= 9 && hour < 12) {
-      // Mid-Morning
-      return 'bg-success';
-    } else if (hour == 12) {
-      // Noon/Midday
-      return 'bg-warning';
-    } else if (hour > 12 && hour < 15) {
-      // Afternoon
-      return 'bg-primary';
-    } else if (hour >= 15 && hour < 18) {
-      // Mid-Afternoon
-      return 'bg-danger';
-    } else if (
-      (hour >= 18 && hour < 21) ||
-      (hour >= 0 && hour < this.getSunsetHour())
-    ) {
-      // Evening
-      return 'bg-warning';
-    } else if (hour >= this.getSunsetHour() && hour < this.getDarknessHour()) {
-      // Dusk
-      return 'bg-danger';
+  getUpdatedHourValue(
+    HourObject: hourType,
+    increment: number,
+    isBeforeFood: boolean
+  ): hourType {
+    let newHourObject = { ...HourObject };
+    let oldValue = 0;
+    if (isBeforeFood) {
+      if (newHourObject?.beforeFoodDispenseQuantity != undefined) {
+        try {
+          oldValue = parseInt(newHourObject?.beforeFoodDispenseQuantity);
+          if (Number.isNaN(oldValue)) oldValue = 0;
+        } catch (error) {
+          oldValue = 0;
+        }
+      }
+      console.log(oldValue);
+      let finalValue: string =
+        oldValue + increment > 0 ? (oldValue + increment).toString() : '';
+      newHourObject.beforeFoodDispenseQuantity = finalValue;
     } else {
-      // Night
-      return 'bg-dark';
+      if (newHourObject?.afterFoodDispenseQuantity != undefined) {
+        try {
+          oldValue = parseInt(newHourObject?.afterFoodDispenseQuantity);
+          if (Number.isNaN(oldValue)) oldValue = 0;
+        } catch (error) {
+          oldValue = 0;
+        }
+      }
+      let finalValue: string =
+        oldValue + increment > 0 ? (oldValue + increment).toString() : '';
+      newHourObject.afterFoodDispenseQuantity = finalValue;
     }
+    return newHourObject;
   }
 
-  getToolTipText(hour: number): string {
-    if (hour >= 0 && hour < 3) {
-      //
-      return 'Late Night';
-    } else if (hour >= 3 && hour < 6) {
-      //
-      return 'Pre-Dawn/Dawn';
-    } else if (hour >= 6 && hour < 9) {
-      //
-      return 'Early Morning';
-    } else if (hour >= 9 && hour < 12) {
-      //
-      return 'Mid-Morning';
-    } else if (hour == 12) {
-      //
-      return 'Noon/Midday';
-    } else if (hour > 12 && hour < 15) {
-      //
-      return 'Afternoon';
-    } else if (hour >= 15 && hour < 18) {
-      //
-      return 'Mid-Afternoon';
-    } else if (
-      (hour >= 18 && hour < 21) ||
-      (hour >= 0 && hour < this.getSunsetHour())
-    ) {
-      //
-      return 'Evening';
-    } else if (hour >= this.getSunsetHour() && hour < this.getDarknessHour()) {
-      //
-      return 'Dusk';
-    } else {
-      //
-      return 'Night';
-    }
+  applyHourModification(
+    partOfDayIndex: number,
+    hourIndex: number,
+    newValue: hourType
+  ) {
+    let oldPartOfDayArray = this.partsOfDayHours[partOfDayIndex];
+    oldPartOfDayArray[hourIndex] = newValue;
   }
 
-  // Placeholder functions, replace these with your actual logic to determine sunset and darkness hours
-  getSunsetHour() {
-    return 18; // 6:00 PM
+  getBackgroundColor(index: number): string {
+    return index >= 0 && index < this._hourClasses.length
+      ? this._hourClasses[index]
+      : 'bg-dark';
   }
 
-  getDarknessHour() {
-    return 21; // 9:00 PM
+  
+
+  getTitle(index: number) {
+    return index >= 0 && index < this._hourClasses.length
+      ? this._partsOfDayNames[index]
+      : '';
+  }
+
+  onInputChange($event: any) {
+    console.log($event);
   }
 }
+export type hourType = {
+  hour: string;
+  beforeFoodDispenseQuantity?: string;
+  afterFoodDispenseQuantity?: string;
+};

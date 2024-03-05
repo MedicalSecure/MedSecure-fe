@@ -2,11 +2,21 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-sn.pipe';
+import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
+import { MatIcon } from '@angular/material/icon';
+import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
 
 @Component({
   selector: 'app-patient-select',
   standalone: true,
-  imports: [CommonModule, FormsModule, FilterPatientByNameAndSnPipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    FilterPatientByNameAndSnPipe,
+    PatientInfoCardsComponent,
+    MatIcon,
+    ToggleButtonComponent,
+  ],
   templateUrl: './patient-select.component.html',
   styleUrl: './patient-select.component.css',
 })
@@ -26,12 +36,26 @@ export class PatientSelectComponent {
     { sn: '009', name: 'Emily', sex: 'Female', age: 31, height: 162 },
     { sn: '010', name: 'Alex', sex: 'Male', age: 26, height: 178 },
   ];
-
+  checked: boolean = true;
   searchTerm: string = '';
+  stepNumber: number = 0;
 
-  onClickPatient(patient: patientType) {
+  onClickPatient(patient: patientType | undefined) {
+    if (patient != undefined) {
+      this.stepNumber = 1;
+    }
     this.selectedPatientChange.emit(patient);
     this.selectedPatient = patient;
+  }
+
+  SwitchToStep(index: number) {
+    if (this._validatePageSwitch(index)) this.stepNumber = index;
+  }
+  _validatePageSwitch(index: number): Boolean {
+    if (index > 0) {
+      if (this.selectedPatient == undefined) return false;
+    }
+    return true;
   }
 }
 export type patientType = {

@@ -7,6 +7,8 @@ import {
 import { PrescribeMedicationComponent } from './prescribe-medication/prescribe-medication.component';
 import { onChipsSelectionEmitType } from '../../components/chips-select/chips-select.component';
 import { MatIcon } from '@angular/material/icon';
+import { WizardHeaderComponent } from '../../components/wizard-header/wizard-header.component';
+import { PatientInfoCardsComponent } from './patient-info-cards/patient-info-cards.component';
 
 @Component({
   selector: 'app-add-prescription',
@@ -16,36 +18,56 @@ import { MatIcon } from '@angular/material/icon';
     PatientSelectComponent,
     PrescribeMedicationComponent,
     MatIcon,
+    WizardHeaderComponent,
+    PatientInfoCardsComponent,
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 0;
+  stepNumber: number = 3;
+  stepsLimit: number = 3;
   selectedDiagnosis: any = [];
   selectedPatient: patientType | undefined;
-  prevStep() {
-    this.stepNumber--;
+
+  private _nextButtonContent = {
+    label: 'next',
+    class: 'btn w-100 py-2 m-0 btn-success',
+  };
+
+  private _backButtonContent = {
+    label: 'back',
+    class: 'btn w-100 m-0 btn-warning',
+  };
+  nextButtonContent: { label: string; class: string } = this._nextButtonContent;
+  backButtonContent: { label: string; class: string } = this._backButtonContent;
+
+  ngOnInit() {
+    this._updateButtonsState();
   }
 
-  onSelectPatient(patient: patientType | undefined) {
-    if (patient != undefined) {
-      this.nextStep();
-    } else {
+  onSelectPatientChange(patient: patientType | undefined) {
+    if (patient == undefined) {
       this.selectedPatient = undefined;
       this.stepNumber = 0;
     }
+    this._updateButtonsState();
   }
 
   SwitchToStep(index: number) {
-    if (this._validatePageSwitch(index)) this.stepNumber = index;
+    if (this._validatePageSwitch(index) == false) return;
+    this.stepNumber = index;
+    this._updateButtonsState();
   }
 
   nextStep() {
-    this.stepNumber++;
+    this.SwitchToStep(this.stepNumber + 1);
   }
+  prevStep() {
+    this.SwitchToStep(this.stepNumber - 1);
+  }
+
   isStepNumber(step: number): boolean {
-    console.log(step + ' is ', this.stepNumber === step);
     return this.stepNumber === step;
   }
 
@@ -54,14 +76,50 @@ export class AddPrescriptionComponent {
   }
 
   onSelectedDiagnosisChangeHandler(event: onChipsSelectionEmitType) {
-    console.log('main ' + event);
     this.selectedDiagnosis = event.SelectedObjectList;
   }
 
   _validatePageSwitch(index: number): Boolean {
-    if (index > 0) {
-      if (this.selectedPatient == undefined) return false;
-    }
+    if (index > this.stepsLimit) return false;
+    if (index < 0) return false;
+    if (index >= 0 && index == this.stepNumber) return false;
+    if (index != 0 && this.selectedPatient == undefined) return false;
     return true;
+  }
+
+  onClickNextEvent(): void {
+    this.nextStep();
+  }
+  onClickBackEvent(): void {
+    this.prevStep();
+  }
+  setNextButtonStyle(event: { label: string; class: string }) {
+    this.nextButtonContent = event;
+  }
+  setBackButtonStyle(event: { label: string; class: string }) {
+    this.nextButtonContent = event;
+  }
+
+  private _updateButtonsState() {
+    if (
+      this.stepNumber == this.stepsLimit ||
+      this.selectedPatient == undefined
+    ) {
+      this.nextButtonContent = {
+        ...this.nextButtonContent,
+        class: this.nextButtonContent.class + 'd btn-outline-warning disabled',
+      };
+    } else {
+      this.nextButtonContent = this._nextButtonContent;
+    }
+
+    if (this.stepNumber === 1) {
+      this.backButtonContent = {
+        ...this.backButtonContent,
+        class: this.backButtonContent.class + 'd btn-outline-success disabled',
+      };
+    } else {
+      this.backButtonContent = this._backButtonContent;
+    }
   }
 }

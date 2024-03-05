@@ -11,3 +11,6 @@
 td {
   padding-right: 8px;
 }
+#test-height {
+  max-width: 60vh;
+}
