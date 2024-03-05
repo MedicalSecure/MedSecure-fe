@@ -1,0 +1,114 @@
+<table class="table table-borderless">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            @for (hour of targetHours; track $index) {
+                <th scope="col">{{hour}}H</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @for (room of uniqueroom; track room) {
+        <tr>
+            <th>
+                {{room}}
+            </th>
+            <td >
+                @for (element of data_list; track element) {
+                @if (element.room === room) {
+                @for (medicine of getMedicineByHour(targetHours[0],element.patient); track medicine) {
+                @for (posology of medicine.posology; track posology) {
+                <ul class="chart-row-bars">
+                    <li class="chart-li-one" style="display: inline-block;">
+                        <div>Pateint : {{element.patient}}</div>
+                        <div>
+                            Bed : {{element.bed}}
+                        </div>
+                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        </div>
+                    </li>
+                </ul>
+                }}
+                }
+                }
+            </td>
+            <td >
+                @for (element of data_list; track element) {
+                @if (element.room === room) {
+                @for (medicine of getMedicineByHour(targetHours[1],element.patient); track medicine) {
+                @for (posology of medicine.posology; track posology) {
+                <ul class="chart-row-bars">
+                    <li class="chart-li-one" style="display: inline-block;">
+                        <div>Pateint : {{element.patient}}</div>
+                        <div>
+                            Bed : {{element.bed}}
+                        </div>
+                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        </div>
+                    </li>
+                </ul>
+                }}
+                }
+                }
+            </td>
+            <td >
+                @for (element of data_list; track element) {
+                @if (element.room === room) {
+                @for (medicine of getMedicineByHour(targetHours[2],element.patient); track medicine) {
+                @for (posology of medicine.posology; track posology) {
+                <ul class="chart-row-bars">
+                    <li class="chart-li-one" style="display: inline-block;">
+                        <div>Pateint : {{element.patient}}</div>
+                        <div>
+                            Bed : {{element.bed}}
+                        </div>
+                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        </div>
+                    </li>
+                </ul>
+                }}
+                }
+                }
+            </td>
+            <td >
+                @for (element of data_list; track element) {
+                @if (element.room === room) {
+                @for (medicine of getMedicineByHour(targetHours[3],element.patient); track medicine) {
+                @for (posology of medicine.posology; track posology) {
+                <ul class="chart-row-bars">
+                    <li class="chart-li-one" style="display: inline-block;">
+                        <div>Pateint : {{element.patient}}</div>
+                        <div>
+                            Bed : {{element.bed}}
+                        </div>
+                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        </div>
+                    </li>
+                </ul>
+                }}
+                }
+                }
+            </td>
+
+
+
+        </tr>
+
+        }
+    </tbody>
+</table>
+
+<!---
+@for (medicine of getMedicineByHour(hour,element.patient); track medicine) {
+    @for (posology of medicine.posology; track posology) {
+    @if (posology[$index].hour === hour ) {
+    <ul class="chart-row-bars">
+        <li class="chart-li-one" style="display: inline-block; ">
+            <div>{{element.patient}}</div>
+            <div>{{ medicine.name}} / {{posology[$index].quantity}}
+            </div>
+        </li>
+    </ul>
+    }
+    }
+    }--->

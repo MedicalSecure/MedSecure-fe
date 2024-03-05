@@ -199,12 +199,12 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Acetylsalicylic', posology: [
           [
-          
             { hour: '02', value: '8', quantity: 3 },
-            { hour: '03', value: '2', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '04', value: '04', quantity: 1 },
-
+            { hour: '07', value: '2', quantity: 1 },
+            { hour: '08', value: '22', quantity: 2 },
+            { hour: '14', value: '04', quantity: 1 },
+            { hour: '19', value: '22', quantity: 2 },
+            { hour: '23', value: '04', quantity: 1 },
           ]
         ], root: 'Injection', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
 
@@ -213,10 +213,13 @@ export const ELEMENT_DATA : bacpatient[] = [
         name: 'Hydrochlorothiazide', posology: [
           [
             { hour: '01', value: '8', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
+            { hour: '19', value: '17', quantity: 1 },
+            { hour: '21', value: '22', quantity: 2 },
+            { hour: '23', value: '8', quantity: 1 },
+            { hour: '07', value: '17', quantity: 1 },
+            { hour: '13', value: '22', quantity: 2 },
           ]
-        ], root: 'Oral', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], root: 'Nebulizers', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
     
     ],
@@ -236,32 +239,34 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Esomeprazole', posology: [
           [
-            { hour: '01', value: '8', quantity: 1 },
-            { hour: '02', value: '02', quantity: 1 },
-            { hour: '17', value: '17', quantity: 3 },
-            { hour: '22', value: '22', quantity: 1 },
+            { hour: '04', value: '8', quantity: 1 },
+            { hour: '10', value: '02', quantity: 1 },
 
           ]
-        ], root: 'Oral', dose: 1, note:['']
+        ], root: 'Intracardiac', dose: 1, note:['']
       },
       {
         name: 'Levothyroxine', posology: [
           [
-            { hour: '01', value: '8', quantity: 1 },
+            { hour: '05', value: '8', quantity: 1 },
             { hour: '03', value: '03', quantity: 1 },
-            { hour: '04', value: '04', quantity: 1 },
+            { hour: '15', value: '04', quantity: 1 },
 
           ]
-        ], root: 'Injection', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], root: 'Intramuscular', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
       {
         name: 'Pantoprazole', posology: [
           [
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '04', value: '04', quantity: 1 },
+            { hour: '10', value: '22', quantity: 1 },
+            { hour: '23', value: '04', quantity: 1 },
+            { hour: '15', value: '22', quantity: 1 },
+            { hour: '16', value: '04', quantity: 1 },
+            { hour: '11', value: '22', quantity: 1 },
+            { hour: '07', value: '04', quantity: 1 },
 
           ]
-        ], root: 'Oral', dose: 1, note:['']
+        ], root: 'Sublingual', dose: 1, note:['']
       }
     ],
     toServe: 15,
@@ -283,30 +288,85 @@ export const ELEMENT_DATA : bacpatient[] = [
             { hour: '02', value: '02', quantity: 2 },
             { hour: '17', value: '17', quantity: 2 },
             { hour: '22', value: '22', quantity: 2 },
+            { hour: '05', value: '02', quantity: 2 },
+            { hour: '03', value: '17', quantity: 2 },
+            { hour: '19', value: '22', quantity: 2 },
        
           ]
-        ], root: 'Oral', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
       {
         name: 'Azithromycin', posology: [
           [
             { hour: '01', value: '8', quantity: 1 },
-            { hour: '03', value: '03', quantity: 2 },
-            { hour: '04', value: '04', quantity: 1 },
+            { hour: '23', value: '03', quantity: 2 },
+            { hour: '13', value: '04', quantity: 1 },
           
           ]
 
-        ], root: 'Injection', dose: 1, note:['']
+        ], root: 'Syrup', dose: 1, note:['']
       },
       {
         name: 'Lisdexamfetamine', posology: [
           [
-            { hour: '01', value: '8', quantity: 1 },
-            { hour: '02', value: '02', quantity: 2 },
-            { hour: '22', value: '22', quantity: 1 },
+            { hour: '09', value: '8', quantity: 1 },
+            { hour: '11', value: '02', quantity: 2 },
+            { hour: '16', value: '22', quantity: 1 },
+            { hour: '20', value: '8', quantity: 1 },
+            { hour: '06', value: '02', quantity: 2 },
+            { hour: '21', value: '22', quantity: 1 },
      
           ]
-        ], root: 'Oral', dose: 1, note:['']
+        ], root: 'Bandage', dose: 1, note:['']
+      }
+    ],
+    toServe: 18,
+    served: 6,
+    status: 'On Progress',
+    
+    add: 'Add 3',
+    servingDate: new Date()
+  }, 
+  {
+    id: 3,
+    room: 102,
+    bed: 3,
+    patient: 'vasco',
+    bd: new Date('5/13/2000'),
+    medicines: [
+      {
+        name: 'Ceftriaxone', posology: [
+          [
+            { hour: '09', value: '02', quantity: 2 },
+            { hour: '18', value: '17', quantity: 2 },
+            { hour: '23', value: '22', quantity: 2 },
+            { hour: '05', value: '02', quantity: 2 },
+            { hour: '12', value: '17', quantity: 2 },
+            { hour: '08', value: '22', quantity: 2 },
+       
+          ]
+        ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+      },
+      {
+        name: 'Azithromycin', posology: [
+          [
+            { hour: '01', value: '8', quantity: 1 },
+            { hour: '12', value: '03', quantity: 2 },
+            { hour: '17', value: '04', quantity: 1 },
+          
+          ]
+
+        ], root: 'Syrup', dose: 1, note:['']
+      },
+      {
+        name: 'Lisdexamfetamine', posology: [
+          [
+            { hour: '09', value: '8', quantity: 1 },
+            { hour: '18', value: '02', quantity: 2 },
+          
+     
+          ]
+        ], root: 'Bandage', dose: 1, note:['']
       }
     ],
     toServe: 18,

@@ -110,9 +110,9 @@
               <td class="element root-cell" mat-cell *matCellDef="let medicine">
                 <img [src]="medicine.root === 'Ophthalmic' ? 'assets/routes/eye.svg' :
                         medicine.root === 'Otic' ? 'assets/routes/ear.svg' :
-                        medicine.root === 'Inhalation' ? 'assets//routes/lungs.svg' :
+                        medicine.root === 'Inhalation' ? 'assets/routes/lungs.svg' :
                         medicine.root === 'Bandage' ? 'assets/routes/bandage.svg' :
-                        medicine.root === 'Syrup' ? 'assets//routes/syrup.svg' :
+                        medicine.root === 'Syrup' ? 'assets/routes/syrup.svg' :
                         medicine.root === 'Transdermal' ? 'assets/routes/cream.svg' :
                         medicine.root === 'Sublingual' ? 'assets/routes/Sublingual.svg' :
                         medicine.root === 'Intramuscular' ? 'assets/routes/Intramuscular.svg' :
@@ -120,7 +120,7 @@
                         medicine.root === 'Nebulizers' ? 'assets/routes/spray.svg' :
                         medicine.root === 'Injection' ? 'assets/routes/vaccine.svg' :
                         medicine.root === 'Oral' ? 'assets/routes/pills.svg' : ''" alt="{{medicine.root}}"
-                  style="height: 35px; width: 35px; margin-top: 5px; margin-left: 5px;">
+                  style="height: 40px; width: 40px; margin-top: 5px; margin-left: 5px;">
               </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="['name', 'posology', 'root' ] "></tr>
