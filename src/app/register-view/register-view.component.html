@@ -3,9 +3,10 @@
   <button type="button" class="btn btn-outline-primary btn-sm" [routerLink]="[ '/', 'register']" routerLinkActive="active" >Add patient</button>
 </div>
 <mat-form-field>
-    <mat-label>Search ..</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
-  </mat-form-field>
+  <mat-label>Search ..</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+</mat-form-field>
+<i class="fa fa-search"></i>
   
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { WizardHeaderComponent, wizardStepType } from '../components/wizard-header/wizard-header.component';
 // Interfaces
 
 interface Activity {
@@ -45,16 +46,45 @@ export interface Symptom {
 @Component({
   selector: 'app-register-form',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,WizardHeaderComponent],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css',
 })
 export class RegisterFormComponent implements OnInit{
+
   items: Item[] = [];
   activities : Activity[]= [];
   habits : Smoking[]= [];
   cardio: Item[]= [];
   allergySymptoms: Symptom[]= [];
+  stepNumber:number=1;
+
+  steps: wizardStepType[] = [
+    {
+      id: 1,
+      title: 'Patient information',
+      matIconName: '',
+      iconClass: 'fa fa-user-md',
+    },
+    {
+      id: 2,
+      title: 'Allergies',
+      matIconName: '',
+      iconClass: 'fa fa-medkit',
+    },
+    {
+      id: 3,
+      title: 'Personal medical informations',
+      matIconName: '',
+      iconClass: 'fa fa-stethoscope',
+    },
+    {
+      id: 4,
+      title: 'Family medical informations',
+      matIconName: '',
+      iconClass: 'fa fa-users',
+    },
+  ];
 
   ngOnInit(): void {
 
@@ -70,6 +100,9 @@ export class RegisterFormComponent implements OnInit{
     this.loadAllergySymptoms();
   }
 
+  SwitchToStep(number:number){
+    this.stepNumber=number
+  }
   // Function to load activities
   loadActivities(): void {
     // load activities goes here

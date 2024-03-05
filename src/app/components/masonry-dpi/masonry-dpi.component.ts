@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxMasonryModule } from 'ngx-masonry';
 import { MatCardModule } from '@angular/material/card';
 import { NgxMasonryOptions } from 'ngx-masonry';
-
+import { RouterModule } from '@angular/router';
 
 
 interface MasonryItem {
@@ -14,7 +14,7 @@ interface MasonryItem {
 @Component({
   selector: 'app-masonry-dpi',
   standalone: true,
-  imports: [CommonModule,NgxMasonryModule,MatCardModule],
+  imports: [CommonModule,NgxMasonryModule,MatCardModule,RouterModule],
   templateUrl: './masonry-dpi.component.html',
   styleUrl: './masonry-dpi.component.css'
 })

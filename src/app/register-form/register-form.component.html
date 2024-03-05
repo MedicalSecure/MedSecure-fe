@@ -1,54 +1,32 @@
 <div class="content-wrapper">
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-  <button type="button" class="btn btn-outline-primary btn-sm" [routerLink]="[ '/', 'register-view']" routerLinkActive="active" >Liste des Patients</button>
-</div>
-  <div class="row">
-    <div class="multisteps-form__progress">
-      <button
-        class="multisteps-form__progress-btn"
-        [class.js-active]="currentStep === 1"
-        type="button"
-        title="Patient Info"
-        (click)="onClick(1)"
-      >
-        Patient Details
-      </button>
-      <button
-        class="multisteps-form__progress-btn"
-        [class.js-active]="currentStep === 2"
-        type="button"
-        title="allergies"
-        (click)="onClick(2)"
-      >
-        Allergy Symptoms
-      </button>
-      <button
-        class="multisteps-form__progress-btn"
-        [class.js-active]="currentStep === 3"
-        type="button"
-        title="personal medical history"
-        (click)="onClick(3)"
-      >
-        Personal Medical History
-      </button>
-      <button
-        class="multisteps-form__progress-btn"
-        [class.js-active]="currentStep === 4"
-        type="button"
-        title="family medical history"
-        (click)="onClick(4)"
-      >
-        Family Medical History
-      </button>
-    </div>
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+      [routerLink]="['/', 'register-view']"
+      routerLinkActive="active"
+    >
+      Liste des Patients
+    </button>
   </div>
-  <div class="card">
+
+  <div class="card" style="border-radius: 0%">
     <div class="card-body">
-     
-        <div class="wizard-container" style="height: 470px; overflow-y: auto">
-          <!--step 1-->
-          <div class="wizard-step" [class.active]="currentStep === 1">
-            <!-- Content for step 1 goes here 
+      <app-wizard-header
+        (currentStepChange)="SwitchToStep($event)"
+        [switchCondition]="true"
+        [currentStep]="stepNumber"
+        [size]="3"
+        [IconSizeRatio]="0.6"
+        [steps]="steps"
+        [showSteps$WithTitle]="false"
+      >
+      </app-wizard-header>
+
+      <div class="wizard-container" style="height: 470px; overflow-y: auto">
+        <!--step 1-->
+        <div class="wizard-step" [class.active]="stepNumber === 1">
+          <!-- Content for step 1 goes here 
             <form class="forms-sample">
             <div class="form-group">
               <input
@@ -183,147 +161,181 @@
               </div>
             </div>
           </form>-->
-          
-            
-                
-                    
-                        
-                            <h4 class="card-title"></h4>
-                            <p class="card-description">
-                            </p>
-                            <form class="forms-sample">
-                              <div class="mb-3 d-flex flex-wrap justify-content-around">
-                                <div class="mr-2">
-                                  <label for="exampleInputPatientname">Patient name:</label>
-                                  <input type="text" class="form-control form-control-sm" id="exampleInputPatientname" placeholder="name">
-                                </div>
-                                <div class="mr-2">
-                                  <label for="exampleInputage">Age :</label>
-                                  <input type="number" class="form-control form-control-sm" id="exampleInputage" placeholder="age">
-                                </div>
-                              </div>
-                              <div class="mb-3 d-flex flex-wrap justify-content-around">
-                                <div class="mr-2">
-                                  <label for="exampleInputH">Height:</label> 
-                                  <input type="number" class="form-control form-control-sm" id="height" placeholder="Entrez la hauteur (cm)" formControlName="height" required>
-                                </div>
-                                <div class="mr-2">
-                                  <label for="exampleInputW">Weight:</label>
-                                  <input type="number" class="form-control form-control-sm" id="weight" placeholder="Entrez le poids en (kg)" formControlName="weight" required>
-                                </div>
-                              </div>
-                              <div class="mb-3 d-flex flex-wrap justify-content-around">
-                                <div class="mr-2">
-                                  <label for="exampleInputage">Activity Status:</label>
-                                </div>
-                                <div class="mr-2">
-                                  <input type="text" class="form-control form-control-sm" id="activity" formControlName="activity" placeholder="Do you workout?" required list="activityOptions">
-                                  <datalist id="activityOptions">
-                                    <option *ngFor="let activity of activities" [value]="activity.viewValue"></option>
-                                  </datalist>
-                                </div>
-                              </div>
-                            </form>
-                            
-                            
-                            
-                            
-        </div>
 
-          <!--step 2-->
-          <div class="wizard-step" [class.active]="currentStep === 2">
-            <!-- Content for step 2 goes here -->
-            <h2><strong> symptoms checklist</strong></h2>
-           <p>Check your symptoms below na dshare with your provider :</p> 
-            <ul
-              class="list-group list-group-flush"
-              *ngFor="let symptom of allergySymptoms"
-            >
-              <li class="list-group-item">
+          <h4 class="card-title"></h4>
+          <p class="card-description"></p>
+          <form class="forms-sample">
+            <div class="mb-3 d-flex flex-wrap justify-content-around">
+              <div class="mr-2">
+                <label for="exampleInputPatientname">Patient name:</label>
                 <input
-                  style="margin-left: 15px; margin-right: 5px"
-                  type="checkbox"
-                  id="{{ symptom.id }}"
-                  formControlName="allergySymptoms"
-                  [value]="symptom.id"
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="exampleInputPatientname"
+                  placeholder="name"
                 />
-                {{ symptom.name }}
-              </li>
-            </ul>
-          </div>
-
-          <!--step 3-->
-          <div class="wizard-step" [class.active]="currentStep === 3">
-            <!-- Content for step 3 goes here -->
-            <ul class="list-group list-group-flush" *ngFor="let item of items">
-              <h5>{{ item.name }}</h5>
-              <li class="list-group-item">
-                <div *ngFor="let group of item.groups">
+              </div>
+              <div class="mr-2">
+                <label for="exampleInputage">Age :</label>
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  id="exampleInputage"
+                  placeholder="age"
+                />
+              </div>
+            </div>
+            <div class="mb-3 d-flex flex-wrap justify-content-around">
+              <div class="mr-2">
+                <label for="exampleInputH">Height:</label>
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  id="height"
+                  placeholder="Entrez la hauteur (cm)"
+                  formControlName="height"
+                  required
+                />
+              </div>
+              <div class="mr-2">
+                <label for="exampleInputW">Weight:</label>
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  id="weight"
+                  placeholder="Entrez le poids en (kg)"
+                  formControlName="weight"
+                  required
+                />
+              </div>
+            </div>
+            <div class="mb-3 d-flex flex-wrap justify-content-around">
+              <div class="mr-2">
+                <label for="exampleInputage">Activity Status:</label>
+                <div class="mr-2">
                   <input
-                    type="checkbox"
-                    style="margin-right: 5px"
-                    (change)="toggleExpanded(group)"
+                    type="text"
+                    class="form-control form-control-sm"
+                    id="activity"
+                    formControlName="activity"
+                    placeholder="Do you workout?"
+                    required
+                    list="activityOptions"
                   />
-                  {{ group.name }}
-                  <div *ngIf="group.expand">
-                    <div *ngFor="let child of group.children">
-                      <input
-                        style="margin-left: 20px; margin-right: 5px"
-                        type="checkbox"
-                        (change)="onItemChange($event, child)"
-                      />
-                      {{ child.name }}
-                    </div>
-                  </div>
+                  <datalist id="activityOptions">
+                    <option
+                      *ngFor="let activity of activities"
+                      [value]="activity.viewValue"
+                    ></option>
+                  </datalist>
                 </div>
-              </li>
-            </ul>
-          </div>
-
-          <!--step 4-->
-          <div class="wizard-step" [class.active]="currentStep === 4">
-            <i class="fas fa-check"></i>
-            <!-- Content for step 4 goes here -->
-            <i class="bi bi-exclamation-triangle"></i>
-            <p><em>Consider only <strong>first-degree relatives</strong></em></p>
-            <br/>
-            <ul class="list-group list-group-flush" *ngFor="let item of cardio">
-              <h5>{{ item.name }}</h5>
-              <li class="list-group-item">
-                <div *ngFor="let group of item.groups">
-                  <input
-                    type="checkbox"
-                    style="margin-right: 5px"
-                    (change)="toggleExpanded(group)"
-                  />
-                  {{ group.name }}
-                  <div *ngIf="group.expand">
-                    <div *ngFor="let child of group.children">
-                      <input
-                        style="margin-left: 15px; margin-right: 5px"
-                        type="checkbox"
-                        (change)="onItemChange($event, child)"
-                      />
-                      {{ child.name }}
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </div>
+          </form>
         </div>
-        <div class="d-flex justify-content-start">
+
+        <!--step 2-->
+        <div class="wizard-step" [class.active]="stepNumber === 2">
+          <!-- Content for step 2 goes here -->
+          <h2><strong> symptoms checklist</strong></h2>
+          <p>Check your symptoms below na dshare with your provider :</p>
+          <ul
+            class="list-group list-group-flush"
+            *ngFor="let symptom of allergySymptoms"
+          >
+            <li class="list-group-item">
+              <input
+                style="margin-left: 15px; margin-right: 5px"
+                type="checkbox"
+                id="{{ symptom.id }}"
+                formControlName="allergySymptoms"
+                [value]="symptom.id"
+              />
+              {{ symptom.name }}
+            </li>
+          </ul>
+        </div>
+
+        <!--step 3-->
+        <div class="wizard-step" [class.active]="stepNumber === 3">
+          <!-- Content for step 3 goes here -->
+          <ul class="list-group list-group-flush" *ngFor="let item of items">
+            <h5>{{ item.name }}</h5>
+            <li class="list-group-item">
+              <div *ngFor="let group of item.groups">
+                <input
+                  type="checkbox"
+                  style="margin-right: 5px"
+                  (change)="toggleExpanded(group)"
+                />
+                {{ group.name }}
+                <div *ngIf="group.expand">
+                  <div *ngFor="let child of group.children">
+                    <input
+                      style="margin-left: 20px; margin-right: 5px"
+                      type="checkbox"
+                      (change)="onItemChange($event, child)"
+                    />
+                    {{ child.name }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!--step 4-->
+        <div class="wizard-step" [class.active]="stepNumber === 4">
+          <!-- Content for step 4 goes here -->
+          
+          <p>
+            <i class="fa fa-exclamation-triangle"></i>
+            <em> Consider only <strong>first-degree relatives</strong></em>
+          </p>
+          <br />
+          <ul class="list-group list-group-flush" *ngFor="let item of cardio">
+            <h5>{{ item.name }}</h5>
+            <li class="list-group-item">
+              <div *ngFor="let group of item.groups">
+                <input
+                  type="checkbox"
+                  style="margin-right: 5px"
+                  (change)="toggleExpanded(group)"
+                />
+                {{ group.name }}
+                <div *ngIf="group.expand">
+                  <div *ngFor="let child of group.children">
+                    <input
+                      style="margin-left: 15px; margin-right: 5px"
+                      type="checkbox"
+                      (change)="onItemChange($event, child)"
+                    />
+                    {{ child.name }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="d-flex justify-content-start">
         <div class="col-12 col-lg-8 mb-4">
-          <button type="button" class="btn btn-outline-success" (click)="onPrevClick()">
+          <button
+            type="button"
+            class="btn btn-outline-success"
+            (click)="onPrevClick()"
+          >
             Previous
           </button>
-          <button type="button" class="btn btn-outline-success" (click)="onNextClick()">
+          <button
+            type="button"
+            class="btn btn-outline-success"
+            (click)="onNextClick()"
+          >
             Next
           </button>
         </div>
       </div>
-      </div>
-      
     </div>
   </div>
-
+</div>
