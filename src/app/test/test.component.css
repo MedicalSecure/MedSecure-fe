@@ -19,15 +19,13 @@
   align-self: center;
 
 }
-.extended-table .mat-column-posology{
-margin-left: 50px;
-}
+
 .extended-table .mat-column-root{
-  width: 20%;
+  width: 15%;
 
   }
   .extended-table .mat-column-name{
-    width: 20%;
+    width: 15%;
   
     }
 .more-button {
@@ -61,6 +59,7 @@ margin-left: 50px;
   align-items: center;
   text-align: center;
   height: auto;
+  background-color: rgba(128, 128, 128, 0.1);
 
 }
 

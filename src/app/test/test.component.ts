@@ -53,6 +53,7 @@ export class TestComponent implements AfterViewInit {
   servingDay: Date[];
   tomorrow = new Date();
   yesterday = new Date();
+  uniqueRooms: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
   changeDate(selectedDate: string) {
@@ -61,7 +62,6 @@ export class TestComponent implements AfterViewInit {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()));
 
   }
-  uniqueRooms: any;
   constructor(public dialog: MatDialog) {
     const filteredData = ELEMENT_DATA.filter(item => new Date(item.servingDate).toLocaleDateString() === this.todayDate);
     this.dataSource.data = filteredData;
@@ -118,7 +118,6 @@ export class TestComponent implements AfterViewInit {
 
 
   }
-
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -161,14 +160,13 @@ export class TestComponent implements AfterViewInit {
       }
     }
   }
-
 }
 export interface Medicine {
   name: string;
   posology: Posology[][];
   root: string;
   dose: number;
-  note: string;
+  note: string[];
 }
 export interface Posology {
   [x: string]: any;
@@ -182,79 +180,49 @@ export interface bacpatient {
   room: number;
   bed: number;
   patient: string;
-  birthday: Date;
+  bd: Date;
   medicines: Medicine[];
   toServe: number;
   served: number;
   status: string;
-  note: string[];
   add: string;
   servingDate: Date;
 }
-export const ELEMENT_DATA = [
+export const ELEMENT_DATA : bacpatient[] = [
   {
     id: 1,
     room: 101,
     bed: 1,
     patient: 'rahma',
-    bd: new Date('2000-05-13'),
+    bd: new Date('5/13/2000'),
     medicines: [
       {
-        name: 'medicine1', posology: [
+        name: 'Acetylsalicylic', posology: [
           [
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
+          
+            { hour: '02', value: '8', quantity: 3 },
+            { hour: '03', value: '2', quantity: 1 },
             { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-
+            { hour: '04', value: '04', quantity: 1 },
 
           ]
         ], root: 'Injection', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
 
       },
       {
-        name: 'medicine2', posology: [
+        name: 'Hydrochlorothiazide', posology: [
           [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 3 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 3 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
+            { hour: '01', value: '8', quantity: 1 },
             { hour: '17', value: '17', quantity: 1 },
             { hour: '22', value: '22', quantity: 2 },
           ]
         ], root: 'Oral', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
-      {
-        name: 'medicine3', posology: [
-          [
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '22', value: '22', quantity: 3 },
-            { hour: '00', value: '00', quantity: 1 },
-
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 2, note: []
-      }
+    
     ],
     toServe: 20,
     served: 7,
     status: 'Pending...',
-    note: 'Note 1',
     add: 'Add 1',
     servingDate: new Date()
   },
@@ -263,60 +231,42 @@ export const ELEMENT_DATA = [
     room: 102,
     bed: 2,
     patient: 'mehrez',
-    bd: new Date('2000-05-13'),
+    bd: new Date('5/13/2000'),
     medicines: [
       {
-        name: 'medicine4', posology: [
+        name: 'Esomeprazole', posology: [
           [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
+            { hour: '01', value: '8', quantity: 1 },
+            { hour: '02', value: '02', quantity: 1 },
             { hour: '17', value: '17', quantity: 3 },
             { hour: '22', value: '22', quantity: 1 },
 
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note: ''
+        ], root: 'Oral', dose: 1, note:['']
       },
       {
-        name: 'medicine5', posology: [
+        name: 'Levothyroxine', posology: [
           [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
+            { hour: '01', value: '8', quantity: 1 },
+            { hour: '03', value: '03', quantity: 1 },
+            { hour: '04', value: '04', quantity: 1 },
 
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
           ]
         ], root: 'Injection', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
       {
-        name: 'medicine6', posology: [
+        name: 'Pantoprazole', posology: [
           [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
             { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
+            { hour: '04', value: '04', quantity: 1 },
 
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
           ]
-        ], root: 'Oral', dose: 1, note: ''
+        ], root: 'Oral', dose: 1, note:['']
       }
     ],
     toServe: 15,
     served: 5,
-    status: 'Pending...',
-    note: 'Note 2',
+    status: 'Completed',
     add: 'Add 2',
     servingDate: new Date()
   },
@@ -325,448 +275,45 @@ export const ELEMENT_DATA = [
     room: 101,
     bed: 3,
     patient: 'nejma',
-    bd: new Date('2000-05-13'),
+    bd: new Date('5/13/2000'),
     medicines: [
       {
-        name: 'medicine7', posology: [
+        name: 'Ceftriaxone', posology: [
           [
-            { hour: '08', value: '8', quantity: 2 },
-            { hour: '12', value: '12', quantity: 2 },
+            { hour: '02', value: '02', quantity: 2 },
             { hour: '17', value: '17', quantity: 2 },
             { hour: '22', value: '22', quantity: 2 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
+       
           ]
         ], root: 'Oral', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
       {
-        name: 'medicine8', posology: [
+        name: 'Azithromycin', posology: [
           [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
+            { hour: '01', value: '8', quantity: 1 },
+            { hour: '03', value: '03', quantity: 2 },
+            { hour: '04', value: '04', quantity: 1 },
+          
           ]
 
-        ], root: 'Injection', dose: 1, note: ''
+        ], root: 'Injection', dose: 1, note:['']
       },
       {
-        name: 'medicine9', posology: [
+        name: 'Lisdexamfetamine', posology: [
           [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 2 },
+            { hour: '01', value: '8', quantity: 1 },
+            { hour: '02', value: '02', quantity: 2 },
             { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 2 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
+     
           ]
-        ], root: 'Oral', dose: 1, note: ''
+        ], root: 'Oral', dose: 1, note:['']
       }
     ],
     toServe: 18,
     served: 6,
-    status: 'Pending...',
-    note: 'Note 3',
+    status: 'On Progress',
+    
     add: 'Add 3',
     servingDate: new Date()
-  },
-  {
-    id: 4,
-    room: 102,
-    bed: 4,
-    patient: 'morjana',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine10', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine11', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-      },
-      {
-        name: 'medicine12', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 12,
-    served: 4,
-    status: 'Pending...',
-    note: 'Note 4',
-    add: 'Add 4',
-    servingDate: new Date()
-  },
-  {
-    id: 12,
-    room: 104,
-    bed: 10,
-    patient: 'vasco',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ''
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(22)
-  },
-  {
-    id: 11,
-    room: 103,
-    bed: 10,
-    patient: 'nono',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '01', value: '1', quantity: 3 },
-            { hour: '08', value: '8', quantity: 3 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ''
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(24)
-  },
-  {
-    id: 11,
-    room: 103,
-    bed: 10,
-    patient: 'candy',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ''
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(24)
-  },
-  {
-    id: 11,
-    room: 103,
-    bed: 10,
-    patient: 'roukaya',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ''
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(25)
-  },
-  {
-    id: 11,
-    room: 103,
-    bed: 10,
-    patient: 'fanta',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ''
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(25)
-  },
-  {
-    id: 11,
-    room: 103,
-    bed: 10,
-    patient: 'kamou',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ''
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(21)
-  },
-  {
-    id: 11,
-    room: 103,
-    bed: 10,
-    patient: 'gustavo',
-    bd: new Date('2000-05-13'),
-    medicines: [
-      {
-        name: 'medicine28', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '17', value: '17', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      },
-      {
-        name: 'medicine29', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Injection', dose: 1, note: ''
-      },
-      {
-        name: 'medicine30', posology: [
-          [
-            { hour: '08', value: '8', quantity: 1 },
-            { hour: '12', value: '12', quantity: 1 },
-            { hour: '22', value: '22', quantity: 1 },
-            { hour: '00', value: '00', quantity: 1 },
-          ]
-        ], root: 'Oral', dose: 1, note: ''
-      }
-    ],
-    toServe: 11,
-    served: 3,
-    status: 'Pending...',
-    note: 'Note 10',
-    add: 'Add 10',
-    servingDate: new Date().setDate(21)
-  },
-
+  }, 
 ];

@@ -4,9 +4,16 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideDaterangepickerLocale } from "ngx-daterangepicker-bootstrap";
+import { GanttChartComponent, GanttChartTaskColumn } from 'smart-webcomponents-angular/ganttchart';
+
+ 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), 
+
+
+  providers: [provideRouter(routes) , GanttChartComponent ,
     provideDaterangepickerLocale({separator: ' - ', applyLabel: 'Okay',}), 
-    provideAnimationsAsync()]
+    provideAnimationsAsync() ]
+
 };
+
