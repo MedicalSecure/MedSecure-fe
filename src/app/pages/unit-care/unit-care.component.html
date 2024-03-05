@@ -1,63 +1,11 @@
-<div class="row" >
-  <div class="col-lg-3 d-flex flex-column" >
-    <app-side-rooms></app-side-rooms>
+<div class="row">
+  <div class="col-lg-3 d-flex flex-column">
+   <app-form-unit-care></app-form-unit-care>
   </div>
 
   <div class="col-lg-9 d-flex flex-column">
-    <div class="container">
-      @for (card of cards; track card.title;) {
-      <div class="card" (click)="showRooms(card)">
-        <div class="card-body">
-          <div style="display: flex; align-items: center">
-            <h4 class="card-title" style="margin-right: auto; margin-top: 15px">
-              {{ card.title }}
-            </h4>
-
-            <button mat-icon-button aria-label="Edit" color="primary">
-              <mat-icon>edit</mat-icon>
-            </button>
-
-            <button mat-icon-button aria-label="delete_forever" color="warn">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
-          <p class="card-description">
-            {{ card.description }}
-          </p>
-          <div class="template-demo" >
-          @for (person of card.personnel; track person.name){
-            <div class="image-pers">
-              <img
-              [src]="person.gender === 'Male' ? 'https://mdbcdn.b-cdn.net/img/new/avatars/2.webp' : 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp'"
-              class="rounded-circle"
-              style="width: 50px"
-              alt="Avatar"
-         />
-
-         <p>{{ person.name }}</p>
-            </div>
-
-
-        }
-      </div>
-
-          <hr />
-          <div class="template-demo">
-            @for (room of card.rooms; track room.roomNumber;let i = $index){
-              <button
-
-              type="button"
-              [ngClass]="getButtonClass(i)"
-              class="btn"
-            >
-              {{ room.roomNumber }}
-            </button>
-            }
-
-          </div>
-        </div>
-      </div>
-      }
-    </div>
+  <app-cards-unit-care></app-cards-unit-care>
   </div>
-</div>
+
+  </div>
+

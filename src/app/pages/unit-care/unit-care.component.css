@@ -1,19 +1,7 @@
-.container {
-  padding: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+.col-lg-3 {
+  padding-top: 24px; /* Adjust as needed */
 }
 
-.card {
-  width: calc(33.33% - 8px); /* 33.33% pour que trois cartes s'affichent par ligne, -8px pour l'espace entre les cartes */
-  margin-bottom: 16px; /* Ajoute un espace en bas de chaque carte */
-}
-
-.template-demo img {
-  margin-right: 10px; /* Espacement horizontal entre les images */
-}
-
-.image-pers{
-  text-align: center; display: inline-block; margin-right: 10px;
+.col-lg-9 .container {
+  padding-top: 24px; /* Same padding as the side component */
 }

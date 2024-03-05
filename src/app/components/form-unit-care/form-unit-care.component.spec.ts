@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SideRoomsComponent } from './side-rooms.component';
+import { FormUnitCareComponent } from './form-unit-care.component';
 
-describe('SideRoomsComponent', () => {
-  let component: SideRoomsComponent;
-  let fixture: ComponentFixture<SideRoomsComponent>;
+describe('FormUnitCareComponent', () => {
+  let component: FormUnitCareComponent;
+  let fixture: ComponentFixture<FormUnitCareComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SideRoomsComponent]
+      imports: [FormUnitCareComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SideRoomsComponent);
+    fixture = TestBed.createComponent(FormUnitCareComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
