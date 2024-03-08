@@ -1,4 +1,4 @@
-import { Component,ViewChild } from '@angular/core';
+import { Component,ViewChild,Input ,OnChanges,SimpleChanges} from '@angular/core';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -33,16 +33,14 @@ export type ChartOptions = {
   templateUrl: './custom-data-labels-bar.component.html',
   styleUrl: './custom-data-labels-bar.component.css'
 })
-export class CustomDataLabelsBarComponent {
+export class CustomDataLabelsBarComponent  implements OnChanges{
   @ViewChild("chart") chart!: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
-
+  @Input() jsonData: any;
   constructor() {
     this.chartOptions = {
       series: [
-        {
-          data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
-        }
+       
       ],
       chart: {
         type: "bar",
@@ -89,18 +87,9 @@ export class CustomDataLabelsBarComponent {
         colors: ["#fff"]
       },
       xaxis: {
-        // categories: [
-        //   "South Korea",
-        //   "Canada",
-        //   "United Kingdom",
-        //   "Netherlands",
-        //   "Italy",
-        //   "France",
-        //   "Japan",
-        //   "United States",
-        //   "China",
-        //   "India"
-        // ]
+        categories: [
+        
+        ]
       },
       yaxis: {
         labels: {
@@ -108,7 +97,7 @@ export class CustomDataLabelsBarComponent {
         }
       },
       title: {
-        text: "Top 10 medicine",
+        text: "Stock Medicine",
         align: "center",
         floating: true
       },
@@ -128,4 +117,31 @@ export class CustomDataLabelsBarComponent {
       }
     };
   }
+  ngOnChanges(): void {
+
+    const sortedData = this.jsonData.sort((a: any, b: any) => a.stock - b.stock);
+
+    const categories = sortedData.map((item: any) => item.name);
+    const data = sortedData.map((item: any) => item.stock);
+
+    this.chartOptions = {
+      ...this.chartOptions,
+      xaxis: {
+        ...this.chartOptions.xaxis,
+        categories: categories
+      },
+      series: [{ data: data }],
+      dataLabels: {
+        ...this.chartOptions.dataLabels,
+        style: {
+          fontSize: '12px', 
+      
+          colors: ["#fff"]
+        }
+      }
+    };
+    
+  }
 }
+
+

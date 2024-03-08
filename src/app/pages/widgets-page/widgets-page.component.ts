@@ -9,10 +9,11 @@ import { RadialbarChartsComponent, ChartOptionsCircle } from '../../components/c
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { formatDate } from '@angular/common';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-widgets-page',
   standalone: true,
-  imports: [HttpClientModule, DashedComponent, ColumnChartsComponent, CustomAngleCircleComponent, CustomDataLabelsBarComponent, CardComponent, RadialbarChartsComponent],
+  imports: [MatProgressSpinnerModule,HttpClientModule, DashedComponent, ColumnChartsComponent, CustomAngleCircleComponent, CustomDataLabelsBarComponent, CardComponent, RadialbarChartsComponent],
   templateUrl: './widgets-page.component.html',
   styleUrl: './widgets-page.component.css'
 })
@@ -157,8 +158,13 @@ export class WidgetsPageComponent implements OnInit {
   electricityData: number[] = [];
   luminosityData: number[] = [];
   categoriesData : Date[]=[]
+  DateUsedMedicationsByMonth :Date[]=[]
   mostUsedMedicationsByMonth:any= {};
   leastUsedMedicationsByMonth:any={}
+  checkin: number = 0;
+  checkout: number = 0;
+  register: number = 0;
+  Datastock : String[]=[]
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -169,7 +175,8 @@ export class WidgetsPageComponent implements OnInit {
     // this.getDataluminosity()
     this.getDataall()
     this.getJsonDataMedication()
-   
+    this.getJsonDataRegistration()
+   this.getJsonDataStock()
   }
 
 
@@ -323,9 +330,8 @@ export class WidgetsPageComponent implements OnInit {
         medicationsByMonth[month] = [];
       }
       medicationsByMonth[month].push(medication);
-    });
 
-   
+    });
 
     for (const month in medicationsByMonth) {
       if (medicationsByMonth.hasOwnProperty(month)) {
@@ -335,13 +341,37 @@ export class WidgetsPageComponent implements OnInit {
         medications.sort((a: any, b: any) => a.uses - b.uses);
         this.leastUsedMedicationsByMonth[month] = medications[0];
       }
-
-
+      this.mostUsedMedicationsByMonth={...this.mostUsedMedicationsByMonth}
+      this.leastUsedMedicationsByMonth={...this.leastUsedMedicationsByMonth}
     }
     
     console.log('Medications les plus utilisées par mois:', this.mostUsedMedicationsByMonth);
     console.log('Medications les moins utilisées par mois:', this.leastUsedMedicationsByMonth);
+
   }
+  getJsonDataRegistration(): void {
+    const jsonFilePath = 'assets/data/registration.json'; 
+     this.http.get<any>(jsonFilePath).subscribe(data => {
+        this.checkin = data.checkin;
+        this.checkout = data.checkout;
+        this.register = data.register;
+        console.log('this.checkin',this.checkin )
+      });
+    }
+
+    getJsonDataStock() :void{
+      const jsonFilePath = 'assets/data/stockmedication.json';
+      this.http.get<any>(jsonFilePath).subscribe(
+        (data: any) => {
+          this.Datastock = data; 
+        },
+        (error) => {
+          console.error('Erreur lors du chargement des données JSON:', error);
+        }
+      );
+    }
+  
+
 }
   
   

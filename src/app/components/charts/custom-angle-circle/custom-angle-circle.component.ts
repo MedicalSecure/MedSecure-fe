@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild ,Input, OnInit, OnChanges} from '@angular/core';
 import {
   ApexNonAxisChartSeries,
   ApexPlotOptions,
@@ -24,13 +24,18 @@ export type ChartOptions = {
   templateUrl: './custom-angle-circle.component.html',
   styleUrl: './custom-angle-circle.component.css'
 })
-export class CustomAngleCircleComponent {
+export class CustomAngleCircleComponent implements OnChanges {
   @ViewChild("chart") chart!: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
+  public chartOptions!: Partial<ChartOptions>;
+  @Input() checkin!: number ;
+  @Input() checkout!: number ;
+  @Input() register!: number;
 
   constructor() {
+  }
+  ngOnChanges() {
     this.chartOptions = {
-      series: [50, 30, 20], // Adjust the values based on the number of patients
+      series: [this.checkin, this.checkout, this.register], 
       chart: {
         height: 390,
         type: "radialBar"

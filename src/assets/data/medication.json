@@ -13,7 +13,7 @@
       "dosage": "5mg",
       "type": "Antibiotic",
       "frequency": "Once daily",
-      "month": "January"
+      "month": "Mars"
     },
     {   "id":3,
       "name": "Medication C",
@@ -21,7 +21,7 @@
       "dosage": "20mg",
       "type": "Antidepressant",
       "frequency": "Once daily",
-      "month": "January"
+      "month": "Mars"
     },
     {    "id":4,
       "name": "Medication D",
@@ -37,7 +37,7 @@
       "dosage": "30mg",
       "type": "Antacid",
       "frequency": "As needed",
-      "month": "January"
+      "month": "Mars"
     },
     {   "id":5,
       "name": "Medication F",
@@ -46,54 +46,7 @@
       "type": "Antipsychotic",
       "frequency": "Once daily",
       "month": "January"
-    },
-    {   "id":6,
-      "name": "Medication A",
-      "uses": 90,
-      "dosage": "10mg",
-      "type": "Painkiller",
-      "frequency": "Twice daily",
-      "month": "February"
-    },
-    {   "id":7,
-      "name": "Medication B",
-      "uses": 70,
-      "dosage": "5mg",
-      "type": "Antibiotic",
-      "frequency": "Once daily",
-      "month": "February"
-    },
-    {   "id":8,
-      "name": "Medication C",
-      "uses": 110,
-      "dosage": "20mg",
-      "type": "Antidepressant",
-      "frequency": "Once daily",
-      "month": "February"
-    },
-    { "id":9,
-      "name": "Medication D",
-      "uses": 50,
-      "dosage": "15mg",
-      "type": "Antihistamine",
-      "frequency": "As needed",
-      "month": "February"
-    },
-    {  "id":10,
-      "name": "Medication E",
-      "uses": 30,
-      "dosage": "30mg",
-      "type": "Antacid",
-      "frequency": "As needed",
-      "month": "February"
-    },
-    { "id":11,
-      "name": "Medication F",
-      "uses": 10,
-      "dosage": "25mg",
-      "type": "Antipsychotic",
-      "frequency": "Once daily",
-      "month": "February"
     }
+   
   ]
   

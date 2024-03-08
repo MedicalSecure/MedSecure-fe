@@ -1,4 +1,5 @@
-import { Component,ViewChild,Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, ViewChild, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { formatDate } from '@angular/common';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -14,16 +15,16 @@ import {
 } from "ng-apexcharts";
 import { NgApexchartsModule } from "ng-apexcharts";
 export type ChartOptions = {
-  series: ApexAxisChartSeries|any;
-  chart: ApexChart|any;
-  dataLabels: ApexDataLabels|any;
-  plotOptions: ApexPlotOptions|any;
-  yaxis: ApexYAxis|any;
-  xaxis: ApexXAxis|any;
-  fill: ApexFill|any;
-  tooltip: ApexTooltip|any
-  stroke: ApexStroke|any;
-  legend: ApexLegend|any;
+  series: ApexAxisChartSeries | any;
+  chart: ApexChart | any;
+  dataLabels: ApexDataLabels | any;
+  plotOptions: ApexPlotOptions | any;
+  yaxis: ApexYAxis | any;
+  xaxis: ApexXAxis | any;
+  fill: ApexFill | any;
+  tooltip: ApexTooltip | any
+  stroke: ApexStroke | any;
+  legend: ApexLegend | any;
 };
 @Component({
   selector: 'app-column-charts',
@@ -35,23 +36,24 @@ export type ChartOptions = {
 export class ColumnChartsComponent implements OnChanges {
   @ViewChild("chart") chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
-  @Input() mostmedication :any []=[]
-  @Input() leastmedication:any[]=[]
+  @Input() mostmedication: any = []
+  @Input() leastmedication: any = []
+  @Input() datacateg: Date[] = []
+
+
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['mostmedication'] && changes['mostmedication'].currentValue){
+    console.log('gggg',this.getDataname(this.mostmedication))
       this.chartOptions = {
         series: [
           {
-            name: "Most Used Medications",
-            data:[],
-            color: "#007bff"
+            name:this.getDataname(this.mostmedication),
+            data: this.getDataValues(this.mostmedication)
           },
           {
-            name: "Least Used Medications",
-            data: [13, 19, 26, 12, 25, 18, 12, 13, 21],
-            color: "#ff0000"
-          }
+            name:this.getDataname(this.leastmedication),
+            data: this.getDataValues(this.leastmedication)
+          }, 
         ],
         chart: {
           type: "bar",
@@ -60,7 +62,7 @@ export class ColumnChartsComponent implements OnChanges {
         plotOptions: {
           bar: {
             horizontal: false,
-            columnWidth: "55%",
+            columnWidth: "30%",
             endingShape: "rounded"
           }
         },
@@ -73,105 +75,49 @@ export class ColumnChartsComponent implements OnChanges {
           colors: ["transparent"]
         },
         xaxis: {
-          categories: [
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct"
-          ]
+          categories:  Object.keys(this.mostmedication)
+   
         },
         yaxis: {
           title: {
             text: "nbr(quantite)"
           }
         },
+
+
         fill: {
           opacity: 1
         },
-        tooltip: {
-          y: {
-            formatter: function(val:any) {
-              return "nbr " + val ;
-            }
-          }
-        }
+       
       };
-    }
-    console.log("hhhh",this.chartOptions.series)
-
+      console.log('gggg111111',this.getDataname(this.mostmedication))
   }
-
-
-  constructor() {
-    // this.chartOptions = {
-    //   series: [
-    //     {
-    //       name: "Most Used Medications",
-    //       data:this.mostmedication,
-    //       color: "#007bff"
-    //     },
-    //     {
-    //       name: "Least Used Medications",
-    //       data: [13, 19, 26, 12, 25, 18, 12, 13, 21],
-    //       color: "#ff0000"
-    //     }
-    //   ],
-    //   chart: {
-    //     type: "bar",
-    //     height: 350
-    //   },
-    //   plotOptions: {
-    //     bar: {
-    //       horizontal: false,
-    //       columnWidth: "55%",
-    //       endingShape: "rounded"
-    //     }
-    //   },
-    //   dataLabels: {
-    //     enabled: false
-    //   },
-    //   stroke: {
-    //     show: true,
-    //     width: 2,
-    //     colors: ["transparent"]
-    //   },
-    //   xaxis: {
-    //     categories: [
-    //       "Feb",
-    //       "Mar",
-    //       "Apr",
-    //       "May",
-    //       "Jun",
-    //       "Jul",
-    //       "Aug",
-    //       "Sep",
-    //       "Oct"
-    //     ]
-    //   },
-    //   yaxis: {
-    //     title: {
-    //       text: "nbr(quantite)"
-    //     }
-    //   },
-    //   fill: {
-    //     opacity: 1
-    //   },
-    //   tooltip: {
-    //     y: {
-    //       formatter: function(val:any) {
-    //         return "nbr " + val ;
-    //       }
-    //     }
-    //   }
-    // };
-  }
- 
-
 
   
+  constructor() {
+  
+
+  }
+  private getDataValues(medication: any): number[] {
+    return Object.values(medication).map((med: any) => med.uses);
+  }
+  private getDataname(medication: any): string[] {
+    return Object.values(medication).map((med: any) => med.name);
+   
+  }
+  private getDataname2(medication: any[]): string[] {
+    return medication.map((monthData: any) => {
+      const mostUsedMedication = Object.keys(monthData).reduce((a, b) => monthData[a].uses > monthData[b].uses ? a : b);
+      return monthData[mostUsedMedication].name;
+    });
+  }
+  
+  
+  
+
+  
+
+  
+
 }
+

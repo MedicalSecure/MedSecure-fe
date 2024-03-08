@@ -1,9 +1,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-3">
-      <app-radialbar-charts
-        [chartOptionsCircle]="TemperatureOptionsCircle"
-      ></app-radialbar-charts>
+
+      <div >
+        <!-- Spinner component or loading animation -->
+        <!-- <mat-spinner></mat-spinner> -->
+      </div>
+      <app-radialbar-charts 
+        [chartOptionsCircle]="TemperatureOptionsCircle"/>
       <br />
       <app-radialbar-charts
       [chartOptionsCircle]="HumidityOptionsCircle"
@@ -36,16 +40,19 @@
   
   <app-column-charts [mostmedication]="mostUsedMedicationsByMonth"
   [leastmedication]="leastUsedMedicationsByMonth"
+  [datacateg]="DateUsedMedicationsByMonth"
   ></app-column-charts>
     </div>
     <div class="col-md-6">
-      <app-custom-data-labels-bar></app-custom-data-labels-bar>
+      <app-custom-data-labels-bar [jsonData]="Datastock"></app-custom-data-labels-bar>
     </div>
   </div>
   <br />
   <div class="row">
     <div class="col-md-6">
-      <app-custom-angle-circle></app-custom-angle-circle>
+      <app-custom-angle-circle
+      [checkin]="checkin" [checkout]="checkout" [register]="register"
+      ></app-custom-angle-circle>
     </div>
   </div>
 </div>
