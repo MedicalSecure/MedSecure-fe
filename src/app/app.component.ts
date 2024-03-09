@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
     schemas: [NO_ERRORS_SCHEMA],
-    imports: [RouterOutlet, IndexComponent,CalendarShedulerComponent]
+    imports: [RouterOutlet, IndexComponent]
 })
 export class AppComponent {
 
