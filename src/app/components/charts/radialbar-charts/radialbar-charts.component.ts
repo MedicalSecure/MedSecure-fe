@@ -39,6 +39,7 @@ export class RadialbarChartsComponent {
       labels: ["Cricket"]
     };
   }
+  
 
 }
 

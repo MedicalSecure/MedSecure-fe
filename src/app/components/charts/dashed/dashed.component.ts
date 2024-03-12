@@ -1,4 +1,4 @@
-import { Component, ViewChild ,Input, OnInit, SimpleChanges, OnChanges} from '@angular/core';
+import { Component, ViewChild ,Input, OnInit, SimpleChanges, OnChanges, Output} from '@angular/core';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { HttpClient } from '@angular/common/http';
 import {
@@ -44,6 +44,7 @@ export class DashedComponent implements OnChanges {
   @Input() dataele: number[] = [];
   @Input() datalum: number[] = [];
   @Input() datacateg :Date [] =[]
+  @Input()selectedUniteSoin: any;
   public chartOptions!: Partial<ChartOptions>;
   constructor(private http: HttpClient) {
  

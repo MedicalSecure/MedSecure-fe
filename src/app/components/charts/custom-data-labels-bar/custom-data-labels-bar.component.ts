@@ -44,7 +44,7 @@ export class CustomDataLabelsBarComponent  implements OnChanges{
       ],
       chart: {
         type: "bar",
-        height: 350
+        height: 320
       },
       plotOptions: {
         bar: {
@@ -135,8 +135,9 @@ export class CustomDataLabelsBarComponent  implements OnChanges{
         ...this.chartOptions.dataLabels,
         style: {
           fontSize: '12px', 
+          fontFamily: 'system-ui',
+          colors: ["#fff"] 
       
-          colors: ["#fff"]
         }
       }
     };

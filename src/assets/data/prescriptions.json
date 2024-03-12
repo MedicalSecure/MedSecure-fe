@@ -1,0 +1,78 @@
+
+ [
+      {
+        "id": 1,
+        "medication_name": "Paracetamol",
+        "dosage": "500mg",
+        "quantity": 30,
+        "date_prescribed": "2024-03-10",
+        "patient_name": "John Doe",
+        "doctor_name": "Dr. Smith"
+      },
+      {
+        "id": 2,
+        "medication_name": "Amoxicillin",
+        "dosage": "250mg",
+        "quantity": 20,
+        "date_prescribed": "2024-03-09",
+        "patient_name": "Jane Smith",
+        "doctor_name": "Dr. Johnson"
+      },
+      {
+        "id": 3,
+        "medication_name": "Lisinopril",
+        "dosage": "10mg",
+        "quantity": 60,
+        "date_prescribed": "2024-03-08",
+        "patient_name": "Michael Johnson",
+        "doctor_name": "Dr. Williams"
+      },
+      {
+        "id": 4,
+        "medication_name": "Aspirin",
+        "dosage": "81mg",
+        "quantity": 90,
+        "date_prescribed": "2024-03-07",
+        "patient_name": "Emily Brown",
+        "doctor_name": "Dr. Martinez"
+      },
+      {
+        "id":5,
+        "medication_name": "Paracetamol",
+        "dosage": "500mg",
+        "quantity": 30,
+        "date_prescribed": "2024-03-07",
+        "patient_name": "John vb",
+        "doctor_name": "Dr.xxx"
+      },
+      {
+        "id":6,
+        "medication_name": "Paracetamol",
+        "dosage": "500mg",
+        "quantity": 10,
+        "date_prescribed": "2024-03-08",
+        "patient_name": "John vb",
+        "doctor_name": "Dr.xxx"
+      },
+      {
+        "id":7,
+        "medication_name": "Adole",
+        "dosage": "500mg",
+        "quantity": 60,
+        "date_prescribed": "2024-03-08",
+        "patient_name": "chadha",
+        "doctor_name": "Dr.xxx"
+      },
+      {
+        "id": 8,
+        "medication_name": "Aspirin",
+        "dosage": "81mg",
+        "quantity": 15,
+        "date_prescribed": "2024-03-09",
+        "patient_name": "Emily Brown",
+        "doctor_name": "Dr. Martinez"
+      }
+      ]
+
+ 
+  
