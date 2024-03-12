@@ -19,13 +19,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MessageComponent } from "../message/message.component";
 import { MatTabsModule } from '@angular/material/tabs';
-import { DialogOverviewExampleDialogComponent } from '../dialog-overview-example-dialog/dialog-overview-example-dialog.component';
+import { DialogOverviewExampleDialogComponent } from '../dialog/dialog-overview-example-dialog.component';
 import { CommentComponent } from "../comment/comment.component";
 
 @Component({
   selector: 'table-pagination-example',
-  templateUrl: './test.component.html',
-  styleUrl: './test.component.css',
+  templateUrl: './bacPatient.component.html',
+  styleUrl: './bacPatient.component.css',
   standalone: true,
   animations: [
     trigger('detailExpand', [
@@ -36,7 +36,7 @@ import { CommentComponent } from "../comment/comment.component";
   ],
   imports: [MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, MessageComponent, CommentComponent]
 })
-export class TestComponent implements AfterViewInit {
+export class BacPatientComponent implements AfterViewInit {
 
   today: Date = new Date();
   checkednumber: Number = 0;
@@ -172,7 +172,8 @@ export interface Posology {
   [x: string]: any;
   hour: string,
   value: string,
-  quantity: number
+  quantityBE: number,
+  quantityAE: number,
 
 }
 export interface bacpatient {
@@ -199,12 +200,12 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Acetylsalicylic', posology: [
           [
-            { hour: '02', value: '8', quantity: 3 },
-            { hour: '07', value: '2', quantity: 1 },
-            { hour: '08', value: '22', quantity: 2 },
-            { hour: '14', value: '04', quantity: 1 },
-            { hour: '19', value: '22', quantity: 2 },
-            { hour: '23', value: '04', quantity: 1 },
+            { hour: '02', value: '8', quantityBE: 1 , quantityAE :2},
+            { hour: '07', value: '2', quantityBE: 1 , quantityAE :2},
+            { hour: '08', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '14', value: '04', quantityBE: 1 , quantityAE :2 },
+            { hour: '19', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '23', value: '04', quantityBE: 1 , quantityAE :2 },
           ]
         ], root: 'Injection', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
 
@@ -212,12 +213,12 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Hydrochlorothiazide', posology: [
           [
-            { hour: '01', value: '8', quantity: 1 },
-            { hour: '19', value: '17', quantity: 1 },
-            { hour: '21', value: '22', quantity: 2 },
-            { hour: '23', value: '8', quantity: 1 },
-            { hour: '07', value: '17', quantity: 1 },
-            { hour: '13', value: '22', quantity: 2 },
+            { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '19', value: '17', quantityBE: 1 , quantityAE :2 },
+            { hour: '21', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '23', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '07', value: '17', quantityBE: 1 , quantityAE :2 },
+            { hour: '13', value: '22', quantityBE: 1 , quantityAE :2 },
           ]
         ], root: 'Nebulizers', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
       },
@@ -239,8 +240,8 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Esomeprazole', posology: [
           [
-            { hour: '04', value: '8', quantity: 1 },
-            { hour: '10', value: '02', quantity: 1 },
+            { hour: '04', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '10', value: '02', quantityBE: 1 , quantityAE :2 },
 
           ]
         ], root: 'Intracardiac', dose: 1, note:['']
@@ -248,9 +249,9 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Levothyroxine', posology: [
           [
-            { hour: '05', value: '8', quantity: 1 },
-            { hour: '03', value: '03', quantity: 1 },
-            { hour: '15', value: '04', quantity: 1 },
+            { hour: '05', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '03', value: '03', quantityBE: 1 , quantityAE :2 },
+            { hour: '15', value: '04', quantityBE: 1 , quantityAE :2 },
 
           ]
         ], root: 'Intramuscular', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
@@ -258,12 +259,12 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Pantoprazole', posology: [
           [
-            { hour: '10', value: '22', quantity: 1 },
-            { hour: '23', value: '04', quantity: 1 },
-            { hour: '15', value: '22', quantity: 1 },
-            { hour: '16', value: '04', quantity: 1 },
-            { hour: '11', value: '22', quantity: 1 },
-            { hour: '07', value: '04', quantity: 1 },
+            { hour: '10', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '23', value: '04', quantityBE: 1 , quantityAE :2 },
+            { hour: '15', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '16', value: '04', quantityBE: 1 , quantityAE :2 },
+            { hour: '11', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '07', value: '04', quantityBE: 1 , quantityAE :2 },
 
           ]
         ], root: 'Sublingual', dose: 1, note:['']
@@ -285,12 +286,12 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Ceftriaxone', posology: [
           [
-            { hour: '02', value: '02', quantity: 2 },
-            { hour: '17', value: '17', quantity: 2 },
-            { hour: '22', value: '22', quantity: 2 },
-            { hour: '05', value: '02', quantity: 2 },
-            { hour: '03', value: '17', quantity: 2 },
-            { hour: '19', value: '22', quantity: 2 },
+            { hour: '02', value: '02', quantityBE: 1 , quantityAE :2 },
+            { hour: '17', value: '17', quantityBE: 1 , quantityAE :2 },
+            { hour: '22', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '05', value: '02', quantityBE: 1 , quantityAE :2 },
+            { hour: '03', value: '17', quantityBE: 1 , quantityAE :2 },
+            { hour: '19', value: '22', quantityBE: 1 , quantityAE :2 },
        
           ]
         ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
@@ -298,9 +299,9 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Azithromycin', posology: [
           [
-            { hour: '01', value: '8', quantity: 1 },
-            { hour: '23', value: '03', quantity: 2 },
-            { hour: '13', value: '04', quantity: 1 },
+            { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '23', value: '03', quantityBE: 1 , quantityAE :2 },
+            { hour: '13', value: '04', quantityBE: 1 , quantityAE :2 },
           
           ]
 
@@ -309,12 +310,12 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Lisdexamfetamine', posology: [
           [
-            { hour: '09', value: '8', quantity: 1 },
-            { hour: '11', value: '02', quantity: 2 },
-            { hour: '16', value: '22', quantity: 1 },
-            { hour: '20', value: '8', quantity: 1 },
-            { hour: '06', value: '02', quantity: 2 },
-            { hour: '21', value: '22', quantity: 1 },
+            { hour: '09', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '11', value: '02', quantityBE: 1 , quantityAE :2 },
+            { hour: '16', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '20', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '06', value: '02', quantityBE: 1 , quantityAE :2 },
+            { hour: '21', value: '22', quantityBE: 1 , quantityAE :2 },
      
           ]
         ], root: 'Bandage', dose: 1, note:['']
@@ -337,12 +338,12 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Ceftriaxone', posology: [
           [
-            { hour: '09', value: '02', quantity: 2 },
-            { hour: '18', value: '17', quantity: 2 },
-            { hour: '23', value: '22', quantity: 2 },
-            { hour: '05', value: '02', quantity: 2 },
-            { hour: '12', value: '17', quantity: 2 },
-            { hour: '08', value: '22', quantity: 2 },
+            { hour: '09', value: '02', quantityBE: 1 , quantityAE :2 },
+            { hour: '18', value: '17', quantityBE: 1 , quantityAE :2 },
+            { hour: '23', value: '22', quantityBE: 1 , quantityAE :2 },
+            { hour: '05', value: '02', quantityBE: 1 , quantityAE :2 },
+            { hour: '12', value: '17', quantityBE: 1 , quantityAE :2 },
+            { hour: '08', value: '22', quantityBE: 1 , quantityAE :2 },
        
           ]
         ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
@@ -350,9 +351,9 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Azithromycin', posology: [
           [
-            { hour: '01', value: '8', quantity: 1 },
-            { hour: '12', value: '03', quantity: 2 },
-            { hour: '17', value: '04', quantity: 1 },
+            { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '12', value: '03', quantityBE: 1 , quantityAE :2 },
+            { hour: '17', value: '04', quantityBE: 1 , quantityAE :2 },
           
           ]
 
@@ -361,8 +362,8 @@ export const ELEMENT_DATA : bacpatient[] = [
       {
         name: 'Lisdexamfetamine', posology: [
           [
-            { hour: '09', value: '8', quantity: 1 },
-            { hour: '18', value: '02', quantity: 2 },
+            { hour: '09', value: '8', quantityBE: 1 , quantityAE :2 },
+            { hour: '18', value: '02', quantityBE: 1 , quantityAE :2 },
           
      
           ]

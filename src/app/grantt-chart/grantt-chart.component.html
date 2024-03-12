@@ -1,4 +1,6 @@
-<table class="table table-borderless">
+
+<div class="table-responsive">
+    <table  class="table table-borderless">
     <thead>
         <tr>
             <th scope="col"></th>
@@ -24,7 +26,7 @@
                         <div>
                             Bed : {{element.bed}}
                         </div>
-                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>
                 </ul>
@@ -43,7 +45,7 @@
                         <div>
                             Bed : {{element.bed}}
                         </div>
-                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>
                 </ul>
@@ -62,7 +64,7 @@
                         <div>
                             Bed : {{element.bed}}
                         </div>
-                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>
                 </ul>
@@ -81,7 +83,7 @@
                         <div>
                             Bed : {{element.bed}}
                         </div>
-                        <div> {{ medicine.name}} /{{posology[$index].quantity}}
+                        <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>
                 </ul>
@@ -97,18 +99,4 @@
         }
     </tbody>
 </table>
-
-<!---
-@for (medicine of getMedicineByHour(hour,element.patient); track medicine) {
-    @for (posology of medicine.posology; track posology) {
-    @if (posology[$index].hour === hour ) {
-    <ul class="chart-row-bars">
-        <li class="chart-li-one" style="display: inline-block; ">
-            <div>{{element.patient}}</div>
-            <div>{{ medicine.name}} / {{posology[$index].quantity}}
-            </div>
-        </li>
-    </ul>
-    }
-    }
-    }--->
+</div>

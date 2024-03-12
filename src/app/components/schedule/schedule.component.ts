@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Posology } from '../../test/test.component';
+import { Posology } from '../../bacPatient/bacPatient.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogOverviewExampleDialogComponent } from '../../dialog-overview-example-dialog/dialog-overview-example-dialog.component';
+import { DialogOverviewExampleDialogComponent } from '../../dialog/dialog-overview-example-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -25,6 +25,7 @@ export class ScheduleComponent implements OnInit {
   fullyChecked:boolean = false ;
   showChoices: boolean = true;
   @Input() hoursList : Posology[][]
+
 
 
 

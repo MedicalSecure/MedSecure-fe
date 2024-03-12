@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { ELEMENT_DATA, Medicine, Posology, bacpatient } from '../test/test.component';
+import { ELEMENT_DATA, Medicine, Posology, bacpatient } from '../bacPatient/bacPatient.component';
 
 @Component({
   selector: 'app-grantt-chart',
@@ -9,6 +9,9 @@ import { ELEMENT_DATA, Medicine, Posology, bacpatient } from '../test/test.compo
   styleUrl: './grantt-chart.component.css'
 })
 export class GranttChartComponent implements OnInit{
+calculateQuantity( be:number , ae:number):number {
+  return be+ae ;
+}
   
   @Input() targetHours : string[];
   data_list: bacpatient[] = ELEMENT_DATA;
@@ -63,6 +66,5 @@ getMedicineByHour(hour: string , name : string): Medicine[] {
 }
 ngOnInit(): void {
   this.getUniqueRooms();
-  
 }
 }

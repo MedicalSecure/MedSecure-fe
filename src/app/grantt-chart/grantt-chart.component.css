@@ -1,7 +1,10 @@
 .table{
     background-color: #fff;
-    width: 100%;
+    width:95%;
+    margin: 0 auto; 
+
 }
+
 .table th {
    text-align: center;
     font-weight: bold;
@@ -12,7 +15,7 @@
 }
 .table td {
     vertical-align: top;
-    width: fit-content;   
+    width: 25%;   
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 li {
