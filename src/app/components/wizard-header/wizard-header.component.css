@@ -14,6 +14,12 @@ body {
   display: none;
 }
 
+.step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .step-wrapper.active {
   display: block;
 }
