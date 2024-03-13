@@ -19,6 +19,7 @@ import { MedicationService } from './medication.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-medication-search',
@@ -35,6 +36,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatAutocompleteModule,
     ReactiveFormsModule,
     MatOptionModule,
+    MatTooltip
     
   ],
   templateUrl: './medication-search.component.html',
