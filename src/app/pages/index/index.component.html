@@ -627,7 +627,7 @@
             href="#form-elements"
             aria-expanded="false"
             aria-controls="form-elements"
-            [routerLink] = "['/','pharmacy']"
+            [routerLink]="['/', 'pharmacy']"
           >
             <i class="menu-icon mdi mdi-card-text-outline"></i>
             <span class="menu-title">Pharmalink</span>
@@ -836,10 +836,9 @@
                           ? 'display:block;opacity:100'
                           : 'display:none;opacity:0'
                       "
-                      
                     >
                       <div
-                        class="modal-dialog"
+                        class="modal-dialog justify-content-center"
                         role="document"
                         (click)="stopPropagation($event)"
                       >
@@ -858,42 +857,46 @@
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <div class="modal-body">
-                            @for(dbColumn of dbHeaders;track $index){
-                            <div
-                              class="d-flex justify-content-center align-middle mt-2"
-                            >
-                              <p class="col-6">{{ dbColumn }}</p>
+                          <div
+                            class="modal-body d-flex flex-wrap gap-4 form-group justify-content-center"
+                          >
+                            <!-- @for(dbColumn of dbHeaders;track $index){ -->
 
+                            @for(dbColumn of dbHeaders;track $index){
+                            <div style="width: 10rem">
+                              <label>{{ dbColumn }}</label>
                               <select
-                                [(ngModel)]="columnMappings[dbColumn]"
-                                class="form-control"
+                                [value]="columnMappings[dbColumn]"
+                                class="form-select"
                               >
                                 @for(impHeader of importedDataHeaders;track
                                 impHeader){
-                                <option [value]="impHeader">
+                                <option [value]="impHeader" style="width: 50%">
                                   {{ impHeader }}
                                 </option>
                                 }
                               </select>
                             </div>
+
                             }
-                            <div class="modal-footer p-3">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                (click)="onClickCloseModal()"
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-primary"
-                                (click)="onClickFinishModal()"
-                              >
-                                Save changes
-                              </button>
-                            </div>
+                          </div>
+
+                          <div class="ms-4">
+                            <button
+                              type="button"
+                              class="btn btn-primary text-white"
+                              (click)="onClickFinishModal()"
+                            >
+                              Save changes
+                            </button>
+
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              (click)="onClickCloseModal()"
+                            >
+                              Cancel
+                            </button>
                           </div>
                         </div>
                       </div>

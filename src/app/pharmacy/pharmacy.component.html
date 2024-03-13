@@ -1,72 +1,136 @@
-<div class="table-responsive">
+<div class="table-responsive" style="max-height: 400px; overflow-y: auto">
+  <div class="mb-4 col-12 col-md-6 col-lg-4 shadow">
+    <input
+      matInput
+      class="form-control"
+      (keyup)="applyFilter($event)"
+      placeholder="search medication"
+      #input
+    />
+  </div>
+
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.Name }}</td>
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">Name</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.Name }}
+      </td>
     </ng-container>
 
     <!-- Dosage Column -->
     <ng-container matColumnDef="dosage">
-      <th mat-header-cell *matHeaderCellDef>Dosage</th>
-      <td mat-cell *matCellDef="let element">{{ element.Dosage }}</td>
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">Dosage</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.Dosage }}
+      </td>
     </ng-container>
 
     <!-- Forme Column -->
     <ng-container matColumnDef="forme">
-      <th mat-header-cell *matHeaderCellDef>Forme</th>
-      <td mat-cell *matCellDef="let element">{{ element.Forme }}</td>
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">Forme</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.Forme }}
+      </td>
+    </ng-container>
+
+    <!-- Quantity Column -->
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">Quantity</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.Quantity }}
+      </td>
     </ng-container>
 
     <!-- Unit Column -->
     <ng-container matColumnDef="unit">
-      <th mat-header-cell *matHeaderCellDef>Unit</th>
-      <td mat-cell *matCellDef="let element">{{ element.Unit }}</td>
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">Unit</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.Unit }}
+      </td>
     </ng-container>
 
     <!-- DCI Column -->
     <ng-container matColumnDef="dci">
-      <th mat-header-cell *matHeaderCellDef>DCI</th>
-      <td mat-cell *matCellDef="let element">{{ element.DCI }}</td>
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">DCI</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.DCI }}
+      </td>
     </ng-container>
 
-    <!-- Manufacturer Column -->
-    <ng-container matColumnDef="manufacturer">
-      <th mat-header-cell *matHeaderCellDef>Manufacturer</th>
-      <td mat-cell *matCellDef="let element">{{ element.Manufacturer }}</td>
+    <!-- Laboratory Column -->
+    <ng-container matColumnDef="laboratory">
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">
+        Laboratory
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.Laboratory }}
+      </td>
     </ng-container>
 
     <!-- Expiration_Date Column -->
     <ng-container matColumnDef="expiration_date">
-      <th mat-header-cell *matHeaderCellDef>Expiration Date</th>
-      <td mat-cell *matCellDef="let element">{{ element['Expiration Date'] }}</td>
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">
+        Expiration Date
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element["Expiration Date"] }}
+      </td>
     </ng-container>
 
     <!-- Price Column -->
     <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef>Price</th>
-      <td mat-cell *matCellDef="let element">{{ element.Price }}</td>
-    </ng-container>
-
-    <!-- Prescription_Required Column -->
-    <ng-container matColumnDef="prescription_required">
-      <th mat-header-cell *matHeaderCellDef>Prescription Required</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element['Prescription Required'] }}
+      <th mat-header-cell *matHeaderCellDef class="vertical-line">Price</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="vertical-line welcome-sub-text"
+      >
+        {{ element.Price }}
       </td>
     </ng-container>
 
     <!-- Indications Column -->
     <ng-container matColumnDef="indications">
       <th mat-header-cell *matHeaderCellDef>Indications</th>
-      <td mat-cell *matCellDef="let element">{{ element.Indications }}</td>
+      <td mat-cell *matCellDef="let element" class="welcome-sub-text">
+        {{ element.Indications }}
+      </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns sticky:true;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 </div>
-
-
-

@@ -3,9 +3,10 @@ import { Router, RouterModule } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatOption, provideNativeDateAdapter } from '@angular/material/core';
 import { NgIf } from '@angular/common';
 import * as XLSX from 'xlsx';
+import {MatSelectModule} from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -23,7 +24,9 @@ import { FormsModule } from '@angular/forms';
     RouterModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule,
+    MatSelectModule,
+    MatOption,
+    FormsModule
   ],
 })
 export class IndexComponent {
@@ -35,18 +38,18 @@ export class IndexComponent {
   isShowImportModal = false;
 
   columnMappings:MedicationType= {
-    Name: NOT_ASSIGNED,
-    Dosage: NOT_ASSIGNED,
-    Forme: NOT_ASSIGNED,
-    Unit: NOT_ASSIGNED,
-    DCI: NOT_ASSIGNED,
-    Manufacturer: NOT_ASSIGNED,
-    'Expiration Date': NOT_ASSIGNED,
-    Price: NOT_ASSIGNED,
-    'Prescription Required': NOT_ASSIGNED,
-    Indications: NOT_ASSIGNED,
+      Name: NOT_ASSIGNED,
+      Dosage: NOT_ASSIGNED,
+      Forme: NOT_ASSIGNED,
+      Quantity: NOT_ASSIGNED,
+      Unit: NOT_ASSIGNED,
+      DCI: NOT_ASSIGNED,
+      Laboratory: NOT_ASSIGNED,
+      'Expiration Date': NOT_ASSIGNED,
+      Price: NOT_ASSIGNED,
+      Indications: NOT_ASSIGNED
   };
-  dbHeaders = Object.keys(this.columnMappings) as (keyof MedicationType)[];
+  dbHeaders: (keyof MedicationType)[] = Object.keys(this.columnMappings) as (keyof MedicationType)[];
 
   constructor(private router: Router) {}
 
@@ -81,17 +84,17 @@ export class IndexComponent {
     let result :MedicationType[]= [];
     for (let importedObj of this.importedData) {
       const newMappedObject:MedicationType  = {
-        Name: NOT_ASSIGNED,
-        Dosage: NOT_ASSIGNED,
-        Forme: NOT_ASSIGNED,
-        Unit: NOT_ASSIGNED,
-        DCI: NOT_ASSIGNED,
-        Manufacturer: NOT_ASSIGNED,
-        'Expiration Date': NOT_ASSIGNED,
-        Price: NOT_ASSIGNED,
-        'Prescription Required': NOT_ASSIGNED,
-        Indications: NOT_ASSIGNED,
-      };;
+          Name: NOT_ASSIGNED,
+          Dosage: NOT_ASSIGNED,
+          Forme: NOT_ASSIGNED,
+          Quantity: NOT_ASSIGNED,
+          Unit: NOT_ASSIGNED,
+          DCI: NOT_ASSIGNED,
+          Laboratory: NOT_ASSIGNED,
+          'Expiration Date': NOT_ASSIGNED,
+          Price: NOT_ASSIGNED,
+          Indications: NOT_ASSIGNED,
+      };
       for (const dbHead of this.dbHeaders) {
         const oldHeader = this.columnMappings[dbHead as keyof MedicationType];
         if (importedObj[oldHeader] !== undefined) {
@@ -118,15 +121,16 @@ export class IndexComponent {
   }
 }
 export const NOT_ASSIGNED = 'Not Assigned';
+
 export type MedicationType = {
   Name: string;
   Dosage: string;
   Forme: string;
+  Quantity: string;
   Unit: string;
   DCI: string;
-  Manufacturer: string;
+  Laboratory: string;
   'Expiration Date': string;
   Price: string;
-  'Prescription Required': string;
   Indications: string;
 };

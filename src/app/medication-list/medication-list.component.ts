@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { Medications } from '../medication-search/medication.model';
 
 
 @Component({
@@ -11,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './medication-list.component.css'
 })
 export class MedicationListComponent {
-  medication: any;
+  medication: Medications;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.medication = this.data.medication;
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Medications) {
+    this.medication = this.data['medication'];
   }
 }

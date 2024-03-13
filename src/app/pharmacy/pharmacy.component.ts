@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { MedicationType } from '../pages/index/index.component';
 
+
 @Component({
   selector: 'app-pharmacy',
   standalone: true,
@@ -27,12 +28,12 @@ export class PharmacyComponent implements OnInit {
     'name',
     'dosage',
     'forme',
+    'quantity',
     'unit',
     'dci',
-    'manufacturer',
+    'laboratory',
     'expiration_date',
     'price',
-    'prescription_required',
     'indications',
   ];
   dataSource = new MatTableDataSource<MedicationType>();
@@ -47,9 +48,9 @@ export class PharmacyComponent implements OnInit {
     }
   }
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.dataSource.filter = filterValue;
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   
 }

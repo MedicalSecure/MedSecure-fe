@@ -11,32 +11,33 @@
         (keypress)="handleKeyPress($event)"
       />
       <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-        <ng-container
-          *ngFor="
-            let medication of filteredMedications | async;
-            let last = last
-          "
-        >
-          <mat-option (click)="openDialog(medication)" [value]="medication">
+        <ng-container *ngFor="let medication of filteredMedications | async">
+          <mat-option
+            (click)="openDialog(medication)"
+            [value]="medication"
+            class="result"
+          >
             {{ getMedicationProperty(medication) }}
           </mat-option>
-          <div *ngIf="!last" class="dropdown-divider"></div>
         </ng-container>
       </mat-autocomplete>
       <button
         mat-icon-button
         matSuffix
         class="position-absolute top-50 bg-transparent"
-        style="right: 10px; transform: translateY(-50%); border: none"
+        style="right: 5px; transform: translateY(-41%); border: none"
       >
         <mat-icon>search</mat-icon>
       </button>
     </div>
 
     <div>
-      <div
-        class="mat-chip-listbox-container d-flex">
-        <strong><p style="font-size: x-large">Je cherche par:</p></strong>
+      <div class="mat-chip-listbox-container d-flex gap-3 mt-3">
+        <strong
+          ><p style="font-size: x-large; margin-top: 7px">
+            Je cherche par:
+          </p></strong
+        >
         <mat-chip-listbox
           [value]="searchKey"
           (change)="onSelectionChange($event)"
@@ -47,9 +48,12 @@
         </mat-chip-listbox>
       </div>
 
-      <div
-        class="mat-chip-listbox-container d-flex mt-5">
-        <strong><p style="font-size: x-large">Je cherche par:</p></strong>
+      <div class="mat-chip-listbox-container d-flex mt-5 gap-3">
+        <strong
+          ><p style="font-size: x-large; margin-top: 7px">
+            Je cherche par:
+          </p></strong
+        >
         <mat-chip-listbox
           [value]="searchKey"
           (change)="onSelectionChange($event)"
@@ -69,15 +73,30 @@
         *ngFor="let medication of selectedMedications"
         class="medication-item mb-3"
       >
-      <p class="text-primary mb-0 gap-5">
-        <mat-icon style="margin-right: 5px;">medical_services</mat-icon>
-        <strong style="margin-right: 5px;">- Nom:</strong>
-        <mark><strong>{{ medication.Nom }}</strong></mark>
-        <strong style="margin-right: 5px;">- Dosage:</strong>
-        <mark><strong>{{ medication.Dosage }}</strong></mark>
-        <strong style="margin-right: 5px;">- Quantity:</strong>
-        <mark><strong>{{ medication.Quantity }}</strong></mark>
-      </p>
+        <p class="text-primary mb-0 gap-3 mt-4" style="display: flex">
+          <mat-icon style="margin-right: 5px">medical_services</mat-icon>
+          <strong style="margin-right: 5px"></strong>
+          <mark
+            ><strong>{{ medication["Nom"] }}</strong></mark
+          >
+          <strong style="margin-right: 5px"></strong>
+          <mark
+            ><strong>{{ medication["Dosage"] }}</strong></mark
+          >
+          <strong style="margin-right: 100px"></strong>
+          <mark
+            ><strong>{{ medication["Quantity"] }}</strong></mark
+          >
+          <img
+            src="assets/images/info.svg"
+            alt="info"
+            class="image"
+            style="height: 15px; width: 15px; margin-top: 5px; margin-left: 5px"
+            matTooltip="
+            Indications: {{ medication['Indications'] }}
+            "
+          />
+        </p>
       </div>
     </div>
   </div>
