@@ -1,11 +1,11 @@
 <div class="row d-flex justify-content-between align-items-start">
-  <!--   <div style="margin-top: 42px; width: 35px" class="col-md-1">
+  <div style="margin-top: 42px; width: 35px" class="col-md-1">
     <i
       style="margin-right: 5px; color: #203bad; font-size: 30px"
       class="material-icons"
       >dining</i
     >
-  </div> -->
+  </div>
   <div class="col">
     <ng-container>
       <td>
@@ -42,8 +42,9 @@
                     <div
                       (contextmenu)="
                         $event.preventDefault();
-                        onClick(partOfDayIndex, hourIndex, 1, hourItem, true)
+                        onClick(partOfDayIndex, hourIndex, -1, hourItem, true)
                       "
+                      title="Before food dispense quantity"
                     >
                       <input
                         class="form-control text-center"
@@ -53,7 +54,17 @@
                             ? hourItem.beforeFoodDispenseQuantity
                             : ''
                         "
-                        (change)="onInputChange($event)"
+                        (input)="onInputChange($event)"
+                        pattern="[0-9]*"
+                        (change)="
+                          onInputFinalChange(
+                            $event,
+                            partOfDayIndex,
+                            hourIndex,
+                            hourItem,
+                            true
+                          )
+                        "
                         type="text"
                         (click)="
                           onClick(partOfDayIndex, hourIndex, 1, hourItem, true)
@@ -77,8 +88,9 @@
                     <div
                       (contextmenu)="
                         $event.preventDefault();
-                        onClick(partOfDayIndex, hourIndex, 1, hourItem, false)
+                        onClick(partOfDayIndex, hourIndex, -1, hourItem, false)
                       "
+                      title="After food dispense quantity"
                     >
                       <input
                         class="form-control text-center"
@@ -87,6 +99,17 @@
                           hourItem.afterFoodDispenseQuantity
                             ? hourItem.afterFoodDispenseQuantity
                             : ''
+                        "
+                        (input)="onInputChange($event)"
+                        pattern="[0-9]*"
+                        (change)="
+                          onInputFinalChange(
+                            $event,
+                            partOfDayIndex,
+                            hourIndex,
+                            hourItem,
+                            false
+                          )
                         "
                         type="text"
                         (click)="
@@ -114,8 +137,3 @@
     </ng-container>
   </div>
 </div>
-<!-- <div class="row">
-  <app-datepicker-range-popup
-    style="margin-left: 37px; max-width: 290px"
-  ></app-datepicker-range-popup>
-</div> -->
