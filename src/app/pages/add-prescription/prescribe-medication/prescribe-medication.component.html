@@ -6,35 +6,46 @@
       class="d-flex flex-column gap-2 justify-content-center align-middle py-2"
       [formGroup]="Medication"
     >
-      <mat-form-field>
-        <mat-label>Type medication name</mat-label>
-        <input
-          type="text"
-          matInput
-          required
-          [matAutocomplete]="autoGroup"
-          formControlName="medicationId"
-        />
-        <mat-autocomplete
-          #autoGroup="matAutocomplete"
-          (optionSelected)="onSelectedMedicationChange($event)"
-        >
-          @for (group of medicationGroupOptions | async; track group) {
-          <mat-optgroup [label]="group.letter">
-            @for (name of group.names; track name) {
-            <mat-option [value]="name">{{ name }}</mat-option>
+      <div class="d-flex align-middle justify-content-around">
+        <mat-form-field class="col-10">
+          <mat-label>Type medication name</mat-label>
+          <input
+            type="text"
+            matInput
+            required
+            [matAutocomplete]="autoGroup"
+            formControlName="medicationId"
+          />
+          <mat-autocomplete
+            #autoGroup="matAutocomplete"
+            (optionSelected)="onSelectedMedicationChange($event)"
+          >
+            @for (group of medicationGroupOptions | async; track group) {
+            <mat-optgroup [label]="group.letter">
+              @for (name of group.names; track name) {
+              <mat-option [value]="name">{{ name }}</mat-option>
+              }
+            </mat-optgroup>
             }
-          </mat-optgroup>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
+          </mat-autocomplete>
+        </mat-form-field>
 
+        <div
+          title="Add comment"
+          (click)="onAddComment()"
+          class="pt-2"
+          style="cursor: pointer"
+        >
+          <i class="fa-solid fa-comment-medical fs-2"></i>
+        </div>
+      </div>
       @if(false){<mat-error style="margin-top: -1.8rem"
         >Warning : Medication not compatible</mat-error
       >}
 
       <!-- part of day -->
-      <app-parts-of-day></app-parts-of-day>
+
+      <app-parts-of-day [(partsOfDayHours)]="test"></app-parts-of-day>
 
       <!-- period -->
       <div
@@ -226,21 +237,5 @@
       </div>
     </div>
     <!-- end cards container -->
-  </div>
-</div>
-<div style="position: absolute; bottom: 0; right: 0; z-index: 4; width: 38vw">
-  <div class="d-flex justify-content-start">
-    <div class="d-flex align-content-center justify-content-around gap-2 w-75">
-      <div title="Add comment" (click)="onAddComment()">
-        <i class="fa fa-commenting icon-flipped fs-4"></i>
-      </div>
-      <button
-        type="button"
-        [className]="getAppendMedicationButtonLabel().class"
-        (click)="onClickAppendMedication()"
-      >
-        {{ getAppendMedicationButtonLabel().label }}
-      </button>
-    </div>
   </div>
 </div>

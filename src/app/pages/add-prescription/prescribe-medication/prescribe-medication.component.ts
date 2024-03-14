@@ -25,7 +25,10 @@ import { SYRINGE_ICON } from '../../../../assets/icons/icons';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { R } from '@angular/cdk/keycodes';
-import { PartsOfDayComponent } from '../../../components/parts-of-day/parts-of-day.component';
+import {
+  PartsOfDayComponent,
+  hourType,
+} from '../../../components/parts-of-day/parts-of-day.component';
 import { patientType } from '../patient-select/patient-select.component';
 import { DatepickerRangePopupComponent } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
 import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
@@ -82,6 +85,7 @@ export class PrescribeMedicationComponent {
     'mg/kg ',
     'mcg/mL ',
   ];
+  test: hourType[][] = _initialPartsOfDayHours;
   selectedMedicationInput = '';
   isSelectedForceOrder: boolean = false;
   isFilteredForceOrder: boolean = false;
@@ -473,3 +477,24 @@ export type commentType = {
   labelClass?: string;
   labelStyle?: styleClass;
 };
+
+const _initialPartsOfDayHours: hourType[][] = [
+  // Late Night
+  [{ hour: '00' }, { hour: '01' }, { hour: '02' }],
+  // Pre-Dawn/Dawn
+  [{ hour: '03' }, { hour: '04' }, { hour: '05' }],
+  // Early Morning
+  [{ hour: '06' }, { hour: '07' }, { hour: '08' }],
+  // Mid-Morning
+  [{ hour: '09' }, { hour: '10' }, { hour: '11' }],
+  // Noon/Midday
+  [{ hour: '12' }],
+  // Afternoon
+  [{ hour: '13' }, { hour: '14' }, { hour: '15' }],
+  // Mid-Afternoon
+  [{ hour: '16' }, { hour: '17' }],
+  // Evening
+  [{ hour: '18' }, { hour: '19' }, { hour: '20' }, { hour: '21' }],
+  // Dusk
+  [{ hour: '22' }, { hour: '23' }],
+];

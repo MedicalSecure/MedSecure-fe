@@ -1,17 +1,24 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-schedule',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './schedule.component.html',
-  styleUrl: './schedule.component.css'
+  styleUrl: './schedule.component.css',
 })
 export class ScheduleComponent implements OnInit {
   @Input() selectedHours: any[] = [];
-  @Input() daysOfWeek: string[] = ['31/07', '01/08', '02/08', '03/08', '04/08', '05/08', '06/08'];
+  @Input() daysOfWeek: string[] = [
+    '31/07',
+    '01/08',
+    '02/08',
+    '03/08',
+    '04/08',
+    '05/08',
+    '06/08',
+  ];
   @Input() hoursListEmitter: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Input() keyDownEvent: EventEmitter<any> = new EventEmitter<any>();
   @Input() posologieValue: any;
@@ -24,15 +31,18 @@ export class ScheduleComponent implements OnInit {
   toggleChoices(): void {
     this.showChoices = !this.showChoices;
   }
-  
+
   onKeyDown(event: any, hourIndex: number, itemIndex: number): void {
     // You can include hourIndex and itemIndex in the emitted event
     const eventData = { event, hourIndex, itemIndex };
     this.keyDownEvent.emit(eventData);
   }
-  
 
-  handleClickEvent(currentitem: { hour: string; value: string; quantity: string }, hourIndex: number, itemIndex: number): void {
+  handleClickEvent(
+    currentitem: { hour: string; value: string; quantity: string },
+    hourIndex: number,
+    itemIndex: number
+  ): void {
     if (!currentitem.quantity) {
       currentitem.quantity = this.posologieValue ? this.posologieValue : '?';
     } else {
@@ -40,18 +50,20 @@ export class ScheduleComponent implements OnInit {
         currentitem.quantity = '1';
       } else {
         const parsedQuantity = parseFloat(currentitem.quantity);
-if (!isNaN(parsedQuantity)) {
-  const incrementedQuantity = parsedQuantity + 1;
-  currentitem.quantity = (incrementedQuantity % 1 === 0) ? String(incrementedQuantity) : incrementedQuantity.toFixed(2);
-} else {
-  // If parsing fails, default to 1
-  currentitem.quantity = '1';
-}
+        if (!isNaN(parsedQuantity)) {
+          const incrementedQuantity = parsedQuantity + 1;
+          currentitem.quantity =
+            incrementedQuantity % 1 === 0
+              ? String(incrementedQuantity)
+              : incrementedQuantity.toFixed(2);
+        } else {
+          // If parsing fails, default to 1
+          currentitem.quantity = '1';
+        }
       }
     }
     this.hoursListEmitter.emit(this.hoursList);
   }
-  
 
   formatNumber(num: string): string {
     if (num) {
@@ -95,18 +107,19 @@ if (!isNaN(parsedQuantity)) {
     const desiredHours = [8, 12, 17, 22, 0];
 
     for (const hourArray of this.hoursList) {
-      const filteredHours = hourArray.filter((hourObj : any) =>
+      const filteredHours = hourArray.filter((hourObj: any) =>
         desiredHours.includes(parseInt(hourObj.value, 10))
       );
       this.selectedHours.push(filteredHours);
     }
 
-    this.selectedHours = this.selectedHours.filter((hourObj, index, self) =>
-      index === self.findIndex((h) => h.value === hourObj.value)
+    this.selectedHours = this.selectedHours.filter(
+      (hourObj, index, self) =>
+        index === self.findIndex((h) => h.value === hourObj.value)
     );
   }
 
   toggleCheckbox(currentitem: any) {
     currentitem.isSelected = !currentitem.isSelected;
-}
+  }
 }
