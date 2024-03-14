@@ -5,8 +5,8 @@
  remove associated diagnosis
 
 -->
-<div id="add-prescription-body" class="container-scroll bg-white">
-  <div class="content">
+<div id="add-prescription-body">
+  <div class="container-scroll bg-white">
     <app-wizard-header
       (currentStepChange)="SwitchToStep($event)"
       [switchCondition]="selectedPatient != undefined"
@@ -111,9 +111,10 @@
       width: 90vw;
       z-index: 2;
       min-height: 2.2rem;
+      padding: 0.2rem;
     "
   >
-    <div class="d-flex gap-1 col-7 col-lg-5 m-0">
+    <div class="d-flex gap-1 col-7 col-md-5 col-lg-4 m-0">
       <button
         type="button"
         [className]="backButtonContent.class"

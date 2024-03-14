@@ -1,27 +1,26 @@
 #add-prescription-body {
   font-family: "Manrope", sans-serif;
+  position: relative;
+  padding-bottom: 2.2rem;
 }
 .container-scroll {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 82vh; /* Takes the available viewport height */
+  height: 75vh; /* Takes the available viewport height */
+  overflow-y: auto; /* Enables vertical scrollbar if content overflows */
 }
 @media (max-width: 576px) {
   /* CSS rules for extra small devices */
   .container-scroll {
-    height: 87vh; /* Takes the available viewport height */
+    height: 81vh; /* Takes the available viewport height */
   }
 }
 @media (min-width: 576px) and (max-width: 768px) {
   /* CSS rules for small devices */
   .container-scroll {
-    height: 85vh; /* Takes the available viewport height */
+    height: 77vh; /* Takes the available viewport height */
   }
-}
-
-.content {
-  flex: 1; /* Takes remaining space */
-  overflow-y: auto; /* Enables vertical scrollbar if content overflows */
 }
 
 .example-headers-align .mat-expansion-panel-header-description {

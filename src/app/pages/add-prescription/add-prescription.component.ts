@@ -39,6 +39,7 @@ export class AddPrescriptionComponent {
     label: 'back',
     class: 'btn w-100 m-0 btn-warning',
   };
+
   nextButtonContent: { label: string; class: string } = this._nextButtonContent;
   backButtonContent: { label: string; class: string } = this._backButtonContent;
 
@@ -101,16 +102,25 @@ export class AddPrescriptionComponent {
   }
 
   private _updateButtonsState() {
-    if (
-      this.stepNumber == this.stepsLimit ||
-      this.selectedPatient == undefined
-    ) {
+    if (this.selectedPatient == undefined) {
       this.nextButtonContent = {
         ...this.nextButtonContent,
         class: this.nextButtonContent.class + 'd btn-outline-warning disabled',
       };
     } else {
       this.nextButtonContent = this._nextButtonContent;
+    }
+    if (this.stepNumber == this.stepsLimit) {
+      if (true)
+        this.nextButtonContent = {
+          ...this.nextButtonContent,
+          label: 'Finish',
+        };
+      else
+        this.nextButtonContent = {
+          ...this.nextButtonContent,
+          label: 'Finish',
+        };
     }
 
     if (this.stepNumber === 1) {

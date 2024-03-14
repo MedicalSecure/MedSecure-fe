@@ -22,6 +22,7 @@ body {
   border-collapse: separate;
   display: table;
   margin-left: 0px;
+  margin-bottom: 0px;
   position: relative;
   table-layout: fixed;
   text-align: center;
