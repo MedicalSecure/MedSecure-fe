@@ -868,6 +868,9 @@
                               <select
                                 [value]="columnMappings[dbColumn]"
                                 class="form-select"
+                                (change)="
+                                  OnSelectchange($event, dbColumn)
+                                "
                               >
                                 @for(impHeader of importedDataHeaders;track
                                 impHeader){
