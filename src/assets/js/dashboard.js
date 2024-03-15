@@ -1,4 +1,6 @@
-(function($) {
+
+
+setTimeout(()=>(function($) {
   'use strict';
   $(function() {
     if ($("#performaneLine").length) {
@@ -107,6 +109,7 @@
       });
       document.getElementById('performance-line-legend').innerHTML = salesTop.generateLegend();
     }
+
     if ($("#performaneLine-dark").length) {
       var graphGradient = document.getElementById("performaneLine-dark").getContext('2d');
       var graphGradient2 = document.getElementById("performaneLine-dark").getContext('2d');
@@ -289,6 +292,78 @@
           data: statusData,
           options: statusOptions
       });
+    }
+    if ($('#totalTemperatures').length) {
+
+      var bar = new ProgressBar.Circle(totalTemperatures, {
+        color: '#fff',
+        // This has to be the same size as the maximum width to
+        // prevent clipping
+        strokeWidth: 15,
+        trailWidth: 15, 
+        easing: 'easeInOut',
+        duration: 1400,
+        text: {
+          autoStyleContainer: false
+        },
+        from: {
+          color: '#52CDFF',
+          width: 15
+        },
+        to: {
+          color: '#677ae4',
+          width: 15
+        },
+        // Set default step function for all animate calls
+        step: function(state, circle) {
+          circle.path.setAttribute('stroke', state.color);
+          circle.path.setAttribute('stroke-width', state.width);
+  
+          var value = Math.round(circle.value() * 100);
+          if (value === 0) {
+            circle.setText('');
+          } else {
+            circle.setText(value);
+          }
+        }
+      });
+  
+      bar.text.style.fontSize = '0rem';
+      bar.animate($('#totalTemperatures').data('temperature') / 100); // Number from 0.0 to 1.0
+    }
+    if ($('#totalHumidity').length) {
+      var bar = new ProgressBar.Circle(totalHumidity, {
+        color: '#fff',
+        strokeWidth: 15,
+        trailWidth: 15, 
+        easing: 'easeInOut',
+        duration: 1400,
+        text: {
+          autoStyleContainer: false
+        },
+        from: {
+          color: '#52CDFF',
+          width: 15
+        },
+        to: {
+          color: '#677ae4',
+          width: 15
+        },
+        step: function(state, circle) {
+          circle.path.setAttribute('stroke', state.color);
+          circle.path.setAttribute('stroke-width', state.width);
+  
+          var value = Math.round(circle.value() * 100);
+          if (value === 0) {
+            circle.setText('');
+          } else {
+            circle.setText(value);
+          }
+        }
+      });
+  
+      bar.text.style.fontSize = '0rem';
+      bar.animate($('#totalHumidity').data('humidity') / 100); 
     }
     if ($('#totalVisitors').length) {
       var bar = new ProgressBar.Circle(totalVisitors, {
@@ -772,4 +847,4 @@
     }
   
   });
-})(jQuery);
+})(jQuery),1000)
