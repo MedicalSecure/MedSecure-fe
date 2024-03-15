@@ -1,44 +1,139 @@
 <div class="row d-flex justify-content-between align-items-start">
-    <div style="margin-top: 42px; width: 35px;" class="col-md-1">
-        <i style="margin-right: 5px; color:#203bad; font-size: 30px;" class="material-icons">dining</i>
-    </div>
-    <div class="col">
-        <ng-container>
-            <td>
-                <div class="d-flex flex-wrap">
-                    <ng-container *ngFor="let currenthours of selectedHours;">
-                        <div class="mb-2" *ngFor="let currentitem of currenthours; let itemIndex = index">
-                            <div *ngIf="currentitem.hour !=5"
-                                class="card mr-1 w-3 h-3 mb-4 cursor-pointer {{getBackgroundColor(currentitem.hour)}} color-white"
-                                style="width: 3rem; height: 4.4rem;">
-                                <div class="card-header p-0 text-center">
-                                    <p class="mb-0 font-weight-normal text-white">
-                                        {{ currentitem.hour }} H
-                                        <!-- <i style="width: 10px;" class="material-icons" data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="{{getToolTipText(currentitem.hour)}}">info</i> -->
-                                    </p>
-                                </div>
-                                <div class="card-body p-0 text-center bg-secondary color-white">
-                                    <div>
-                                        <input class="form-control text-center" style="padding: 0%;" [value]=""
-                                            type="text" />
-                                    </div>
-                                    <mat-divider class="m-1" style="border-top-color: #203bad;"></mat-divider>
-                                    <div>
-                                        <input class="form-control text-center" style="padding: 0%;" [value]=""
-                                            type="text" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-container>
-
+  <div style="margin-top: 42px; width: 35px" class="col-md-1">
+    <i
+      style="margin-right: 5px; color: #203bad; font-size: 30px"
+      class="material-icons"
+      >dining</i
+    >
+  </div>
+  <div class="col">
+    <ng-container>
+      <td>
+        <div class="d-flex flex-wrap">
+          <ng-container
+            *ngFor="
+              let partOfDayHours of partsOfDayHours;
+              let partOfDayIndex = index
+            "
+          >
+            <div class="d-flex me-2">
+              <div
+                class="mb-2"
+                *ngFor="let hourItem of partOfDayHours; let hourIndex = index"
+              >
+                <div
+                  *ngIf="true"
+                  class="mr-1 mb-4 cursor-pointer {{
+                    getBackgroundColor(partOfDayIndex)
+                  }} color-white"
+                  style="width: 2.2rem; height: 4rem; border-radius: 8px"
+                >
+                  <div
+                    class="card-header p-0 text-center"
+                    [title]="getTitle(partOfDayIndex)"
+                  >
+                    <p class="mb-0 font-weight-normal text-white">
+                      {{ hourItem.hour }} H
+                    </p>
+                  </div>
+                  <div
+                    class="card-body p-0 text-center bg-secondary color-white"
+                  >
+                    <div
+                      (contextmenu)="
+                        $event.preventDefault();
+                        onClick(partOfDayIndex, hourIndex, -1, hourItem, true)
+                      "
+                      title="Before food dispense quantity"
+                    >
+                      <input
+                        class="form-control text-center"
+                        style="padding: 0%"
+                        [value]="
+                          hourItem.beforeFoodDispenseQuantity
+                            ? hourItem.beforeFoodDispenseQuantity
+                            : ''
+                        "
+                        (input)="onInputChange($event)"
+                        pattern="[0-9]*"
+                        (change)="
+                          onInputFinalChange(
+                            $event,
+                            partOfDayIndex,
+                            hourIndex,
+                            hourItem,
+                            true
+                          )
+                        "
+                        type="text"
+                        (click)="
+                          onClick(partOfDayIndex, hourIndex, 1, hourItem, true)
+                        "
+                        (wheel)="
+                          $event.preventDefault();
+                          onScroll(
+                            partOfDayIndex,
+                            hourIndex,
+                            $event,
+                            hourItem,
+                            true
+                          )
+                        "
+                      />
+                    </div>
+                    <mat-divider
+                      class="m-1"
+                      style="border-top-color: #203bad"
+                    ></mat-divider>
+                    <div
+                      (contextmenu)="
+                        $event.preventDefault();
+                        onClick(partOfDayIndex, hourIndex, -1, hourItem, false)
+                      "
+                      title="After food dispense quantity"
+                    >
+                      <input
+                        class="form-control text-center"
+                        style="padding: 0%"
+                        [value]="
+                          hourItem.afterFoodDispenseQuantity
+                            ? hourItem.afterFoodDispenseQuantity
+                            : ''
+                        "
+                        (input)="onInputChange($event)"
+                        pattern="[0-9]*"
+                        (change)="
+                          onInputFinalChange(
+                            $event,
+                            partOfDayIndex,
+                            hourIndex,
+                            hourItem,
+                            false
+                          )
+                        "
+                        type="text"
+                        (click)="
+                          onClick(partOfDayIndex, hourIndex, 1, hourItem, false)
+                        "
+                        (wheel)="
+                          $event.preventDefault();
+                          onScroll(
+                            partOfDayIndex,
+                            hourIndex,
+                            $event,
+                            hourItem,
+                            false
+                          )
+                        "
+                      />
+                    </div>
+                  </div>
                 </div>
-            </td>
-        </ng-container>
-    </div>
-</div>
-<div class="row">
-    <app-datepicker-range-popup style=" margin-left: 37px; max-width: 290px;"></app-datepicker-range-popup>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </td>
+    </ng-container>
+  </div>
 </div>
