@@ -10,7 +10,7 @@ export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'page1', component: Page1Component } ,
-    { path: 'Widget', component:WidgetsPageComponent },
+    { path: 'widget', component:WidgetsPageComponent },
     { path: 'ScatterCharts', component: ScatterChartsComponent },
     { path: 'SelectComponent', component:SelectComponent },
     { path: 'ChipsInputComponent', component:ChipsInputComponent },
