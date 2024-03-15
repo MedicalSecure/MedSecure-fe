@@ -35,6 +35,7 @@ interface Group {
 interface Item {
   id: string;
   name: string;
+  icon: string;
   groups: Group[];
 }
 
@@ -128,6 +129,7 @@ export class RegisterFormComponent implements OnInit{
     this.cardio =[{
       id: 'Kidneydiseases',
       name: 'Cardiovascular risk factors',
+      icon:'',
       groups: [
         {
           name: 'Family history of chronic kidney disease',
@@ -154,6 +156,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'diabetes',
         name: 'Diabetes',
+        icon:'',
         groups: [
           {
             name: 'Type 1 diabetes mellitus',
@@ -187,6 +190,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Chronicheartfailure',
         name: 'Chronic heart failure',
+        icon:'<img src="../assets/images/tk8PLM01.svg" width="19" height="30">',
         groups: [
           {
             name: 'Documented atherosclerotic cardiovascular disease',
@@ -226,6 +230,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Dyslipidemia',
         name: 'Dyslipidemia',
+        icon:'',
         groups: [
           {
             name: 'Dyslipidemia',
@@ -246,6 +251,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Kidneydiseases',
         name: 'Kidney diseases',
+        icon:'',
         groups: [
           {
             name: 'Acute kidney injury (previous episode)',
@@ -281,8 +287,23 @@ export class RegisterFormComponent implements OnInit{
       },
       
     ];
+    
   }
 
+  selectedIconData!: string;
+
+  selectItem(item: { icon: string; }) {
+    const iconData = item.icon;
+    const regex = /src="([^"]+)"/g;  // Regular expression to find the image URL
+  
+    const match = regex.exec(iconData);
+    if (match) {
+      const imageUrl = match[1];  // Capture the first group (image URL)
+      console.log(imageUrl);  // This will log the extracted image URL
+    } else {
+      console.error("No image URL found in icon data");
+    }
+  }
   // Function to load typesOfAllergies
   loadAllergySymptoms(): void {
     this.allergySymptoms = [
@@ -333,21 +354,27 @@ export class RegisterFormComponent implements OnInit{
   constructor(private _formBuilder: FormBuilder) {}
   
   // Region wizard
-  currentStep: number = 1;
+  currentStep: number = 1; // Initialize current step to 1
 
   // Function to handle the "Next" button click
   onNextClick(): void {
-    if (this.currentStep < 4) {
-      this.currentStep++;
+    if (this.stepNumber < 4) {
+      this.stepNumber++;
     }
   }
 
   // Function to handle the "Previous" button click
   onPrevClick(): void {
-    if (this.currentStep > 1) {
-      this.currentStep--;
+    if (this.stepNumber > 1) {
+      this.stepNumber--;
     }
   }
+
+  // Function to handle the "Cancel" button click
+  onCancelClick(): void {
+    this.stepNumber = 1;
+  }
+  
 
   selectActivity(_t90: any) {
     throw new Error('Method not implemented.');
