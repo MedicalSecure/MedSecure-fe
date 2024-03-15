@@ -1,0 +1,53 @@
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4" aria-label="Slide 5"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="5" aria-label="Slide 6"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <app-grantt-chart [targetHours]="['01', '02', '03', '04']"></app-grantt-chart>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+    <div class="carousel-item">
+      <app-grantt-chart [targetHours]="['05', '06', '07', '08']"></app-grantt-chart>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+    <div class="carousel-item">
+      <app-grantt-chart [targetHours]="['09', '10', '11', '12']"></app-grantt-chart>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+    <div class="carousel-item">
+      <app-grantt-chart [targetHours]="['13', '14', '15', '16']"></app-grantt-chart>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+    <div class="carousel-item">
+      <app-grantt-chart [targetHours]="['17', '18', '19', '20']"></app-grantt-chart>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+    <div class="carousel-item">
+      <app-grantt-chart [targetHours]="['21', '22', '23', '00']"></app-grantt-chart>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev" style="color: black; position: absolute; left:  -7%;">
+    <span> <img src="assets/left_arrow_icon.svg" style="width: 70px;height: 70px;"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next"style="color: black; position: absolute; right:  -7%; " >
+    <span> <img src="assets/right_arrow_icon.svg" style="width: 70px;height: 70px;" ></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+<div style="margin-top: 5%;">
+  <app-kanban ></app-kanban>
+</div>
