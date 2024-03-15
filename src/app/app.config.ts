@@ -7,14 +7,14 @@ import { provideDaterangepickerLocale } from "ngx-daterangepicker-bootstrap";
 import { GanttChartComponent, GanttChartTaskColumn } from 'smart-webcomponents-angular/ganttchart';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
+import { HttpClientModule } from '@angular/common/http';
  
 
 export const appConfig: ApplicationConfig = {
-
-
-  providers: [provideRouter(routes) , GanttChartComponent ,
+  providers: [
+      provideRouter(routes), GanttChartComponent,
     provideDaterangepickerLocale({separator: ' - ', applyLabel: 'Okay',}), 
-        provideAnimationsAsync(), provideAnimations(), provideHttpClient()]
-
-};
+    provideAnimationsAsync(),
+    provideAnimations(), HttpClientModule 
+]}
 

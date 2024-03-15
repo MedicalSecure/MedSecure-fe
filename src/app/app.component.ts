@@ -7,12 +7,13 @@ import { HttpClient } from '@angular/common/http';
 import '@angular/localize/init'
 import { AIPromptModule } from '@progress/kendo-angular-conversational-ui';
 
+import { NgApexchartsModule } from "ng-apexcharts";
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    imports: [RouterOutlet, IndexComponent , AIPromptModule],
+    imports: [RouterOutlet, IndexComponent, AIPromptModule, NgApexchartsModule],
     schemas: [NO_ERRORS_SCHEMA]
 })
 export class AppComponent {

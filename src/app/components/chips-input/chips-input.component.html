@@ -1,0 +1,74 @@
+<!-- <div>
+    <form>
+        <mat-form-field class="example-chip-list">
+          <mat-label>Favorite Fruits</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Fruit selection">
+            @for (fruit of fruits; track fruit) {
+              <mat-chip-row (removed)="remove(fruit)">
+                {{fruit}}
+                <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input placeholder="New Fruit..." #fruitInput [formControl]="fruitCtrl"
+            [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"/>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            @for (fruit of filteredFruits | async; track fruit) {
+              <mat-option [value]="fruit">{{fruit}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-chip-list">
+          <mat-label>Favorite Units</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Unit selection">
+            <mat-chip-row *ngFor="let unit of units" (removed)="remove(unit)">
+              {{unit.name}}
+              <button matChipRemove [attr.aria-label]="'remove ' + unit.name">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          </mat-chip-grid>
+          <input placeholder="New Unit..." #unitInput [formControl]="unitCtrl"
+            [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"/>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit">
+              {{unit.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        
+      </form>
+      
+</div> -->
+
+<div>
+  <form>
+    <mat-form-field class="example-chip-list" >
+      <mat-label>Favorite Units</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Unit selection" >
+        <mat-chip *ngFor="let unit of units; trackBy: trackByFn" (removed)="remove(unit)">
+          {{unit.name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-grid>
+      <input placeholder="New Unit..." #unitInput [formControl]="unitCtrl"
+        [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="add($event)"/>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" >
+        <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit">
+          {{unit.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>
+<div *ngIf="selectedUniteSoin"> 
+  <app-detection-temp></app-detection-temp>
+ </div>
