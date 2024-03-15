@@ -2,7 +2,7 @@
   "Medications": {
     "medication": [
       {
-        "Name": "5-FLUOROURACIL",
+        "Nom": "5-FLUOROURACIL",
         "Dosage": "250 MG",
         "Forme": "Solution injectable",
         "Unit": "B/5/5ML",
@@ -23,7 +23,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "5-FLUOROURACILE EBEWE",
+        "Nom": "5-FLUOROURACILE EBEWE",
         "Dosage": "1000 mg/20 ml",
         "Forme": "Solution injectable pour perfusion",
         "Unit": "B/1/20 ml",
@@ -44,7 +44,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "5-FLUOROURACILE EBEWE",
+        "Nom": "5-FLUOROURACILE EBEWE",
         "Dosage": "500 mg/10 ml",
         "Forme": "Solution injectable pour perfusion",
         "Unit": "B/5/10 ml",
@@ -65,7 +65,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABBOTICINE",
+        "Nom": "ABBOTICINE",
         "Dosage": "200 MG",
         "Forme": "Poudre pour suspension orale",
         "Unit": "FL/60ML",
@@ -86,7 +86,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABEVMY",
+        "Nom": "ABEVMY",
         "Dosage": "400 mg(25mg/ml)",
         "Forme": "Solution à diluer pour perfusion",
         "Unit": "B/1FL/16ml",
@@ -107,7 +107,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABEVMY",
+        "Nom": "ABEVMY",
         "Dosage": "100 mg(25mg/ml)",
         "Forme": "Solution à diluer pour perfusion",
         "Unit": "B/1FL/4ml",
@@ -128,7 +128,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABILICARE",
+        "Nom": "ABILICARE",
         "Dosage": "10 mg",
         "Forme": "Comprimé",
         "Unit": "B/30",
@@ -149,7 +149,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABILICARE",
+        "Nom": "ABILICARE",
         "Dosage": "15 mg",
         "Forme": "Comprimé",
         "Unit": "B/30",
@@ -170,7 +170,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABILIFY",
+        "Nom": "ABILIFY",
         "Dosage": "15 mg",
         "Forme": "Comprimé",
         "Unit": "B/28",
@@ -191,7 +191,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABILIFY",
+        "Nom": "ABILIFY",
         "Dosage": "10 mg",
         "Forme": "Comprimé",
         "Unit": "B/28",
@@ -212,7 +212,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABIRATERONE ACETATE NEAPOLIS",
+        "Nom": "ABIRATERONE ACETATE NEAPOLIS",
         "Dosage": "250 mg",
         "Forme": "Comprimé",
         "Unit": "B/120",
@@ -233,7 +233,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABREMIA",
+        "Nom": "ABREMIA",
         "Dosage": "250 mg",
         "Forme": "Comprimé",
         "Unit": "B/120",
@@ -254,7 +254,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ABUFENE",
+        "Nom": "ABUFENE",
         "Dosage": "400 MG",
         "Forme": "Comprimé",
         "Unit": "B/30",
@@ -275,7 +275,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ACACIPRO 500",
+        "Nom": "ACACIPRO 500",
         "Dosage": "500 mg",
         "Forme": "Comprimé pelliculé sécable",
         "Unit": "B/10",
@@ -296,7 +296,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ACAMANTINE 625",
+        "Nom": "ACAMANTINE 625",
         "Dosage": "500 mg/125mg",
         "Forme": "Comprimé pelliculé",
         "Unit": "B/12",
@@ -317,7 +317,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ACARBOSE ADWYA",
+        "Nom": "ACARBOSE ADWYA",
         "Dosage": "100 mg",
         "Forme": "Comprimé",
         "Unit": "B/90",
@@ -338,7 +338,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ACARBOSE ADWYA",
+        "Nom": "ACARBOSE ADWYA",
         "Dosage": "50 mg",
         "Forme": "Comprimé",
         "Unit": "B/90",
@@ -359,7 +359,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ACARLYSE",
+        "Nom": "ACARLYSE",
         "Dosage": "100 mg",
         "Forme": "Comprimé",
         "Unit": "B/90",
@@ -380,7 +380,7 @@
         "Stock Alerte": 3
       },
       {
-        "Name": "ACARLYSE",
+        "Nom": "ACARLYSE",
         "Dosage": "50 mg",
         "Forme": "Comprimé",
         "Unit": "B/90",
