@@ -1,0 +1,56 @@
+.container {
+  padding: 24px;
+}
+
+.card {
+  margin-bottom: 16px;
+}
+
+
+.image-pers {
+  text-align: center;
+  display: inline-block;
+  margin-right: 10px;
+
+}
+
+.icon-div {
+  position: relative;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 10rem;
+  background-color: transparent;
+  border: transparent;
+  width:fit-content
+  }
+
+
+  .img-icon {
+    position: absolute;
+    z-index: 2;
+    right:-11px;
+    top:0px;
+
+}
+
+
+.day-shift {
+
+  box-shadow: 0px 0px 3px 3px #ffc100;
+
+}
+.night-shift {
+  background-color: white; border-radius: 100%;
+  box-shadow: 0px 0px 3px 3px #063970;
+}
+
+.half-shift {
+  border-bottom:  6px solid #063970; ;
+  border-right:6px solid #063970;
+  border-top: 6px solid #ffc100;
+  border-left: 6px solid #ffc100;
+}
+
+
+
+

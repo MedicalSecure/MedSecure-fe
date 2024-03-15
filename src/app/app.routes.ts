@@ -10,21 +10,13 @@ import {WidgetsPageComponent} from './pages/widgets-page/widgets-page.component'
 import {SelectComponent} from './components/select/select.component'
 import {ChipsInputComponent} from './components/chips-input/chips-input.component'
 import {DetectionTempComponent} from './components/detection-temp/detection-temp.component'
+import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 
 import { TimelineComponent } from './pages/timeline/timeline.component';
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'page1', component: Page1Component } ,
-    { path: 'widget', component:WidgetsPageComponent },
-    { path: 'scattercharts', component: ScatterChartsComponent },
-    { path: 'select', component:SelectComponent },
-    { path: 'chipsinput', component:ChipsInputComponent },
-    { path: 'detectiontemp', component:DetectionTempComponent },
-    { path: 'timeLine', component: TimelineComponent} ,   
-    {path: 'search', component: MedicationSearchComponent},
-    {path: 'pharmacy', component: PharmacyComponent},
-    { path: 'visits', component: Visits  },
-    { path: 'bac-patient', component: BacPatientComponent} ,
+    {path:'unit-care',component:UnitCareComponent},
 ];
 
