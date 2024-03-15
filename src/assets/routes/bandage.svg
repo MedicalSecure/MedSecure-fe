@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<style>.cls-1{fill:#ff005c;}</style>
+</defs>
+<title/>
+<g id="Bandage">
+<rect class="cls-1" height="7.07" transform="translate(-9.32 22.5) rotate(-45)" width="11.31" x="16.84" y="18.96"/>
+<rect class="cls-1" height="7.07" transform="translate(-3.94 9.5) rotate(-45)" width="11.31" x="3.84" y="5.96"/>
+<path d="M29.71,10.5,21.5,2.29H20.08L16,6.37,11.92,2.29H10.5L2.29,10.5v1.42L6.37,16,2.29,20.08V21.5l8.21,8.21h1.42L16,25.63l4.08,4.08H21.5l8.21-8.21V20.08L25.63,16l4.08-4.08Zm-25.3.71,6.8-6.8,3.38,3.38-6.8,6.8Zm23.18,9.58-6.8,6.8-3.38-3.38,6.8-6.8Zm-4.09-5.5L15.29,23.5l-4.08,4.09-6.8-6.8L8.5,16.71,16.71,8.5l4.08-4.09,6.8,6.8Z"/>
+<rect height="2" transform="translate(-3.51 15.54) rotate(-45)" width="2.83" x="15.59" y="11"/>
+<rect height="2" transform="translate(-4.75 18.54) rotate(-45)" width="2.83" x="18.59" y="14"/>
+<rect height="2" transform="translate(-8.51 13.46) rotate(-45)" width="2.83" x="10.59" y="16"/>
+<rect height="2" transform="translate(-9.75 16.46) rotate(-45)" width="2.83" x="13.59" y="19"/>
+</g>
+</svg>
