@@ -91,14 +91,14 @@ export class ShipsSelectComponent {
 
   onSelectionChange(
     lastAddedItem: object | undefined,
-    //lastSelectedItem: object | undefined,
+    lastSelectedItem: object | undefined,
     lastRemovedItem: object | undefined
   ) {
     // Emit the updated array to the parent component
     this.selectedChipsChange.emit({
       SelectedObjectList: this.selectedObjects,
       lastAddedItem,
-      //lastSelectedItem,
+      lastSelectedItem,
       lastRemovedItem,
     } as onChipsSelectionEmitType);
   }
