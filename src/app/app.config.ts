@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
@@ -13,7 +14,7 @@ export const appConfig: ApplicationConfig = {
 
   providers: [provideRouter(routes) , GanttChartComponent ,
     provideDaterangepickerLocale({separator: ' - ', applyLabel: 'Okay',}), 
-        provideAnimationsAsync(), provideAnimations()]
+        provideAnimationsAsync(), provideAnimations(), provideHttpClient()]
 
 };
 
