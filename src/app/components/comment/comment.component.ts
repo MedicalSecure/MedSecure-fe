@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { bacpatient } from '../bacPatient/bacPatient.component';
+import { bacpatient } from '../../pages/bacPatient/bacPatient.component';
 @Component({
   selector: 'app-comment',
   standalone: true,

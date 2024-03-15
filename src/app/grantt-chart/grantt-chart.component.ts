@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { ELEMENT_DATA, Medicine, Posology, bacpatient } from '../bacPatient/bacPatient.component';
+import { ELEMENT_DATA, Medicine, Posology, bacpatient } from '../pages/bacPatient/bacPatient.component';
 
 @Component({
   selector: 'app-grantt-chart',

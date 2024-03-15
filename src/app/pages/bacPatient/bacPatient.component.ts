@@ -14,13 +14,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ScheduleComponent } from "../components/schedule/schedule.component";
+import { ScheduleComponent } from "../../components/schedule/schedule.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
-import { MessageComponent } from "../message/message.component";
+import { MessageComponent } from "../../message/message.component";
 import { MatTabsModule } from '@angular/material/tabs';
-import { DialogOverviewExampleDialogComponent } from '../dialog/dialog-overview-example-dialog.component';
-import { CommentComponent } from "../comment/comment.component";
+import { DialogOverviewExampleDialogComponent } from '../../dialog/dialog-overview-example-dialog.component';
+import { CommentComponent } from "../../components/comment/comment.component";
 
 @Component({
   selector: 'table-pagination-example',

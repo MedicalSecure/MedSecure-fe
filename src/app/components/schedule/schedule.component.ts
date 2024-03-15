@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Posology } from '../../bacPatient/bacPatient.component';
+import { Posology } from '../../pages/bacPatient/bacPatient.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogOverviewExampleDialogComponent } from '../../dialog/dialog-overview-example-dialog.component';

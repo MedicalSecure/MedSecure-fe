@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ELEMENT_DATA, bacpatient } from '../bacPatient/bacPatient.component';
+import { ELEMENT_DATA, bacpatient } from '../pages/bacPatient/bacPatient.component';
 
 @Component({
   selector: 'app-kanban',
