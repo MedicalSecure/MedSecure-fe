@@ -11,10 +11,10 @@ export const routes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'page1', component: Page1Component } ,
     { path: 'widget', component:WidgetsPageComponent },
-    { path: 'ScatterCharts', component: ScatterChartsComponent },
-    { path: 'SelectComponent', component:SelectComponent },
-    { path: 'ChipsInputComponent', component:ChipsInputComponent },
-    { path: 'DetectionTempComponent', component:DetectionTempComponent },
+    { path: 'scattercharts', component: ScatterChartsComponent },
+    { path: 'select', component:SelectComponent },
+    { path: 'chipsinput', component:ChipsInputComponent },
+    { path: 'detectiontemp', component:DetectionTempComponent },
 ];
 
 
