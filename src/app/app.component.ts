@@ -4,14 +4,16 @@ import { IndexComponent } from "./pages/index/index.component";
 import { CalendarEvent, CalendarEventAction } from 'angular-calendar';
 import { CalendarShedulerComponent  } from './components/calendar-scheduler/calendar-scheduler.component';
 import { HttpClient } from '@angular/common/http';
+import '@angular/localize/init'
+import { AIPromptModule } from '@progress/kendo-angular-conversational-ui';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [RouterOutlet, IndexComponent]
+    imports: [RouterOutlet, IndexComponent , AIPromptModule],
+    schemas: [NO_ERRORS_SCHEMA]
 })
 export class AppComponent {
 
