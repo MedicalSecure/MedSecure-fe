@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { MedicationSearchComponent } from './medication-search/medication-search.component';
+import { MedicationSearchComponent } from './components/medication-search/medication-search.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { Page1Component } from './pages/page1/page1.component';
-import { PharmacyComponent } from './pharmacy/pharmacy.component';
+import { PharmacyComponent } from './pages/pharmacy/pharmacy.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

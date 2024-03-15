@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
-import { MedicationType } from '../pages/index/index.component';
+import { MedicationType } from '../../pages/index/index.component';
 
 
 @Component({
