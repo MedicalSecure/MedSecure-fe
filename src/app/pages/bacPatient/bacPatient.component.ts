@@ -17,7 +17,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScheduleComponent } from "../../components/schedule/schedule.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
-import { MessageComponent } from "../../message/message.component";
+import { MessageComponent } from "../../components/message/message.component";
 import { MatTabsModule } from '@angular/material/tabs';
 import { DialogOverviewExampleDialogComponent } from '../../dialog/dialog-overview-example-dialog.component';
 import { CommentComponent } from "../../components/comment/comment.component";
