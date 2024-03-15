@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MessageComponent } from "../message/message.component";
+import { MessageComponent } from "../components/message/message.component";
 export interface DialogData {
   animal: string;
   name: string;
