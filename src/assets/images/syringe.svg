@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="100px" height="200px" viewBox="-5 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  <g id="syringe-2" transform="translate(-7 -2)">
+    <path id="secondary" fill="#2ca9bc" d="M15,17V8H9v9a1,1,0,0,0,1,1h4A1,1,0,0,0,15,17Z"/>
+    <path id="primary" d="M10,3h4M12,8V3M8,8h8m-1,9V8H9v9a1,1,0,0,0,1,1h4A1,1,0,0,0,15,17Zm-3,1v3" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+</svg>
