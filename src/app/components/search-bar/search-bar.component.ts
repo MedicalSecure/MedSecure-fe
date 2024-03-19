@@ -1,10 +1,5 @@
 import { MatSelectModule } from '@angular/material/select';
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,10 +30,10 @@ import { MatTooltip } from '@angular/material/tooltip';
     MatAutocompleteModule,
     ReactiveFormsModule,
     MatOptionModule,
-    MatTooltip
+    MatTooltip,
   ],
   templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.css'
+  styleUrl: './search-bar.component.css',
 })
 export class SearchBarComponent implements OnInit {
   searchControl = new FormControl();
@@ -47,7 +42,6 @@ export class SearchBarComponent implements OnInit {
   Medications: Medications[] = [];
   filteredMedications: Observable<Medications[]>;
   selectedMedications: Medications[] = [];
-
 
   @Output() searchMedicationsChange = new EventEmitter<Medications[]>();
 
@@ -76,7 +70,7 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
-  openDialog(medication: Medications): void {
+  onChangeSelectedMedication(medication: Medications): void {
     if (!this.selectedMedications.includes(medication)) {
       this.selectedMedications.push(medication);
       this.emitSelectedMedications();
@@ -84,8 +78,12 @@ export class SearchBarComponent implements OnInit {
     this.searchControl.setValue('');
   }
 
+  test($event: any) {
+    console.log($event);
+  }
+
   onSelectionChange(event: MatChipListboxChange) {
-    this.searchKey = event.source.value
+    this.searchKey = event.source.value;
     this.emitSelectedMedications();
   }
 
@@ -94,9 +92,9 @@ export class SearchBarComponent implements OnInit {
       case 'Nom':
         return medication['Nom'];
       case 'Laboratoire':
-        return medication['Laboratoire']; 
+        return medication['Laboratoire'];
       case 'Indications':
-        return medication['Indications']; 
+        return medication['Indications'];
       default:
         return '';
     }
@@ -113,5 +111,4 @@ export class SearchBarComponent implements OnInit {
   private emitSelectedMedications(): void {
     this.searchMedicationsChange.emit(this.selectedMedications);
   }
-  
 }

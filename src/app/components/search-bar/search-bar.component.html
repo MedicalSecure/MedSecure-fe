@@ -9,7 +9,6 @@
           [matAutocomplete]="auto"
           class="form-control custom-width-rem custom-height custom-border-style custom-padding-right"
           style="border-color: white"
-          
         />
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
           <ng-container
@@ -17,8 +16,7 @@
             class="list"
           >
             <mat-option
-              (click)="openDialog(medication)"
-              [value]="medication"
+              (onSelectionChange)="onChangeSelectedMedication(medication)"
               class="result"
             >
               {{ getMedicationProperty(medication) }}
