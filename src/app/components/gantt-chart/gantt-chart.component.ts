@@ -2,13 +2,13 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { ELEMENT_DATA, Medicine, Posology, bacpatient } from '../../pages/bacPatient/bacPatient.component';
 
 @Component({
-  selector: 'app-grantt-chart',
+  selector: 'app-gantt-chart',
   standalone: true,
   imports: [],
-  templateUrl: './grantt-chart.component.html',
-  styleUrl: './grantt-chart.component.css'
+  templateUrl: './gantt-chart.component.html',
+  styleUrl: './gantt-chart.component.css'
 })
-export class GranttChartComponent implements OnInit{
+export class GanttChartComponent implements OnInit{
 calculateQuantity( be:number , ae:number):number {
   return be+ae ;
 }
@@ -41,8 +41,6 @@ getUniqueRooms(): Map<number, bacpatient[]> {
    }
   });
   return uniqueRoomsMap;
- 
-  
 }
 getMedicineByHour(hour: string , name : string): Medicine[] {
   const medicines = [];
