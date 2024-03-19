@@ -78,10 +78,6 @@ export class SearchBarComponent implements OnInit {
     this.searchControl.setValue('');
   }
 
-  test($event: any) {
-    console.log($event);
-  }
-
   onSelectionChange(event: MatChipListboxChange) {
     this.searchKey = event.source.value;
     this.emitSelectedMedications();
