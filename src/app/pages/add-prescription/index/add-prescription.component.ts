@@ -25,10 +25,11 @@ import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-ca
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 3;
+  stepNumber: number = 1;
   stepsLimit: number = 3;
   selectedDiagnosis: any = [];
   selectedPatient: patientType | undefined;
+  autoPageSwitchOnPatientSelection: boolean = false;
 
   private _nextButtonContent = {
     label: 'next',
@@ -50,7 +51,11 @@ export class AddPrescriptionComponent {
   onSelectPatientChange(patient: patientType | undefined) {
     if (patient == undefined) {
       this.selectedPatient = undefined;
-      this.stepNumber = 0;
+      this.stepNumber = 1;
+    } else {
+      if (this.autoPageSwitchOnPatientSelection && this.stepNumber == 1) {
+        this.SwitchToStep(2);
+      }
     }
     this._updateButtonsState();
   }

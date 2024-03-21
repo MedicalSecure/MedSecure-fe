@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-sn.pipe';
 import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
@@ -20,9 +27,10 @@ import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-
   templateUrl: './patient-select.component.html',
   styleUrl: './patient-select.component.css',
 })
-export class PatientSelectComponent {
+export class PatientSelectComponent implements OnChanges {
   @Input() selectedPatient: patientType | undefined = undefined;
   @Output() selectedPatientChange = new EventEmitter<patientType | undefined>();
+  @Input() clearTextAfterEachSearch:boolean=false;
   @Input()
   dataList: patientType[] = [
     { sn: '001', name: 'John', sex: 'Male', age: 30, height: 180 },
@@ -38,24 +46,18 @@ export class PatientSelectComponent {
   ];
   checked: boolean = true;
   searchTerm: string = '';
-  stepNumber: number = 0;
 
-  onClickPatient(patient: patientType | undefined) {
-    if (patient != undefined) {
-      this.stepNumber = 1;
-    }
+  onClickPatient(patient: patientType) {
     this.selectedPatientChange.emit(patient);
     this.selectedPatient = patient;
   }
 
-  SwitchToStep(index: number) {
-    if (this._validatePageSwitch(index)) this.stepNumber = index;
-  }
-  _validatePageSwitch(index: number): Boolean {
-    if (index > 0) {
-      if (this.selectedPatient == undefined) return false;
-    }
-    return true;
+  ngOnChanges(changes: SimpleChanges) {
+    if(!this.clearTextAfterEachSearch) return;
+    let newChange = changes['selectedPatient'];
+     if (newChange && !newChange.firstChange) {
+      if (this.selectedPatient === undefined) this.searchTerm = '';
+    } 
   }
 }
 export type patientType = {

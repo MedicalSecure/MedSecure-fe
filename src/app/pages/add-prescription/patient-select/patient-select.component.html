@@ -31,7 +31,7 @@
 </div>
 } -->
 
-<div [className]="stepNumber != 0 && 'd-none'">
+<div [className]="selectedPatient != undefined && ' d-none'">
   <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
     <input
       type="text"
@@ -50,19 +50,6 @@
       value="Search"
     />
   </div>
-  @if(selectedPatient){
-  <div class="d-flex gap-3 pt-2 justify-content-center" style="height: 2rem">
-    <p style="margin: 0" class="align-self-center">Selected Patient :</p>
-    <span class="text-primary fw-bold align-self-center">
-      SN : {{ selectedPatient.sn }} | {{ selectedPatient.name }} -
-      {{ selectedPatient.age }} years</span
-    >
-    <mat-icon class="align-self-center" (click)="onClickPatient(undefined)"
-      >close</mat-icon
-    >
-  </div>
-  }
-</div>
 
 <table class="table table-responsive">
   <thead>
@@ -88,3 +75,4 @@
     </tr>
   </tbody>
 </table>
+</div>

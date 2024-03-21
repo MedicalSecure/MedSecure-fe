@@ -33,6 +33,7 @@ import {
   medicationType,
   styleClass,
 } from '../../../types';
+import { MedicationSearchComponent } from '../../../components/medication-search/medication-search.component';
 
 @Component({
   selector: 'app-prescribe-medication',
@@ -54,6 +55,7 @@ import {
     PartsOfDayComponent,
     DatepickerRangePopupComponent,
     ToggleButtonComponent,
+    MedicationSearchComponent,
   ],
   templateUrl: './prescribe-medication.component.html',
   styleUrl: './prescribe-medication.component.css',
