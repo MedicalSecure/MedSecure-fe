@@ -21,7 +21,6 @@ import { Observable, map, startWith } from 'rxjs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
-import { SYRINGE_ICON } from '../../../../assets/icons/icons';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { R } from '@angular/cdk/keycodes';
@@ -70,7 +69,6 @@ export class PrescribeMedicationComponent {
   selectedPatient: patientType | undefined;
   @Output() onBackClick = new EventEmitter<void>();
   SelectedMedicationUnit: string = 'Unit';
-  syringeIcon: string = SYRINGE_ICON;
   dummyData: any[] = [
     { index: 1, label: 'test', value: 5555, x: [] },
     { index: 9, label: 'test2', value: 54545 },
