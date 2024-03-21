@@ -12,7 +12,7 @@ import { ChipsInputComponent } from './components/chips-input/chips-input.compon
 import { DetectionTempComponent } from './components/detection-temp/detection-temp.component';
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
-import { AddPrescriptionComponent } from './pages/add-prescription/add-prescription.component';
+import { AddPrescriptionComponent } from './pages/add-prescription/index/add-prescription.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

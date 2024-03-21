@@ -1,8 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-  ShipsSelectComponent,
-  onChipsSelectionEmitType,
-} from '../../../components/chips-select/chips-select.component';
+
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
@@ -41,7 +38,6 @@ import {
   selector: 'app-prescribe-medication',
   standalone: true,
   imports: [
-    ShipsSelectComponent,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,

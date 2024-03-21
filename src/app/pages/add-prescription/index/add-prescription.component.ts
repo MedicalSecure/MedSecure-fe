@@ -1,14 +1,14 @@
 import { Component, EventEmitter } from '@angular/core';
-import { AddSymptomsComponent } from './add-symptoms/add-symptoms.component';
+import { AddSymptomsComponent } from '../add-symptoms/add-symptoms.component';
 import {
   PatientSelectComponent,
   patientType,
-} from './patient-select/patient-select.component';
-import { PrescribeMedicationComponent } from './prescribe-medication/prescribe-medication.component';
-import { onChipsSelectionEmitType } from '../../components/chips-select/chips-select.component';
+} from '../patient-select/patient-select.component';
+import { PrescribeMedicationComponent } from '../prescribe-medication/prescribe-medication.component';
+import { onChipsSelectionEmitType } from '../../../components/chips-select/chips-select.component';
 import { MatIcon } from '@angular/material/icon';
-import { WizardHeaderComponent } from '../../components/wizard-header/wizard-header.component';
-import { PatientInfoCardsComponent } from './patient-info-cards/patient-info-cards.component';
+import { WizardHeaderComponent } from '../../../components/wizard-header/wizard-header.component';
+import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
 
 @Component({
   selector: 'app-add-prescription',
