@@ -402,7 +402,7 @@ export const ELEMENT_DATA : bacpatient[] = [
     ],
     toServe: 10,
     served: 3,
-    status: 'Pending',
+    status: 'Pending...',
     add: 'Add 4',
     servingDate: new Date()
   },
@@ -480,7 +480,7 @@ export const ELEMENT_DATA : bacpatient[] = [
     ],
     toServe: 8,
     served: 2,
-    status: 'Pending',
+    status: 'Pending...',
     add: 'Add 6',
     servingDate: new Date()
   }
