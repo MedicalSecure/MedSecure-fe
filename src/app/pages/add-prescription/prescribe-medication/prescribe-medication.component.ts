@@ -3,7 +3,6 @@ import {
   ShipsSelectComponent,
   onChipsSelectionEmitType,
 } from '../../../components/chips-select/chips-select.component';
-import { DatePicker } from '../../../shared/date-picker/date-picker.component';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
@@ -43,7 +42,6 @@ import {
   standalone: true,
   imports: [
     ShipsSelectComponent,
-    DatePicker,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,

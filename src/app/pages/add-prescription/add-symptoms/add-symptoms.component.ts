@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { DatePicker } from '../../../shared/date-picker/date-picker.component';
 import {
   ShipsSelectComponent,
   onChipsSelectionEmitType,
@@ -23,7 +22,6 @@ import { patientType } from '../patient-select/patient-select.component';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    DatePicker,
     ShipsSelectComponent,
     DynamicMultipleSelectsComponent,
     HumanBodyViewerComponent,
