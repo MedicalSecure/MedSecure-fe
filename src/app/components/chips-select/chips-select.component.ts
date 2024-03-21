@@ -216,21 +216,23 @@ export class ShipsSelectComponent {
     if (!this.fullData || this.fullData.length == 0) return;
     if (!this.fullData[0].hasOwnProperty(this.searchPropertyName)) {
       throw new TypeError(
-        'chip select: ' +
-          this.customLabel +
+        'Chip select component : ' +
           " the provided data doesn't contain the searchPropertyName : " +
-          this.searchPropertyName
+          this.searchPropertyName +
+          ' || Component Label : ' +
+          this.customLabel
       );
     }
     let searchablePropertyType =
       typeof this.fullData[0][this.searchPropertyName];
-    if (!(searchablePropertyType in ['number', 'string'])) {
+    if (['number', 'string'].includes(searchablePropertyType) == false) {
       throw new TypeError(
-        'chip select: ' +
-          this.customLabel +
-          ' the provided searchPropertyName ( ' +
+        'Chip select component : ' +
+          'the provided searchPropertyName ( ' +
           this.searchPropertyName +
-          " ) isn't of type String Or Number"
+          " ) isn't of type String Or Number" +
+          ' || Component Label : ' +
+          this.customLabel
       );
     }
   }
