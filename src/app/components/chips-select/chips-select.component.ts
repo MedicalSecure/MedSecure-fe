@@ -98,7 +98,7 @@ export class ShipsSelectComponent {
     this.selectedChipsChange.emit({
       SelectedObjectList: this.selectedObjects,
       lastAddedItem,
-      //lastSelectedItem,
+      lastSelectedItem,
       lastRemovedItem,
     } as onChipsSelectionEmitType);
   }
@@ -179,10 +179,6 @@ export class ShipsSelectComponent {
     this._isAdditionEnabled = isAdditionEnabled;
   }
 
-  onClickSelectedChip(object: any) {
-    console.log(object);
-  }
-
   private _addChipToSelection(newChip: any, isAdded = false): void {
     this.selectedObjects.push(newChip);
     this.ObjectControl.setValue(null);
@@ -228,7 +224,7 @@ export class ShipsSelectComponent {
     }
     let searchablePropertyType =
       typeof this.fullData[0][this.searchPropertyName];
-    /* if (!(searchablePropertyType in ['number', 'string'])) {
+    if (!(searchablePropertyType in ['number', 'string'])) {
       throw new TypeError(
         'chip select: ' +
           this.customLabel +
@@ -236,7 +232,7 @@ export class ShipsSelectComponent {
           this.searchPropertyName +
           " ) isn't of type String Or Number"
       );
-    } */
+    }
   }
 }
 

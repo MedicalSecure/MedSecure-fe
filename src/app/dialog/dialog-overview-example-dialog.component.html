@@ -1,0 +1,7 @@
+<mat-dialog-content style="height: 50%; width: 50%;">
+  <app-messages></app-messages>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

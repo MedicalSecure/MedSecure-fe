@@ -129,10 +129,11 @@ export type wizardStepType = {
 
 <app-wizard-header
     (currentStepChange)="SwitchToStep($event)"
-    [switchCondition]="selectedPatient != undefined"
-    [currentStep]="stepNumber"
-    [size]="3"
-    [IconSizeRatio]="0.6"
+    [switchCondition]="selectedPatient != undefined"     ***optional****
+    [currentStep]="stepNumber"    ***optional****
+    [size]="3"     ***optional****
+    [IconSizeRatio]="0.6"     ***optional****
+    [steps]= yourArrayHere 
   ></app-wizard-header>
   
 */

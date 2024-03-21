@@ -32,7 +32,12 @@ import {
 import { patientType } from '../patient-select/patient-select.component';
 import { DatepickerRangePopupComponent } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
 import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
-import { styleClass } from '../../../types';
+import {
+  commentType,
+  medicationHourType,
+  medicationType,
+  styleClass,
+} from '../../../types';
 
 @Component({
   selector: 'app-prescribe-medication',
@@ -451,32 +456,9 @@ export const _filterMedication = (opt: string[], value: string): string[] => {
   return opt.filter((item) => item.toLowerCase().includes(filterValue));
 };
 
-export type medicationType = {
-  medicationId: string;
-  name: string;
-  dispenseValue: number;
-  dispenseUnit: string;
-  startDate: Date;
-  consumptionDays: number;
-  isForceOrder?: boolean;
-  administrationHours: Set<medicationHourType>;
-  dispenseCaution?: string;
-  comments: Array<commentType>;
-};
 interface DayHoursBoundaries {
   [category: string]: number[]; // Use index signature for dynamic categories
 }
-export type medicationHourType = {
-  hour: number;
-  isBeforeFood: boolean;
-};
-export type commentType = {
-  id?: string;
-  label?: string;
-  content: string;
-  labelClass?: string;
-  labelStyle?: styleClass;
-};
 
 const _initialPartsOfDayHours: hourType[][] = [
   // Late Night

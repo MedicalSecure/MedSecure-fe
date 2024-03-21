@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { medicationType } from '../../pages/add-prescription/prescribe-medication/prescribe-medication.component';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { medicationType } from '../../types';
 
 @Component({
   selector: 'app-card-medication',

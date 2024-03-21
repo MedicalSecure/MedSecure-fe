@@ -14,6 +14,12 @@ body {
   display: none;
 }
 
+.step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .step-wrapper.active {
   display: block;
 }
@@ -22,7 +28,6 @@ body {
   border-collapse: separate;
   display: table;
   margin-left: 0px;
-  margin-bottom: 0px;
   position: relative;
   table-layout: fixed;
   text-align: center;

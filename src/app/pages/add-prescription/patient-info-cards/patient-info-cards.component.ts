@@ -3,8 +3,8 @@ import { patientType } from '../patient-select/patient-select.component';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { medicationType } from '../prescribe-medication/prescribe-medication.component';
 import { CardMedicationComponent } from '../../../components/card-medication/card-medication.component';
+import { medicationType } from '../../../types';
 
 @Component({
   selector: 'app-patient-info-cards',

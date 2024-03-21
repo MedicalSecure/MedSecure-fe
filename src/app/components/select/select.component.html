@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-md-3">
+    <select
+      class="form-select form-select-lg mb-3"
+      aria-label=".form-select-lg example"
+     (change)="onSelectUniteSoin($event)"
+    >
+      <option disabled selected>Choisissez une unité de soin</option>
+      <option *ngFor="let uniteSoin of unitesSoins" [value]="uniteSoin">{{ uniteSoin.name }}</option>
+    </select>
+  </div>
+</div>
+<div *ngIf="selectedUniteSoin"> 
+ <app-detection-temp></app-detection-temp>
+
+</div>
