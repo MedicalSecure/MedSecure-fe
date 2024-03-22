@@ -1,24 +1,23 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { DashedComponent } from '../../components/charts/dashed/dashed.component'
-import { ColumnChartsComponent } from '../../components/charts/column-charts/column-charts.component'
-import { CustomAngleCircleComponent } from '../../components/charts/custom-angle-circle/custom-angle-circle.component'
-import { CustomDataLabelsBarComponent } from '../../components/charts/custom-data-labels-bar/custom-data-labels-bar.component'
+import { chartsmostmedicationComponent } from '../../components/charts/charts-mostmedication/charts-mostmedication.component'
+import { TriCheckCircleProgressComponent } from '../../components/charts/tricheckcircle-progress/tricheckcircle-progress.component'
+import { ChartsListeMedstockComponent } from '../../components/charts/charts-liste-medstock/charts-liste-medstock.component'
 import { CardComponent } from '../../components/card/card.component'
 import { RadialbarChartsComponent, ChartOptionsCircle } from '../../components/charts/radialbar-charts/radialbar-charts.component'
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
-import { formatDate } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ScatterChartsComponent } from '../../components/charts/scatter-charts/scatter-charts.component'
-import { DetectionTempComponent } from '../../components/detection-temp/detection-temp.component'
-//import {SelectComponent} from '../../components/select/select.component'
+import { ChartsScatterMedComponent } from '../../components/charts/charts-scatter-med/charts-scatter-med.component'
+import { MultiSenseEnviroScanComponent } from '../../components/MultiSense-EnviroScan/MultiSense-EnviroScan.component'
+
 @Component({
   selector: 'app-widgets-page',
   standalone: true,
-  imports: [MatProgressSpinnerModule, HttpClientModule, DashedComponent, ColumnChartsComponent,
-    CustomAngleCircleComponent, CustomDataLabelsBarComponent, CardComponent,
-    RadialbarChartsComponent, ScatterChartsComponent, DetectionTempComponent],
+  imports: [MatProgressSpinnerModule, HttpClientModule, DashedComponent, chartsmostmedicationComponent,
+    TriCheckCircleProgressComponent, ChartsListeMedstockComponent, CardComponent,
+    RadialbarChartsComponent, ChartsScatterMedComponent, MultiSenseEnviroScanComponent],
   templateUrl: './widgets-page.component.html',
   styleUrl: './widgets-page.component.css'
 })
@@ -45,7 +44,7 @@ export class WidgetsPageComponent implements OnInit {
 
 
   getJsonDataMedication(): void {
-    const jsonFilePath = 'assets/data/medication.json'; // Chemin vers votre fichier JSON
+    const jsonFilePath = 'assets/data/medication.json'; 
     this.http.get(jsonFilePath).subscribe(
       (data: any) => {
         this.jsonData = data;

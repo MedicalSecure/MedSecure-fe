@@ -1,33 +1,33 @@
 <div class="container-fluid">
 
-<app-detection-temp></app-detection-temp>
+<app-multisense-enviroscan></app-multisense-enviroscan>
   <br />
   <div class="row">
     <div class="col-md-6">
   
-  <app-column-charts [mostmedication]="mostUsedMedicationsByMonth"
+  <app-charts-mostmedication [mostmedication]="mostUsedMedicationsByMonth"
   [leastmedication]="leastUsedMedicationsByMonth"
   [datacateg]="DateUsedMedicationsByMonth"
-  ></app-column-charts>
+  ></app-charts-mostmedication>
     </div>
     <div class="col-md-6">
-      <app-custom-data-labels-bar [jsonData]="Datastock"></app-custom-data-labels-bar>
+      <app-charts-liste-medstock [jsonData]="Datastock"></app-charts-liste-medstock>
     </div>
   </div>
   <br />
   <div class="row">
     <div class="col-md-6">
-      <app-custom-angle-circle
+      <app-tricheckcircle-progress
       [checkin]="checkin" [checkout]="checkout" [register]="register"
-      ></app-custom-angle-circle>
+      ></app-tricheckcircle-progress>
     </div>
   </div>
   <br>
   <div >
     <div >
-      <app-scatter-charts
+      <app-charts-scatter-med
       [prescriptions]="Dataprescription"
-      ></app-scatter-charts>
+      ></app-charts-scatter-med>
     </div>
   </div>
 </div>
