@@ -14,6 +14,7 @@ import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetMedecineComponent } from './pages/widget-medecine/widget-medecine.component';
 
+
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
@@ -26,5 +27,6 @@ export const routes: Routes = [
     {path:'selectbo',component:UnitSelectEnviroMonitorComponent},
     {path:'selectmat',component:ChipUnitSelectorEnviroMonitor},
     {path:'WidgetsPageComponent',component:WidgetsPageComponent},
+
 ];
 
