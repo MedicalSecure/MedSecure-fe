@@ -1,11 +1,9 @@
 
 import { Component, OnInit, Input } from '@angular/core';
-import { DashedComponent } from '../../components/charts/dashed/dashed.component'
-import { chartsmostmedicationComponent } from '../../components/charts/charts-mostmedication/charts-mostmedication.component'
 import { TriCheckCircleProgressComponent } from '../../components/charts/tricheckcircle-progress/tricheckcircle-progress.component'
 import { ChartsListeMedstockComponent } from '../../components/charts/charts-liste-medstock/charts-liste-medstock.component'
 import { CardComponent } from '../../components/card/card.component'
-import { RadialbarChartsComponent, ChartOptionsCircle } from '../../components/charts/radialbar-charts/radialbar-charts.component'
+import { RadialbarChartsComponent } from '../../components/charts/radialbar-charts/radialbar-charts.component'
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -15,7 +13,7 @@ import { MultiSenseEnviroScanComponent } from '../../components/MultiSense-Envir
 @Component({
   selector: 'app-widgets-page',
   standalone: true,
-  imports: [MatProgressSpinnerModule, HttpClientModule, DashedComponent, chartsmostmedicationComponent,
+  imports: [MatProgressSpinnerModule, HttpClientModule,
     TriCheckCircleProgressComponent, ChartsListeMedstockComponent, CardComponent,
     RadialbarChartsComponent, ChartsScatterMedComponent, MultiSenseEnviroScanComponent],
   templateUrl: './widgets-page.component.html',

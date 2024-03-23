@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DashedComponent } from '../charts/dashed/dashed.component'
+import { DetectionEnvironnement } from '../charts/detection-environnement/detection-environnement.component'
 import { ChartOptionsCircle } from '../charts/radialbar-charts/radialbar-charts.component'
 import { RadialbarChartsComponent} from '../charts/radialbar-charts/radialbar-charts.component'
 import { HttpClientModule } from '@angular/common/http';
@@ -10,7 +10,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-multisense-enviroscan',
   standalone: true,
-  imports: [MatProgressSpinnerModule,HttpClientModule, DashedComponent,RadialbarChartsComponent],
+  imports: [MatProgressSpinnerModule,HttpClientModule, DetectionEnvironnement,RadialbarChartsComponent],
   templateUrl: './MultiSense-EnviroScan.component.html',
   styleUrl: './MultiSense-EnviroScan.component.css'
 })

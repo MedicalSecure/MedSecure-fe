@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashedComponent } from './dashed.component';
+import { DetectionEnvironnement } from './detection-environnement.component';
 
-describe('DashedComponent', () => {
-  let component: DashedComponent;
-  let fixture: ComponentFixture<DashedComponent>;
+describe('DetectionEnvironnement', () => {
+  let component: DetectionEnvironnement;
+  let fixture: ComponentFixture<DetectionEnvironnement>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashedComponent]
+      imports: [DetectionEnvironnement]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DashedComponent);
+    fixture = TestBed.createComponent(DetectionEnvironnement);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

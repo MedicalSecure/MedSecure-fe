@@ -31,13 +31,13 @@ export type ChartOptions = {
 
 
 @Component({
-  selector: 'app-dashed',
+  selector: 'app-detection-environnement',
   standalone: true,
   imports: [NgApexchartsModule],
-  templateUrl: './dashed.component.html',
-  styleUrl: './dashed.component.css'
+  templateUrl: './detection-environnement.component.html',
+  styleUrl: './detection-environnement.component.css'
 })
-export class DashedComponent implements OnChanges {
+export class DetectionEnvironnement implements OnChanges {
   @ViewChild("chart") chart!: ChartComponent;
   @Input() datatemp: number[] = [];
   @Input() datahum: number[] = [];

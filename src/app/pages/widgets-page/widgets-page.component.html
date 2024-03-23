@@ -4,24 +4,17 @@
   <br />
   <div class="row">
     <div class="col-md-6">
-  
-  <app-charts-mostmedication [mostmedication]="mostUsedMedicationsByMonth"
-  [leastmedication]="leastUsedMedicationsByMonth"
-  [datacateg]="DateUsedMedicationsByMonth"
-  ></app-charts-mostmedication>
+      
+  <app-tricheckcircle-progress
+  [checkin]="checkin" [checkout]="checkout" [register]="register"
+  ></app-tricheckcircle-progress>
     </div>
     <div class="col-md-6">
       <app-charts-liste-medstock [jsonData]="Datastock"></app-charts-liste-medstock>
     </div>
   </div>
   <br />
-  <div class="row">
-    <div class="col-md-6">
-      <app-tricheckcircle-progress
-      [checkin]="checkin" [checkout]="checkout" [register]="register"
-      ></app-tricheckcircle-progress>
-    </div>
-  </div>
+ 
   <br>
   <div >
     <div >
