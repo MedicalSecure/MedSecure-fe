@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { WizardHeaderComponent, wizardStepType } from '../components/wizard-header/wizard-header.component';
+import {
+  WizardHeaderComponent,
+  wizardStepType,
+} from '../components/wizard-header/wizard-header.component';
 // Interfaces
 
 interface Activity {
@@ -47,18 +50,17 @@ export interface Symptom {
 @Component({
   selector: 'app-register-form',
   standalone: true,
-  imports: [CommonModule, RouterModule,WizardHeaderComponent],
+  imports: [CommonModule, RouterModule, WizardHeaderComponent],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css',
 })
-export class RegisterFormComponent implements OnInit{
-
+export class RegisterFormComponent implements OnInit {
   items: Item[] = [];
-  activities : Activity[]= [];
-  habits : Smoking[]= [];
-  cardio: Item[]= [];
-  allergySymptoms: Symptom[]= [];
-  stepNumber:number=1;
+  activities: Activity[] = [];
+  habits: Smoking[] = [];
+  cardio: Item[] = [];
+  allergySymptoms: Symptom[] = [];
+  stepNumber: number = 1;
 
   steps: wizardStepType[] = [
     {
@@ -88,7 +90,6 @@ export class RegisterFormComponent implements OnInit{
   ];
 
   ngOnInit(): void {
-
     // Load activities
     this.loadActivities();
     // Load habits
@@ -101,8 +102,8 @@ export class RegisterFormComponent implements OnInit{
     this.loadAllergySymptoms();
   }
 
-  SwitchToStep(number:number){
-    this.stepNumber=number
+  SwitchToStep(number: number) {
+    this.stepNumber = number;
   }
   // Function to load activities
   loadActivities(): void {
@@ -121,47 +122,51 @@ export class RegisterFormComponent implements OnInit{
       { value: 'Medium-1', viewValue: 'Medium' },
       { value: 'Heavy-2', viewValue: 'Heavy' },
     ];
-  
   }
 
   // Function to load cardio
   loadCardio(): void {
-    this.cardio =[{
-      id: 'Kidneydiseases',
-      name: 'Cardiovascular risk factors',
-      icon:'',
-      groups: [
-        {
-          name: 'Family history of chronic kidney disease',
-          expand: false,
+    this.cardio = [
+      {
+        id: 'Kidneydiseases',
+        name: 'Cardiovascular risk factors',
+        icon: '',
+        groups: [
+          {
+            name: 'Family history of chronic kidney disease',
+            expand: false,
             checked: false,
-          children: [],
-        },{
-          name: 'Family history of hypertension',
-          expand: false,
+            children: [],
+          },
+          {
+            name: 'Family history of hypertension',
+            expand: false,
             checked: false,
-          children: [],
-        },{
-          name: 'Family history of premature cardiovascular disease',
-          expand: false,
+            children: [],
+          },
+          {
+            name: 'Family history of premature cardiovascular disease',
+            expand: false,
             checked: false,
-          children: [],
-        }]}];
+            children: [],
+          },
+        ],
+      },
+    ];
   }
 
   // Function to load items
-  loadItems(): void 
-  {
+  loadItems(): void {
     this.items = [
       {
         id: 'diabetes',
         name: 'Diabetes',
-        icon:'',
+        icon: '',
         groups: [
           {
             name: 'Type 1 diabetes mellitus',
             expand: false,
-              checked: false,
+            checked: false,
             children: [
               { name: 'Diabetic neuropathy', checked: false },
               { name: 'Diabetic retinopathy', checked: false },
@@ -190,7 +195,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Chronicheartfailure',
         name: 'Chronic heart failure',
-        icon:'<img src="../assets/images/tk8PLM01.svg" width="19" height="30">',
+        icon: '<img src="../assets/images/tk8PLM01.svg" width="19" height="30">',
         groups: [
           {
             name: 'Documented atherosclerotic cardiovascular disease',
@@ -230,12 +235,12 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Dyslipidemia',
         name: 'Dyslipidemia',
-        icon:'',
+        icon: '',
         groups: [
           {
             name: 'Dyslipidemia',
             expand: false,
-              checked: false,
+            checked: false,
             children: [
               { name: 'Patient under lipid-lowering drugs', checked: false },
             ],
@@ -251,12 +256,12 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Kidneydiseases',
         name: 'Kidney diseases',
-        icon:'',
+        icon: '',
         groups: [
           {
             name: 'Acute kidney injury (previous episode)',
             expand: false,
-              checked: false,
+            checked: false,
             children: [],
           },
           {
@@ -285,23 +290,21 @@ export class RegisterFormComponent implements OnInit{
           },
         ],
       },
-      
     ];
-    
   }
 
   selectedIconData!: string;
 
-  selectItem(item: { icon: string; }) {
+  selectItem(item: { icon: string }) {
     const iconData = item.icon;
-    const regex = /src="([^"]+)"/g;  // Regular expression to find the image URL
-  
+    const regex = /src="([^"]+)"/g; // Regular expression to find the image URL
+
     const match = regex.exec(iconData);
     if (match) {
-      const imageUrl = match[1];  // Capture the first group (image URL)
-      console.log(imageUrl);  // This will log the extracted image URL
+      const imageUrl = match[1]; // Capture the first group (image URL)
+      console.log(imageUrl); // This will log the extracted image URL
     } else {
-      console.error("No image URL found in icon data");
+      console.error('No image URL found in icon data');
     }
   }
   // Function to load typesOfAllergies
@@ -318,17 +321,16 @@ export class RegisterFormComponent implements OnInit{
   }
 
   parentCheckbox: boolean = false;
- 
+
   selectedGender: string = '';
   type1Checked: boolean = false;
   type1Expand: boolean = false;
 
   isLinear = false;
-  
 
   expandedElement: Group | null = null;
 
-  toggleExpanded(group:Group): void {
+  toggleExpanded(group: Group): void {
     group.expand = !group.expand;
   }
 
@@ -350,9 +352,9 @@ export class RegisterFormComponent implements OnInit{
     // Handle checkbox change logic
     console.log('Checkbox changed:', event.target.checked, child.name);
   }
-  
+
   constructor(private _formBuilder: FormBuilder) {}
-  
+
   // Region wizard
   currentStep: number = 1; // Initialize current step to 1
 
@@ -374,11 +376,10 @@ export class RegisterFormComponent implements OnInit{
   onCancelClick(): void {
     this.stepNumber = 1;
   }
-  
 
   selectActivity(_t90: any) {
     throw new Error('Method not implemented.');
-    }
+  }
 
   onClick(stepNumber: number): void {
     this.currentStep = stepNumber;
