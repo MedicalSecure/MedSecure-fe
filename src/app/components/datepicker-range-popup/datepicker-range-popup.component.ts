@@ -18,6 +18,12 @@ export class DatepickerRangePopupComponent {
   @Input()
   isMinimalisticView: boolean = true;
 
+  @Input()
+  minDate:Date=new Date('2000/01/01');
+
+  @Input()
+  maxDate:Date=new Date('9999/01/01');
+
   panelStyle: string = 'd-none';
   @Output()
   DateRangeChange: EventEmitter<DateRangeType> =

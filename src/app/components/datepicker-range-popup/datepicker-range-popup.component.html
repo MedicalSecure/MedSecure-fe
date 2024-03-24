@@ -9,6 +9,9 @@
   (onSelect)="onDateSelect()"
   (onClearClick)="onClearClick()"
   (onClickOutside)="onCloseCalender()"
-  [styleClass]=""
+  [inputStyle]='{"width":"fit-content"}'
+  [minDate]="minDate" 
+  [maxDate]="maxDate"
+  
 ></p-calendar>
 <!-- [panelStyle]="{ height: '300px', width: '300px' }" -->
