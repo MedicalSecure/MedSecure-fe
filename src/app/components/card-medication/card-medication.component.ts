@@ -43,7 +43,7 @@ export class CardMedicationComponent {
     medication: medicationType
   ): string | undefined {
     let result;
-    const size = medication.administrationHours.size;
+    const size = medication.administrationHours.length;
     if (size > 1) result = size + ' times a day';
     else if (size == 1) result = 'single time a day';
     return result;

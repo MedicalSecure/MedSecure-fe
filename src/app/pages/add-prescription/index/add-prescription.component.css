@@ -1,13 +1,11 @@
 #add-prescription-body {
   font-family: "Manrope", sans-serif;
-  position: relative;
-  padding-bottom: 2.2rem;
 }
 .container-scroll {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 75vh; /* Takes the available viewport height */
+  height: 80vh; /* Takes the available viewport height */
   overflow-y: auto; /* Enables vertical scrollbar if content overflows */
 }
 @media (max-width: 576px) {

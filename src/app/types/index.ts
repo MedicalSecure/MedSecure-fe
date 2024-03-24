@@ -1,3 +1,6 @@
+import { hourType } from '../components/parts-of-day/parts-of-day.component';
+import { ConsumptionPeriodType } from '../pages/add-prescription/prescribe-medication/prescribe-medication.component';
+
 export type styleClass = { [klass: string]: any } | null | undefined;
 
 export type medicationHourType = {
@@ -12,14 +15,12 @@ export type commentType = {
   labelStyle?: styleClass;
 };
 export type medicationType = {
-  medicationId: string;
-  name: string;
-  dispenseValue: number;
+  id: string;
+  label: string;
   dispenseUnit: string;
-  startDate: Date;
-  consumptionDays: number;
+  consumptionPeriod: ConsumptionPeriodType;
   isForceOrder?: boolean;
-  administrationHours: Set<medicationHourType>;
-  dispenseCaution?: string;
+  administrationHours: hourType[][];
+  Caution?: string;
   comments: Array<commentType>;
 };

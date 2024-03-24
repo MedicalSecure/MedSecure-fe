@@ -33,12 +33,12 @@ export class AddPrescriptionComponent {
 
   private _nextButtonContent = {
     label: 'next',
-    class: 'btn w-100 py-2 m-0 btn-success',
+    class: 'btn w-100 m-0 btn-success fs-6 text-white',
   };
 
   private _backButtonContent = {
     label: 'back',
-    class: 'btn w-100 m-0 btn-warning',
+    class: 'btn w-100 m-0 btn-warning fs-6 text-white',
   };
 
   nextButtonContent: { label: string; class: string } = this._nextButtonContent;

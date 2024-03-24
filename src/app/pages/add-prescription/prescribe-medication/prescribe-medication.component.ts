@@ -19,13 +19,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
-import { R } from '@angular/cdk/keycodes';
+import { MatChipsModule } from '@angular/material/chips';
 import {
   PartsOfDayComponent,
   hourType,
 } from '../../../components/parts-of-day/parts-of-day.component';
 import { patientType } from '../patient-select/patient-select.component';
-import { DatepickerRangePopupComponent } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
+import {
+  DateRangeType,
+  DatepickerRangePopupComponent,
+} from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
 import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
 import {
   commentType,
@@ -56,6 +59,7 @@ import { MedicationSearchComponent } from '../../../components/medication-search
     DatepickerRangePopupComponent,
     ToggleButtonComponent,
     MedicationSearchComponent,
+    MatChipsModule,
   ],
   templateUrl: './prescribe-medication.component.html',
   styleUrl: './prescribe-medication.component.css',
@@ -63,256 +67,174 @@ import { MedicationSearchComponent } from '../../../components/medication-search
 export class PrescribeMedicationComponent {
   @Input()
   selectedPatient: patientType | undefined;
-  @Output() onBackClick = new EventEmitter<void>();
-  SelectedMedicationUnit: string = 'Unit';
-  dummyData: any[] = [
-    { index: 1, label: 'test', value: 5555, x: [] },
-    { index: 9, label: 'test2', value: 54545 },
-    { index: 3, label: 'eeee', value: 555 },
-    { index: 4, label: 'eeee22', value: 55 },
-    { index: 4, label: 'eeeegegege22', value: 55 },
-  ];
-  dosageUnits: string[] = [
-    'Units',
-    'mg (milligrams)',
-    'mcg (micrograms)',
-    'g (grams)',
-    'mL (milliliters)',
-    'cc (cubic centimeters)',
-    'IU (International Units)',
-    'mg/mL',
-    'mg/kg ',
-    'mcg/mL ',
-  ];
-  test: hourType[][] = _initialPartsOfDayHours;
-  selectedMedicationInput = '';
+  @Output() onMedicationsChange = new EventEmitter<medicationType[]>();
+
   isSelectedForceOrder: boolean = false;
   isFilteredForceOrder: boolean = false;
   isEditingMode: boolean = false;
   isCautionEnabled: boolean = false;
-  initialUnit: string = this.dosageUnits[0];
-  commentsList: commentType[] = [];
-  cautionComment: commentType = {
-    id: undefined,
-    label: 'Caution',
-    content: '',
-    labelClass: 'text-warning fw-bold',
-  };
-  selected!: Date | null;
-  public start: Date = new Date('10/07/2017');
-  public end: Date = new Date('11/25/2017');
-  getDater(data: any) {
-    console.log(data);
-  }
-  range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
+  cautionComment: commentType = initialCautionComment;
+  consumptionMinStartDate: Date = new Date();
+
+  selectedMedication: medicationType = _getFormInitialValues();
+  prescribedMedications: medicationType[] = [];
+
+  /* autocomplete medication  search */
+  medicationFormGroup = this._formBuilder.group({
+    medicationNameInputFormControl: '',
   });
-  EndDate = this._formBuilder.group({
-    isPermanent: false,
-    consumptionDays: 7,
-  });
-  private _formInitialValues = {
-    medicationId: '',
-    SIG: '3 times a day',
-    dispenseValue: 1,
-    dispenseUnit: this.dosageUnits[0],
-    startDate: new Date(),
-    consumptionDays: 7,
-    isForceOrder: false,
-    administrationHours: new Set<medicationHourType>(),
-    dispenseCaution: '',
-    comments: [],
-  };
-  dayHoursBoundaries: DayHoursBoundaries = {
-    Morning: [5, 6, 7, 8, 9, 10, 11],
-    Afternoon: [12, 13, 14, 15, 16, 17],
-    Evening: [18, 19, 20, 21],
-    Night: [22, 23, 0, 1, 2, 3, 4],
-  };
-  dayHoursBoundariesKeys: string[] = Object.keys(this.dayHoursBoundaries);
-
-  Medication = this._formBuilder.group<any>(this._formInitialValues);
-
-  medicationForm = this._formBuilder.group({
-    medicationGroup: '',
-  });
-
-  mainAddedMedications: medicationType[] = [];
-
-  MedicationGroups: MedicationGroupType[] = [
-    {
-      letter: 'in stock',
-      names: ['Doliprane', 'Fervex', 'Aspirin'],
-    },
-    {
-      letter: 'out of stock',
-      names: ['ARPL'],
-    },
-  ];
-
   medicationGroupOptions!: Observable<MedicationGroupType[]>;
   constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
-    this.medicationGroupOptions = this.medicationForm
-      .get('medicationGroup')!
+    /* autocomplete */
+    this.medicationGroupOptions = this.medicationFormGroup
+      .get('medicationNameInputFormControl')!
       .valueChanges.pipe(
         startWith(''),
-        map((value) => this._filterMedicationGroup(value || ''))
+        map((value) => this._filterGroup(value || ''))
       );
-    this.SIGFilteredOptions = this.sigFormControl.valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filter(value || ''))
-    );
-    this.isCautionEnabled && this.commentsList.unshift(this.cautionComment);
+
+    /* if is caution enabled by default => add a caution comment at the beginning of the array  */
+    this.isCautionEnabled &&
+      this.selectedMedication.comments.unshift(this.cautionComment);
   }
 
-  onStartDateInputChange(newDate: Date | null): void {
-    if (newDate != null) {
-      this.Medication.setValue({
-        ...this.Medication.getRawValue(),
-        startDate: newDate,
-      });
-    }
+  /* Form inputs change */
+  onSelectedMedicationChange(group: any) {
+    //this.appendMedication();
+    this.selectedMedication = {
+      ..._getFormInitialValues(),
+      id: group.option.value,
+      label: group.option.value,
+      isForceOrder: group.option.group.label === 'out of stock',
+    };
+    this.isSelectedForceOrder = group.option.group.label === 'out of stock';
   }
-
-  sigFormControl = new FormControl('');
-  SigOptions: string[] = [
-    '3 times a day',
-    '5 times a day',
-    'single time : morning',
-    'single time : afternoon',
-  ];
-  SIGFilteredOptions!: Observable<string[]>;
-
-  setIsPermanentToFalse() {
-    this.EndDate.setValue({
-      ...this.EndDate.getRawValue(),
-      isPermanent: false,
-    });
-    this.Medication.setValue({
-      ...this.Medication.getRawValue(),
-      consumptionDays: this.EndDate.getRawValue().consumptionDays,
-    });
-  }
-
-  onIsCautionEnabledChange() {
-    this.isCautionEnabled = !this.isCautionEnabled;
-    if (this.isCautionEnabled) {
+  onIsCautionEnabledChange(caution: boolean) {
+    this.isCautionEnabled = caution;
+    let commentList = this.selectedMedication.comments;
+    if (caution) {
       // Add the caution to the beginning of the array
-      this.commentsList.unshift(this.cautionComment);
+      commentList.unshift(this.cautionComment);
     } else {
       // Remove caution from the array if it exists
-      const index = this.commentsList.indexOf(this.cautionComment);
+      const index = commentList.indexOf(this.cautionComment);
       if (index !== -1) {
-        this.commentsList.splice(index, 1);
+        commentList.splice(index, 1);
       }
     }
   }
-
-  onIsPermanentChange() {
-    const currentEndDate = this.EndDate.getRawValue();
-    const newIsPermanentState = !currentEndDate.isPermanent;
-    this.EndDate.setValue({
-      ...currentEndDate,
-      isPermanent: newIsPermanentState,
-    });
-
+  onIsPermanentChange(newIsPermanentState: boolean) {
+    this.switchIsPermanent(newIsPermanentState);
+    let dateRange = this.selectedMedication.consumptionPeriod.dateRange;
+    if (dateRange === null) {
+      dateRange = getInitialDateRange();
+    }
     if (newIsPermanentState == true) {
-      this.Medication.setValue({
-        ...this.Medication.getRawValue(),
-        consumptionDays: -1,
-      });
+      dateRange[1] = null;
     } else {
-      this.Medication.setValue({
-        ...this.Medication.getRawValue(),
-        consumptionDays: currentEndDate.consumptionDays,
-      });
+      if (dateRange === null || dateRange[0] === null) {
+        dateRange = getInitialDateRange();
+      } else if (dateRange[0] != null) {
+        let oldStartDate = dateRange[0];
+        let newEndDate = getInitialDateRange(oldStartDate)[1];
+        dateRange[1] = newEndDate;
+      }
     }
+    this.selectedMedication.consumptionPeriod.dateRange = [...dateRange];
   }
-
-  onClickFinish() {
-    const CurrentMedication = this.Medication.getRawValue() as medicationType;
-    if (CurrentMedication != null && CurrentMedication.medicationId != '') {
-      this.mainAddedMedications.push(CurrentMedication);
-      this.Medication.setValue(this._formInitialValues);
-      this.isEditingMode == false;
+  onPeriodChange(newDateRange: DateRangeType) {
+    if (newDateRange === null) {
+      //clear button disabling
+      newDateRange = getInitialDateRange();
+      if (this.selectedMedication.consumptionPeriod.isPermanent) {
+        //maintain the old permanent state
+        newDateRange[1] = null;
+      }
     }
-    console.log('finish ');
-    console.log(this.mainAddedMedications);
+    this.selectedMedication.consumptionPeriod.dateRange = [...newDateRange];
+    this.switchIsPermanent(newDateRange[1] === null);
   }
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.SigOptions.filter((option) =>
-      option.toLowerCase().includes(filterValue)
-    );
+  switchIsPermanent(newState: boolean) {
+    this.selectedMedication.consumptionPeriod.isPermanent = newState;
   }
 
+  /* Comments */
   onAddComment() {
-    if (this.commentsList.length > 0) {
-      let lastElement = this.commentsList.at(this.commentsList.length - 1);
-      if (lastElement?.content != '')
-        this.commentsList.push({
+    let commentList = this.selectedMedication.comments;
+    if (commentList.length > 0) {
+      let lastElement = commentList.at(commentList.length - 1);
+      const isLastElementCautionComment = lastElement === this.cautionComment;
+      if (lastElement?.content != '' || isLastElementCautionComment === true)
+        commentList.push({
           id: undefined,
           label: 'Comment',
           content: '',
         });
-    } else if (this.commentsList.length == 0)
-      this.commentsList.push({ id: undefined, label: 'Comment', content: '' });
+    } else if (commentList.length == 0)
+      commentList.push({ id: undefined, label: 'Comment', content: '' });
   }
-
-  onCommentChange(event: any, comment: commentType) {}
-
+  onCommentChange(event: any, comment: commentType) {
+    let commentContent: string = event.value as string;
+    comment.content = commentContent;
+    if (!commentContent || commentContent.trim() === '') {
+      //remove the comment if its empty or whitespace
+      this.onRemoveComment(comment);
+    }
+  }
   onRemoveComment(comment: commentType) {
+    let commentList = this.selectedMedication.comments;
     if (comment === this.cautionComment) {
-      this.onIsCautionEnabledChange();
+      this.onIsCautionEnabledChange(false);
       return;
     }
-    this.commentsList = this.commentsList.filter((item) => {
+    commentList = commentList.filter((item) => {
       return item != comment;
     });
   }
-  onSelectedMedicationChange(group: any) {
-    this.Medication.setValue({
-      ...this.Medication.getRawValue(),
-      medicationId: group.option.value,
-      isForceOrder: group.option.group.label === 'out of stock',
-    });
-    this.isSelectedForceOrder = group.option.group.label === 'out of stock';
-  }
 
-  getNextButtonLabel(): { label: string; class: string } {
-    if (this.isFilteredForceOrder || this.isSelectedForceOrder) {
-      return {
-        label: 'Finish with Order',
-        class: ' btn-outline-warning col-6 m-0',
-      };
-    }
-    return {
-      label: 'Finish',
-      class: 'btn py-2 btn-outline-success col-6 m-0',
-    };
-  }
-
+  /* medications */
   onClickEditMedication(index: number, medication: medicationType) {
     if (this.isEditingMode == true) {
-      return;
+      //if, after checking the current edited one, we can append it,
+      //then we can swap the two medications, first append then proceed to edit the new one
+      if (this.onAppendMedication() == false) return;
     }
     this.isEditingMode = true;
-    this.mainAddedMedications = this.mainAddedMedications.filter(
+    this.prescribedMedications = this.prescribedMedications.filter(
       (item, i) => index != i
     );
-    this.Medication.setValue(medication);
-  }
-
-  onClickRemoveMedication(index: number, medication: medicationType) {
-    this.mainAddedMedications = this.mainAddedMedications.filter((item, i) => {
-      if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
-      return index != i;
+    this.selectedMedication = medication;
+    this.medicationFormGroup.setValue({
+      medicationNameInputFormControl: medication.label,
     });
+  }
+  onClickRemoveMedication(index: number, medication: medicationType) {
+    this.prescribedMedications = this.prescribedMedications.filter(
+      (item, i) => {
+        if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
+        return index != i;
+      }
+    );
     console.log('result ' + this.isFilteredForceOrder);
+  }
+  onAppendMedication(): boolean {
+    const CurrentMedication = this.selectedMedication as medicationType;
+    if (CurrentMedication != null && CurrentMedication.label != '') {
+      this.prescribedMedications.push(CurrentMedication);
+      this.selectedMedication = _getFormInitialValues();
+      this.isEditingMode = false;
+      this.medicationFormGroup.setValue({ medicationNameInputFormControl: '' });
+      if (this.isFilteredForceOrder === false)
+        this.isFilteredForceOrder =
+          CurrentMedication.isForceOrder == undefined
+            ? false
+            : CurrentMedication.isForceOrder;
+      this.onMedicationsChange.emit(this.prescribedMedications);
+      return true;
+    }
+    return false;
   }
   getAppendMedicationButtonLabel(): { label: string; class: string } {
     if (this.isSelectedForceOrder) {
@@ -328,128 +250,44 @@ export class PrescribeMedicationComponent {
       class: 'btn py-2 btn-primary text-white m-0 col-11 ',
     };
   }
-  onClickAppendMedication() {
-    const CurrentMedication = this.Medication.getRawValue() as medicationType;
-    if (CurrentMedication != null && CurrentMedication.medicationId != '') {
-      this.mainAddedMedications.push(CurrentMedication);
-      this.Medication.setValue({
-        ...this._formInitialValues,
-        administrationHours: new Set(),
-      });
-      this.isEditingMode = false;
-      if (this.isFilteredForceOrder === false)
-        this.isFilteredForceOrder =
-          CurrentMedication.isForceOrder == undefined
-            ? false
-            : CurrentMedication.isForceOrder;
+
+  onClickFinish() {
+    const CurrentMedication = this.selectedMedication;
+    if (CurrentMedication != null && CurrentMedication.label != '') {
+      this.prescribedMedications.push(CurrentMedication);
+      this.selectedMedication = _getFormInitialValues();
+      this.isEditingMode == false;
     }
-  }
-  onClickBackEvent(): void {
-    this.onBackClick.emit();
+    console.log('finish ');
+    console.log(this.prescribedMedications);
   }
 
-  getHourClass(hourNumber: number): string {
-    let medicationHour = this.getMedicationHourByHour(hourNumber);
-    if (medicationHour === null) return 'bg-white border ';
-
-    return medicationHour.isBeforeFood
-      ? 'bg-info border hourCircleBtn'
-      : 'bg-primary text-light border hourCircleBtn';
-  }
-
-  onClickDayHour(hourNumber: number) {
-    const CurrentMedication = this.Medication.getRawValue() as medicationType;
-    const currentSelectedHours = CurrentMedication.administrationHours;
-    let medicationHour = this.getMedicationHourByHour(hourNumber);
-    if (medicationHour === null) {
-      currentSelectedHours.add({
-        hour: hourNumber,
-        isBeforeFood: true,
-      });
-      this.Medication.setValue({
-        ...CurrentMedication,
-        administrationHours: currentSelectedHours,
-      });
-      return;
-    }
-    if (medicationHour.isBeforeFood === true) {
-      currentSelectedHours.delete(medicationHour);
-      currentSelectedHours.add({
-        hour: hourNumber,
-        isBeforeFood: false,
-      });
-      this.Medication.setValue({
-        ...CurrentMedication,
-        administrationHours: currentSelectedHours,
-      });
-      return;
-    }
-    currentSelectedHours.delete(medicationHour);
-    this.Medication.setValue({
-      ...CurrentMedication,
-      administrationHours: currentSelectedHours,
-    });
-  }
-
-  onModifyQuantity(increment: number) {
-    const CurrentMedication = this.Medication.getRawValue() as medicationType;
-    if (increment > 0) {
-      this.Medication.setValue({
-        ...CurrentMedication,
-        dispenseValue: CurrentMedication.dispenseValue + increment,
-      });
-      return;
-    }
-    if (CurrentMedication.dispenseValue > 1) {
-      this.Medication.setValue({
-        ...CurrentMedication,
-        dispenseValue: CurrentMedication.dispenseValue + increment,
-      });
-    }
-  }
-
+  /* prescribed/selected medications display */
   getNewlyPrescribedMedicationSig(
     medication: medicationType
   ): string | undefined {
     let result;
-    const size = medication.administrationHours.size;
+    const size = medication.administrationHours.length;
     if (size > 1) result = size + ' times a day';
     else if (size == 1) result = 'single time a day';
     return result;
   }
 
-  getMedicationHourByHour(hourNumber: number): medicationHourType | null {
-    const CurrentMedication = this.Medication.getRawValue() as medicationType;
-    let medicationHour: medicationHourType | null = null;
-    CurrentMedication.administrationHours.forEach((element) => {
-      if (element.hour === hourNumber) {
-        medicationHour = element;
-        return;
-      }
-    });
-    return medicationHour;
-  }
-  private _filterMedicationGroup(value: string): MedicationGroupType[] {
+  private _filterGroup(value: string): MedicationGroupType[] {
     if (value) {
-      return this.MedicationGroups.map((group) => ({
+      return MedicationGroups.map((group) => ({
         letter: group.letter,
-        names: _filterMedication(group.names, value),
-      })).filter((group) => group.names.length > 0);
+        labels: _filterInputAutoCompleteOptions(group.labels, value),
+      })).filter((group) => group.labels.length > 0);
     }
 
-    return this.MedicationGroups;
+    return MedicationGroups;
   }
 }
 export interface MedicationGroupType {
   letter: string;
-  names: string[];
+  labels: string[];
 }
-export const _filterMedication = (opt: string[], value: string): string[] => {
-  const filterValue = value.toLowerCase();
-
-  return opt.filter((item) => item.toLowerCase().includes(filterValue));
-};
-
 interface DayHoursBoundaries {
   [category: string]: number[]; // Use index signature for dynamic categories
 }
@@ -474,3 +312,74 @@ const _initialPartsOfDayHours: hourType[][] = [
   // Dusk
   [{ hour: '22' }, { hour: '23' }],
 ];
+export type ConsumptionPeriodType = {
+  isPermanent: boolean;
+  dateRange: [Date, Date | null] | null;
+};
+
+export const _filterInputAutoCompleteOptions = (
+  opt: string[],
+  value: string
+): string[] => {
+  const filterValue = value.toLowerCase();
+  return opt.filter((item) => item.toLowerCase().includes(filterValue));
+};
+
+const MedicationGroups: MedicationGroupType[] = [
+  {
+    letter: 'in stock',
+    labels: ['Doliprane', 'Fervex', 'Aspirin'],
+  },
+  {
+    letter: 'out of stock',
+    labels: ['ARPL'],
+  },
+];
+
+const initialCautionComment = {
+  id: undefined,
+  label: 'Caution',
+  content: '',
+  labelClass: 'text-warning fw-bold',
+};
+
+const consumptionPeriod: ConsumptionPeriodType = {
+  isPermanent: false,
+  dateRange: getInitialDateRange(),
+};
+function _getFormInitialValues(): medicationType {
+  return {
+    id: '',
+    label: '',
+    dispenseUnit: '',
+    consumptionPeriod: { ...consumptionPeriod },
+    isForceOrder: false,
+    administrationHours: _getACopyOfAdministrationHours(),
+    Caution: '',
+    comments: [],
+  };
+}
+
+function _getACopyOfAdministrationHours(
+  source = _initialPartsOfDayHours
+): hourType[][] {
+  /* get a copy of the objects one by one to change their memory id; */
+  let result: hourType[][] = [];
+  source.forEach((hourGroup: hourType[]) => {
+    let newHoursGroup: hourType[] = [];
+    hourGroup.forEach((hourElement) => {
+      let hourElementClone = { ...hourElement };
+      newHoursGroup.push(hourElementClone);
+    });
+    result.push(newHoursGroup);
+  });
+
+  return result;
+}
+
+function getInitialDateRange(startDay = new Date()): [Date, Date] {
+  let twoWeeksLater = new Date(startDay.getTime() + 14 * 24 * 60 * 60 * 1000);
+  //set the time to midnight
+  twoWeeksLater.setHours(0, 0, 0, 0);
+  return [startDay, twoWeeksLater];
+}

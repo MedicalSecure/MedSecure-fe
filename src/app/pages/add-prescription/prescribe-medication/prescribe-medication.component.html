@@ -1,12 +1,14 @@
 <div
-  class="d-flex flex-column p-md-2 justify-content-center gap-4 flex-column flex-md-row"
+  class="d-flex flex-column p-md-2 justify-content-start gap-4 flex-column flex-md-row"
 >
   <div class="col-12 col-md-6 col-md-5 p-0">
     <form
       class="d-flex flex-column gap-2 justify-content-center align-middle py-2"
-      [formGroup]="Medication"
     >
-      <div class="d-flex align-middle justify-content-around">
+      <div
+        class="d-flex align-middle justify-content-around"
+        [formGroup]="medicationFormGroup"
+      >
         <mat-form-field class="col-10">
           <mat-label>Type medication name</mat-label>
           <input
@@ -14,7 +16,7 @@
             matInput
             required
             [matAutocomplete]="autoGroup"
-            formControlName="medicationId"
+            formControlName="medicationNameInputFormControl"
           />
           <mat-autocomplete
             #autoGroup="matAutocomplete"
@@ -22,14 +24,22 @@
           >
             @for (group of medicationGroupOptions | async; track group) {
             <mat-optgroup [label]="group.letter">
-              @for (name of group.names; track name) {
-              <mat-option [value]="name">{{ name }}</mat-option>
+              @for (label of group.labels; track label) {
+              <mat-option [value]="label">{{ label }}</mat-option>
               }
             </mat-optgroup>
             }
           </mat-autocomplete>
         </mat-form-field>
 
+        <div
+          title="Add medication"
+          (click)="onAppendMedication()"
+          class="pt-2"
+          style="cursor: pointer"
+        >
+          <i class="fa fa-plus-circle fs-2" aria-hidden="true"></i>
+        </div>
         <div
           title="Add comment"
           (click)="onAddComment()"
@@ -43,16 +53,16 @@
         >Warning : Medication not compatible</mat-error
       >}
 
-
       <!-- <app-medication-search></app-medication-search> -->
-      <!-- part of day -->
 
-      <app-parts-of-day [(partsOfDayHours)]="test"></app-parts-of-day>
+      <!-- part of day -->
+      <app-parts-of-day
+        [(partsOfDayHours)]="selectedMedication.administrationHours"
+      ></app-parts-of-day>
 
       <!-- period -->
       <div
         class="border border-black p-2 mt-1 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center"
-        [formGroup]="EndDate"
       >
         <p
           class="position-absolute px-2 bg-white fit-content"
@@ -61,23 +71,30 @@
           Period*
         </p>
 
-        <app-datepicker-range-popup></app-datepicker-range-popup>
-        <app-toggle-button
-          [on]="EndDate.getRawValue().isPermanent ? true : false"
-          [showLabels]="true"
-          onText="Permanent"
-          offText="Permanent"
-          (changed)="onIsPermanentChange()"
-          [containerClass]="{ width: '8rem' }"
-        ></app-toggle-button>
+        <app-datepicker-range-popup
+          [dateRange]="selectedMedication.consumptionPeriod.dateRange"
+          (DateRangeChange)="onPeriodChange($event)"
+          [minDate]="consumptionMinStartDate"
+        ></app-datepicker-range-popup>
+        <mat-chip-option
+          (selectionChange)="onIsPermanentChange($event.selected)"
+          [selected]="
+            selectedMedication.consumptionPeriod.isPermanent ? true : false
+          "
+          color="warn"
+          >Permanent</mat-chip-option
+        >
+        <mat-chip-option
+          (selectionChange)="onIsCautionEnabledChange($event.selected)"
+          [selected]="isCautionEnabled"
+          color="accent"
+          >Caution</mat-chip-option
+        >
       </div>
 
       <!-- Additional information -->
-      @if(commentsList.length >0){
-      <div
-        class="border border-black p-2 mt-1 p-2 p-lg-3 position-relative"
-        [formGroup]="EndDate"
-      >
+      @if(selectedMedication.comments.length >0){
+      <div class="border border-black p-2 mt-1 p-2 p-lg-3 position-relative">
         <p
           class="position-absolute px-2 bg-white fit-content"
           style="z-index: 2; top: -0.8em; left: 1em"
@@ -85,7 +102,7 @@
           Additional information*
         </p>
         <div>
-          @for(comment of commentsList;track $index){
+          @for(comment of selectedMedication.comments;track $index){
           <div
             class="d-flex align-items-center justify-content-around col-12 gap-2 py-1"
           >
@@ -95,6 +112,7 @@
               [ngStyle]="comment.labelStyle"
               >{{ comment.label ? comment.label : "Comment" }}</label
             >
+
             <textarea
               class="form-control p-2"
               style="height: 3rem"
@@ -102,7 +120,7 @@
               id=""
               type="text"
               [value]="comment.content"
-              (change)="onCommentChange($event, comment)"
+              (change)="onCommentChange($event.target, comment)"
             ></textarea>
             <mat-icon
               (click)="onRemoveComment(comment)"
@@ -115,17 +133,21 @@
       </div>
       }
     </form>
+
+    <!-- <button type="button" class="btn btn-primary text-white" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onAppendMedication()">Add</button>
+ -->
   </div>
 
   <!-- Cards right side -->
+  @if(prescribedMedications.length >0){
   <div class="d-flex flex-column gap-2 col-12 col-md-4 col-lg-5">
     <div class="card mb-2 py-2">
       <!-- Current Added medications card -->
-      @if(mainAddedMedications.length >0){
+
       <div class="card-body pb-0 pt-3">
         <h4 class="card-title fs-6 mb-1">Newly prescribed medications</h4>
         <ul class="list p-1 m-0 ps-3">
-          @for(medication of mainAddedMedications;track $index){
+          @for(medication of prescribedMedications;track $index){
           <li>
             <div class="mb-0">
               <div
@@ -136,7 +158,7 @@
                   style="cursor: pointer"
                   class="d-flex justify-content-start align-middle align-items-center"
                 >
-                  {{ medication.medicationId }}
+                  {{ medication.id }}
                   <mat-icon class="fs-6">edit</mat-icon></span
                 >
                 <mat-icon
@@ -148,18 +170,22 @@
               </div>
               <p class="fw-light fs-6 text-dark mb-0">
                 {{
-                  medication.consumptionDays == -1
+                  medication.consumptionPeriod.isPermanent
                     ? "Permanent"
-                    : medication.consumptionDays + " Days"
+                    : 9 + " Days"
                 }}
                 <span style="font-size: small">
                   {{
-                    medication.startDate.getDate() +
+                    medication.consumptionPeriod.dateRange?.at(0)?.getDate() +
                       "/" +
-                      medication.startDate.getMonth() +
+                      medication.consumptionPeriod.dateRange
+                        ?.at(0)
+                        ?.getMonth() +
                       1 +
                       "/" +
-                      medication.startDate.getFullYear()
+                      medication.consumptionPeriod.dateRange
+                        ?.at(0)
+                        ?.getFullYear()
                   }}</span
                 >
               </p>
@@ -168,7 +194,7 @@
                 class="text-dark fw-bold"
                 style="font-size: small; margin-top: -0.2rem"
               >
-                {{ medication.dispenseValue + " " + medication.dispenseUnit }}
+                <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
                 @if(true){
                 {{ getNewlyPrescribedMedicationSig(medication) }}
                 }
@@ -183,61 +209,8 @@
           }
         </ul>
       </div>
-      }
-      <!-- Current medication card -->
-      <div class="card-body pb-0 pt-3">
-        <h4 class="card-title fs-6 mb-1">Current Medication</h4>
-        <ul class="list p-1 m-0 ps-3">
-          <li>
-            <div class="mb-0">
-              <p class="fw-bold fs-6 text-primary mb-0">
-                Insulin<span class="fw-light fs-6 text-dark mb-0">
-                  Permanent</span
-                >
-              </p>
-              <p class="text-dark mb-1">
-                600 mg oral tablet<span> Start: 01 Jan 2024</span>
-              </p>
-            </div>
-          </li>
-          <li>
-            <div class="mb-0">
-              <p class="fw-bold fw-bold fs-6 text-primary mb-0">Doliprane</p>
-              <p class="text-dark mb-0">
-                600 mg oral tablet<span> Start: 01 Jan 2024</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Current Allergies card -->
-      <div class="card-body pb-0 pt-3">
-        <h4 class="card-title fs-6 mb-1">Allergies</h4>
-        <ul class="list p-1 m-0 ps-3">
-          <li>
-            <div class="mb-0">
-              <p class="fw-bold fs-6 text-primary mb-0">
-                Drug allergy<span class="fw-light fs-6 text-dark mb-0">
-                  Chronic</span
-                >
-              </p>
-              <p class="fw-bold text-danger">
-                INSULIN<span class="text-dark"> Start: 01 Jan 2024</span>
-              </p>
-            </div>
-          </li>
-          <li>
-            <div class="mb-0">
-              <p class="fw-bold fw-bold fs-6 text-primary mb-0">Doliprane</p>
-              <p class="text-dark mb-0">
-                600 mg oral tablet<span> Start: 01 Jan 2024</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-      </div>
     </div>
     <!-- end cards container -->
   </div>
+  }
 </div>

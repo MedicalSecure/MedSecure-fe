@@ -6,7 +6,8 @@
 
 -->
 <div id="add-prescription-body">
-  <div class="container-scroll bg-white">
+  <!-- main content -->
+  <div class="container-scroll bg-white pt-2">
     <app-wizard-header
       (currentStepChange)="SwitchToStep($event)"
       [switchCondition]="selectedPatient != undefined"
@@ -14,56 +15,9 @@
       [size]="3"
       [IconSizeRatio]="0.6"
     ></app-wizard-header>
-    <!-- in-body navigator -->
-    <!--     <div
-      class="d-flex align-items-center justify-content-center border-bottom px-4"
-      style="background-color: #f4f5f7"
-    >
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item align-self-center">
-          <button
-            id="home-tab"
-            data-bs-toggle="tab"
-            aria-controls="overview"
-            (click)="SwitchToStep(0)"
-            [className]="
-              'nav-link ps-3 m-0 py-2' + (stepNumber == 0 && ' active bg-white')
-            "
-          >
-            Patient information
-          </button>
-        </li>
-        <li class="nav-item align-self-center">
-          <button
-            id="profile-tab"
-            data-bs-toggle="tab"
-            (click)="SwitchToStep(1)"
-            [className]="
-              'nav-link m-0 py-2' + (stepNumber == 1 && ' active bg-white')
-            "
-          >
-            Diagnostic
-          </button>
-        </li>
-        <li class="nav-item align-self-center">
-          <button
-            id="contact-tab"
-            data-bs-toggle="tab"
-            [attr.aria-selected]="stepNumber === 2"
-            (click)="SwitchToStep(2)"
-            [className]="
-              'nav-link m-0 b-0 py-2 ' + (stepNumber == 2 && ' active bg-white')
-            "
-          >
-            Medication
-          </button>
-        </li>
-      </ul>
-    </div>
- -->
     @if(selectedPatient && stepNumber!=0){
-    <div class="d-flex gap-3 pt-2 justify-content-center" style="height: 2rem">
-      <p style="margin: 0" class="align-self-center">Selected Patient :</p>
+    <div class="d-flex gap-2 justify-content-center " style="height: 2rem">
+      <p class="align-self-center m-0 ">Selected Patient :</p>
       <span class="text-primary fw-bold align-self-center">
         SN : {{ selectedPatient.sn }} | {{ selectedPatient.name }} -
         {{ selectedPatient.age }} years</span
@@ -102,21 +56,22 @@
       </div>
     </div>
   </div>
+  <!-- wizard - navigation buttons -->
   <div
     class="d-flex justify-content-start"
     style="
-      position: absolute;
-      bottom: 0;
       background-color: #f4f5f7;
       width: 90vw;
-      z-index: 2;
       min-height: 2.2rem;
-      padding: 0.2rem;
+      padding: 0.1rem;
+      padding-top: 0.3rem;
+      padding-left: 0.3rem;
     "
   >
-    <div class="d-flex gap-1 col-7 col-md-5 col-lg-4 m-0">
+    <div class="d-flex gap-1 col-7 col-md-5 col-lg-4 m-0 ">
       <button
         type="button"
+        style="padding: 0.8rem 0;"
         [className]="backButtonContent.class"
         (click)="onClickBackEvent()"
       >
