@@ -852,14 +852,17 @@
                     "
                   >
                     <div
-                      class="modal-dialog justify-content-center"
+                      class="modal-dialog justify-content-center modal-dialog-centered"
                       role="document"
                       (click)="stopPropagation($event)"
                     >
-                      <div class="modal-content">
+                      <div
+                        class="modal-content"
+                        style="height: 540px; margin-right: 75px"
+                      >
                         <div class="modal-header p-2">
                           <h5 class="modal-title" id="exampleModalLabel">
-                            Import and map data
+                            <strong>Import and map data</strong>
                           </h5>
                           <button
                             type="button"
@@ -872,23 +875,22 @@
                           </button>
                         </div>
                         <div
-                          class="modal-body d-flex flex-wrap gap-4 form-group justify-content-center"
+                          class="modal-body d-flex flex-wrap gap-3 form-group ms-3"
                         >
                           <!-- @for(dbColumn of dbHeaders;track $index){ -->
 
                           @for(dbColumn of dbHeaders;track $index){
                           <div style="width: 10rem">
-                            <label>{{ dbColumn }}</label>
                             <select
                               [value]="columnMappings[dbColumn]"
                               class="form-select"
-                              (change)="
-                                OnSelectchange($event, dbColumn)
-                              "
+                              (change)="OnSelectchange($event, dbColumn)"
+                              required
                             >
+                              <option value="" hidden>{{ dbColumn }}</option>
                               @for(impHeader of importedDataHeaders;track
                               impHeader){
-                              <option [value]="impHeader" style="width: 50%">
+                              <option [value]="impHeader" style="width: 100%">
                                 {{ impHeader }}
                               </option>
                               }
@@ -896,24 +898,23 @@
                           </div>
 
                           }
-                        </div>
+                          <div class="mt-3">
+                            <button
+                              type="button"
+                              class="btn btn-primary text-white"
+                              (click)="onClickFinishModal()"
+                            >
+                              Save changes
+                            </button>
 
-                        <div class="ms-4">
-                          <button
-                            type="button"
-                            class="btn btn-primary text-white"
-                            (click)="onClickFinishModal()"
-                          >
-                            Save changes
-                          </button>
-
-                          <button
-                            type="button"
-                            class="btn btn-secondary"
-                            (click)="onClickCloseModal()"
-                          >
-                            Cancel
-                          </button>
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              (click)="onClickCloseModal()"
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
