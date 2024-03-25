@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {RadialbarChartsComponent} from '../../components/charts/radialbar-charts/radialbar-charts.component'
+import {RadialbarChartsComponent} from '../../components/widgets/radialbar-charts/radialbar-charts.component'
 @Component({
   selector: 'app-card',
   standalone: true,
