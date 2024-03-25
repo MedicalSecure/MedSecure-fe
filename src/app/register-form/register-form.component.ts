@@ -127,7 +127,7 @@ export class RegisterFormComponent implements OnInit{
   // Function to load cardio
   loadCardio(): void {
     this.cardio =[{
-      id: 'Kidneydiseases',
+      id: 'cardiovascular',
       name: 'Cardiovascular risk factors',
       icon:'',
       groups: [
@@ -156,7 +156,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'diabetes',
         name: 'Diabetes',
-        icon:'',
+        icon:'fas fa-solid fa-syringe',
         groups: [
           {
             name: 'Type 1 diabetes mellitus',
@@ -190,7 +190,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Chronicheartfailure',
         name: 'Chronic heart failure',
-        icon:'<img src="../assets/images/tk8PLM01.svg" width="19" height="30">',
+        icon:'fas fa-solid fa-heart-pulse',
         groups: [
           {
             name: 'Documented atherosclerotic cardiovascular disease',
@@ -230,7 +230,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Dyslipidemia',
         name: 'Dyslipidemia',
-        icon:'',
+        icon:'fas fa-solid fa-vial',
         groups: [
           {
             name: 'Dyslipidemia',
@@ -251,7 +251,7 @@ export class RegisterFormComponent implements OnInit{
       {
         id: 'Kidneydiseases',
         name: 'Kidney diseases',
-        icon:'',
+        icon:'fas fa-solid fa-capsules',
         groups: [
           {
             name: 'Acute kidney injury (previous episode)',
@@ -285,7 +285,50 @@ export class RegisterFormComponent implements OnInit{
           },
         ],
       },
-      
+      {
+        id: 'infectiousAutoimmune',
+        name: 'Infectious and autoimmune diseases',
+        icon:'fas fa-solid fa-virus',
+        groups: [
+          {
+            name: 'Autoimmune diseases',
+            expand: false,
+              checked: false,
+            children: [],
+          },
+          {
+            name: 'Completed vaccination against hepatitis B virus',
+            expand: false,
+            children: [],
+            checked: false,
+          },
+        ],
+      },
+      {
+        id: 'Lifestyle',
+        name: 'Lifestyle and environment',
+        icon:'fas fa-solid fa-seedling',
+        groups: [
+          {
+            name: 'Exposure to nephrotoxic agents',
+            expand: false,
+              checked: false,
+            children: [],
+          },
+          {
+            name: 'Occupational exposure to lead , cadmium or mercury',
+            expand: false,
+            children: [],
+            checked: false,
+          },
+          {
+            name: 'Smoking',
+            expand: false,
+            checked: false,
+            children: [],
+          },
+        ],
+      },
     ];
     
   }
