@@ -21,6 +21,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { URL_REGEX } from '../../shared/const';
 /**
  * @title Chips Autocomplete
  */
@@ -44,6 +45,7 @@ export class ShipsSelectComponent<T> {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
   @Input() searchPropertyName: string = 'label';
+  @Input() imagePropertyName: string = ''; // optional : add the property name of the image
   @Input() minimumSearchLength: number = 2;
   @Input() minimumAddedLabelLength: number = 5;
   @Input() class: string = '';
@@ -83,6 +85,7 @@ export class ShipsSelectComponent<T> {
       }
     );
     this._verifySearchPropertyName();
+    this._verifyImagePropertyName();
   }
 
   ngOnDestroy() {
@@ -179,6 +182,21 @@ export class ShipsSelectComponent<T> {
     this._isAdditionEnabled = isAdditionEnabled;
   }
 
+  isViewImage(chipObject: any): boolean {
+    if (this.imagePropertyName === '') return false;
+    if (this.imagePropertyName === undefined) return false;
+    if (this.imagePropertyName === null) return false;
+    let imageUrl = '';
+    try {
+      imageUrl = chipObject[this.imagePropertyName];
+    } catch (error) {
+      imageUrl = '';
+    }
+    if (imageUrl == '' || typeof imageUrl != 'string') return false;
+    const isValidUrl = URL_REGEX.test(imageUrl);
+    return isValidUrl;
+  }
+
   private _addChipToSelection(newChip: any, isAdded = false): void {
     this.selectedObjects.push(newChip);
     this.ObjectControl.setValue(null);
@@ -236,6 +254,43 @@ export class ShipsSelectComponent<T> {
       );
     }
   }
+  private _verifyImagePropertyName(): void {
+    if (!this.fullData || this.fullData.length == 0) return;
+    if (this.imagePropertyName === '' || this.imagePropertyName === undefined)
+      return;
+    if (!this.fullData[0].hasOwnProperty(this.imagePropertyName)) {
+      throw new TypeError(
+        'Chip select component : ' +
+          " the provided data doesn't contain the image property name : " +
+          this.imagePropertyName +
+          ' || Component Label : ' +
+          this.customLabel
+      );
+    }
+    let imagePropertyType = typeof this.fullData[0][this.imagePropertyName];
+    if (imagePropertyType != 'string') {
+      throw new TypeError(
+        'Chip select component : ' +
+          'the provided ImagePropertyName ( ' +
+          this.imagePropertyName +
+          " ) isn't of type String (must be a url)" +
+          ' || Component Label : ' +
+          this.customLabel
+      );
+    }
+    let imageUrl = this.fullData[0][this.imagePropertyName];
+    const isValidUrl = URL_REGEX.test(imageUrl);
+    if (!isValidUrl) {
+      throw new TypeError(
+        'Chip select component : ' +
+          'the provided ImagePropertyName ( ' +
+          this.imagePropertyName +
+          " ) isn't a valid url" +
+          ' || Component Label : ' +
+          this.customLabel
+      );
+    }
+  }
 }
 
 export type onChipsSelectionEmitType<T> = {
@@ -281,5 +336,6 @@ export type onChipsSelectionEmitType<T> = {
       [minimumAddedLabelLength]="5"
       [isStartWithSearch]="true"
       [searchPropertyName]="'label'"
+      [imagePropertyName]="''"
     ></chips-select>
 */

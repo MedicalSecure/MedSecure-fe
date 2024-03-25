@@ -4,6 +4,12 @@
     <mat-chip-grid #chipGrid aria-label="object selection ">
       @for (object of selectedObjects; track object) {
       <mat-chip-row (removed)="remove(object)">
+        @if(isViewImage(object)){
+          <img
+            matChipAvatar
+            [src]="object[imagePropertyName]"
+          />}
+
         {{ object[searchPropertyName] }}
         <button
           matChipRemove

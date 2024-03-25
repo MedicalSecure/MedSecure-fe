@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GranttChartComponent } from './grantt-chart.component';
+import { GanttChartComponent } from './gantt-chart.component';
 
-describe('GranttChartComponent', () => {
-  let component: GranttChartComponent;
-  let fixture: ComponentFixture<GranttChartComponent>;
+describe('GanttChartComponent', () => {
+  let component: GanttChartComponent;
+  let fixture: ComponentFixture<GanttChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GranttChartComponent]
+      imports: [GanttChartComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(GranttChartComponent);
+    fixture = TestBed.createComponent(GanttChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

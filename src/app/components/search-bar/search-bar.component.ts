@@ -1,11 +1,5 @@
 import { MatSelectModule } from '@angular/material/select';
-import {
-  CUSTOM_ELEMENTS_SCHEMA,
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,15 +8,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { Medications } from './medication.model';
-import { MedicationService } from './medication.service';
+import { Medications } from '../../model/medication';
+import { MedicationService } from '../../services/medication.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-medication-search',
+  selector: 'app-search-bar',
   standalone: true,
   imports: [
     MatChipsModule,
@@ -36,14 +30,12 @@ import { MatTooltip } from '@angular/material/tooltip';
     MatAutocompleteModule,
     ReactiveFormsModule,
     MatOptionModule,
-    MatTooltip
-    
+    MatTooltip,
   ],
-  templateUrl: './medication-search.component.html',
-  styleUrl: './medication-search.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  templateUrl: './search-bar.component.html',
+  styleUrl: './search-bar.component.css',
 })
-export class MedicationSearchComponent implements OnInit {
+export class SearchBarComponent implements OnInit {
   searchControl = new FormControl();
   searchKeys: string[] = ['Nom', 'Laboratoire', 'Indications'];
   searchKey: string = '';
@@ -66,10 +58,6 @@ export class MedicationSearchComponent implements OnInit {
     });
   }
 
-  search(value: string) {
-    console.log(value);
-  }
-
   filterMedications(searchTerm: string): Medications[] {
     if (typeof searchTerm !== 'string' || searchTerm.trim() === '') {
       return [];
@@ -82,7 +70,7 @@ export class MedicationSearchComponent implements OnInit {
     }
   }
 
-  openDialog(medication: Medications): void {
+  onChangeSelectedMedication(medication: Medications): void {
     if (!this.selectedMedications.includes(medication)) {
       this.selectedMedications.push(medication);
       this.emitSelectedMedications();
@@ -91,7 +79,7 @@ export class MedicationSearchComponent implements OnInit {
   }
 
   onSelectionChange(event: MatChipListboxChange) {
-    this.searchKey = event.source.value
+    this.searchKey = event.source.value;
     this.emitSelectedMedications();
   }
 
@@ -100,9 +88,9 @@ export class MedicationSearchComponent implements OnInit {
       case 'Nom':
         return medication['Nom'];
       case 'Laboratoire':
-        return medication['Laboratoire']; 
+        return medication['Laboratoire'];
       case 'Indications':
-        return medication['Indications']; 
+        return medication['Indications'];
       default:
         return '';
     }
@@ -118,13 +106,5 @@ export class MedicationSearchComponent implements OnInit {
 
   private emitSelectedMedications(): void {
     this.searchMedicationsChange.emit(this.selectedMedications);
-  }
-
-  // Function to handle Enter key press
-  handleKeyPress(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      // Implement your logic here to perform an action when Enter key is pressed
-      console.log('Enter key pressed');
-    }
   }
 }
