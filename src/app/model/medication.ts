@@ -3,5 +3,7 @@ export interface Medications {
     Nom: string;
     Dosage: string;
     Forme: string;
-    Quantity: number;
+    Unit: string;
+    DCI: string;
+    'Stock dispo': number;
 }
