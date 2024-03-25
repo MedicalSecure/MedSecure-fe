@@ -23,4 +23,5 @@ export type medicationType = {
   administrationHours: hourType[][];
   Caution?: string;
   comments: Array<commentType>;
+  summary?:object;
 };

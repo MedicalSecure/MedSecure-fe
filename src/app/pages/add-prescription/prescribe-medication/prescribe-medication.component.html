@@ -5,10 +5,7 @@
     <form
       class="d-flex flex-column gap-2 justify-content-center align-middle py-2"
     >
-      <div
-        class="d-flex align-middle justify-content-around"
-        [formGroup]="medicationFormGroup"
-      >
+      <div class="d-flex align-middle justify-content-around" [formGroup]="medicationFormGroup">
         <mat-form-field class="col-10">
           <mat-label>Type medication name</mat-label>
           <input
@@ -31,14 +28,14 @@
             }
           </mat-autocomplete>
         </mat-form-field>
-
+        
         <div
           title="Add medication"
           (click)="onAppendMedication()"
           class="pt-2"
           style="cursor: pointer"
         >
-          <i class="fa fa-plus-circle fs-2" aria-hidden="true"></i>
+        <i class="fa fa-plus-circle fs-2" aria-hidden="true"></i>
         </div>
         <div
           title="Add comment"
@@ -56,9 +53,7 @@
       <!-- <app-medication-search></app-medication-search> -->
 
       <!-- part of day -->
-      <app-parts-of-day
-        [(partsOfDayHours)]="selectedMedication.administrationHours"
-      ></app-parts-of-day>
+      <app-parts-of-day [(partsOfDayHours)]="selectedMedication.administrationHours"></app-parts-of-day>
 
       <!-- period -->
       <div
@@ -71,15 +66,11 @@
           Period*
         </p>
 
-        <app-datepicker-range-popup
-          [dateRange]="selectedMedication.consumptionPeriod.dateRange"
-          (DateRangeChange)="onPeriodChange($event)"
-          [minDate]="consumptionMinStartDate"
-        ></app-datepicker-range-popup>
+        <app-datepicker-range-popup [dateRange]="selectedMedication.consumptionPeriod.dateRange" (DateRangeChange)="onPeriodChange($event)" [minDate]="consumptionMinStartDate"></app-datepicker-range-popup>
         <mat-chip-option
           (selectionChange)="onIsPermanentChange($event.selected)"
           [selected]="
-            selectedMedication.consumptionPeriod.isPermanent ? true : false
+           selectedMedication.consumptionPeriod.isPermanent ? true : false
           "
           color="warn"
           >Permanent</mat-chip-option
@@ -94,7 +85,9 @@
 
       <!-- Additional information -->
       @if(selectedMedication.comments.length >0){
-      <div class="border border-black p-2 mt-1 p-2 p-lg-3 position-relative">
+      <div
+        class="border border-black p-2 mt-1 p-2 p-lg-3 position-relative"
+      >
         <p
           class="position-absolute px-2 bg-white fit-content"
           style="z-index: 2; top: -0.8em; left: 1em"
@@ -134,8 +127,7 @@
       }
     </form>
 
-    <!-- <button type="button" class="btn btn-primary text-white" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onAppendMedication()">Add</button>
- -->
+    <button type="button" class="btn btn-primary text-white btn-lg px-5 " data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onAppendMedication()">Add</button>
   </div>
 
   <!-- Cards right side -->
@@ -172,32 +164,39 @@
                 {{
                   medication.consumptionPeriod.isPermanent
                     ? "Permanent"
-                    : 9 + " Days"
+                    : getNumberOfDaysInRange(medication.consumptionPeriod.dateRange) + " Days"
                 }}
                 <span style="font-size: small">
                   {{
                     medication.consumptionPeriod.dateRange?.at(0)?.getDate() +
                       "/" +
-                      medication.consumptionPeriod.dateRange
-                        ?.at(0)
-                        ?.getMonth() +
+                      medication.consumptionPeriod.dateRange?.at(0)?.getMonth() +
                       1 +
                       "/" +
-                      medication.consumptionPeriod.dateRange
-                        ?.at(0)
-                        ?.getFullYear()
+                      medication.consumptionPeriod.dateRange?.at(0)?.getFullYear()
                   }}</span
                 >
+                @if(!medication.consumptionPeriod.isPermanent){<span style="font-size: small">
+                  {{
+                    " - " + medication.consumptionPeriod.dateRange?.at(1)?.getDate() +
+                      "/" +
+                      medication.consumptionPeriod.dateRange?.at(1)?.getMonth() +
+                      1 +
+                      "/" +
+                      medication.consumptionPeriod.dateRange?.at(1)?.getFullYear()
+                  }}</span
+                >}
               </p>
 
               <p
                 class="text-dark fw-bold"
                 style="font-size: small; margin-top: -0.2rem"
               >
-                <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
+               <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
                 @if(true){
-                {{ getNewlyPrescribedMedicationSig(medication) }}
-                }
+                {{ getPrescribedMedicationSummary(medication).timesADay }} : {{ getPrescribedMedicationSummary(medication).average }} units on avg | 
+                maximum dispense: {{ getPrescribedMedicationSummary(medication).maximumDispenseQuantity }}
+              }
               </p>
               @if(medication.isForceOrder){
               <p class="fw-bold text-danger" style="margin-top: -0.7rem">

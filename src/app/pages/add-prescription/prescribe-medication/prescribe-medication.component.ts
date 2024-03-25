@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 
@@ -13,7 +20,7 @@ import {
 //import { MedicationAutocompleteInputComponent } from '../../../components/medication-autocomplete-input/medication-autocomplete-input.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, Subscription, map, startWith } from 'rxjs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
@@ -64,10 +71,14 @@ import { MedicationSearchComponent } from '../../../components/medication-search
   templateUrl: './prescribe-medication.component.html',
   styleUrl: './prescribe-medication.component.css',
 })
-export class PrescribeMedicationComponent {
+export class PrescribeMedicationComponent implements OnInit, OnDestroy {
   @Input()
   selectedPatient: patientType | undefined;
+  /* on click finish listener */
+  @Input() events: Observable<void>;
+  private finishEventSubscription: Subscription;
   @Output() onMedicationsChange = new EventEmitter<medicationType[]>();
+  @Output() onIsMedicationPageValidChange = new EventEmitter<boolean>();
 
   isSelectedForceOrder: boolean = false;
   isFilteredForceOrder: boolean = false;
@@ -75,7 +86,7 @@ export class PrescribeMedicationComponent {
   isCautionEnabled: boolean = false;
   cautionComment: commentType = initialCautionComment;
   consumptionMinStartDate: Date = new Date();
-
+  isPageValid: boolean = true;
   selectedMedication: medicationType = _getFormInitialValues();
   prescribedMedications: medicationType[] = [];
 
@@ -95,9 +106,20 @@ export class PrescribeMedicationComponent {
         map((value) => this._filterGroup(value || ''))
       );
 
+    this.finishEventSubscription = this.events.subscribe(() =>
+      this.onClickFinish()
+    );
+
     /* if is caution enabled by default => add a caution comment at the beginning of the array  */
     this.isCautionEnabled &&
       this.selectedMedication.comments.unshift(this.cautionComment);
+
+    /* emit wether or not we can finish the prescription */
+    this.onIsMedicationPageValidChange.emit(this.isPageValid);
+  }
+
+  ngOnDestroy() {
+    this.finishEventSubscription.unsubscribe();
   }
 
   /* Form inputs change */
@@ -220,8 +242,9 @@ export class PrescribeMedicationComponent {
     console.log('result ' + this.isFilteredForceOrder);
   }
   onAppendMedication(): boolean {
-    const CurrentMedication = this.selectedMedication as medicationType;
+    const CurrentMedication = this.selectedMedication;
     if (CurrentMedication != null && CurrentMedication.label != '') {
+      this._cleanComments();
       this.prescribedMedications.push(CurrentMedication);
       this.selectedMedication = _getFormInitialValues();
       this.isEditingMode = false;
@@ -252,25 +275,88 @@ export class PrescribeMedicationComponent {
   }
 
   onClickFinish() {
-    const CurrentMedication = this.selectedMedication;
-    if (CurrentMedication != null && CurrentMedication.label != '') {
-      this.prescribedMedications.push(CurrentMedication);
-      this.selectedMedication = _getFormInitialValues();
-      this.isEditingMode == false;
-    }
-    console.log('finish ');
+    console.log('checking before finish ');
+    this.onAppendMedication();
+    if (this.validateFinish() === false) return;
+    /* below part is where to handle prescription submission to backend */
+    console.log('valid medication: ');
     console.log(this.prescribedMedications);
   }
 
+  validateFinish(): boolean {
+    let isFormValid = true;
+    //add conditions here like
+    const currentInput =
+      this.medicationFormGroup.getRawValue().medicationNameInputFormControl;
+    if (currentInput !== '') isFormValid = false;
+
+    //emit changes
+    this.onIsMedicationPageValidChange.emit(isFormValid);
+    return isFormValid;
+  }
+
   /* prescribed/selected medications display */
-  getNewlyPrescribedMedicationSig(
-    medication: medicationType
-  ): string | undefined {
-    let result;
-    const size = medication.administrationHours.length;
-    if (size > 1) result = size + ' times a day';
-    else if (size == 1) result = 'single time a day';
-    return result;
+  getPrescribedMedicationSummary(medication: medicationType): {
+    timesADay: string;
+    beforeFoodCounter: number;
+    afterFoodCounter: number;
+    maximumDispenseQuantity: number;
+    average: number;
+  } {
+    let timesADay: string = '';
+    let afterFoodCounter: number = 0;
+    let beforeFoodCounter: number = 0;
+    let timesADayCounter: number = 0;
+    let maximumDispenseQuantity: number = 0;
+    medication.administrationHours.forEach((medicationGroup) => {
+      medicationGroup.forEach((hourObj) => {
+        if (hourObj.beforeFoodDispenseQuantity) {
+          const beforeFQ = parseInt(hourObj.beforeFoodDispenseQuantity);
+          beforeFoodCounter += beforeFQ;
+          timesADayCounter++;
+          if (beforeFQ > maximumDispenseQuantity)
+            maximumDispenseQuantity = beforeFQ;
+        }
+        if (hourObj.afterFoodDispenseQuantity) {
+          const afterFQ = parseInt(hourObj.afterFoodDispenseQuantity);
+          afterFoodCounter += afterFQ;
+          timesADayCounter++;
+          if (afterFQ > maximumDispenseQuantity)
+            maximumDispenseQuantity = afterFQ;
+        }
+      });
+    });
+    if (timesADayCounter > 1) timesADay = timesADayCounter + ' times a day';
+    else if (timesADayCounter == 1) timesADay = 'single time a day';
+    let average = (beforeFoodCounter + afterFoodCounter) / timesADayCounter;
+    return {
+      timesADay,
+      beforeFoodCounter,
+      afterFoodCounter,
+      maximumDispenseQuantity,
+      average: !Number.isNaN(average) ? Number(average.toFixed(1)) : 0,
+    };
+  }
+  getNumberOfDaysInRange(dateRange: [Date, Date | null] | null): number | null {
+    if (dateRange === null || dateRange[1] === null) return null;
+    // Convert both dates to timestamps
+    var timestamp1 = dateRange[0].getTime();
+    var timestamp2 = dateRange[1].getTime();
+    // Calculate the difference in milliseconds
+    var difference = Math.abs(timestamp2 - timestamp1);
+    // Convert milliseconds to days
+    var daysDifference = Math.ceil(difference / (1000 * 60 * 60 * 24));
+    return daysDifference;
+  }
+
+  private _cleanComments(medication: medicationType = this.selectedMedication) {
+    medication.comments.forEach((comment) => {
+      let commentContent = comment.content;
+      if (!commentContent || commentContent.trim() === '') {
+        //remove the comment if its empty or whitespace
+        this.onRemoveComment(comment);
+      }
+    });
   }
 
   private _filterGroup(value: string): MedicationGroupType[] {

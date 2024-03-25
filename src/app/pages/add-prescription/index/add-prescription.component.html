@@ -14,6 +14,7 @@
       [currentStep]="stepNumber"
       [size]="3"
       [IconSizeRatio]="0.6"
+      [validatePageSwitch]="validatePageSwitch"
     ></app-wizard-header>
     @if(selectedPatient && stepNumber!=0){
     <div class="d-flex gap-2 justify-content-center " style="height: 2rem">
@@ -36,19 +37,21 @@
         <app-patient-select
           [(selectedPatient)]="selectedPatient"
           (selectedPatientChange)="onSelectPatientChange($event)"
+          (onIsPatientSelectPageValidChange)="handleIsPatientSelectPageValidChange($event)"
         />
       </div>
       <div [className]="stepNumber != 2 && 'd-none'">
         <app-add-symptoms
-          (onPageChangeEvent)="onPageChangeEvent($event, 2)"
           (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
           [selectedPatient]="selectedPatient"
+          (onIsAddSymptomsPageValidChange)="handleIsAddSymptomsPageValidChange($event)"
         />
       </div>
       <div [className]="stepNumber != 3 && 'd-none'">
         <app-prescribe-medication
-          (onBackClick)="SwitchToStep(2)"
+          [events]="eventsSubject.asObservable()"
           [selectedPatient]="selectedPatient"
+          (onIsMedicationPageValidChange)="handleIsMedicationPageValidChange($event)"
         />
       </div>
       <div [className]="selectedPatient == undefined && 'd-none'">

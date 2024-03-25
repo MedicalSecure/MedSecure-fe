@@ -30,7 +30,8 @@ import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-
 export class PatientSelectComponent implements OnChanges {
   @Input() selectedPatient: patientType | undefined = undefined;
   @Output() selectedPatientChange = new EventEmitter<patientType | undefined>();
-  @Input() clearTextAfterEachSearch:boolean=false;
+  @Output() onIsPatientSelectPageValidChange = new EventEmitter<boolean>();
+  @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   dataList: patientType[] = [
     { sn: '001', name: 'John', sex: 'Male', age: 30, height: 180 },
@@ -50,14 +51,15 @@ export class PatientSelectComponent implements OnChanges {
   onClickPatient(patient: patientType) {
     this.selectedPatientChange.emit(patient);
     this.selectedPatient = patient;
+    this.onIsPatientSelectPageValidChange.emit(patient != undefined);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(!this.clearTextAfterEachSearch) return;
+    if (!this.clearTextAfterEachSearch) return;
     let newChange = changes['selectedPatient'];
-     if (newChange && !newChange.firstChange) {
+    if (newChange && !newChange.firstChange) {
       if (this.selectedPatient === undefined) this.searchTerm = '';
-    } 
+    }
   }
 }
 export type patientType = {

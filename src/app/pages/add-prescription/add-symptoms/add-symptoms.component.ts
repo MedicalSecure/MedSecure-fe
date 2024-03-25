@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -31,16 +31,26 @@ import { patientType } from '../patient-select/patient-select.component';
   templateUrl: './add-symptoms.component.html',
   styleUrl: './add-symptoms.component.css',
 })
-export class AddSymptomsComponent {
-  @Input()
-  selectedPatient: patientType | undefined;
-  maxSymptomsStartDate: Date = new Date();
-  @Output() onSelectedDiagnosisChange =
-    new EventEmitter<onChipsSelectionEmitType>();
-  @Output() onPageChangeEvent = new EventEmitter<number>();
+export class AddSymptomsComponent{
+  @Input() selectedPatient: patientType | undefined;
+  @Input() minimumRequiredSymptoms: number = 0;
+  @Input() minimumRequiredDiagnosis: number = 0;
+  @Output() onSelectedDiagnosisChange = new EventEmitter<
+    onChipsSelectionEmitType<diagnosisType>
+  >();
+  @Output() onSelectedSymptomsChange = new EventEmitter<
+    onChipsSelectionEmitType<symptomType>
+  >();
+  @Output() onIsAddSymptomsPageValidChange = new EventEmitter<boolean>();
 
+  selectedDiagnosis: diagnosisType[] = [];
+  selectedSymptoms: symptomType[] = [];
 
-  symptomsData = [
+  ngOnInit(){
+    this.onIsPageValidChange() 
+  }
+
+  symptomsData: symptomType[] = [
     { index: 1, label: 'Fever', value: 1 },
     { index: 2, label: 'Cough', value: 2 },
     { index: 3, label: 'Shortness of breath', value: 3 },
@@ -62,7 +72,7 @@ export class AddSymptomsComponent {
     { index: 19, label: 'Loss of appetite', value: 19 },
     { index: 20, label: 'Difficulty sleeping', value: 20 },
   ];
-  diagnosesData = [
+  diagnosesData: diagnosisType[] = [
     { index: 1, label: 'Common Cold', value: 1 },
     { index: 2, label: 'Influenza (Flu)', value: 2 },
     { index: 3, label: 'Pneumonia', value: 3 },
@@ -85,11 +95,7 @@ export class AddSymptomsComponent {
     { index: 20, label: 'Rheumatoid Arthritis', value: 20 },
   ];
 
-  constructor() {
-    this.maxSymptomsStartDate.setHours(23, 59, 59, 999); // Set hours, minutes, seconds, and milliseconds
-  }
-
-  selectedSymptomsChipsChange(result: onChipsSelectionEmitType) {
+  selectedSymptomsChipsChange(result: onChipsSelectionEmitType<symptomType>) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
       console.log('added custom item :', result.lastAddedItem);
@@ -99,9 +105,14 @@ export class AddSymptomsComponent {
       console.log('removed item :', result.lastRemovedItem);
     }
     console.log('updated Selected chips:', result.SelectedObjectList);
+    this.selectedSymptoms = result.SelectedObjectList;
+    this.onIsPageValidChange();
+    this.onSelectedSymptomsChange.emit(result);
   }
 
-  selectedDiagnosisChipsChange(result: onChipsSelectionEmitType) {
+  selectedDiagnosisChipsChange(
+    result: onChipsSelectionEmitType<diagnosisType>
+  ) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
       console.log('added custom item :', result.lastAddedItem);
@@ -111,10 +122,29 @@ export class AddSymptomsComponent {
       console.log('removed item :', result.lastRemovedItem);
     }
     console.log('updated Selected chips:', result.SelectedObjectList);
+    this.selectedDiagnosis = result.SelectedObjectList;
+    this.onIsPageValidChange();
     this.onSelectedDiagnosisChange.emit(result);
   }
 
-  onStartDateInputChange(newDate: Date | null): void {
-    console.log('selected ' + newDate);
+  onIsPageValidChange() {
+    const areDiagnosisValid =
+      this.selectedDiagnosis.length >= this.minimumRequiredDiagnosis;
+    const areSymptomsValid =
+      this.selectedSymptoms.length >= this.minimumRequiredSymptoms;
+    this.onIsAddSymptomsPageValidChange.emit(
+      areDiagnosisValid && areSymptomsValid
+    );
   }
 }
+
+export type symptomType = {
+  index: number;
+  label: string;
+  value: number;
+};
+export type diagnosisType = {
+  index: number;
+  label: string;
+  value: number;
+};

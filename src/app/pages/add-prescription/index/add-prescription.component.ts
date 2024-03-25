@@ -1,5 +1,5 @@
 import { Component, EventEmitter } from '@angular/core';
-import { AddSymptomsComponent } from '../add-symptoms/add-symptoms.component';
+import { AddSymptomsComponent, diagnosisType, symptomType } from '../add-symptoms/add-symptoms.component';
 import {
   PatientSelectComponent,
   patientType,
@@ -9,6 +9,7 @@ import { onChipsSelectionEmitType } from '../../../components/chips-select/chips
 import { MatIcon } from '@angular/material/icon';
 import { WizardHeaderComponent } from '../../../components/wizard-header/wizard-header.component';
 import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-add-prescription',
@@ -27,22 +28,18 @@ import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-ca
 export class AddPrescriptionComponent {
   stepNumber: number = 1;
   stepsLimit: number = 3;
-  selectedDiagnosis: any = [];
+  selectedDiagnosis: diagnosisType[] = [];
+  selectedSymptoms: symptomType[] = [];
   selectedPatient: patientType | undefined;
   autoPageSwitchOnPatientSelection: boolean = false;
+  isPatientSelectPageValid: boolean = false;
+  isAddSymptomsPageValid: boolean = false;
+  isSelectMedicationPageValid: boolean = false;
 
-  private _nextButtonContent = {
-    label: 'next',
-    class: 'btn w-100 m-0 btn-success fs-6 text-white',
-  };
+  eventsSubject: Subject<void> = new Subject<void>();
 
-  private _backButtonContent = {
-    label: 'back',
-    class: 'btn w-100 m-0 btn-warning fs-6 text-white',
-  };
-
-  nextButtonContent: { label: string; class: string } = this._nextButtonContent;
-  backButtonContent: { label: string; class: string } = this._backButtonContent;
+  nextButtonContent: { label: string; class: string } = _nextButtonContent;
+  backButtonContent: { label: string; class: string } = _backButtonContent;
 
   ngOnInit() {
     this._updateButtonsState();
@@ -60,8 +57,16 @@ export class AddPrescriptionComponent {
     this._updateButtonsState();
   }
 
+  onClickFinish() {
+    this.emitFinishEventToChild();
+  }
+
   SwitchToStep(index: number) {
-    if (this._validatePageSwitch(index) == false) return;
+    if (index === this.stepsLimit + 1) {
+      this.onClickFinish();
+      return;
+    }
+    if (this.validatePageSwitch(index) == false) return;
     this.stepNumber = index;
     this._updateButtonsState();
   }
@@ -81,16 +86,27 @@ export class AddPrescriptionComponent {
     this.SwitchToStep(event + sourcePageNumber);
   }
 
-  onSelectedDiagnosisChangeHandler(event: onChipsSelectionEmitType) {
+  onSelectedDiagnosisChangeHandler(event: onChipsSelectionEmitType<diagnosisType>) {
     this.selectedDiagnosis = event.SelectedObjectList;
   }
+  onSelectedSymptomsChangeHandler(event: onChipsSelectionEmitType<symptomType>) {
+    this.selectedSymptoms = event.SelectedObjectList;
+  }
 
-  _validatePageSwitch(index: number): Boolean {
-    if (index > this.stepsLimit) return false;
-    if (index < 0) return false;
+  validatePageSwitch = (index: number): boolean => {
+    // arrow function to hold they callback context xD
+    if (index > this.stepsLimit + 1) return false;
+    if (index < 1) return false;
     if (index >= 0 && index == this.stepNumber) return false;
-    if (index != 0 && this.selectedPatient == undefined) return false;
+    /* if (index != 1 && this.selectedPatient == undefined) return false; */
+    if (index != 1 && !this.isPatientSelectPageValid) return false;
+    if (index > 2 && !this.isAddSymptomsPageValid) return false;
+    if (index > 3 && !this.isSelectMedicationPageValid) return false;
     return true;
+  };
+
+  emitFinishEventToChild() {
+    this.eventsSubject.next();
   }
 
   onClickNextEvent(): void {
@@ -106,6 +122,16 @@ export class AddPrescriptionComponent {
     this.nextButtonContent = event;
   }
 
+  handleIsMedicationPageValidChange(eventData: boolean) {
+    this.isSelectMedicationPageValid = eventData;
+  }
+  handleIsPatientSelectPageValidChange(eventData: boolean) {
+    this.isPatientSelectPageValid = eventData;
+  }
+  handleIsAddSymptomsPageValidChange(eventData: boolean) {
+    this.isAddSymptomsPageValid = eventData;
+  }
+
   private _updateButtonsState() {
     if (this.selectedPatient == undefined) {
       this.nextButtonContent = {
@@ -113,7 +139,7 @@ export class AddPrescriptionComponent {
         class: this.nextButtonContent.class + 'd btn-outline-warning disabled',
       };
     } else {
-      this.nextButtonContent = this._nextButtonContent;
+      this.nextButtonContent = _nextButtonContent;
     }
     if (this.stepNumber == this.stepsLimit) {
       if (true)
@@ -134,7 +160,16 @@ export class AddPrescriptionComponent {
         class: this.backButtonContent.class + 'd btn-outline-success disabled',
       };
     } else {
-      this.backButtonContent = this._backButtonContent;
+      this.backButtonContent = _backButtonContent;
     }
   }
 }
+const _nextButtonContent = {
+  label: 'next',
+  class: 'btn w-100 m-0 btn-success fs-6 text-white',
+};
+
+const _backButtonContent = {
+  label: 'back',
+  class: 'btn w-100 m-0 btn-warning fs-6 text-white',
+};
