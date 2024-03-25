@@ -21,6 +21,7 @@
 @import '../node_modules/@smart-webcomponents-angular/ganttchart/styles/smart.common.css';
 
 
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
