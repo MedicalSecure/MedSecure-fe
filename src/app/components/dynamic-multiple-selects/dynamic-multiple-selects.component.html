@@ -1,0 +1,18 @@
+@for (multiSelectInput of multiSelectInputs;let i = $index;track multiSelectInput ) {
+<div class="d-flex align-items-center gap-sm-3 gap-md-5 p-0">
+  @if(multiSelectInput.label){
+  <p class="fs-6 pb-2">{{ multiSelectInput.label }}</p>
+  }
+  <mat-form-field class="{{ class }}">
+    @if(multiSelectInput.label){
+    <mat-label class="fs-6">{{ multiSelectInput.label }}</mat-label
+    >} @else{<mat-label>Select an option</mat-label>}
+
+    <mat-select [(value)]="selectedInputs[i]" (valueChange)="onSelectionChange()">
+      @for(option of multiSelectInput.options; track option){
+      <mat-option value={{option}}>{{ option }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+}

@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
   ],
 })
 export class IndexComponent {
+  displayTabs:boolean=false;
   importedData: { [key: string]: any }[] = [];
   //after mapping :
   mappedData: MedicationType[] = [];

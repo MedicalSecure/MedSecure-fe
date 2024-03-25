@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { medicationType } from '../../shared/types/';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { medicationType } from '../../types';
 
 @Component({
   selector: 'app-card-medication',
@@ -43,7 +43,7 @@ export class CardMedicationComponent {
     medication: medicationType
   ): string | undefined {
     let result;
-    const size = medication.administrationHours.size;
+    const size = medication.administrationHours.length;
     if (size > 1) result = size + ' times a day';
     else if (size == 1) result = 'single time a day';
     return result;

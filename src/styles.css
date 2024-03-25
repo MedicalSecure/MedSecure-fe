@@ -25,3 +25,27 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
+/* Component DatepickerRangePopupComponent inside the prescription */
+/* Adjust the width and height of the calendar popup */
+#add-prescription-body { 
+  .p-datepicker {
+    width: fit-content;
+    height: fit-content;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .p-datepicker table td {
+    padding: 0.2em;
+  }
+  .p-datepicker table td > span {
+    width: 2em;
+    height: 2em;
+    padding: 1rem;
+  }
+  .p-datepicker .p-datepicker-header {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .p-datepicker .p-datepicker-buttonbar {
+    padding: 0;
+  }
+}
