@@ -1,0 +1,141 @@
+
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8 custom-table">
+  <ng-container matColumnDef="header">
+    <div class="date" style="display: flex; align-items: flex-start;">
+      <th mat-header-cell *matHeaderCellDef [attr.colspan]="columnsToDisplay.length">
+        <mat-chip class="uc" style="margin-right: 20px;">
+          Unit Care: Emergency Department
+        </mat-chip>
+        <mat-form-field appearance="outline"
+          style="width: 300px;  position: relative; border-radius: 50px; margin-top: 20px ; ">
+          <input style="width:300px;   border-radius: 50px;" matInput (keyup)="Filter($event)" placeholder="Search..."
+            #input style="width: 200px; color: gray">
+        </mat-form-field>
+        <mat-form-field  appearance="outline" style="position: relative;  margin-left:10px ; width: 300px; background-color: transparent; color: transparent; border-color: transparent;">
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="picker" #dateInput (dateChange)="changeDate(dateInput.value)">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button style="background-color: transparent; border-color: transparent;" (click)="onLeftButtonClick()">
+          <img src="assets/left_arrow_icon.svg" alt="left_arrow">
+        </button>
+        {{ todayDate }}
+        <button style="background-color: transparent; border-color: transparent;" (click)="onRightButtonClick()">
+          <img src="assets/right_arrow_icon.svg" alt="right_arrow">
+        </button>
+      </th>
+    </div>
+    <tr mat-header-row *matHeaderRowDef="['header']"></tr>
+  </ng-container>
+  <ng-container matColumnDef="add">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)">
+      <img [src]="expandedElement === element ? 'assets/minus.svg' : 'assets/plus.svg'" alt="more" class="image"
+        style="height: 30px;width: 30px;">
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="room">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Room </th>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{element.room}} </td>
+  </ng-container>
+  <ng-container matColumnDef="bed">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Bed </th>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{element.bed}} </td>
+  </ng-container>
+  <ng-container matColumnDef="patient">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Patient </th>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{element.patient}} </td>
+  </ng-container>
+  <ng-container matColumnDef="age">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Age </th>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)"> {{
+      calculateAge(element.bd) }}
+      <img src="assets/info.svg" alt="info" class="image"
+        style="height: 15px; width: 15px; margin-top:5px; margin-left: 5px;" matTooltip={{element.bd}}>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="progress">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress </th>
+    <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)">
+      <mat-progress-bar mode="determinate" [value]="(element.served / element.toServe) * 100"></mat-progress-bar>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+    <td mat-cell *matCellDef="let element" (click)="toggleExpanded(element)">
+      @if ( element.status === "Pending...") {
+      <mat-chip class="element mat-chip"
+        style="background-color: rgba(255, 0, 0, 0.05); border: 1px solid red;">{{element.status}}</mat-chip>
+      }
+      @else if (element.status === "On Progress") {
+      <mat-chip class="element mat-chip"
+        style="background-color: rgba(255, 247, 17, 0.05);border: 1px solid yellow;">{{element.status}}</mat-chip>
+      }
+      @else if (element.status === "Completed") {
+      <mat-chip class="element mat-chip"
+        style="background-color: rgba(17, 255, 33, 0.05);border: 1px solid green;">{{element.status}}</mat-chip>
+      }
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+      <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <div class="example-element-diagram">
+          <table mat-table [dataSource]="element.medicines" class="mat-elevation-z0 extended-table "
+            style="border: 1px solid rgba(0, 0, 0, 0.155);">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td class="element name-cell" mat-cell *matCellDef="let medicine" style="position: relative; top: 0%;">
+                <h5 style="font-weight: bold;">{{ medicine.name }}</h5>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="posology">
+              <table mat-table [dataSource]="element.medicines.posology " class="mat-elevation-z8 extended-table-cell ">
+                <ng-container matColumnDef="posology">
+                  <th mat-header-cell *matHeaderCellDef>Posology</th>
+                  <div>
+                    <td class="element posology-cell" mat-cell *matCellDef="let elementt">
+                      <app-schedule [hoursList]="elementt.posology"
+                        (checkEmmiter)="onCheckEmitted($event, element)"></app-schedule>
+                      <app-comment [note]="elementt.note"></app-comment>
+                    </td>
+                  </div>
+                </ng-container>
+                <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
+              </table>
+            </ng-container>
+            <ng-container matColumnDef="root">
+              <th mat-header-cell *matHeaderCellDef>Route</th>
+              <td class="element root-cell" mat-cell *matCellDef="let medicine">
+                <img [src]="medicine.root === 'Ophthalmic' ? 'assets/routes/eye.svg' :
+                        medicine.root === 'Otic' ? 'assets/routes/ear.svg' :
+                        medicine.root === 'Inhalation' ? 'assets/routes/lungs.svg' :
+                        medicine.root === 'Bandage' ? 'assets/routes/bandage.svg' :
+                        medicine.root === 'Syrup' ? 'assets/routes/syrup.svg' :
+                        medicine.root === 'Transdermal' ? 'assets/routes/cream.svg' :
+                        medicine.root === 'Sublingual' ? 'assets/routes/Sublingual.svg' :
+                        medicine.root === 'Intramuscular' ? 'assets/routes/Intramuscular.svg' :
+                        medicine.root === 'Intracardiac' ? 'assets/routes/Intracardiac.svg' :
+                        medicine.root === 'Nebulizers' ? 'assets/routes/spray.svg' :
+                        medicine.root === 'Injection' ? 'assets/routes/vaccine.svg' :
+                        medicine.root === 'Oral' ? 'assets/routes/pills.svg' : ''" alt="{{medicine.root}}"
+                  style="height: 40px; width: 40px; margin-top: 5px; margin-left: 5px;">
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['name', 'posology', 'root' ] "></tr>
+            <tr mat-row *matRowDef="let row; columns: ['name', 'posology','root' ] "></tr>
+          </table>
+        </div>
+        <div class="example-element-description">
+          {{ element.description }}
+        </div>
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+    [class.example-expanded-row]="expandedElement === element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>

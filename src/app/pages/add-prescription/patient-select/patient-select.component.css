@@ -1,0 +1,22 @@
+th,
+td {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+tr:hover {
+  background-color: rgba(126, 203, 255, 0.15);
+}
+#table-head-row:hover {
+  background-color: transparent;
+}
+
+@media (min-width: 768px) {
+  th,
+  td {
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+}
+@media (min-width: 992px) {
+  /* CSS rules for large devices */
+}

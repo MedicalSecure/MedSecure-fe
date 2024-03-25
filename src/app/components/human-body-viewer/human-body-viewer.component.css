@@ -1,0 +1,29 @@
+path {
+  fill: transparent;
+  stroke-width: 2px;
+  cursor: pointer;
+}
+
+path:hover {
+  fill: rgba(255, 0, 0, 0.2);
+  transition: fill 0.2s ease-in-out;
+}
+
+#human-body-container {
+  display: block;
+}
+
+#bodyViewer-btn {
+  position: relative;
+  padding: 1.2rem;
+  margin: 0.5rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0;
+}
+#bodyViewer-btn-icon {
+  font-size: 1.2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+}

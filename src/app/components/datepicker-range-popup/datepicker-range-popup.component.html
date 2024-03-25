@@ -1,16 +1,17 @@
-<!-- component 1 -->
-<div class="nav-item d-none d-lg-block">
-    <div class="input-group date datepicker navbar-date-picker">
-        <span class="input-group-addon input-group-prepend border-right">
-            <span class="icon-calendar input-group-text calendar-icon"></span>
-        </span>
-        <input type="text" placeholder="Select Date Range" [showClearButton]="true" ngxDaterangepickerBootstrap
-        (change)="onDateRangeChange($event)" class="form-control" />
-    </div>
-</div>
-
-<!-- component 2 -->
-<div class="mt-2">
-    <p-calendar (onSelect)="onDateSelect($event)" selectionMode="range" [showButtonBar]="true" placeholder="Select Date Range"
-        [iconDisplay]="'input'" [showIcon]="true"></p-calendar>
-</div>
+<p-calendar
+  [(ngModel)]="dateRange"
+  selectionMode="range"
+  [showButtonBar]="true"
+  placeholder="Select Date Range"
+  [iconDisplay]="'input'"
+  [showIcon]="true"
+  [inputStyle]="inputStyle"
+  (onSelect)="onDateSelect()"
+  (onClearClick)="onClearClick()"
+  (onClickOutside)="onCloseCalender()"
+  [inputStyle]='{"width":"fit-content"}'
+  [minDate]="minDate" 
+  [maxDate]="maxDate"
+  
+></p-calendar>
+<!-- [panelStyle]="{ height: '300px', width: '300px' }" -->

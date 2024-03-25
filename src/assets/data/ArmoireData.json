@@ -1,0 +1,62 @@
+[
+      {
+        "id": 1,
+        "nom": "Armoire A",
+        "medicaments": [
+          {
+            "nom": "ACARLYSE",
+            "quantite_Pres_administree": 6,
+            "quantite_stock_actual": 4
+          },
+          {
+            "nom": "Ibuprofène",
+            "quantite_Pres_administree": 12,
+            "quantite_stock_actual": 4
+        
+          }, 
+          {
+            "nom": "Amoxicilline",
+            "quantite_Pres_administree": 16,
+            "quantite_stock_actual": 6
+            
+          },
+          {
+            "nom": "Diazépam",
+            "quantite_Pres_administree": 20,
+            "quantite_stock_actual": 14
+         
+          },
+          {
+            "nom": "ACAMANTIN",
+            "quantite_Pres_administree": 16,
+            "quantite_stock_actual": 6
+            
+          },
+          {
+            "nom": "ACARBOSE ADWYA",
+            "quantite_Pres_administree": 20,
+            "quantite_stock_actual": 14
+         
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "nom": "Armoire B",
+        "medicaments": [
+          {
+            "nom": "Amoxicilline",
+            "quantite_Pres_administree": 16,
+            "quantite_stock_actual": 6
+            
+          },
+          {
+            "nom": "Diazépam",
+            "quantite_Pres_administree": 20,
+            "quantite_stock_actual": 14
+         
+          }
+        ]
+      }
+    ]
+ 

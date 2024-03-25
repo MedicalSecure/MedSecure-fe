@@ -1,0 +1,113 @@
+<div class="d-flex justify-content-center">
+  <div class="d-flex flex-column gap-3">
+    <div class="search">
+      <div class="search-field position-relative mt-1">
+
+        <input
+          type="text"
+          placeholder="Search for medication"
+          [formControl]="searchControl"
+          [matAutocomplete]="auto"
+          class="form-control custom-width-rem custom-height custom-border-style custom-padding-right"
+          style="border-color: white"
+        />
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+          <ng-container
+            *ngFor="let medication of filteredMedications | async"
+            class="list"
+          >
+            <mat-option
+              (onSelectionChange)="onChangeSelectedMedication(medication)"
+              class="result"
+            >
+              {{ getMedicationProperty(medication) }}
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+        <button
+          mat-icon-button
+          matSuffix
+          class="position-absolute top-50 bg-transparent"
+          style="right: 5px; transform: translateY(-41%); border: none"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div class="mat-chip-listbox-container d-flex gap-3">
+        <strong
+          ><h4 style="font-size: large; margin-top: 9px">
+            Je cherche par:
+          </h4></strong
+        >
+        <mat-chip-listbox
+          [value]="searchKey"
+          (change)="onSelectionChange($event)"
+        >
+          <mat-chip-option value="Nom">Name</mat-chip-option>
+          <mat-chip-option value="Laboratoire">Pathologie</mat-chip-option>
+          <mat-chip-option value="Indications">SubstanceActive</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+
+      <div class="mat-chip-listbox-container d-flex gap-3 mt-1">
+        <strong
+          ><h4 style="font-size: large; margin-top: 9px">
+            Je cherche par:
+          </h4></strong
+        >
+        <mat-chip-listbox
+          [value]="searchKey"
+          (change)="onSelectionChange($event)"
+        >
+          <mat-chip-option value="pn">Patient Name</mat-chip-option>
+          <mat-chip-option value="dn">DN</mat-chip-option>
+          <mat-chip-option value="pid">Patiend ID</mat-chip-option>
+          <mat-chip-option value="rd">Registration Date</mat-chip-option>
+          <mat-chip-option value="cin">CIN</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+    </div>
+
+    @if (selectedMedications.length > 0) {
+    <div class="mt-3">
+      <h4>Selected Medicines:</h4>
+      <div
+        *ngFor="let medication of selectedMedications"
+        class="medication-item"
+      >
+        <div>
+          <p class="d-flex gap-3 mt-1">
+            <img
+              width="30"
+              height="30"
+              src="https://img.icons8.com/external-konkapp-flat-konkapp/64/external-syringe-emergency-services-konkapp-flat-konkapp.png"
+              alt="external-syringe-emergency-services-konkapp-flat-konkapp"
+            />
+
+            <strong>{{ medication["Nom"] }}</strong>
+            <strong>{{ medication["Dosage"] }}</strong>
+            <strong>{{ medication["Unit"] }}</strong>
+            <strong>{{ medication["DCI"] }}</strong>
+            <strong>{{ medication["Stock dispo"] }}</strong>
+            <img
+              src="assets/images/info.svg"
+              alt="info"
+              style="
+                height: 15px;
+                width: 15px;
+                margin-top: 3px;
+              "
+              matTooltip="
+                Indications: {{ medication['Indications'] }}
+                "
+            />
+          </p>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

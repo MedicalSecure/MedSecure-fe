@@ -1,0 +1,75 @@
+body{
+    margin-top:10%;
+    background: #fafafa;
+    width: 50%;
+  }
+  
+  .card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 .25rem .5rem rgba(0, 0, 0, .025);
+  
+  }
+  .card-header {
+    border-bottom-width: 1px
+  }
+  
+  
+  .card-title {
+    font-weight: 500;
+    margin-top: 10% ; 
+  position: relative;
+  align-self: center;
+  
+  }
+  
+  .card-subtitle {
+    font-weight: 400
+  }
+  
+  .card-table {
+    margin-bottom: 0
+  }
+  
+  .card-table tr td:first-child,
+  .card-table tr th:first-child {
+    padding-left: 1.25rem
+  }
+  
+  .card-table tr td:last-child,
+  .card-table tr th:last-child {
+    padding-right: 1.25rem
+  }
+  
+  .card-img-top {
+    height: 100%
+  }
+  .card {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.025);
+  }
+  .card {
+   
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #e5e9f2;
+    border-radius: .2rem;
+  }
+  
+  .card-header:first-child {
+    border-radius: calc(.2rem - 1px) calc(.2rem - 1px) 0 0;
+  }
+  
+  .card-header {
+    border-bottom-width: 1px;
+  }
+  .card-header {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    margin-top: 10px;
+    color: inherit;
+    border-bottom: 1px solid #e5e9f2;
+  }

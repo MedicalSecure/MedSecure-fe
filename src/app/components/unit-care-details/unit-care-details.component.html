@@ -1,0 +1,56 @@
+<div class="form-container">
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"
+        ><i class="fa fa-search text-black"></i
+      ></span>
+    </div>
+    <input
+      class="form-control"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+    />
+  </div> <br>
+
+  <h4 class="card-title" style="margin-right: auto; margin-top: 15px;">
+    {{ cards[1].title }}
+    <p>
+      <code
+        ><b>{{ cards[1].type }}</b></code
+      >
+    </p>
+  </h4>
+  <div class="example-action-buttons">
+    <button mat-button (click)="accordion.openAll()" style="color: blue;">Expand All</button>
+    <button mat-button (click)="accordion.closeAll()" style="color: blue;">Collapse All</button>
+  </div>
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel *ngFor="let room of cards[1].rooms">
+
+      <mat-expansion-panel-header>
+
+        <mat-panel-title >
+          Room No.
+        </mat-panel-title>
+
+          <mat-panel-description style="display: flex; flex: 1; ">
+            {{ room.roomNumber }}
+          </mat-panel-description>
+
+          <mat-icon style="flex: 0.5; color: green;">check_circle</mat-icon>
+
+
+      </mat-expansion-panel-header>
+         <h4> List of equipments</h4>
+      <ul>
+        <li *ngFor="let equipment of room.equipments">{{ equipment.name }}</li>
+      </ul>
+
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+</div>
+

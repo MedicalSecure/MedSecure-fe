@@ -1,0 +1,16 @@
+<ol class="step-indicator">
+  <li
+    *ngFor="let step of steps"
+    [ngClass]="getIndicatorClass(step)"
+    (click)="SwitchToStep(step.id)"
+    [ngStyle]="{ '--top': size / 2 + sizeUnit }"
+  >
+    <div class="step" [ngStyle]="style">
+      <i [class]="step.iconClass"></i>
+    </div>
+    <div class="caption hidden-xs hidden-sm">
+      @if(showSteps$WithTitle){Step <span>{{ step.id }}</span
+      >:} <span>{{ step.title }}</span>
+    </div>
+  </li>
+</ol>

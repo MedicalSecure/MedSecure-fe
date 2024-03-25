@@ -1,0 +1,132 @@
+
+.transparent-button {
+  background-color: transparent;
+  border: none;
+}
+.demo-paginator {
+  position: fixed;
+  left: 60%;
+  bottom: 90%;
+  background-color: transparent;
+  font-weight: bold;
+
+}
+.header-container {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+
+  align-self: center;
+
+}
+
+.extended-table .mat-column-root{
+  width: 15%;
+
+  }
+  .extended-table .mat-column-name{
+    width: 15%;
+  
+    }
+.more-button {
+  background-color: transparent;
+  border: none;
+ 
+
+}
+
+.extended-table th {
+  color: black;
+  text-align: center;
+}
+
+
+
+.image {
+  margin-bottom: 6px;
+}
+
+.header {
+  background-color: blueviolet;
+  font-weight: 700;
+}
+
+.container {
+  background-color: rgb(150, 83, 83);
+}
+
+.extended-table td{
+  align-items: center;
+  text-align: center;
+  height: auto;
+  background-color: rgba(128, 128, 128, 0.1);
+
+}
+
+
+.checkbox {
+  color: greenyellow;
+}
+
+
+
+.header-button {
+  background-color: transparent;
+  border: none;
+}
+
+
+
+table .extended-table {
+  background-color: rgba(239, 239, 239, 0);
+
+ 
+}
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+
+.example-element-detail {
+  overflow-y: auto;
+  transition: max-height 0.3s;
+  margin: 0 auto;
+  justify-content: space-between;
+
+}
+
+
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+  height: fit-content;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.custom-chip-set .status-chip {
+  border: 4px solid greenyellow;
+  padding: 8px;
+  background-color: transparent;
+}
