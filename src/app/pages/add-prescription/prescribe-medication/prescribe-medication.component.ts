@@ -79,6 +79,7 @@ export class PrescribeMedicationComponent implements OnInit, OnDestroy {
   private finishEventSubscription: Subscription;
   @Output() onMedicationsChange = new EventEmitter<medicationType[]>();
   @Output() onIsMedicationPageValidChange = new EventEmitter<boolean>();
+  @Output() onSubmitChange = new EventEmitter<void>();
 
   isSelectedForceOrder: boolean = false;
   isFilteredForceOrder: boolean = false;
@@ -278,9 +279,11 @@ export class PrescribeMedicationComponent implements OnInit, OnDestroy {
     console.log('checking before finish ');
     this.onAppendMedication();
     if (this.validateFinish() === false) return;
-    /* below part is where to handle prescription submission to backend */
+    /* handle prescription submission to backend */
+
     console.log('valid medication: ');
-    console.log(this.prescribedMedications);
+    console.log(this.prescribedMedications); 
+    this.onSubmitChange.emit();
   }
 
   validateFinish(): boolean {
@@ -302,12 +305,16 @@ export class PrescribeMedicationComponent implements OnInit, OnDestroy {
     afterFoodCounter: number;
     maximumDispenseQuantity: number;
     average: number;
+    numberOfCautions:number,
+    numberOfComments:number
   } {
     let timesADay: string = '';
     let afterFoodCounter: number = 0;
     let beforeFoodCounter: number = 0;
     let timesADayCounter: number = 0;
     let maximumDispenseQuantity: number = 0;
+    let numberOfComments:number=0;
+    let numberOfCautions:number=0;
     medication.administrationHours.forEach((medicationGroup) => {
       medicationGroup.forEach((hourObj) => {
         if (hourObj.beforeFoodDispenseQuantity) {
@@ -326,8 +333,12 @@ export class PrescribeMedicationComponent implements OnInit, OnDestroy {
         }
       });
     });
-    if (timesADayCounter > 1) timesADay = timesADayCounter + ' times a day';
-    else if (timesADayCounter == 1) timesADay = 'single time a day';
+    medication.comments.forEach(comment => {
+      if(comment.label==="Caution") numberOfCautions++;
+      else numberOfComments++;
+    });
+    if (timesADayCounter > 1) timesADay = timesADayCounter + ' times a day : ';
+    else if (timesADayCounter == 1) timesADay = 'single time a day : ';
     let average = (beforeFoodCounter + afterFoodCounter) / timesADayCounter;
     return {
       timesADay,
@@ -335,6 +346,8 @@ export class PrescribeMedicationComponent implements OnInit, OnDestroy {
       afterFoodCounter,
       maximumDispenseQuantity,
       average: !Number.isNaN(average) ? Number(average.toFixed(1)) : 0,
+      numberOfCautions,
+      numberOfComments
     };
   }
   getNumberOfDaysInRange(dateRange: [Date, Date | null] | null): number | null {
@@ -373,9 +386,6 @@ export class PrescribeMedicationComponent implements OnInit, OnDestroy {
 export interface MedicationGroupType {
   letter: string;
   labels: string[];
-}
-interface DayHoursBoundaries {
-  [category: string]: number[]; // Use index signature for dynamic categories
 }
 
 const _initialPartsOfDayHours: hourType[][] = [

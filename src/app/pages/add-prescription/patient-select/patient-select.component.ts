@@ -9,9 +9,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-sn.pipe';
-import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
-import { MatIcon } from '@angular/material/icon';
-import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
 
 @Component({
   selector: 'app-patient-select',
@@ -20,9 +17,6 @@ import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-
     CommonModule,
     FormsModule,
     FilterPatientByNameAndSnPipe,
-    PatientInfoCardsComponent,
-    MatIcon,
-    ToggleButtonComponent,
   ],
   templateUrl: './patient-select.component.html',
   styleUrl: './patient-select.component.css',

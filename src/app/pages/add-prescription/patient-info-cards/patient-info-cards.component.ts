@@ -21,15 +21,6 @@ export class PatientInfoCardsComponent {
   onClickEditMedication(x: any, y: any) {}
   onClickRemoveMedication(x: any, y: any) {}
 
-  getNewlyPrescribedMedicationSig(
-    medication: medicationType
-  ): string | undefined {
-    let result;
-    const size = medication.administrationHours.length;
-    if (size > 1) result = size + ' times a day';
-    else if (size == 1) result = 'single time a day';
-    return result;
-  }
 }
 
 const dummyData: medicationType[] = [

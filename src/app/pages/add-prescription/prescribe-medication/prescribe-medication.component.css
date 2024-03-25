@@ -11,37 +11,18 @@
   height: fit-content;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-.input-group-days {
-  position: relative;
-  width: 6rem;
-}
-
-.input-days {
+.icon-counter {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 10px; /* Adjust as needed */
-}
-
-.hourCircleBtn {
-  border-radius: 2rem;
-  padding: 0.2rem;
-  padding-top: 0.15rem;
-  padding-bottom: 0.15rem;
-  margin-right: 0.05rem;
-}
-.icon-flipped {
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
+  top: 0px;
+  right: -3px;
+  background-color: rgb(21, 14, 129);
+  color: white;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

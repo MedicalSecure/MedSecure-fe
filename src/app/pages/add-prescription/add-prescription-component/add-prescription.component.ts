@@ -1,5 +1,9 @@
 import { Component, EventEmitter } from '@angular/core';
-import { AddSymptomsComponent, diagnosisType, symptomType } from '../add-symptoms/add-symptoms.component';
+import {
+  AddSymptomsComponent,
+  diagnosisType,
+  symptomType,
+} from '../add-symptoms/add-symptoms.component';
 import {
   PatientSelectComponent,
   patientType,
@@ -10,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 import { WizardHeaderComponent } from '../../../components/wizard-header/wizard-header.component';
 import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
 import { Subject } from 'rxjs';
+import { medicationType } from '../../../types';
 
 @Component({
   selector: 'app-add-prescription',
@@ -30,6 +35,7 @@ export class AddPrescriptionComponent {
   stepsLimit: number = 3;
   selectedDiagnosis: diagnosisType[] = [];
   selectedSymptoms: symptomType[] = [];
+  selectedMedications: medicationType[] = [];
   selectedPatient: patientType | undefined;
   autoPageSwitchOnPatientSelection: boolean = false;
   isPatientSelectPageValid: boolean = false;
@@ -45,6 +51,58 @@ export class AddPrescriptionComponent {
     this._updateButtonsState();
   }
 
+  handleSubmit() {
+    const finalPrescription = {
+      patient: this.selectedPatient,
+      symptoms: this.selectedSymptoms,
+      diagnosis: this.selectedDiagnosis,
+      medications: this.selectedMedications,
+    };
+    console.log(finalPrescription);
+  }
+
+  validatePageSwitch = (index: number): boolean => {
+    // arrow function to hold they callback context xD
+    if (index > this.stepsLimit + 1) return false;
+    if (index < 1) return false;
+    if (index >= 0 && index == this.stepNumber) return false;
+    /* if (index != 1 && this.selectedPatient == undefined) return false; */
+    if (index != 1 && !this.isPatientSelectPageValid) return false;
+    if (index > 2 && !this.isAddSymptomsPageValid) return false;
+    if (index > 3 && !this.isSelectMedicationPageValid) return false;
+    return true;
+  };
+
+  emitFinishEventToChild() {
+    this.eventsSubject.next();
+  }
+
+  handleMedicationChange(medications: medicationType[]) {
+    this.selectedMedications = medications;
+  }
+
+  handleIsMedicationPageValidChange(eventData: boolean) {
+    this.isSelectMedicationPageValid = eventData;
+  }
+  handleIsPatientSelectPageValidChange(eventData: boolean) {
+    this.isPatientSelectPageValid = eventData;
+  }
+  handleIsAddSymptomsPageValidChange(eventData: boolean) {
+    this.isAddSymptomsPageValid = eventData;
+  }
+  onSelectedDiagnosisChangeHandler(
+    event: onChipsSelectionEmitType<diagnosisType>
+  ) {
+    this.selectedDiagnosis = event.SelectedObjectList;
+  }
+  onSelectedSymptomsChangeHandler(
+    event: onChipsSelectionEmitType<symptomType>
+  ) {
+    this.selectedSymptoms = event.SelectedObjectList;
+  }
+  onClickFinish() {
+    this.emitFinishEventToChild();
+  }
   onSelectPatientChange(patient: patientType | undefined) {
     if (patient == undefined) {
       this.selectedPatient = undefined;
@@ -57,10 +115,7 @@ export class AddPrescriptionComponent {
     this._updateButtonsState();
   }
 
-  onClickFinish() {
-    this.emitFinishEventToChild();
-  }
-
+  /* wizard buttons */
   SwitchToStep(index: number) {
     if (index === this.stepsLimit + 1) {
       this.onClickFinish();
@@ -86,29 +141,6 @@ export class AddPrescriptionComponent {
     this.SwitchToStep(event + sourcePageNumber);
   }
 
-  onSelectedDiagnosisChangeHandler(event: onChipsSelectionEmitType<diagnosisType>) {
-    this.selectedDiagnosis = event.SelectedObjectList;
-  }
-  onSelectedSymptomsChangeHandler(event: onChipsSelectionEmitType<symptomType>) {
-    this.selectedSymptoms = event.SelectedObjectList;
-  }
-
-  validatePageSwitch = (index: number): boolean => {
-    // arrow function to hold they callback context xD
-    if (index > this.stepsLimit + 1) return false;
-    if (index < 1) return false;
-    if (index >= 0 && index == this.stepNumber) return false;
-    /* if (index != 1 && this.selectedPatient == undefined) return false; */
-    if (index != 1 && !this.isPatientSelectPageValid) return false;
-    if (index > 2 && !this.isAddSymptomsPageValid) return false;
-    if (index > 3 && !this.isSelectMedicationPageValid) return false;
-    return true;
-  };
-
-  emitFinishEventToChild() {
-    this.eventsSubject.next();
-  }
-
   onClickNextEvent(): void {
     this.nextStep();
   }
@@ -120,16 +152,6 @@ export class AddPrescriptionComponent {
   }
   setBackButtonStyle(event: { label: string; class: string }) {
     this.nextButtonContent = event;
-  }
-
-  handleIsMedicationPageValidChange(eventData: boolean) {
-    this.isSelectMedicationPageValid = eventData;
-  }
-  handleIsPatientSelectPageValidChange(eventData: boolean) {
-    this.isPatientSelectPageValid = eventData;
-  }
-  handleIsAddSymptomsPageValidChange(eventData: boolean) {
-    this.isAddSymptomsPageValid = eventData;
   }
 
   private _updateButtonsState() {

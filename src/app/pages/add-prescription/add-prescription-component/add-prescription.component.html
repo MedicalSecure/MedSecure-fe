@@ -1,10 +1,3 @@
-<!-- 
-  remove start date from symptoms
-  change sig to android time pickers
-  dosage unit => remove list + autoSelect from medication choose
- remove associated diagnosis
-
--->
 <div id="add-prescription-body">
   <!-- main content -->
   <div class="container-scroll bg-white pt-2">
@@ -43,6 +36,7 @@
       <div [className]="stepNumber != 2 && 'd-none'">
         <app-add-symptoms
           (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
+          (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"
           [selectedPatient]="selectedPatient"
           (onIsAddSymptomsPageValidChange)="handleIsAddSymptomsPageValidChange($event)"
         />
@@ -52,6 +46,8 @@
           [events]="eventsSubject.asObservable()"
           [selectedPatient]="selectedPatient"
           (onIsMedicationPageValidChange)="handleIsMedicationPageValidChange($event)"
+          (onSubmitChange)="handleSubmit()"
+          (onMedicationsChange)="handleMedicationChange($event)"
         />
       </div>
       <div [className]="selectedPatient == undefined && 'd-none'">
