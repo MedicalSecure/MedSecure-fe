@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOption, provideNativeDateAdapter } from '@angular/material/core';
 import { NgIf } from '@angular/common';
 import * as XLSX from 'xlsx';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -26,11 +26,11 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatSelectModule,
     MatOption,
-    FormsModule
+    FormsModule,
   ],
 })
 export class IndexComponent {
-  displayTabs:boolean=false;
+  displayTabs:boolean = true;
   importedData: { [key: string]: any }[] = [];
   //after mapping :
   mappedData: MedicationType[] = [];
@@ -38,23 +38,23 @@ export class IndexComponent {
   isImportValid: boolean = false;
   isShowImportModal = false;
 
-  columnMappings:MedicationType= {
+  columnMappings: MedicationType = {
     Name: NOT_ASSIGNED,
     Dosage: NOT_ASSIGNED,
     Forme: NOT_ASSIGNED,
-    Quantity: NOT_ASSIGNED,
-    'Average Stock': NOT_ASSIGNED,
-    'Safety Stock': NOT_ASSIGNED,
-    'Minimum Stock': NOT_ASSIGNED,
-    'Alert Stock': NOT_ASSIGNED,
-    Unit: NOT_ASSIGNED,
     DCI: NOT_ASSIGNED,
-    Laboratory: NOT_ASSIGNED,
     'Expiration Date': NOT_ASSIGNED,
+    Unit: NOT_ASSIGNED,
     Price: NOT_ASSIGNED,
-    Indications: NOT_ASSIGNED,
+    Stock: NOT_ASSIGNED,
+    'Alert Stock': NOT_ASSIGNED,
+    'Average Stock': NOT_ASSIGNED,
+    'Minimum Stock': NOT_ASSIGNED,
+    'Safety Stock': NOT_ASSIGNED,
   };
-  dbHeaders: (keyof MedicationType)[] = Object.keys(this.columnMappings) as (keyof MedicationType)[];
+  dbHeaders: (keyof MedicationType)[] = Object.keys(
+    this.columnMappings
+  ) as (keyof MedicationType)[];
 
   constructor(private router: Router) {}
 
@@ -86,28 +86,27 @@ export class IndexComponent {
   }
 
   onClickFinishModal() {
-    let result :MedicationType[]= [];
+    let result: MedicationType[] = [];
     for (let importedObj of this.importedData) {
-      const newMappedObject:MedicationType  = {
+      const newMappedObject: MedicationType = {
         Name: NOT_ASSIGNED,
         Dosage: NOT_ASSIGNED,
         Forme: NOT_ASSIGNED,
-        Quantity: NOT_ASSIGNED,
-        'Average Stock': NOT_ASSIGNED,
-        'Safety Stock': NOT_ASSIGNED,
-        'Minimum Stock': NOT_ASSIGNED,
-        'Alert Stock': NOT_ASSIGNED,
-        Unit: NOT_ASSIGNED,
         DCI: NOT_ASSIGNED,
-        Laboratory: NOT_ASSIGNED,
         'Expiration Date': NOT_ASSIGNED,
+        Unit: NOT_ASSIGNED,
         Price: NOT_ASSIGNED,
-        Indications: NOT_ASSIGNED,
+        Stock: NOT_ASSIGNED,
+        'Alert Stock': NOT_ASSIGNED,
+        'Average Stock': NOT_ASSIGNED,
+        'Minimum Stock': NOT_ASSIGNED,
+        'Safety Stock': NOT_ASSIGNED,
       };
       for (const dbHead of this.dbHeaders) {
         const oldHeader = this.columnMappings[dbHead as keyof MedicationType];
         if (importedObj[oldHeader] !== undefined) {
-          newMappedObject[dbHead as keyof MedicationType] = importedObj[oldHeader];
+          newMappedObject[dbHead as keyof MedicationType] =
+            importedObj[oldHeader];
         } else {
           newMappedObject[dbHead as keyof MedicationType] = NOT_ASSIGNED;
         }
@@ -115,11 +114,10 @@ export class IndexComponent {
       result.push(newMappedObject);
     }
     this.mappedData = result;
-    console.log("mappedData", this.mappedData);
-    console.log("test", this.columnMappings);
+    console.log('mappedData', this.mappedData);
+    console.log('test', this.columnMappings);
     this.onClickCloseModal();
-    this.router.navigate(['/pharmacy'], { state: { mappedData: result } });
-    
+    this.router.navigate(['/', 'pharmacy'], { state: { mappedData: result } });
   }
 
   onClickCloseModal() {
@@ -130,27 +128,27 @@ export class IndexComponent {
     $event.stopPropagation();
   }
 
-  OnSelectchange(event:any, dbColumn: keyof MedicationType){
-    
+  onSelectchange(event: any, dbColumn: keyof MedicationType) {
     this.columnMappings[dbColumn] = event.target.value;
+    if (event.target.value == NOT_ASSIGNED) {
+      this.columnMappings[dbColumn] = '';
+    }
     console.log(this.columnMappings);
   }
 }
-export const NOT_ASSIGNED = 'Not Assigned';
+export const NOT_ASSIGNED = '---';
 
 export type MedicationType = {
   Name: string;
   Dosage: string;
   Forme: string;
-  Quantity: string;
-  'Average Stock': string;
-  'Safety Stock': string;
-  'Minimum Stock': string;
-  'Alert Stock': string;
-  Unit: string;
   DCI: string;
-  Laboratory: string;
   'Expiration Date': string;
+  Unit: string;
   Price: string;
-  Indications: string;
+  Stock: string;
+  'Alert Stock': string;
+  'Average Stock': string;
+  'Minimum Stock': string;
+  'Safety Stock': string;
 };

@@ -629,15 +629,15 @@
                 aria-controls="form-elements"
                 [routerLink]="['/', 'pharmacy']"
               >
-                <i class="menu-icon mdi mdi-card-text-outline"></i>
+                <i class="menu-icon mdi mdi-mortar-pestle-plus"></i>
                 <span class="menu-title">Pharmalink</span>
                 <i class="menu-arrow"></i>
               </a>
               <div class="collapse" id="form-elements">
                 <!--<ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
-                      Elements</a></li>
-          </ul>-->
+                  <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
+                          Elements</a></li>
+              </ul>-->
               </div>
             </li>
             <li class="nav-item nav-category">Drug Distribution</li>
@@ -858,7 +858,7 @@
                     >
                       <div
                         class="modal-content"
-                        style="height: 540px; margin-right: 75px"
+                        style="height: 480px; margin-right: 75px"
                       >
                         <div class="modal-header p-2">
                           <h5 class="modal-title" id="exampleModalLabel">
@@ -884,7 +884,7 @@
                             <select
                               [value]="columnMappings[dbColumn]"
                               class="form-select"
-                              (change)="OnSelectchange($event, dbColumn)"
+                              (change)="onSelectchange($event, dbColumn)"
                               required
                             >
                               <option value="" hidden>{{ dbColumn }}</option>
