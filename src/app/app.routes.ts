@@ -5,14 +5,12 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { Page1Component } from './pages/page1/page1.component';
 import { PharmacyComponent } from './pages/pharmacy/pharmacy.component';
 import { Visits  } from './pages/visits/visits.component';
-import { ChartsScatterMedComponent } from './components/charts/charts-scatter-med/charts-scatter-med.component';
-import {WidgetsPageComponent} from './pages/widgets-page/widgets-page.component'
-import {UnitSelectEnviroMonitorComponent} from './components/UnitSelect-EnviroMonitor/UnitSelect-EnviroMonitor.component'
-import {ChipUnitSelectorEnviroMonitor} from './components/ChipUnitSelector-EnviroMonitor/ChipUnitSelector-EnviroMonitor.component'
-import {MultiSenseEnviroScanComponent} from './components/MultiSense-EnviroScan/MultiSense-EnviroScan.component'
+
+import {UnitSelectorWidget} from './components/unitselector-widget/unitselector-widget.component'
+
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
-import { WidgetMedecineComponent } from './pages/widget-medecine/widget-medecine.component';
+import { WidgetsComponent } from './pages/widgets/widgets.component';
 
 import {KanbanComponent} from './components/kanban/kanban.component';
 
@@ -24,10 +22,8 @@ export const routes: Routes = [
 
     {path:'visits',component:Visits},
     {path:'pharmacy',component:PharmacyComponent},
-    {path:'widgetmedecine',component:WidgetMedecineComponent},
-    {path:'selectbo',component:UnitSelectEnviroMonitorComponent},
-    {path:'selectmat',component:ChipUnitSelectorEnviroMonitor},
-    {path:'WidgetsPageComponent',component:WidgetsPageComponent},
+    {path:'widgets',component:WidgetsComponent},
+    {path:'UnitSelector',component:UnitSelectorWidget},
 
     {path:'bac-patient',component:BacPatientComponent},
     {path:'timeline',component:TimelineComponent},
