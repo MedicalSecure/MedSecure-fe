@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { Medications } from '../medication-search/medication.model';
+import { Medications } from './../../model/medication'
 
 
 @Component({
