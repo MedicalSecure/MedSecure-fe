@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { MedicationSearchComponent } from './components/medication-search/medication-search.component';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { BacPatientComponent} from './pages/bacPatient/bacPatient.component'
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { Page1Component } from './pages/page1/page1.component';
@@ -21,5 +21,7 @@ export const routes: Routes = [
     {path:'bac-patient',component:BacPatientComponent},
     {path:'timeline',component:TimelineComponent},
     {path:'kanban',component:KanbanComponent},
+    {path:'search',component:SearchBarComponent},
+    {path:'search',component:PharmacyComponent},
 ];
 

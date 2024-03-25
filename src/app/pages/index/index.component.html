@@ -621,25 +621,25 @@
             </li>
 
             <li class="nav-item">
-    <a
-      class="nav-link"
-      data-bs-toggle="collapse"
-      href="#form-elements"
-      aria-expanded="false"
-      aria-controls="form-elements"
-      [routerLink]="['/', 'pharmacy']"
-    >
-      <i class="menu-icon mdi mdi-card-text-outline"></i>
-      <span class="menu-title">Pharmalink</span>
-      <i class="menu-arrow"></i>
-    </a>
-    <div class="collapse" id="form-elements">
-      <!--<ul class="nav flex-column sub-menu">
-    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
-            Elements</a></li>
-</ul>-->
-    </div>
-  </li>
+              <a
+                class="nav-link"
+                data-bs-toggle="collapse"
+                href="#form-elements"
+                aria-expanded="false"
+                aria-controls="form-elements"
+                [routerLink]="['/', 'pharmacy']"
+              >
+                <i class="menu-icon mdi mdi-mortar-pestle-plus"></i>
+                <span class="menu-title">Pharmalink</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="form-elements">
+                <!--<ul class="nav flex-column sub-menu">
+                  <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
+                          Elements</a></li>
+              </ul>-->
+              </div>
+            </li>
             <li class="nav-item nav-category">Drug Distribution</li>
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false"
@@ -841,14 +841,17 @@
                       "
                     >
                       <div
-                        class="modal-dialog justify-content-center"
+                        class="modal-dialog justify-content-center modal-dialog-centered"
                         role="document"
                         (click)="stopPropagation($event)"
                       >
-                        <div class="modal-content">
+                        <div
+                          class="modal-content"
+                          style="height: 540px; margin-right: 75px"
+                        >
                           <div class="modal-header p-2">
                             <h5 class="modal-title" id="exampleModalLabel">
-                              Import and map data
+                              <strong>Import and map data</strong>
                             </h5>
                             <button
                               type="button"
@@ -861,23 +864,22 @@
                             </button>
                           </div>
                           <div
-                            class="modal-body d-flex flex-wrap gap-4 form-group justify-content-center"
+                            class="modal-body d-flex flex-wrap gap-3 form-group ms-3"
                           >
                             <!-- @for(dbColumn of dbHeaders;track $index){ -->
 
                             @for(dbColumn of dbHeaders;track $index){
                             <div style="width: 10rem">
-                              <label>{{ dbColumn }}</label>
                               <select
                                 [value]="columnMappings[dbColumn]"
                                 class="form-select"
-                                (change)="
-                                  OnSelectchange($event, dbColumn)
-                                "
+                                (change)="OnSelectchange($event, dbColumn)"
+                                required
                               >
+                                <option value="" hidden>{{ dbColumn }}</option>
                                 @for(impHeader of importedDataHeaders;track
                                 impHeader){
-                                <option [value]="impHeader" style="width: 50%">
+                                <option [value]="impHeader" style="width: 100%">
                                   {{ impHeader }}
                                 </option>
                                 }
@@ -885,24 +887,23 @@
                             </div>
 
                             }
-                          </div>
+                            <div class="mt-3">
+                              <button
+                                type="button"
+                                class="btn btn-primary text-white"
+                                (click)="onClickFinishModal()"
+                              >
+                                Save changes
+                              </button>
 
-                          <div class="ms-4">
-                            <button
-                              type="button"
-                              class="btn btn-primary text-white"
-                              (click)="onClickFinishModal()"
-                            >
-                              Save changes
-                            </button>
-
-                            <button
-                              type="button"
-                              class="btn btn-secondary"
-                              (click)="onClickCloseModal()"
-                            >
-                              Cancel
-                            </button>
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                (click)="onClickCloseModal()"
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
