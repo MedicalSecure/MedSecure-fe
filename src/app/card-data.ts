@@ -40,8 +40,8 @@ export const cardData = [
   },
   {
     title: 'Unit 2',
-    description: 'Description for Card 2',
-    type: 'Type 2',
+    description: 'In our clinics surgical unit, we prioritize patient safety and comfort, offering advanced surgical procedures and personalized care.',
+    type: 'Surgical',
     rooms: [
       { roomNumber: 201, status:'pending',
       equipments:[
@@ -54,7 +54,11 @@ export const cardData = [
         { id: 2, name: 'Equipment 2' },
         { id: 3, name: 'Equipment 3' }
       ] },
-      { roomNumber: 203 , status:'pending', equipments:[]},
+      { roomNumber: 203 , status:'pending',
+       equipments:[
+        { id: 1, name: 'Equipment T' },
+        { id: 2, name: 'Equipment B' },
+       ]},
       { roomNumber: 603, status:'pending' , equipments:[]},
       { roomNumber: 203 , status:'pending', equipments:[]},
       { roomNumber: 603, status:'pending' , equipments:[]},
