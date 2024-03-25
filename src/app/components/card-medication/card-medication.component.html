@@ -4,7 +4,7 @@
     <ul [ngClass]="ULClass">
       @for(medication of medicationList;track $index){
       <li>
-        <div class="mb-0 content-limit-vw">
+<!--         <div class="mb-0 content-limit-vw">
           <div [ngClass]="TitleAndIconsClass">
             <span
               (click)="canEdit && onClickEditMedication($index, medication)"
@@ -22,7 +22,7 @@
           </div>
           <p class="fw-light fs-6 text-dark mb-0">
             {{
-              medication.consumptionDays == -1
+              medication. == -1
                 ? "Permanent"
                 : medication.consumptionDays + " Days"
             }}
@@ -61,7 +61,7 @@
             {{ primaryText }}
           </p>
           }
-        </div>
+        </div> -->
       </li>
       }
     </ul>
