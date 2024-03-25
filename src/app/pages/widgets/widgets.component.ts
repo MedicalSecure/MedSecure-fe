@@ -1,15 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
-import{MedicationsWidgetComponent} from '../../components/charts/medications-widget/medications-widget.component'
-import {StockOutWidgetComponent} from'../../components/charts/stock-out-widget/stock-out-widget.component'
-import {ArmoireWidgetComponent} from '../../components/charts/armoire-widget/armoire-widget.component'
+import{MedicationsWidgetComponent} from '../../components/widgets/medications-widget/medications-widget.component'
+import {StockOutWidgetComponent} from'../../components/widgets/stock-out-widget/stock-out-widget.component'
+import {ArmoireWidgetComponent} from '../../components/widgets/armoire-widget/armoire-widget.component'
 
-import { CheckInProgressComponent} from '../../components/charts/checkin-progress/checkin-progress.component'
+import { CheckInProgressComponent} from '../../components/widgets/checkin-progress/checkin-progress.component'
 import { CardComponent } from '../../components/card/card.component'
-import { RadialbarChartsComponent } from '../../components/charts/radialbar-charts/radialbar-charts.component'
+import { RadialbarChartsComponent } from '../../components/widgets/radialbar-charts/radialbar-charts.component'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PrescriptionWidgetComponent  } from '../../components/charts/prescription-widget/prescription-widget.component'
+import { PrescriptionWidgetComponent  } from '../../components/widgets/prescription-widget/prescription-widget.component'
 import { MultiSenseWidgetComponent} from '../../components/multisense-widget/multisense-widget.component'
 
 
