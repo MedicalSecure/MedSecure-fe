@@ -26,4 +26,5 @@ export const routes: Routes = [
     {path:'search',component:SearchBarComponent},
     {path:'pharmacy',component:PharmacyComponent},
     { path: 'prescribe', component: AddPrescriptionComponent },
+    {path:'visits', component: Visits }
 ];
