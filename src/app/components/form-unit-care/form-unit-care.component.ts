@@ -43,7 +43,7 @@ export class FormUnitCareComponent {
 
        //Methods
 
-  selectedChipsChange(result: onChipsSelectionEmitType) {
+  selectedChipsChange(result: onChipsSelectionEmitType<any>) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
       console.log('added custom item :', result.lastAddedItem);
