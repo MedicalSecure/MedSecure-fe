@@ -22,6 +22,7 @@ export class WizardHeaderComponent implements OnChanges {
   currentStep = 1;
   @Output()
   currentStepChange = new EventEmitter<number>();
+  @Input() validatePageSwitch: CallbackFunction;
   @Input()
   showSteps$WithTitle: boolean = true;
   @Input()
@@ -88,10 +89,14 @@ export class WizardHeaderComponent implements OnChanges {
   }
 
   SwitchToStep(index: number) {
-    if (this._validatePageSwitch(index)) this.stepChanged(index);
+    if (this.localValidatePageSwitch(index)) this.stepChanged(index);
   }
 
-  _validatePageSwitch(index: number): Boolean {
+  localValidatePageSwitch(index: number): Boolean {
+    /* you have the choice to choose between the parent callback fn or this logic here */
+    if(this.validatePageSwitch !== undefined) return this.validatePageSwitch(index);
+
+    /* wizard validation logic, works if no function is provided by the parent */
     if (index > 0) {
       if (this.switchCondition) return true;
     }
@@ -124,6 +129,10 @@ export type wizardStepType = {
   matIconName: string;
   iconClass: string;
 };
+
+interface CallbackFunction {
+  (index:number): boolean;
+}
 
 /* USAGE
 

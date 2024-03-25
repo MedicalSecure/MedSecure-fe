@@ -31,6 +31,8 @@ export class CardsUnitCareComponent {
         return 'btn btn-secondary';
       case 2:
         return 'btn btn-success';
+      case 3:
+        return 'bouton'
       default:
         return 'btn btn-default'; // Add more cases if needed
     }

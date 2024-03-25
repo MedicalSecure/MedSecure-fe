@@ -1,0 +1,88 @@
+<div id="add-prescription-body">
+  <!-- main content -->
+  <div class="container-scroll bg-white pt-2">
+    <app-wizard-header
+      (currentStepChange)="SwitchToStep($event)"
+      [switchCondition]="selectedPatient != undefined"
+      [currentStep]="stepNumber"
+      [size]="3"
+      [IconSizeRatio]="0.6"
+      [validatePageSwitch]="validatePageSwitch"
+    ></app-wizard-header>
+    @if(selectedPatient && stepNumber!=0){
+    <div class="d-flex gap-2 justify-content-center " style="height: 2rem">
+      <p class="align-self-center m-0 ">Selected Patient :</p>
+      <span class="text-primary fw-bold align-self-center">
+        SN : {{ selectedPatient.sn }} | {{ selectedPatient.name }} -
+        {{ selectedPatient.age }} years</span
+      >
+      <mat-icon
+        class="align-self-center"
+        (click)="onSelectPatientChange(undefined)"
+        >close</mat-icon
+      >
+    </div>
+    }
+
+    <!-- human body card -->
+    <div>
+      <div [className]="stepNumber != 1 && 'd-none'">
+        <app-patient-select
+          [(selectedPatient)]="selectedPatient"
+          (selectedPatientChange)="onSelectPatientChange($event)"
+          (onIsPatientSelectPageValidChange)="handleIsPatientSelectPageValidChange($event)"
+        />
+      </div>
+      <div [className]="stepNumber != 2 && 'd-none'">
+        <app-add-symptoms
+          (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
+          (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"
+          [selectedPatient]="selectedPatient"
+          (onIsAddSymptomsPageValidChange)="handleIsAddSymptomsPageValidChange($event)"
+        />
+      </div>
+      <div [className]="stepNumber != 3 && 'd-none'">
+        <app-prescribe-medication
+          [events]="eventsSubject.asObservable()"
+          [selectedPatient]="selectedPatient"
+          (onIsMedicationPageValidChange)="handleIsMedicationPageValidChange($event)"
+          (onSubmitChange)="handleSubmit()"
+          (onMedicationsChange)="handleMedicationChange($event)"
+        />
+      </div>
+      <div [className]="selectedPatient == undefined && 'd-none'">
+        <app-patient-info-cards></app-patient-info-cards>
+      </div>
+    </div>
+  </div>
+  <!-- wizard - navigation buttons -->
+  <div
+    class="d-flex justify-content-start"
+    style="
+      background-color: #f4f5f7;
+      width: 90vw;
+      min-height: 2.2rem;
+      padding: 0.1rem;
+      padding-top: 0.3rem;
+      padding-left: 0.3rem;
+    "
+  >
+    <div class="d-flex gap-1 col-7 col-md-5 col-lg-4 m-0 ">
+      <button
+        type="button"
+        style="padding: 0.8rem 0;"
+        [className]="backButtonContent.class"
+        (click)="onClickBackEvent()"
+      >
+        {{ backButtonContent.label }}
+      </button>
+      <button
+        type="button"
+        [className]="nextButtonContent.class"
+        (click)="onClickNextEvent()"
+      >
+        {{ nextButtonContent.label }}
+      </button>
+    </div>
+  </div>
+</div>

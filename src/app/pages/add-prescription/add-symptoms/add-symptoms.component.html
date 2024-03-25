@@ -1,0 +1,40 @@
+<div
+  class="d-flex flex-column p-sm-2 justify-content-center gap-5 gap-sm-3 flex-sm-row-reverse"
+>
+  <div class="col-12 col-sm-6 p-0" id="test-height">
+    <form class="container d-flex card py-2 shadow-sm gap-1">
+      <app-human-body-viewer></app-human-body-viewer>
+    </form>
+  </div>
+  <div
+    class="d-flex flex-column gap-2 justify-content-center align-middle col-sm-6 ps-1"
+  >
+    <chips-select
+      [ObjectName]="'Symptom'"
+      [customLabel]="'Symptoms'"
+      class="w-100"
+      (selectedChipsChange)="selectedSymptomsChipsChange($event)"
+      [enableCustomAdditions]="false"
+      [enableQuickSelectFromSuggestions]="true"
+      [fullData]="symptomsData"
+      [minimumSearchLength]="1"
+      [minimumAddedLabelLength]="5"
+      [isStartWithSearch]="false"
+      [searchPropertyName]="'label'"
+    ></chips-select>
+
+    <chips-select
+      [ObjectName]="'Diagnosis'"
+      [customLabel]="'Diagnosis'"
+      class="w-100"
+      (selectedChipsChange)="selectedDiagnosisChipsChange($event)"
+      [enableCustomAdditions]="true"
+      [enableQuickSelectFromSuggestions]="true"
+      [fullData]="diagnosesData"
+      [minimumSearchLength]="1"
+      [minimumAddedLabelLength]="5"
+      [isStartWithSearch]="false"
+      [searchPropertyName]="'label'"
+    ></chips-select>
+  </div>
+</div>

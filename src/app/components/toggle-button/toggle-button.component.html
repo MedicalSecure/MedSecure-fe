@@ -1,0 +1,32 @@
+<input
+  type="checkbox"
+  [id]="'toggle-button-checkbox' + id"
+  [checked]="on"
+  (change)="onToggleSwitch($event)"
+/>
+
+<label
+  [for]="'toggle-button-checkbox' + id"
+  class="toggle-button-text"
+  [class.primary-text]="on"
+  [ngStyle]="containerClass"
+  [style.color]="on ? TextColorOn : TextColorOff"
+  [style.flexDirection]="on === true ? 'row-reverse' : 'row'"
+  [style.backgroundColor]="on ? BackgroundColorON : BackgroundColorOFF"
+>
+  <label
+    class="toggle-button-switch"
+    [class.primary]="on"
+    [for]="'toggle-button-checkbox' + id"
+    [ngStyle]="dotStyle"
+    [style.backgroundColor]="on === true ? DotColorOn : DotColorOff"
+  ></label>
+  <div>
+    <div class="toggle-button-text-on">
+      <ng-container *ngIf="showLabels && on">{{ onText }}</ng-container>
+    </div>
+    <div class="toggle-button-text-off">
+      <ng-container *ngIf="showLabels && !on">{{ offText }}</ng-container>
+    </div>
+  </div>
+</label>

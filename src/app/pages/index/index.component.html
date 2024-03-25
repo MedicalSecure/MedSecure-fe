@@ -30,7 +30,7 @@
           <h1 class="welcome-text">
             Hello, <span class="text-black fw-bold">clinic supervisor</span>
           </h1>
-          <h3 class="welcome-sub-text">Your performance summary this week</h3>
+          <!-- <h3 class="welcome-sub-text">Your performance summary this week</h3> -->
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
@@ -621,31 +621,31 @@
             </li>
 
             <li class="nav-item">
-    <a
-      class="nav-link"
-      data-bs-toggle="collapse"
-      href="#form-elements"
-      aria-expanded="false"
-      aria-controls="form-elements"
-      [routerLink]="['/', 'pharmacy']"
-    >
-      <i class="menu-icon mdi mdi-card-text-outline"></i>
-      <span class="menu-title">Pharmalink</span>
-      <i class="menu-arrow"></i>
-    </a>
-    <div class="collapse" id="form-elements">
-      <!--<ul class="nav flex-column sub-menu">
-    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
-            Elements</a></li>
-</ul>-->
-    </div>
-  </li>
+              <a
+                class="nav-link"
+                data-bs-toggle="collapse"
+                href="#form-elements"
+                aria-expanded="false"
+                aria-controls="form-elements"
+                [routerLink]="['/', 'pharmacy']"
+              >
+                <i class="menu-icon mdi mdi-card-text-outline"></i>
+                <span class="menu-title">Pharmalink</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="form-elements">
+                <!--<ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
+                      Elements</a></li>
+          </ul>-->
+              </div>
+            </li>
             <li class="nav-item nav-category">Drug Distribution</li>
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false"
                  aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-prescription"></i>
-                <span class="menu-title">Prescription</span>
+                 <i class="menu-icon mdi mdi-card-text-outline"></i>
+                 <span class="menu-title">Tasks</span>
                 <i class="menu-arrow"></i>
               </a>
               <div class="collapse" id="form-elements">
@@ -653,6 +653,17 @@
           <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
                   Elements</a></li>
       </ul>-->
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" [routerLink]="['/','prescribe']" aria-expanded="false"
+                 aria-controls="form-elements">
+                <i class="menu-icon mdi mdi-prescription"></i>
+                <span class="menu-title">Prescription</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="form-elements">
+
               </div>
             </li>
             <li class="nav-item">
@@ -751,143 +762,143 @@
     <!-- partial -->
     <div class="main-panel">
       <div class="content-wrapper">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="home-tab">
-              <div
-                class="d-sm-flex align-items-center justify-content-between border-bottom"
-              >
-                <ul class="nav nav-tabs" role="tablist">
-                  <li class="nav-item">
-                    <a
-                      class="nav-link active ps-0"
-                      id="home-tab"
-                      data-bs-toggle="tab"
-                      href="#overview"
-                      role="tab"
-                      aria-controls="overview"
-                      aria-selected="true"
-                      >Overview</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      id="profile-tab"
-                      data-bs-toggle="tab"
-                      href="#audiences"
-                      role="tab"
-                      aria-selected="false"
-                      >Diagnostic</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      id="contact-tab"
-                      data-bs-toggle="tab"
-                      href="#demographics"
-                      role="tab"
-                      aria-selected="false"
-                      >Details</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link border-0"
-                      id="more-tab"
-                      data-bs-toggle="tab"
-                      href="#more"
-                      role="tab"
-                      aria-selected="false"
-                      >More</a
-                    >
-                  </li>
-                </ul>
-                <!-- index.component.html -->
-                <div>
-                  <div class="btn-wrapper">
-                    <a href="#" class="btn btn-otline-dark align-items-center"
-                      ><i class="icon-share"></i> Share</a
-                    >
-                    <a href="#" class="btn btn-otline-dark"
-                      ><i class="icon-printer"></i> Export</a
-                    >
+        <div class="row m-0">
+          <div class="home-tab p-0">
+            <!-- tabs nav bar -->
+            @if(displayTabs){<div
+              class="d-sm-flex align-items-center justify-content-between border-bottom"
+            >
+              <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active ps-0"
+                    id="home-tab"
+                    data-bs-toggle="tab"
+                    href="#overview"
+                    role="tab"
+                    aria-controls="overview"
+                    aria-selected="true"
+                    >Overview</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="profile-tab"
+                    data-bs-toggle="tab"
+                    href="#audiences"
+                    role="tab"
+                    aria-selected="false"
+                    >Diagnostic</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="contact-tab"
+                    data-bs-toggle="tab"
+                    href="#demographics"
+                    role="tab"
+                    aria-selected="false"
+                    >Details</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link border-0"
+                    id="more-tab"
+                    data-bs-toggle="tab"
+                    href="#more"
+                    role="tab"
+                    aria-selected="false"
+                    >More</a
+                  >
+                </li>
+              </ul>
+              <!-- index.component.html -->
+              <div>
+                <div class="btn-wrapper">
+                  <a href="#" class="btn btn-otline-dark align-items-center"
+                    ><i class="icon-share"></i> Share</a
+                  >
+                  <a href="#" class="btn btn-otline-dark"
+                    ><i class="icon-printer"></i> Export</a
+                  >
 
-                    <!-- <input type="file" id="fileInput" style="display: none;" (change)="importExcelData($event)" accept=".xls, .xlsx"> -->
-                    <label
-                      for="fileInputPharmacy"
-                      class="btn btn-primary text-white me-0"
-                      >Import</label
-                    >
-                    <input
-                      type="file"
-                      label="Import"
-                      id="fileInputPharmacy"
-                      style="display: none"
-                      (change)="importExcelData($event)"
-                      accept=".xls, .xlsx"
-                    />
+                  <!-- <input type="file" id="fileInput" style="display: none;" (change)="importExcelData($event)" accept=".xls, .xlsx"> -->
+                  <label
+                    for="fileInputPharmacy"
+                    class="btn btn-primary text-white me-0"
+                    >Import</label
+                  >
+                  <input
+                    type="file"
+                    label="Import"
+                    id="fileInputPharmacy"
+                    style="display: none"
+                    (change)="importExcelData($event)"
+                    accept=".xls, .xlsx"
+                  />
 
+                  <div
+                    class="modal fade"
+                    style="background-color: rgba(0, 0, 0, 0.7)"
+                    id="exampleModal"
+                    tabindex="8"
+                    [style]="
+                      isShowImportModal
+                        ? 'display:block;opacity:100'
+                        : 'display:none;opacity:0'
+                    "
+                  >
                     <div
-                      class="modal fade"
-                      style="background-color: rgba(0, 0, 0, 0.7)"
-                      id="exampleModal"
-                      tabindex="8"
-                      [style]="
-                        isShowImportModal
-                          ? 'display:block;opacity:100'
-                          : 'display:none;opacity:0'
-                      "
+                      class="modal-dialog justify-content-center modal-dialog-centered"
+                      role="document"
+                      (click)="stopPropagation($event)"
                     >
                       <div
-                        class="modal-dialog justify-content-center"
-                        role="document"
-                        (click)="stopPropagation($event)"
+                        class="modal-content"
+                        style="height: 540px; margin-right: 75px"
                       >
-                        <div class="modal-content">
-                          <div class="modal-header p-2">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                              Import and map data
-                            </h5>
-                            <button
-                              type="button"
-                              class="close"
-                              data-dismiss="modal"
-                              aria-label="Close"
-                              (click)="onClickCloseModal()"
-                            >
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div
-                            class="modal-body d-flex flex-wrap gap-4 form-group justify-content-center"
+                        <div class="modal-header p-2">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                            <strong>Import and map data</strong>
+                          </h5>
+                          <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                            (click)="onClickCloseModal()"
                           >
-                            <!-- @for(dbColumn of dbHeaders;track $index){ -->
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div
+                          class="modal-body d-flex flex-wrap gap-3 form-group ms-3"
+                        >
+                          <!-- @for(dbColumn of dbHeaders;track $index){ -->
 
-                            @for(dbColumn of dbHeaders;track $index){
-                            <div style="width: 10rem">
-                              <label>{{ dbColumn }}</label>
-                              <select
-                                [value]="columnMappings[dbColumn]"
-                                class="form-select"
-                                (change)="
-                                  OnSelectchange($event, dbColumn)
-                                "
-                              >
-                                @for(impHeader of importedDataHeaders;track
-                                impHeader){
-                                <option [value]="impHeader" style="width: 50%">
-                                  {{ impHeader }}
-                                </option>
-                                }
-                              </select>
-                            </div>
-
-                            }
+                          @for(dbColumn of dbHeaders;track $index){
+                          <div style="width: 10rem">
+                            <select
+                              [value]="columnMappings[dbColumn]"
+                              class="form-select"
+                              (change)="OnSelectchange($event, dbColumn)"
+                              required
+                            >
+                              <option value="" hidden>{{ dbColumn }}</option>
+                              @for(impHeader of importedDataHeaders;track
+                              impHeader){
+                              <option [value]="impHeader" style="width: 100%">
+                                {{ impHeader }}
+                              </option>
+                              }
+                            </select>
                           </div>
 
-                          <div class="ms-4">
+                          }
+                          <div class="mt-3">
                             <button
                               type="button"
                               class="btn btn-primary text-white"
@@ -910,17 +921,17 @@
                   </div>
                 </div>
               </div>
+            </div>}
 
-              <div class="tab-content tab-content-basic">
-                <div
-                  class="tab-pane fade show active"
-                  id="overview"
-                  role="tabpanel"
-                  aria-labelledby="overview"
-                >
-                  <!-- content -->
-                  <router-outlet></router-outlet>
-                </div>
+            <div class="tab-content tab-content-basic">
+              <div
+                class="tab-pane fade show active"
+                id="overview"
+                role="tabpanel"
+                aria-labelledby="overview"
+              >
+                <!-- content -->
+                <router-outlet></router-outlet>
               </div>
             </div>
           </div>

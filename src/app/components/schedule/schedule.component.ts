@@ -8,7 +8,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
   standalone: true,
   imports: [CommonModule , MatGridListModule ],
   templateUrl: './schedule.component.html',
-  styleUrl: './schedule.component.css'
+  styleUrl: './schedule.component.css',
 })
 export class ScheduleComponent implements OnInit {
 
@@ -34,14 +34,17 @@ export class ScheduleComponent implements OnInit {
   toggleChoices(): void {
     this.showChoices = !this.showChoices;
   }
-  
+
   onKeyDown(event: any, hourIndex: number, itemIndex: number): void {
     const eventData = { event, hourIndex, itemIndex };
     this.keyDownEvent.emit(eventData);
   }
-  
 
-  handleClickEvent(currentitem: { hour: string; value: string; quantity: string }, hourIndex: number, itemIndex: number): void {
+  handleClickEvent(
+    currentitem: { hour: string; value: string; quantity: string },
+    hourIndex: number,
+    itemIndex: number
+  ): void {
     if (!currentitem.quantity) {
       currentitem.quantity = this.posologieValue ? this.posologieValue : '?';
     } else {
@@ -59,7 +62,6 @@ if (!isNaN(parsedQuantity)) {
     }
     this.hoursListEmitter.emit(this.hoursList);
   }
-  
 
   formatNumber(num: string): string {
     if (num) {
@@ -72,7 +74,7 @@ if (!isNaN(parsedQuantity)) {
   setDesiredHours(): void {
     const desiredHours = [8, 12, 17, 22, 0 ,1];
     for (const hourArray of this.hoursList) {
-      const filteredHours = hourArray.filter((hourObj : any) =>
+      const filteredHours = hourArray.filter((hourObj: any) =>
         desiredHours.includes(parseInt(hourObj.value, 10))
       );
       this.selectedHours.push(filteredHours);

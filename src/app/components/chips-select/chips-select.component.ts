@@ -41,7 +41,7 @@ import { URL_REGEX } from '../../shared/const';
     MatTooltipModule,
   ],
 })
-export class ShipsSelectComponent {
+export class ShipsSelectComponent<T> {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
   @Input() searchPropertyName: string = 'label';
@@ -65,7 +65,7 @@ export class ShipsSelectComponent {
   @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
   announcer = inject(LiveAnnouncer);
 
-  @Output() selectedChipsChange = new EventEmitter<onChipsSelectionEmitType>();
+  @Output() selectedChipsChange = new EventEmitter<onChipsSelectionEmitType<T>>();
 
   constructor() {
     this.filteredDataByInput = this.ObjectControl.valueChanges.pipe(
@@ -103,7 +103,7 @@ export class ShipsSelectComponent {
       lastAddedItem,
       lastSelectedItem,
       lastRemovedItem,
-    } as onChipsSelectionEmitType);
+    } as onChipsSelectionEmitType<T>);
   }
 
   add(event: MatChipInputEvent): void {
@@ -254,7 +254,6 @@ export class ShipsSelectComponent {
       );
     }
   }
-
   private _verifyImagePropertyName(): void {
     if (!this.fullData || this.fullData.length == 0) return;
     if (this.imagePropertyName === '' || this.imagePropertyName === undefined)
@@ -294,24 +293,24 @@ export class ShipsSelectComponent {
   }
 }
 
-export type onChipsSelectionEmitType = {
-  SelectedObjectList: any[];
-  lastAddedItem?: any;
-  lastSelectedItem?: any;
-  lastRemovedItem?: any;
+export type onChipsSelectionEmitType<T> = {
+  SelectedObjectList: T[];
+  lastAddedItem?: T;
+  lastSelectedItem?: T;
+  lastRemovedItem?: T;
 };
 
 /* 
 // usage: parent component : 
 
- dummyData: any[] = [
+ dummyData: T[] = [
     { index: 1, label: 'test', value: 5555, x: [] },
     { index: 9, label: 'test2', value: 54545 },
     { index: 3, label: 'eeee', value: 555 },
     { index: 4, label: 'eeee22', value: 55 },
     { index: 4, label: 'eeeegegege22', value: 55 },
   ];
-  selectedChipsChange(result: onChipsSelectionEmitType) {
+  selectedChipsChange(result: onChipsSelectionEmitType<T>) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
       console.log('added custom item :', result.lastAddedItem);
