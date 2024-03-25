@@ -1,48 +1,13 @@
-table th {
-  background-color: aqua;
-  font-size: x-small;
-  text-align: center;
-  font-size: 16px;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
-table td {
-  font-weight: 20;
-  
-  font-family: "Manrope", sans-serif;
-  font-style: bold;
-  font-weight:normal;
-  font-size: 10px;
-  line-height: 22px;
-  color: #8d8d8d;
-  margin-bottom: 0;
-  
+td {
+width: 10%;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: x-small; 
 }
-
-.vertical-line {
-  border-right: 1px solid black; /* Adjust border properties as needed */
+tr:hover {
+  background-color: #f5f5f5;
 }
-
-.table-container {
-    max-height: 400px; /* Set the desired height for your table */
-    overflow-y: auto; /* Enable vertical scrolling */
-  }
-  
-  .mat-table {
-    width: 100%; /* Make the table fill the container */
-    table-layout: fixed; /* Fix the table layout */
-  }
-  
-  .mat-header-row {
-    position: sticky; /* Fix the position of the header row */
-    top: 0; /* Position the header at the top of the container */
-    background-color: white; /* Optional: Set the background color of the header */
-    z-index: 1; /* Ensure the header is above other content */
-  }
-  
-  .mat-header-cell {
-    position: sticky; /* Fix the position of the header cell */
-    top: 0; /* Position the header cell at the top of the container */
-    background-color: white; /* Optional: Set the background color of the header cell */
-  }
-  
-
-
