@@ -1,6 +1,6 @@
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { Routes } from '@angular/router';
-import { BacPatientComponent} from './pages/bacPatient/bacPatient.component'
+import { BacPatientComponent } from './pages/bacPatient/bacPatient.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { Page1Component } from './pages/page1/page1.component';
 import { PharmacyComponent } from './pages/pharmacy/pharmacy.component';
@@ -14,17 +14,22 @@ import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { AddPrescriptionComponent } from './pages/add-prescription/add-prescription-component/add-prescription.component';
 
-import {KanbanComponent} from './components/kanban/kanban.component';
+import { KanbanComponent } from './components/kanban/kanban.component';
+import { MasonryDpiComponent } from './components/masonry-dpi/masonry-dpi.component';
+import { RegisterFormComponent } from './components/register-form/register-form.component';
+import { RegisterViewComponent } from './components/register-view/register-view.component';
 export const routes: Routes = [
-    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'page1', component: Page1Component } ,
-    {path:'unit-care',component:UnitCareComponent},
-    {path:'bac-patient',component:BacPatientComponent},
-    {path:'timeline',component:TimelineComponent},
-    {path:'kanban',component:KanbanComponent},
-    {path:'search',component:SearchBarComponent},
-    {path:'pharmacy',component:PharmacyComponent},
-    { path: 'prescribe', component: AddPrescriptionComponent },
-    {path:'visits', component: Visits }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'page1', component: Page1Component },
+  { path: 'unit-care', component: UnitCareComponent },
+  { path: 'bac-patient', component: BacPatientComponent },
+  { path: 'timeline', component: TimelineComponent },
+  { path: 'kanban', component: KanbanComponent },
+  { path: 'search', component: SearchBarComponent },
+  { path: 'pharmacy', component: PharmacyComponent },
+  { path: 'prescribe', component: AddPrescriptionComponent },
+  { path: 'view', component: MasonryDpiComponent },
+  { path: 'register', component: RegisterFormComponent },
+  { path: 'register-view', component: RegisterViewComponent },
 ];
