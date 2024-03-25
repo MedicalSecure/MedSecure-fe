@@ -11,12 +11,15 @@ import {SelectComponent} from './components/select/select.component'
 import {ChipsInputComponent} from './components/chips-input/chips-input.component'
 import {DetectionTempComponent} from './components/detection-temp/detection-temp.component'
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
-
 import { TimelineComponent } from './pages/timeline/timeline.component';
+import {KanbanComponent} from './components/kanban/kanban.component';
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'page1', component: Page1Component } ,
     {path:'unit-care',component:UnitCareComponent},
+    {path:'bac-patient',component:BacPatientComponent},
+    {path:'timeline',component:TimelineComponent},
+    {path:'kanban',component:KanbanComponent},
 ];
 

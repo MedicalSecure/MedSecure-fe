@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MessageComponent } from './message.component';
+import { GanttChartComponent } from './gantt-chart.component';
 
-describe('MessageComponent', () => {
-  let component: MessageComponent;
-  let fixture: ComponentFixture<MessageComponent>;
+describe('GanttChartComponent', () => {
+  let component: GanttChartComponent;
+  let fixture: ComponentFixture<GanttChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MessageComponent]
+      imports: [GanttChartComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MessageComponent);
+    fixture = TestBed.createComponent(GanttChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

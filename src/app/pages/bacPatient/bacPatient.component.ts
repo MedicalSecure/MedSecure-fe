@@ -17,9 +17,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScheduleComponent } from "../../components/schedule/schedule.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
-import { MessageComponent } from "../../components/message/message.component";
 import { MatTabsModule } from '@angular/material/tabs';
-import { DialogOverviewExampleDialogComponent } from '../../dialog/dialog-overview-example-dialog.component';
 import { CommentComponent } from "../../components/comment/comment.component";
 
 @Component({
@@ -34,7 +32,7 @@ import { CommentComponent } from "../../components/comment/comment.component";
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, MessageComponent, CommentComponent]
+  imports: [MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, CommentComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
 
@@ -79,15 +77,7 @@ export class BacPatientComponent implements AfterViewInit {
     this.today.setDate(this.today.getDate() + 1)
     this.todayDate = this.today.toLocaleDateString();
   }
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialogComponent, {
-      data: {},
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
   toggleExpanded(element: any) {
     this.expandedElement = this.expandedElement === element ? null : element;
   }
@@ -376,5 +366,122 @@ export const ELEMENT_DATA : bacpatient[] = [
     
     add: 'Add 3',
     servingDate: new Date()
-  }, 
+  },
+  {
+    id: 4,
+    room: 103,
+    bed: 1,
+    patient: 'Sara',
+    bd: new Date('3/24/1985'),
+    medicines: [
+      {
+        name: 'Metformin',
+        posology: [
+          [
+            { hour: '08', value: '10', quantityBE: 1, quantityAE: 2 },
+            { hour: '14', value: '15', quantityBE: 1, quantityAE: 2 },
+            { hour: '20', value: '20', quantityBE: 1, quantityAE: 2 }
+          ]
+        ],
+        root: 'Oral',
+        dose: 1,
+        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+      },
+      {
+        name: 'Atorvastatin',
+        posology: [
+          [
+            { hour: '10', value: '20', quantityBE: 1, quantityAE: 2 },
+            { hour: '18', value: '30', quantityBE: 1, quantityAE: 2 }
+          ]
+        ],
+        root: 'Oral',
+        dose: 1,
+        note: ['']
+      }
+    ],
+    toServe: 10,
+    served: 3,
+    status: 'Pending...',
+    add: 'Add 4',
+    servingDate: new Date()
+  },
+  {
+    id: 5,
+    room: 104,
+    bed: 2,
+    patient: 'John',
+    bd: new Date('7/12/1978'),
+    medicines: [
+      {
+        name: 'Amlodipine',
+        posology: [
+          [
+            { hour: '04', value: '10', quantityBE: 1, quantityAE: 2 },
+            { hour: '15', value: '20', quantityBE: 1, quantityAE: 2 },
+            { hour: '21', value: '30', quantityBE: 1, quantityAE: 2 }
+          ]
+        ],
+        root: 'Oral',
+        dose: 1,
+        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+      },
+      {
+        name: 'Losartan',
+        posology: [
+          [
+            { hour: '08', value: '20', quantityBE: 1, quantityAE: 2 },
+            { hour: '16', value: '30', quantityBE: 1, quantityAE: 2 }
+          ]
+        ],
+        root: 'Oral',
+        dose: 1,
+        note: ['']
+      }
+    ],
+    toServe: 12,
+    served: 6,
+    status: 'On Progress',
+    add: 'Add 5',
+    servingDate: new Date()
+  },
+  {
+    id: 6,
+    room: 105,
+    bed: 3,
+    patient: 'Emily',
+    bd: new Date('10/05/1993'),
+    medicines: [
+      {
+        name: 'Paracetamol',
+        posology: [
+          [
+            { hour: '07', value: '10', quantityBE: 1, quantityAE: 2 },
+            { hour: '03', value: '20', quantityBE: 1, quantityAE: 2 },
+            { hour: '19', value: '30', quantityBE: 1, quantityAE: 2 }
+          ]
+        ],
+        root: 'Oral',
+        dose: 1,
+        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+      },
+      {
+        name: 'Ibuprofen',
+        posology: [
+          [
+            { hour: '02', value: '20', quantityBE: 1, quantityAE: 2 },
+            { hour: '14', value: '30', quantityBE: 1, quantityAE: 2 }
+          ]
+        ],
+        root: 'Oral',
+        dose: 1,
+        note: ['']
+      }
+    ],
+    toServe: 8,
+    served: 2,
+    status: 'Pending...',
+    add: 'Add 6',
+    servingDate: new Date()
+  }
 ];

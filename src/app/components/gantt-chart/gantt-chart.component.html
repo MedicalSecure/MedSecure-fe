@@ -21,11 +21,9 @@
                 @for (medicine of getMedicineByHour(targetHours[0],element.patient); track medicine) {
                 @for (posology of medicine.posology; track posology) {
                 <ul class="chart-row-bars">
-                    <li class="chart-li-one" style="display: inline-block;">
-                        <div>Pateint : {{element.patient}}</div>
-                        <div>
-                            Bed : {{element.bed}}
-                        </div>
+                    <li class="chart-li-one" style="display: inline-block; size: 10px;" >
+                        <div> name:{{element.patient}}/ bed:{{element.bed}}</div>
+                        
                         <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>
@@ -41,10 +39,7 @@
                 @for (posology of medicine.posology; track posology) {
                 <ul class="chart-row-bars">
                     <li class="chart-li-one" style="display: inline-block;">
-                        <div>Pateint : {{element.patient}}</div>
-                        <div>
-                            Bed : {{element.bed}}
-                        </div>
+                        <div> name:{{element.patient}}/ bed:{{element.bed}}</div>
                         <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>
@@ -60,10 +55,7 @@
                 @for (posology of medicine.posology; track posology) {
                 <ul class="chart-row-bars">
                     <li class="chart-li-one" style="display: inline-block;">
-                        <div>Pateint : {{element.patient}}</div>
-                        <div>
-                            Bed : {{element.bed}}
-                        </div>
+                        <div> name:{{element.patient}}/ bed:{{element.bed}}</div>
                         <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>
@@ -79,10 +71,7 @@
                 @for (posology of medicine.posology; track posology) {
                 <ul class="chart-row-bars">
                     <li class="chart-li-one" style="display: inline-block;">
-                        <div>Pateint : {{element.patient}}</div>
-                        <div>
-                            Bed : {{element.bed}}
-                        </div>
+                        <div> name:{{element.patient}}/ bed:{{element.bed}}</div>
                         <div> {{ medicine.name}} /{{calculateQuantity(posology[$index].quantityBE,posology[$index].quantityAE)}}
                         </div>
                     </li>

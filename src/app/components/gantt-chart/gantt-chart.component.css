@@ -12,11 +12,13 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
     font-size: medium;
     width:min-content;
+   
 }
 .table td {
     vertical-align: top;
     width: 25%;   
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
 }
 li {
     font-weight: 450;
@@ -30,14 +32,15 @@ li {
     position: relative;
     cursor: pointer;
     border-radius: 20px;
-   
-    
   }
   ul .chart-li-one {
-    width:fit-content;
+    width:min-content;
     grid-column: 1/2; 
     background-color:#fff;
-    color: black;
+    color: rgba(33, 45, 137, 0.855);
+    font-size: small;
+    font-weight: bolder;
+    height: min-content;
   border: 5px solid rgba(167, 177, 255, 0.7);
   }
   
