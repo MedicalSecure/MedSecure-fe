@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { MultiSenseWidgetComponent } from '../multisense-widget/multisense-widget.component'
+import { MultiSenseWidgetComponent } from '../widgets/multisense-widget/multisense-widget.component'
 @Component({
   selector: 'app-unitselector-widget',
   standalone: true,
@@ -23,10 +23,10 @@ import { MultiSenseWidgetComponent } from '../multisense-widget/multisense-widge
     MatAutocompleteModule,
     ReactiveFormsModule,
     AsyncPipe, HttpClientModule, CommonModule, MultiSenseWidgetComponent],
-  templateUrl: './unitselector-widget.component.html',
-  styleUrl: './unitselector-widget.component.css'
+  templateUrl: './unitselector.component.html',
+  styleUrl: './unitselector.component.css'
 })
-export class UnitSelectorWidget implements OnInit {
+export class UnitSelectorComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   unitCtrl = new FormControl();
   filteredUnits!: Observable<any[]>;

@@ -5,24 +5,24 @@ import{MedicationsWidgetComponent} from '../../components/widgets/medications-wi
 import {StockOutWidgetComponent} from'../../components/widgets/stock-out-widget/stock-out-widget.component'
 import {ArmoireWidgetComponent} from '../../components/widgets/armoire-widget/armoire-widget.component'
 
-import { CheckInProgressComponent} from '../../components/widgets/checkin-progress/checkin-progress.component'
+import { PatientsWidgetComponent} from '../../components/widgets/patients-widget/patients-widget.component'
 import { CardComponent } from '../../components/card/card.component'
 import { RadialbarChartsComponent } from '../../components/widgets/radialbar-charts/radialbar-charts.component'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PrescriptionWidgetComponent  } from '../../components/widgets/prescription-widget/prescription-widget.component'
-import { MultiSenseWidgetComponent} from '../../components/multisense-widget/multisense-widget.component'
+import { MultiSenseWidgetComponent} from '../../components/widgets/multisense-widget/multisense-widget.component'
 
 
 
 import {ArmoireStock } from "../../model/ArmoireStock"
-import { Medication} from "../../model/Medication"
+import { Medication} from "../../model/Medications"
 import {Stockout} from "../../model/stockout"
 import { Presecription } from "../../model/Presecription"
 @Component({
   selector: 'app-widgets',
   standalone: true,
   imports: [ HttpClientModule,MedicationsWidgetComponent,StockOutWidgetComponent,ArmoireWidgetComponent
-  ,MatProgressSpinnerModule,CheckInProgressComponent, CardComponent,
+  ,MatProgressSpinnerModule,PatientsWidgetComponent, CardComponent,
     RadialbarChartsComponent, PrescriptionWidgetComponent , MultiSenseWidgetComponent]
   ,
   templateUrl: './widgets.component.html',

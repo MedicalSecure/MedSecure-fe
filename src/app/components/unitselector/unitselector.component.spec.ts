@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CheckInProgressComponent } from './checkin-progress.component';
+import { UnitSelectorComponent } from './unitselector.component';
 
-describe('CheckInProgressComponent', () => {
-  let component: CheckInProgressComponent;
-  let fixture: ComponentFixture<CheckInProgressComponent>;
+describe('UnitSelectorComponent', () => {
+  let component:UnitSelectorComponent;
+  let fixture: ComponentFixture<UnitSelectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CheckInProgressComponent]
+      imports: [UnitSelectorComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(CheckInProgressComponent);
+    fixture = TestBed.createComponent(UnitSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

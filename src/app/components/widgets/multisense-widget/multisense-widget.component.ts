@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { EnvironmentWidget } from '../widgets/environment-widget/environment-widget.component'
-import { ChartOptionsCircle } from '../widgets/radialbar-charts/radialbar-charts.component'
-import { RadialbarChartsComponent} from '../widgets/radialbar-charts/radialbar-charts.component'
+import { EnvironmentWidget } from '../environment-widget/environment-widget.component'
+import { ChartOptionsCircle } from '../radialbar-charts/radialbar-charts.component'
+import { RadialbarChartsComponent} from '../radialbar-charts/radialbar-charts.component'
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { formatDate } from '@angular/common';

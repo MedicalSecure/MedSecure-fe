@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UnitSelectorWidget } from './unitselector-widget.component';
+import { PatientsWidgetComponent } from './patients-widget.component';
 
-describe('UnitSelectorWidget', () => {
-  let component: UnitSelectorWidget;
-  let fixture: ComponentFixture<UnitSelectorWidget>;
+describe('PatientsWidgetComponent', () => {
+  let component: PatientsWidgetComponent;
+  let fixture: ComponentFixture<PatientsWidgetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UnitSelectorWidget]
+      imports: [PatientsWidgetComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(UnitSelectorWidget);
+    fixture = TestBed.createComponent(PatientsWidgetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

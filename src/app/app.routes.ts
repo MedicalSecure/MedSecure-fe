@@ -7,15 +7,14 @@ import { PharmacyComponent } from './pages/pharmacy/pharmacy.component';
 
 import { Visits  } from './pages/visits/visits.component';
 
-import {UnitSelectorWidget} from './components/unitselector-widget/unitselector-widget.component'
+import {UnitSelectorComponent} from './components/unitselector/unitselector.component'
 
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
 
 
-import { SelectComponent } from './components/select/select.component';
-import { ChipsInputComponent } from './components/chips-input/chips-input.component';
+import {ShipsSelectComponent} from './components/chips-select/chips-select.component';
 import { AddPrescriptionComponent } from './pages/add-prescription/add-prescription-component/add-prescription.component';
 
 
@@ -30,7 +29,7 @@ export const routes: Routes = [
     {path:'visits',component:Visits},
     {path:'pharmacy',component:PharmacyComponent},
     {path:'widgets',component:WidgetsComponent},
-    {path:'UnitSelector',component:UnitSelectorWidget},
+    {path:'UnitSelector',component:UnitSelectorComponent},
 
     {path:'bac-patient',component:BacPatientComponent},
     {path:'timeline',component:TimelineComponent},

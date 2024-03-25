@@ -21,10 +21,10 @@ export type ChartOptions = {
   selector: 'app-check-in-progress',
   standalone: true,
   imports: [NgApexchartsModule],
-  templateUrl: './checkin-progress.component.html',
-  styleUrl: './checkin-progress.component.css'
+  templateUrl: './patients-widget.component.html',
+  styleUrl: './patients-widget.component.css'
 })
-export class CheckInProgressComponent implements OnChanges {
+export class PatientsWidgetComponent implements OnChanges {
   @ViewChild("chart") chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
   @Input() checkin!: number ;

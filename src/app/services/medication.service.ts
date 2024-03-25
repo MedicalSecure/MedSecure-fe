@@ -9,7 +9,7 @@ export class MedicationService {
   constructor(private http: HttpClient) { }
 
   getMedications(){
-    return this.http.get<any>("./../../assets/medications.json");
+    return this.http.get<any>("./../../assets/data/medications.json");
   }
   
 }
