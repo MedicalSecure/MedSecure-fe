@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
   standalone:true,
   imports:[ CommonModule , ChatModule ,ConversationalUIModule] 
 })
-export class MessageComponent {
+export class ChatComponent {
   public user: User = { id: 1 };
 
 public messages: Message[] = [

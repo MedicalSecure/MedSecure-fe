@@ -14,19 +14,24 @@ import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetMedecineComponent } from './pages/widget-medecine/widget-medecine.component';
 
+import {KanbanComponent} from './components/kanban/kanban.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'page1', component: Page1Component } ,
     {path:'unit-care',component:UnitCareComponent},
+
     {path:'visits',component:Visits},
-    {path:'bac-patient',component:BacPatientComponent},
     {path:'pharmacy',component:PharmacyComponent},
     {path:'widgetmedecine',component:WidgetMedecineComponent},
     {path:'selectbo',component:UnitSelectEnviroMonitorComponent},
     {path:'selectmat',component:ChipUnitSelectorEnviroMonitor},
     {path:'WidgetsPageComponent',component:WidgetsPageComponent},
+
+    {path:'bac-patient',component:BacPatientComponent},
+    {path:'timeline',component:TimelineComponent},
+    {path:'kanban',component:KanbanComponent},
 
 ];
 
