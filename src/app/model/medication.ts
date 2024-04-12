@@ -1,9 +1,22 @@
 export interface Medications {
   [key: string]: any;
-  Nom: string;
-  Dosage: string;
-  Forme: string;
-  Unit: string;
-  DCI: string;
-  'Stock dispo': number;
-}
+    Nom: string;
+    Dosage: string;
+    Forme: string;
+    Unit: string;
+    DCI: string;
+    Classe: string;
+    SousClasse: string;
+    Laboratoire: string;
+    AMM: string;
+    DateAMM: string;
+    Conditionnementprimaire: string;
+    Duréeconservation: number;
+    Indications: string;
+    StockDisponible: number;
+    StockMoyen: number;
+    StockMin:number;
+    StockAlerte: number;
+    StockSécurité: number;
+    StockMax: number;
+  };
