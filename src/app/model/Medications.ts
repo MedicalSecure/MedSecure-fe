@@ -1,4 +1,4 @@
-export type Medication= {
+export type Medication = {
     Nom: string;
     Dosage: string;
     Forme: string;
@@ -17,5 +17,7 @@ export type Medication= {
     StockMin:number;
     StockAlerte: number;
     StockSécurité: number;
-    StockMax: number;
+    StockMax: number; 
+    [key: string]: any;
+    'Stock dispo': number;
   };

@@ -1,0 +1,150 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['/', 'dashboard']"
+          routerLinkActive="active"
+        >
+          <i class="mdi mdi-grid-large menu-icon"></i>
+          <span class="menu-title">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item nav-category">RECEPTION</li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['/', 'register-view']"
+          routerLinkActive="active"
+          data-bs-toggle="collapse"
+          href="#ui-basic"
+          aria-expanded="false"
+          aria-controls="ui-basic"
+        >
+          <i class="menu-icon mdi mdi-account-circle-outline"></i>
+          <span class="menu-title">Registration</span>
+        </a>
+        <div class="collapse" id="ui-basic"></div>
+      </li>
+      <li class="nav-item nav-category">Infrastructure</li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['/', 'unit-care']"
+          routerLinkActive="active"
+          data-bs-toggle="collapse"
+          href="#ui-basic"
+          aria-expanded="false"
+          aria-controls="ui-basic"
+        >
+          <i class="menu-icon mdi mdi-floor-plan"></i>
+          <span class="menu-title">Unit Care</span>
+          <i class="menu-arrow"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-toggle="collapse"
+          href="#form-elements"
+          aria-expanded="false"
+          aria-controls="form-elements"
+          [routerLink]="['/', 'pharmacy']"
+        >
+          <i class="menu-icon mdi mdi-mortar-pestle-plus"></i>
+          <span class="menu-title">Pharmalink</span>
+          <i class="menu-arrow"></i>
+        </a>
+      </li>
+      <li class="nav-item nav-category">ADMINSTRATION</li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-toggle="collapse"
+          href="#form-elements"
+          [routerLink]="['/', 'prescribe']"
+          aria-expanded="false"
+          aria-controls="form-elements"
+        >
+          <i class="menu-icon mdi mdi-prescription"></i>
+          <span class="menu-title">Prescription</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="form-elements"></div>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-toggle="collapse"
+          href="#charts"
+          [routerLink]="['/', 'bac-patient']"
+          aria-expanded="false"
+          aria-controls="charts"
+        >
+          <i class="menu-icon mdi mdi-chart-line"></i>
+          <span class="menu-title">Bac Patient</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts"></div>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-toggle="collapse"
+          href="#form-elements"
+          [routerLink]="['/', 'kanban']"
+          aria-expanded="false"
+          aria-controls="form-elements"
+        >
+          <i class="menu-icon mdi mdi-card-text-outline"></i>
+          <span class="menu-title">Tasks</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="form-elements"></div>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-toggle="collapse"
+          href="#charts"
+          [routerLink]="['/', 'timeline']"
+          aria-expanded="false"
+          aria-controls="charts"
+        >
+          <i class="menu-icon mdi mdi-chart-line"></i>
+          <span class="menu-title">Time Line</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts"></div>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['/', 'visits']"
+          routerLinkActive="active"
+          data-bs-toggle="collapse"
+          href="#ui-basic"
+          aria-expanded="false"
+          aria-controls="ui-basic"
+        >
+          <i class="menu-icon mdi mdi-floor-plan"></i>
+          <span class="menu-title">Visits</span>
+          <i class="menu-arrow"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-toggle="collapse"
+          href="#icons"
+          aria-expanded="false"
+          aria-controls="icons"
+        >
+          <i class="menu-icon mdi mdi-layers-outline"></i>
+          <span class="menu-title">Trach</span>
+          <i class="menu-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>

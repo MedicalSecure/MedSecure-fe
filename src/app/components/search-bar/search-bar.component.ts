@@ -8,7 +8,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { Medications } from './../../model/medication';
+import { Medication } from './../../model/medications';
 import { MedicationService } from '../../services/medication.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -39,11 +39,11 @@ export class SearchBarComponent implements OnInit {
   searchControl = new FormControl();
   searchKeys: string[] = ['Nom', 'Laboratoire', 'Indications'];
   searchKey: string = '';
-  Medications: Medications[] = [];
-  filteredMedications: Observable<Medications[]>;
-  selectedMedications: Medications[] = [];
+  Medications: Medication[] = [];
+  filteredMedications: Observable<Medication[]>;
+  selectedMedications: Medication[] = [];
 
-  @Output() searchMedicationsChange = new EventEmitter<Medications[]>();
+  @Output() searchMedicationsChange = new EventEmitter<Medication[]>();
 
   constructor(private medicationService: MedicationService) {
     this.filteredMedications = this.searchControl.valueChanges.pipe(
@@ -58,7 +58,7 @@ export class SearchBarComponent implements OnInit {
     });
   }
 
-  filterMedications(searchTerm: string): Medications[] {
+  filterMedications(searchTerm: string): Medication[] {
     if (typeof searchTerm !== 'string' || searchTerm.trim() === '') {
       return [];
     } else {
@@ -70,7 +70,7 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
-  onChangeSelectedMedication(medication: Medications): void {
+  onChangeSelectedMedication(medication: Medication): void {
     if (!this.selectedMedications.includes(medication)) {
       this.selectedMedications.push(medication);
       this.emitSelectedMedications();
@@ -83,7 +83,7 @@ export class SearchBarComponent implements OnInit {
     this.emitSelectedMedications();
   }
 
-  getMedicationProperty(medication: Medications): string {
+  getMedicationProperty(medication: Medication): string {
     switch (this.searchKey) {
       case 'Nom':
         return medication['Nom'];
@@ -96,7 +96,7 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
-  removemedication(medication: Medications): void {
+  removemedication(medication: Medication): void {
     const index = this.selectedMedications.indexOf(medication);
     if (index !== -1) {
       this.selectedMedications.splice(index, 1);
