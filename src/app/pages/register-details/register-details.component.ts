@@ -12,11 +12,11 @@ interface MasonryItem {
 }
 
 @Component({
-  selector: 'app-masonry-dpi',
+  selector: 'app-register-details',
   standalone: true,
   imports: [CommonModule,NgxMasonryModule,MatCardModule,RouterModule],
-  templateUrl: './masonry-dpi.component.html',
-  styleUrl: './masonry-dpi.component.css'
+  templateUrl: './register-details.component.html',
+  styleUrl: './register-details.component.css'
 })
 export class MasonryDpiComponent {
    // ngx-masonry options

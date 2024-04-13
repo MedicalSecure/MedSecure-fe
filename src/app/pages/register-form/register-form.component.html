@@ -11,24 +11,22 @@
           </div>
 
           <div class="btn-wrapper">
-            <a href="#" class="btn btn-outline-primary align-items-center"
-              ><i class="fa fa-paper-plane"></i> Forward</a
-            >
-            <a href="#" class="btn btn-outline-primary align-items-center"
-              ><i class="fa fa-file-text-o" aria-hidden="true"></i> Scan</a
-            >
-
-            <a href="#" class="btn btn-outline-primary align-items-center"
-              ><i class="icon-printer"></i> Export PDF</a
-            >
-
             <a
               href="#"
-              class="btn btn-outline-primary align-items-center"
+              class="btn btn-primary text-white align-items-center"
               [routerLink]="['/', 'register']"
               routerLinkActive="active"
-              ><i class="fa fa-users"></i> Patients liste</a
             >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> Patients List
+            </a>
+            <a
+              href="#"
+              class="btn btn-danger text-white align-items-center"
+              [routerLink]="['/', 'report-issue-csv']"
+              style="border-color: red"
+            >
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
           </div>
         </div>
         <div class="table-responsive mt-1">

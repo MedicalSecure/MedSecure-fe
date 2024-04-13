@@ -78,7 +78,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   providers: [],
 })
 export class RegisterViewComponent implements AfterViewInit {
-  columnsToDisplay = ['Look', 'MRN', 'name', 'age', 'registerDate', 'status'];
+  columnsToDisplay = ['MRN', 'name', 'age', 'registerDate', 'status','look' ];
   todayDate: string = new Date().toLocaleDateString();
   today: Date = new Date();
   tomorrow = new Date();

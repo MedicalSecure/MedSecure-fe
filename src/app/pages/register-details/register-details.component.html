@@ -1,13 +1,35 @@
-<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-  <button
-    type="button"
-    class="btn btn-outline-primary btn-sm"
-    [routerLink]="['/', 'register-view']"
-    routerLinkActive="active"
-  >
-    Liste des Patients
-  </button>
-</div>
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Registration details</h4>
+            <p class="card-subtitle card-subtitle-dash">
+              Registration details
+            </p>
+          </div>
+
+          <div class="btn-wrapper">
+            <a
+              href="#"
+              class="btn btn-primary text-white align-items-center"
+              [routerLink]="['/', 'register']"
+              routerLinkActive="active"
+            >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> Patients List
+            </a>
+            <a
+              href="#"
+              class="btn btn-danger text-white align-items-center"
+              [routerLink]="['/', 'report-issue-csv']"
+              style="border-color: red"
+            >
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
+        </div>
+        <div class="table-responsive mt-1">
 <ngx-masonry [options]="masonryOptions">
   <div ngxMasonryItem class="card masonry-item">
     <div class="card-body">
@@ -94,4 +116,10 @@
     </div>
   </div>
   
-  </ngx-masonry>
+</ngx-masonry>
+
+</div>
+</div>
+</div>
+</div>
+</div>

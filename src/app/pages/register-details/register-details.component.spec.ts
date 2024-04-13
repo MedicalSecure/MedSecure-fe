@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MasonryDpiComponent } from './masonry-dpi.component';
+import { MasonryDpiComponent } from './register-details.component';
 
 describe('MasonryDpiComponent', () => {
   let component: MasonryDpiComponent;

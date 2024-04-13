@@ -13,16 +13,15 @@
           <div class="btn-wrapper">
             <a
               href="#"
-              class="btn btn-outline-primary align-items-center"
+              class="btn btn-primary text-white align-items-center"
               [routerLink]="['/', 'register-form']"
               routerLinkActive="active"
             >
-              <i class="fa fa-address-book-o" aria-hidden="true"></i> Add new
-              patient
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> Add new patient
             </a>
             <a
               href="#"
-              class="btn btn-outline-danger align-items-center"
+              class="btn btn-danger text-white align-items-center"
               [routerLink]="['/', 'report-issue-csv']"
               style="border-color: red"
             >
@@ -121,13 +120,6 @@
               <tr mat-header-row *matHeaderRowDef="['header']"></tr>
             </ng-container>
 
-            <ng-container matColumnDef="Look">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-              <td mat-cell *matCellDef="let element" class="element">
-                <i class="fa fa-address-card-o"></i>
-              </td>
-            </ng-container>
-
             <!-- Position Column -->
             <ng-container matColumnDef="MRN">
               <th mat-header-cell *matHeaderCellDef>
@@ -183,6 +175,14 @@
                   >{{ element.status }}</mat-chip
                 >
                 }
+              </td>
+            </ng-container>
+
+            <!-- details Column -->
+            <ng-container matColumnDef="look">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header > Action</th>
+              <td mat-cell *matCellDef="let element" class="element">
+                <i class="fa fa-address-card-o" matTooltip="Look details"></i>
               </td>
             </ng-container>
 

@@ -11,7 +11,7 @@ import { WidgetsComponent } from './pages/widgets/widgets.component';
 import { ShipsSelectComponent } from './components/chips-select/chips-select.component';
 import { AddPrescriptionComponent } from './pages/add-prescription/add-prescription-component/add-prescription.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
-import { MasonryDpiComponent } from './components/masonry-dpi/masonry-dpi.component';
+import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
 
