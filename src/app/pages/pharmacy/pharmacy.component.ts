@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { MedicationType } from '../../partials/navbar/navbar.component';
-
+import { MatChipsModule } from '@angular/material/chips';
 @Component({
   selector: 'app-pharmacy',
   standalone: true,
@@ -18,6 +18,7 @@ import { MedicationType } from '../../partials/navbar/navbar.component';
     CommonModule,
     FormsModule,
     MatTableModule,
+    MatChipsModule
   ],
   templateUrl: './pharmacy.component.html',
   styleUrl: './pharmacy.component.css',

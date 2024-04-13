@@ -2,8 +2,6 @@ import {
   AfterViewInit,
   Component,
   ViewChild,
-  Input,
-  OnInit,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
