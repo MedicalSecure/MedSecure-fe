@@ -131,7 +131,7 @@ export class RegisterFormComponent implements OnInit {
       {
         id: 'cardiovascular',
         name: 'Cardiovascular risk factors',
-        icon: '',
+        icon: 'fas fa-solid fa-heart',
         groups: [
           {
             name: 'Family history of chronic kidney disease',
@@ -218,7 +218,7 @@ export class RegisterFormComponent implements OnInit {
               { name: 'Grade 2', checked: false },
               { name: 'Grade 3', checked: false },
               {
-                name: 'hypertension-included left ventricular hypertrophy',
+                name: 'hypertension-included LVH',
                 checked: false,
               },
               { name: 'hypertension-included retinopathy', checked: false },
@@ -352,18 +352,110 @@ export class RegisterFormComponent implements OnInit {
       console.error('No image URL found in icon data');
     }
   }
+
+  allergyCategories: { name: string, symptoms: { id: string, name: string }[], icon: string }[] = [];
+
+  countries: string[] = [
+    'Tunisia',
+  ];
+
+  states: string[] = [
+    'Ariana',
+    'Beja',
+    'Ben Arous',
+    'Bizerte',
+    'Gabes',
+    'Gafsa',
+    'Jendouba',
+    'Kairouan',
+    'Kasserine',
+    'Kebili',
+    'Kef',
+    'Mahdia',
+    'Manouba',
+    'Medenine',
+    'Monastir',
+    'Nabeul',
+    'Sfax',
+    'Sidi Bouzid',
+    'Siliana',
+    'Sousse',
+    'Tataouine',
+    'Tozeur',
+    'Tunis',
+    'Zaghouan'
+  ];
   // Function to load typesOfAllergies
   loadAllergySymptoms(): void {
-    this.allergySymptoms = [
-      { id: 'food', name: 'Food Allergies' },
-      { id: 'environmental', name: 'Environmental Allergies' },
-      { id: 'insect-sting', name: 'Insect Sting Allergies' },
-      { id: 'medication', name: 'Medication Allergies' },
-      { id: 'skin', name: 'Skin Allergies' },
-      { id: 'pet', name: 'Pet Allergies' },
-      { id: 'occupational', name: 'Occupational Allergies' },
+    this.allergyCategories = [
+      {
+        name: 'Respiratory Allergies',
+        icon: 'fas fa-solid fa-lungs',
+        symptoms: [
+          { id: 'hay-fever', name: 'Hay Fever (Allergic Rhinitis)' },
+          { id: 'sneezing', name: 'Sneezing' },
+          { id: 'itching-nose', name: 'Itching of the Nose' },
+          { id: 'runny-nose', name: 'Runny Nose' },
+          { id: 'watery-eyes', name: 'Watery Eyes' }
+        ]
+      },
+      {
+        name: 'Skin Allergies',
+        icon: 'fas fa-solid fa-bug',
+        symptoms: [
+          { id: 'itchy-skin', name: 'Itchy Skin' },
+          { id: 'rash', name: 'Rash' },
+          { id: 'facial-swelling', name: 'Facial Swelling' },
+          { id: 'atopic-dermatitis', name: 'Atopic Dermatitis (Eczema)' },
+          { id: 'itchy-red-skin', name: 'Itchy and Red Skin' },
+          { id: 'flaking-peeling-skin', name: 'Flaking or Peeling Skin' }
+        ]
+      },
+      {
+        name: 'Food and Insect Allergies',
+        icon: 'fas fa-solid fa-cookie-bite',
+        symptoms: [
+          { id: 'food-allergy', name: 'Food Allergy' },
+          { id: 'tingling-mouth', name: 'Tingling in the Mouth' },
+          { id: 'swelling-lips', name: 'Swelling of the Lips' },
+          { id: 'hives-food', name: 'Hives from Food Allergy' },
+          { id: 'insect-sting-allergy', name: 'Insect Sting Allergy' },
+          { id: 'swelling-sting', name: 'Swelling at Sting Site' },
+          { id: 'itching-hives', name: 'Itching or Hives All Over the Body' }
+        ]
+      },
+      {
+        name: 'Other Allergies',
+        icon: 'fas fa-solid fa-allergies',
+        symptoms: [
+          { id: 'drug-allergy', name: 'Drug Allergy' },
+          { id: 'anaphylaxis', name: 'Anaphylaxis' },
+          { id: 'loss-consciousness', name: 'Loss of Consciousness' },
+          { id: 'low-blood-pressure', name: 'Low Blood Pressure' },
+          { id: 'severe-shortness-breath', name: 'Severe Shortness of Breath' },
+          { id: 'lightheadedness', name: 'Lightheadedness' },
+          { id: 'rapid-weak-pulse', name: 'Rapid Weak Pulse' },
+          { id: 'nausea-vomiting', name: 'Nausea and Vomiting' }
+        ]
+      }
     ];
   }
+  
+  maritals = [
+    { viewValue: 'Single' },
+    { viewValue: 'Married' },
+    { viewValue: 'Divorced' },
+    { viewValue: 'Widowed' }
+  ];
+
+  childrens = [
+    { viewValue: 'None' },
+    { viewValue: '1' },
+    { viewValue: '2' },
+    { viewValue: '3 or more' }
+  ];
+  
+
 
   parentCheckbox: boolean = false;
 
