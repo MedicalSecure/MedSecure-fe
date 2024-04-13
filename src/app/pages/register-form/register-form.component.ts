@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { WizardHeaderComponent, wizardStepType } from '../wizard-header/wizard-header.component';
+import {
+  WizardHeaderComponent,
+  wizardStepType,
+} from '../../components/wizard-header/wizard-header.component';
 
 // Interfaces
 
@@ -124,14 +127,15 @@ export class RegisterFormComponent implements OnInit {
 
   // Function to load cardio
   loadCardio(): void {
-    this.cardio =[{
-      id: 'cardiovascular',
-      name: 'Cardiovascular risk factors',
-      icon:'',
-      groups: [
-        {
-          name: 'Family history of chronic kidney disease',
-          expand: false,
+    this.cardio = [
+      {
+        id: 'cardiovascular',
+        name: 'Cardiovascular risk factors',
+        icon: '',
+        groups: [
+          {
+            name: 'Family history of chronic kidney disease',
+            expand: false,
             checked: false,
             children: [],
           },
@@ -158,7 +162,7 @@ export class RegisterFormComponent implements OnInit {
       {
         id: 'diabetes',
         name: 'Diabetes',
-        icon:'fas fa-solid fa-syringe',
+        icon: 'fas fa-solid fa-syringe',
         groups: [
           {
             name: 'Type 1 diabetes mellitus',
@@ -192,7 +196,7 @@ export class RegisterFormComponent implements OnInit {
       {
         id: 'Chronicheartfailure',
         name: 'Chronic heart failure',
-        icon:'fas fa-solid fa-heart-pulse',
+        icon: 'fas fa-solid fa-heart-pulse',
         groups: [
           {
             name: 'Documented atherosclerotic cardiovascular disease',
@@ -232,7 +236,7 @@ export class RegisterFormComponent implements OnInit {
       {
         id: 'Dyslipidemia',
         name: 'Dyslipidemia',
-        icon:'fas fa-solid fa-vial',
+        icon: 'fas fa-solid fa-vial',
         groups: [
           {
             name: 'Dyslipidemia',
@@ -253,7 +257,7 @@ export class RegisterFormComponent implements OnInit {
       {
         id: 'Kidneydiseases',
         name: 'Kidney diseases',
-        icon:'fas fa-solid fa-capsules',
+        icon: 'fas fa-solid fa-capsules',
         groups: [
           {
             name: 'Acute kidney injury (previous episode)',
@@ -290,12 +294,12 @@ export class RegisterFormComponent implements OnInit {
       {
         id: 'infectiousAutoimmune',
         name: 'Infectious and autoimmune diseases',
-        icon:'fas fa-solid fa-virus',
+        icon: 'fas fa-solid fa-virus',
         groups: [
           {
             name: 'Autoimmune diseases',
             expand: false,
-              checked: false,
+            checked: false,
             children: [],
           },
           {
@@ -309,12 +313,12 @@ export class RegisterFormComponent implements OnInit {
       {
         id: 'Lifestyle',
         name: 'Lifestyle and environment',
-        icon:'fas fa-solid fa-seedling',
+        icon: 'fas fa-solid fa-seedling',
         groups: [
           {
             name: 'Exposure to nephrotoxic agents',
             expand: false,
-              checked: false,
+            checked: false,
             children: [],
           },
           {

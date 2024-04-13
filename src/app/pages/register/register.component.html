@@ -1,0 +1,198 @@
+<!-- <div class="content-wrapper">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <button type="button" class="btn btn-outline-primary btn-sm" [routerLink]="[ '/', 'register-form']" routerLinkActive="active" >Add patient</button>
+</div>
+<mat-form-field>
+  <mat-label>Search ..</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+</mat-form-field>
+<i class="fa fa-search"></i> -->
+  
+
+   <div class="row flex-grow">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card card-rounded">
+        <div class="card-body">
+          <div class="d-sm-flex justify-content-between align-items-start">
+            <div>
+            <h4 class="card-title card-title-dash">Registration</h4>
+            <p class="card-subtitle card-subtitle-dash">
+              Register new patients
+            </p>
+          </div>
+
+          <div class="btn-wrapper">
+            <a href="#" class="btn btn-outline-primary align-items-center" [routerLink]="['/', 'register-form']" routerLinkActive="active" >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> Add new patient 
+            </a>
+            <a href="#" class="btn btn-outline-danger align-items-center" [routerLink]="['/', 'report-issue-csv']" style="border-color: red;">
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
+        </div>
+        <div class="table-responsive mt-1">
+          <table
+          mat-table
+          [dataSource]="dataSource"
+          multiTemplateDataRows
+          matSort
+          class="custom-table"
+          >
+            <ng-container matColumnDef="header">
+              <div class="date" style="display: flex; align-items: flex-start">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  [attr.colspan]="columnsToDisplay.length"
+                >
+                  <mat-chip class="uc" style="margin-right: 20px">
+                    Unit Care: Emergency Department
+                  </mat-chip>
+
+                  <!-- <div class="form-group" style="width: 300px;  position: relative; border-radius: 50px;">
+            <input style="width:300px; border-radius: 50px;" type="text" class="form-control rounded-input" (keyup)="Filter($event)" placeholder="Search...">
+          </div> -->
+
+                  <mat-form-field
+                    appearance="outline"
+                    style="
+                      width: 300px;
+                      position: relative;
+                      border-radius: 50px;
+                      margin-top: 20px;
+                    "
+                  >
+                    <input
+                      style="width: 300px; border-radius: 50px"
+                      matInput
+                      (keyup)="Filter($event)"
+                      placeholder="Search..."
+                      #input
+                      style="width: 200px; color: gray"
+                    />
+                  </mat-form-field>
+
+                  <mat-form-field
+                    appearance="outline"
+                    style="
+                      position: relative;
+                      margin-left: 10px;
+                      width: 300px;
+                      background-color: transparent;
+                      color: transparent;
+                      border-color: transparent;
+                    "
+                  >
+                    <mat-label>Choose a date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker"
+                      #dateInput
+                      (dateChange)="changeDate(dateInput.value)"
+                    />
+                    <mat-datepicker-toggle
+                      matIconSuffix
+                      [for]="picker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+
+                  <button
+                    style="
+                      background-color: transparent;
+                      border-color: transparent;
+                    "
+                    (click)="onLeftButtonClick()"
+                  >
+                    <img src="assets/left_arrow_icon.svg" alt="left_arrow" />
+                  </button>
+                  {{ todayDate }}
+                  <button
+                    style="
+                      background-color: transparent;
+                      border-color: transparent;
+                    "
+                    (click)="onRightButtonClick()"
+                  >
+                    <img src="assets/right_arrow_icon.svg" alt="right_arrow" />
+                  </button>
+                </th>
+              </div>
+              <tr mat-header-row *matHeaderRowDef="['header']"></tr>
+            </ng-container>
+
+            <ng-container matColumnDef="Look">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+              <td mat-cell *matCellDef="let element" class="element">
+                <i class="fa fa-address-card-o"></i>
+              </td>
+            </ng-container>
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="MRN">
+              <th mat-header-cell *matHeaderCellDef>Medical Record Number (MRN)</th>
+              <td mat-cell *matCellDef="let element">{{ element.MRN }}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="age">
+              <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
+              <td mat-cell *matCellDef="let element">{{ element.dateOfBirth | date:'yyyy-MM-dd' }} <strong> ({{ calculateAge(element.dateOfBirth) }}</strong>  years old)</td>
+            </ng-container>
+
+            <!-- registerDate Column -->
+            <ng-container matColumnDef="registerDate">
+              <th mat-header-cell *matHeaderCellDef>Register Date</th>
+              <td mat-cell *matCellDef="let element">{{ element.registerDate | date:'yyyy-MM-dd' }}</td>
+            </ng-container>
+
+             <!-- status Column -->
+             <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+              >
+                @if ( element.status === "Out") {
+                <mat-chip
+                  class="element mat-chip"
+                  style="
+                    background-color: rgba(255, 0, 0, 0.05);
+                    border: 1px solid red;
+                  "
+                  >{{element.status }}</mat-chip
+                >
+                }  @else if (element.status === "Resident") {
+                <mat-chip
+                  class="element mat-chip"
+                  style="
+                    background-color: rgba(17, 255, 33, 0.05);
+                    border: 1px solid green;
+                  "
+                  >{{ element.status }}</mat-chip
+                >
+                }
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsToDisplay" [routerLink]="['/', 'register-details']"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="6">
+                No data matching the filter
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
