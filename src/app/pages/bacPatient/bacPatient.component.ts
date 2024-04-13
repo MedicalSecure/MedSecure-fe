@@ -1,4 +1,4 @@
-
+import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ViewChild, Input, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -32,7 +32,7 @@ import { CommentComponent } from "../../components/comment/comment.component";
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, CommentComponent]
+  imports: [DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, CommentComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
 
@@ -45,7 +45,7 @@ export class BacPatientComponent implements AfterViewInit {
   todayDate: string = new Date().toLocaleDateString();
   dateToShow: string;
   columnsToDisplay = ['add', 'room', 'bed', 'patient', 'age', 'progress', 'status'];
-  columnsToDisplayMedicines = ['name', 'posology', 'root']
+  columnsToDisplayMedicines = ['name', 'posology', 'root' , 'note']
   expandedElement: bacpatient | null;
   selectedIndex: number | null = null;
   servingDay: Date[];
@@ -150,6 +150,39 @@ export class BacPatientComponent implements AfterViewInit {
       }
     }
   }
+
+
+  getRouteImage(route: string): string {
+    switch (route) {
+      case 'Ophthalmic':
+        return 'assets/routes/eye.svg';
+      case 'Otic':
+        return 'assets/routes/ear.svg';
+      case 'Inhalation':
+        return 'assets/routes/lungs.svg';
+      case 'Bandage':
+        return 'assets/routes/bandage.svg';
+      case 'Syrup':
+        return 'assets/routes/syrup.svg';
+      case 'Transdermal':
+        return 'assets/routes/cream.svg';
+      case 'Sublingual':
+        return 'assets/routes/Sublingual.svg';
+      case 'Intramuscular':
+        return 'assets/routes/Intramuscular.svg';
+      case 'Intracardiac':
+        return 'assets/routes/Intracardiac.svg';
+      case 'Nebulizers':
+        return 'assets/routes/spray.svg';
+      case 'Injection':
+        return 'assets/routes/vaccine.svg';
+      case 'Oral':
+        return 'assets/routes/pills.svg';
+      default:
+        return '';
+    }
+  }
+  
 }
 export interface Medicine {
   name: string;
@@ -157,6 +190,7 @@ export interface Medicine {
   root: string;
   dose: number;
   note: string[];
+  description: string;
 }
 export interface Posology {
   [x: string]: any;
@@ -196,9 +230,10 @@ export const ELEMENT_DATA : bacpatient[] = [
             { hour: '14', value: '04', quantityBE: 1 , quantityAE :2 },
             { hour: '19', value: '22', quantityBE: 1 , quantityAE :2 },
             { hour: '23', value: '04', quantityBE: 1 , quantityAE :2 },
-          ]
-        ], root: 'Injection', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-
+          ]], 
+        root: 'Injection', dose: 2, 
+        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"],
+        description : 'some description',
       },
       {
         name: 'Hydrochlorothiazide', posology: [
@@ -210,7 +245,11 @@ export const ELEMENT_DATA : bacpatient[] = [
             { hour: '07', value: '17', quantityBE: 1 , quantityAE :2 },
             { hour: '13', value: '22', quantityBE: 1 , quantityAE :2 },
           ]
-        ], root: 'Nebulizers', dose: 2, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], 
+        root: 'Nebulizers', 
+        dose: 2, 
+        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ,description : 'some description'
       },
     
     ],
@@ -234,7 +273,9 @@ export const ELEMENT_DATA : bacpatient[] = [
             { hour: '10', value: '02', quantityBE: 1 , quantityAE :2 },
 
           ]
-        ], root: 'Intracardiac', dose: 1, note:['']
+        ], root: 'Intracardiac', dose: 1, 
+        note:['']
+        ,description : 'some description'
       },
       {
         name: 'Levothyroxine', posology: [
@@ -244,7 +285,9 @@ export const ELEMENT_DATA : bacpatient[] = [
             { hour: '15', value: '04', quantityBE: 1 , quantityAE :2 },
 
           ]
-        ], root: 'Intramuscular', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ], root: 'Intramuscular', dose: 1, 
+        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ,description : 'some description'
       },
       {
         name: 'Pantoprazole', posology: [
@@ -257,7 +300,10 @@ export const ELEMENT_DATA : bacpatient[] = [
             { hour: '07', value: '04', quantityBE: 1 , quantityAE :2 },
 
           ]
-        ], root: 'Sublingual', dose: 1, note:['']
+        ], 
+        root: 'Sublingual', dose: 1, 
+        note:['']
+        ,description : 'some description'
       }
     ],
     toServe: 15,
@@ -285,6 +331,7 @@ export const ELEMENT_DATA : bacpatient[] = [
        
           ]
         ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ,description : 'some description'
       },
       {
         name: 'Azithromycin', posology: [
@@ -296,6 +343,7 @@ export const ELEMENT_DATA : bacpatient[] = [
           ]
 
         ], root: 'Syrup', dose: 1, note:['']
+        ,description : 'some description'
       },
       {
         name: 'Lisdexamfetamine', posology: [
@@ -309,6 +357,7 @@ export const ELEMENT_DATA : bacpatient[] = [
      
           ]
         ], root: 'Bandage', dose: 1, note:['']
+        ,description : 'some description'
       }
     ],
     toServe: 18,
@@ -337,6 +386,7 @@ export const ELEMENT_DATA : bacpatient[] = [
        
           ]
         ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ,description : 'some description'
       },
       {
         name: 'Azithromycin', posology: [
@@ -348,6 +398,7 @@ export const ELEMENT_DATA : bacpatient[] = [
           ]
 
         ], root: 'Syrup', dose: 1, note:['']
+        ,description : 'some description'
       },
       {
         name: 'Lisdexamfetamine', posology: [
@@ -358,6 +409,7 @@ export const ELEMENT_DATA : bacpatient[] = [
      
           ]
         ], root: 'Bandage', dose: 1, note:['']
+        ,description : 'some description'
       }
     ],
     toServe: 18,
@@ -386,6 +438,7 @@ export const ELEMENT_DATA : bacpatient[] = [
         root: 'Oral',
         dose: 1,
         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ,description : 'some description'
       },
       {
         name: 'Atorvastatin',
@@ -398,6 +451,7 @@ export const ELEMENT_DATA : bacpatient[] = [
         root: 'Oral',
         dose: 1,
         note: ['']
+        ,description : 'some description'
       }
     ],
     toServe: 10,
@@ -425,6 +479,7 @@ export const ELEMENT_DATA : bacpatient[] = [
         root: 'Oral',
         dose: 1,
         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ,description : 'some description'
       },
       {
         name: 'Losartan',
@@ -437,6 +492,7 @@ export const ELEMENT_DATA : bacpatient[] = [
         root: 'Oral',
         dose: 1,
         note: ['']
+        ,description : 'some description'
       }
     ],
     toServe: 12,
@@ -464,6 +520,7 @@ export const ELEMENT_DATA : bacpatient[] = [
         root: 'Oral',
         dose: 1,
         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+        ,description : 'some description'
       },
       {
         name: 'Ibuprofen',
@@ -476,6 +533,7 @@ export const ELEMENT_DATA : bacpatient[] = [
         root: 'Oral',
         dose: 1,
         note: ['']
+        ,description : 'some description'
       }
     ],
     toServe: 8,
