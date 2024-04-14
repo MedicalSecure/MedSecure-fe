@@ -7,7 +7,105 @@
     <app-settings-panel></app-settings-panel>
 
     <!-- Include the sidebar component -->
-    <app-sidebar></app-sidebar>
+    <!-- <app-sidebar></app-sidebar> -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <ul class="nav">
+          <!-- Dashboard Link -->
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'dashboard']">
+                  <i class="mdi mdi-grid-large menu-icon"></i>
+                  <span class="menu-title">Dashboard</span>
+              </a>
+          </li>
+    
+          <!-- Reception Section -->
+          <li class="nav-item nav-category">RECEPTION</li>
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'register']">
+                  <i class="menu-icon mdi mdi-account-circle-outline"></i>
+                  <span class="menu-title">Registration</span>
+              </a>
+          </li>
+    
+          <!-- Infrastructure Section -->
+          <li class="nav-item nav-category">Infrastructure</li>
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'unit-care']">
+                  <i class="menu-icon mdi mdi-floor-plan"></i>
+                  <span class="menu-title">Unit Care</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+    
+          <!-- Pharmacy Link -->
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'pharmacy']">
+                  <i class="menu-icon mdi mdi-mortar-pestle-plus"></i>
+                  <span class="menu-title">Pharmalink</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+    
+          <!-- Administration Section -->
+          <li class="nav-item nav-category">ADMINISTRATION</li>
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'prescribe']">
+                  <i class="menu-icon mdi mdi-prescription"></i>
+                  <span class="menu-title">Prescription</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'bac-patient']">
+                  <i class="menu-icon mdi mdi-chart-line"></i>
+                  <span class="menu-title">Bac Patient</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'tasks']">
+                  <i class="menu-icon mdi mdi-card-text-outline"></i>
+                  <span class="menu-title">Tasks</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'timeline']">
+                  <i class="menu-icon mdi mdi-chart-line"></i>
+                  <span class="menu-title">Time Line</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+    
+          <!-- Visits Link -->
+          <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" [routerLink]="['/', 'visits']">
+                  <i class="menu-icon mdi mdi-floor-plan"></i>
+                  <span class="menu-title">Visits</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+    
+          <!-- Diet Link -->
+          <li class="nav-item">
+              <a class="nav-link">
+                  <i class="menu-icon fa fa-apple" aria-hidden="true"></i>
+                  <span class="menu-title">Diet</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+    
+          <!-- Waste Link -->
+          <li class="nav-item">
+              <a class="nav-link">
+                  <i class="menu-icon fa fa-trash-o"></i>
+                  <span class="menu-title">Waste</span>
+                  <i class="menu-arrow"></i>
+              </a>
+          </li>
+      </ul>
+    </nav>
+    
 
     <!-- Main panel -->
     <div class="main-panel">
