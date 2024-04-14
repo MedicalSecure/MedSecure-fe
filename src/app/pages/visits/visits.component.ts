@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { CalendarEvent } from 'angular-calendar';
 import { CalendarEventType, CalendarShedulerComponent } from '../../components/calendar-scheduler/calendar-scheduler.component';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-visits-home-page',
   standalone: true,
-  imports: [CalendarShedulerComponent],
+  imports: [CalendarShedulerComponent, RouterModule],
   templateUrl: './visits.component.html',
   styleUrl: './visits.component.css'
 })

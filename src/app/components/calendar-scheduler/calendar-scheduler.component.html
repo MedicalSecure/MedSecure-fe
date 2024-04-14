@@ -2,7 +2,7 @@
   <div class="col-md-4">
     <div class="btn-group">
       <div
-        class="btn btn-primary"
+        class="btn btn-primary text-white"
         mwlCalendarPreviousView
         [view]="view"
         [(viewDate)]="viewDate"
@@ -12,14 +12,14 @@
       </div>
       <div
         #todayButton
-        class="btn btn-outline-secondary"
+        class="btn btn-primary text-white"
         mwlCalendarToday
         [(viewDate)]="viewDate"
       >
         Today
       </div>
       <div
-        class="btn btn-primary"
+        class="btn btn-primary text-white"
         mwlCalendarNextView
         [view]="view"
         [(viewDate)]="viewDate"
@@ -35,21 +35,21 @@
   <div class="col-md-4">
     <div class="btn-group">
       <div
-        class="btn btn-primary"
+        class="btn btn-primary text-white"
         (click)="setView(CalendarView.Month)"
         [class.active]="view === CalendarView.Month"
       >
         Month
       </div>
       <div
-        class="btn btn-primary"
+        class="btn btn-primary text-white"
         (click)="setView(CalendarView.Week)"
         [class.active]="view === CalendarView.Week"
       >
         Week
       </div>
       <div
-        class="btn btn-primary"
+        class="btn btn-primary text-white"
         (click)="setView(CalendarView.Day)"
         [class.active]="view === CalendarView.Day"
       >
@@ -106,5 +106,3 @@
   [selectedTime]="selectedTime"
   ></app-appointment>
 </ng-template>
-
-<!-- (eventClicked)="handleEvent('Clicked', $events)" -->
