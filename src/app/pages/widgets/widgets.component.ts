@@ -15,7 +15,7 @@ import { MultiSenseWidgetComponent} from '../../components/widgets/multisense-wi
 
 
 import {ArmoireStock } from "../../model/ArmoireStock"
-import { Medication } from './../../model/medications';
+import { Medication } from './../../model/Medications';
 import {Stockout} from "../../model/stockout"
 import { Presecription } from "../../model/Presecription"
 @Component({

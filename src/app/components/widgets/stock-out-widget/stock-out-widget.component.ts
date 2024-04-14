@@ -9,7 +9,7 @@ import {
 } from "ng-apexcharts";
 import { NgApexchartsModule } from "ng-apexcharts";
 import {Stockout } from "../../../model/stockout"
-import { Medication} from "../../../model/medications"
+import { Medication} from "../../../model/Medications"
 export type ChartOptions = {
   series: ApexAxisChartSeries | any;
   chart: ApexChart | any;

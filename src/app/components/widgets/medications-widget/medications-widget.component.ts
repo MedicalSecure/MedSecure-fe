@@ -8,7 +8,7 @@ import {
   ApexLegend,ApexTitleSubtitle
 } from "ng-apexcharts";
 import { NgApexchartsModule } from "ng-apexcharts";
-import { Medication } from '../../../model/medications';
+import { Medication } from '../../../model/Medications';
 export type ChartOptions = {
   series: ApexAxisChartSeries | any;
   chart: ApexChart | any;
