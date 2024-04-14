@@ -1,14 +1,28 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { ELEMENT_DATA, Medicine, Posology, bacpatient } from '../../pages/bacPatient/bacPatient.component';
+import { Component, Input, OnInit } from '@angular/core';
+import { ELEMENT_DATA, Medicine, bacpatient } from '../bacPatient/bacPatient.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-gantt-chart',
+  selector: 'app-timeline-event',
   standalone: true,
-  imports: [],
-  templateUrl: './gantt-chart.component.html',
-  styleUrl: './gantt-chart.component.css'
+  imports: [CommonModule],
+  templateUrl: './timeline-event.component.html',
+  styleUrl: './timeline-event.component.css'
 })
 export class GanttChartComponent implements OnInit{
+
+  isCurrentHour(hour: string): boolean {
+    const currentHour = new Date().getHours();
+    // Parse the input hour string to an integer
+    const inputHour = parseInt(hour, 10);
+    // Debug output
+    console.log("Hour:", hour);
+    console.log("Input Hour:", inputHour);
+    console.log("Current Hour:", currentHour);
+    // Check if the parsed input hour matches the current hour
+    return inputHour === currentHour;
+  }
+
 calculateQuantity( be:number , ae:number):number {
   return be+ae ;
 }

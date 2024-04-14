@@ -10,7 +10,7 @@ import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
 import { ShipsSelectComponent } from './components/chips-select/chips-select.component';
 import { AddPrescriptionComponent } from './pages/add-prescription/add-prescription-component/add-prescription.component';
-import { KanbanComponent } from './components/kanban/kanban.component';
+import { TasksComponent } from './pages/tasks/tasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
@@ -24,7 +24,7 @@ export const routes: Routes = [
   { path: 'UnitSelector', component: UnitSelectorComponent },
   { path: 'bac-patient', component: BacPatientComponent },
   { path: 'timeline', component: TimelineComponent },
-  { path: 'kanban', component: KanbanComponent },
+  { path: 'tasks', component: TasksComponent },
   { path: 'search', component: SearchBarComponent },
   { path: 'pharmacy', component: PharmacyComponent },
   { path: 'prescribe', component: AddPrescriptionComponent },

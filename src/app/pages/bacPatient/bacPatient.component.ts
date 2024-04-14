@@ -115,18 +115,17 @@ export class BacPatientComponent implements AfterViewInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  calculateAge(birthdate: Date): number {
+  calculateAge(dateOfBirth: Date): number {
     const today = new Date();
-    const birth = new Date(birthdate);
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-
     return age;
   }
+  
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
     if (!this.checkedItems[element.id]) {
       this.checkedItems[element.id] = [];

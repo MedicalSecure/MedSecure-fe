@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GanttChartComponent } from './gantt-chart.component';
+import { GanttChartComponent } from './timeline-event.component';
 
 describe('GanttChartComponent', () => {
   let component: GanttChartComponent;
