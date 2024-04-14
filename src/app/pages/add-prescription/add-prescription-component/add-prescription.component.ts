@@ -15,6 +15,8 @@ import { WizardHeaderComponent } from '../../../components/wizard-header/wizard-
 import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
 import { Subject } from 'rxjs';
 import { medicationType } from '../../../types';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-prescription',
@@ -26,6 +28,8 @@ import { medicationType } from '../../../types';
     MatIcon,
     WizardHeaderComponent,
     PatientInfoCardsComponent,
+    RouterModule,
+    CommonModule, 
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
@@ -117,6 +121,11 @@ export class AddPrescriptionComponent {
 
   /* wizard buttons */
   SwitchToStep(index: number) {
+    if (index === 0) {
+      this.onSelectPatientChange(undefined);
+      return;
+    }
+
     if (index === this.stepsLimit + 1) {
       this.onClickFinish();
       return;

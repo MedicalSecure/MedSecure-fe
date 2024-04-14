@@ -9,20 +9,22 @@ import {
 import { HumanBodyViewerComponent } from '../../../components/human-body-viewer/human-body-viewer.component';
 import { CommonModule } from '@angular/common';
 import { patientType } from '../patient-select/patient-select.component';
+import { PatientInfoCardsComponent } from "../patient-info-cards/patient-info-cards.component";
 
 @Component({
-  selector: 'app-add-symptoms',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ShipsSelectComponent,
-    HumanBodyViewerComponent,
-    CommonModule,
-  ],
-  templateUrl: './add-symptoms.component.html',
-  styleUrl: './add-symptoms.component.css',
+    selector: 'app-add-symptoms',
+    standalone: true,
+    templateUrl: './add-symptoms.component.html',
+    styleUrl: './add-symptoms.component.css',
+    imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ShipsSelectComponent,
+        HumanBodyViewerComponent,
+        CommonModule,
+        PatientInfoCardsComponent
+    ]
 })
 export class AddSymptomsComponent {
   @Input() selectedPatient: patientType | undefined;

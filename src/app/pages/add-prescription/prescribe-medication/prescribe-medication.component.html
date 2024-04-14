@@ -1,263 +1,276 @@
-<div
-  class="d-flex flex-column p-md-2 justify-content-start gap-4 flex-column flex-md-row"
->
-  <div class="col-12 col-md-6 col-md-5 p-0">
-    <form
-      class="d-flex flex-column gap-2 justify-content-center align-middle py-2"
-    >
-      <div
-        class="d-flex align-middle justify-content-around"
-        [formGroup]="medicationFormGroup"
-      >
-        <mat-form-field class="col-10">
-          <mat-label>Type medication name</mat-label>
-          <input
-            type="text"
-            matInput
-            required
-            [matAutocomplete]="autoGroup"
-            formControlName="medicationNameInputFormControl"
-          />
-          <mat-autocomplete
-            #autoGroup="matAutocomplete"
-            (optionSelected)="onSelectedMedicationChange($event)"
-          >
-            @for (group of medicationGroupOptions | async; track group) {
-            <mat-optgroup [label]="group.letter">
-              @for (label of group.labels; track label) {
-              <mat-option [value]="label">{{ label }}</mat-option>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td class="col-md-9">
+        <div class="d-flex flex-column p-md-2 justify-content-start gap-4 flex-column flex-md-row">
+          <div class="col-12 col-md-12 p-0">
+            <form class="d-flex flex-column gap-2 justify-content-center align-middle py-2">
+              <div
+                class="d-flex align-middle justify-content-around"
+                [formGroup]="medicationFormGroup"
+              >
+                <mat-form-field class="col-10">
+                  <mat-label>Type medication name</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    required
+                    [matAutocomplete]="autoGroup"
+                    formControlName="medicationNameInputFormControl"
+                  />
+                  <mat-autocomplete
+                    #autoGroup="matAutocomplete"
+                    (optionSelected)="onSelectedMedicationChange($event)"
+                  >
+                    @for (group of medicationGroupOptions | async; track group) {
+                    <mat-optgroup [label]="group.letter">
+                      @for (label of group.labels; track label) {
+                      <mat-option [value]="label">{{ label }}</mat-option>
+                      }
+                    </mat-optgroup>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+        
+                <div
+                  title="Add medication"
+                  (click)="onAppendMedication()"
+                  class="pt-2"
+                  style="cursor: pointer"
+                >
+                  <i class="fa fa-plus-circle fs-2" aria-hidden="true"></i>
+                </div>
+                <div
+                  title="Add comment"
+                  (click)="onAddComment()"
+                  class="pt-2"
+                  style="cursor: pointer"
+                >
+                  <i class="fa-solid fa-comment-medical fs-2"></i>
+                </div>
+              </div>
+              @if(false){<mat-error style="margin-top: -1.8rem"
+                >Warning : Medication not compatible</mat-error
+              >}
+        
+              <!-- <app-medication-search></app-medication-search> -->
+        
+              <!-- part of day -->
+              <app-parts-of-day style="margin-top: -2rem"
+                [(partsOfDayHours)]="selectedMedication.administrationHours"
+              ></app-parts-of-day>
+        
+              <!-- period -->
+              <div
+                class="border border-black p-2 mt-1 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center"
+              >
+                <p
+                  class="position-absolute px-2 bg-white fit-content"
+                  style="z-index: 2; top: -0.8em; left: 1em"
+                >
+                  Period*
+                </p>
+        
+                <app-datepicker-range-popup
+                  [dateRange]="selectedMedication.consumptionPeriod.dateRange"
+                  (DateRangeChange)="onPeriodChange($event)"
+                  [minDate]="consumptionMinStartDate"
+                ></app-datepicker-range-popup>
+                <mat-chip-option
+                  (selectionChange)="onIsPermanentChange($event.selected)"
+                  [selected]="
+                    selectedMedication.consumptionPeriod.isPermanent ? true : false
+                  "
+                  color="warn"
+                  >Permanent</mat-chip-option
+                >
+                <mat-chip-option
+                  (selectionChange)="onIsCautionEnabledChange($event.selected)"
+                  [selected]="isCautionEnabled"
+                  color="accent"
+                  >Caution</mat-chip-option
+                >
+              </div>
+        
+              <!-- Additional information -->
+              @if(selectedMedication.comments.length >0){
+              <div class="border border-black p-2 mt-1 p-2 p-lg-3 position-relative">
+                <p
+                  class="position-absolute px-2 bg-white fit-content"
+                  style="z-index: 2; top: -0.8em; left: 1em"
+                >
+                  Additional information*
+                </p>
+                <div>
+                  @for(comment of selectedMedication.comments;track $index){
+                  <div
+                    class="d-flex align-items-center justify-content-around col-12 gap-2 py-1"
+                  >
+                    <label
+                      for=""
+                      [ngClass]="comment.labelClass"
+                      [ngStyle]="comment.labelStyle"
+                      >{{ comment.label ? comment.label : "Comment" }}</label
+                    >
+        
+                    <textarea
+                      class="form-control p-2"
+                      style="height: 3rem"
+                      name=""
+                      id=""
+                      type="text"
+                      [value]="comment.content"
+                      (change)="onCommentChange($event.target, comment)"
+                    ></textarea>
+                    <mat-icon
+                      (click)="onRemoveComment(comment)"
+                      class="text-danger pointer"
+                      >delete</mat-icon
+                    >
+                  </div>
+                  }
+                </div>
+              </div>
               }
-            </mat-optgroup>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
-
-        <div
-          title="Add medication"
-          (click)="onAppendMedication()"
-          class="pt-2"
-          style="cursor: pointer"
-        >
-          <i class="fa fa-plus-circle fs-2" aria-hidden="true"></i>
-        </div>
-        <div
-          title="Add comment"
-          (click)="onAddComment()"
-          class="pt-2"
-          style="cursor: pointer"
-        >
-          <i class="fa-solid fa-comment-medical fs-2"></i>
-        </div>
-      </div>
-      @if(false){<mat-error style="margin-top: -1.8rem"
-        >Warning : Medication not compatible</mat-error
-      >}
-
-      <!-- <app-medication-search></app-medication-search> -->
-
-      <!-- part of day -->
-      <app-parts-of-day
-        [(partsOfDayHours)]="selectedMedication.administrationHours"
-      ></app-parts-of-day>
-
-      <!-- period -->
-      <div
-        class="border border-black p-2 mt-1 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center"
-      >
-        <p
-          class="position-absolute px-2 bg-white fit-content"
-          style="z-index: 2; top: -0.8em; left: 1em"
-        >
-          Period*
-        </p>
-
-        <app-datepicker-range-popup
-          [dateRange]="selectedMedication.consumptionPeriod.dateRange"
-          (DateRangeChange)="onPeriodChange($event)"
-          [minDate]="consumptionMinStartDate"
-        ></app-datepicker-range-popup>
-        <mat-chip-option
-          (selectionChange)="onIsPermanentChange($event.selected)"
-          [selected]="
-            selectedMedication.consumptionPeriod.isPermanent ? true : false
-          "
-          color="warn"
-          >Permanent</mat-chip-option
-        >
-        <mat-chip-option
-          (selectionChange)="onIsCautionEnabledChange($event.selected)"
-          [selected]="isCautionEnabled"
-          color="accent"
-          >Caution</mat-chip-option
-        >
-      </div>
-
-      <!-- Additional information -->
-      @if(selectedMedication.comments.length >0){
-      <div class="border border-black p-2 mt-1 p-2 p-lg-3 position-relative">
-        <p
-          class="position-absolute px-2 bg-white fit-content"
-          style="z-index: 2; top: -0.8em; left: 1em"
-        >
-          Additional information*
-        </p>
-        <div>
-          @for(comment of selectedMedication.comments;track $index){
-          <div
-            class="d-flex align-items-center justify-content-around col-12 gap-2 py-1"
-          >
-            <label
-              for=""
-              [ngClass]="comment.labelClass"
-              [ngStyle]="comment.labelStyle"
-              >{{ comment.label ? comment.label : "Comment" }}</label
-            >
-
-            <textarea
-              class="form-control p-2"
-              style="height: 3rem"
-              name=""
-              id=""
-              type="text"
-              [value]="comment.content"
-              (change)="onCommentChange($event.target, comment)"
-            ></textarea>
-            <mat-icon
-              (click)="onRemoveComment(comment)"
-              class="text-danger pointer"
-              >delete</mat-icon
-            >
+            </form>
+        
+            <div class="d-flex justify-content-end mt-2">
+              <button
+                type="button"
+                class="btn btn-primary text-white btn-lg px-5"
+                data-toggle="button"
+                aria-pressed="false"
+                autocomplete="off"
+                (click)="onAppendMedication()"
+              >
+                {{getAppendMedicationButtonLabel().label}}
+              </button>
+            </div>
+          </div>
+        
+          <!-- Cards right side -->
+          @if(prescribedMedications.length >0){
+          <div class="d-flex flex-column gap-2 col-12 col-md-4 col-lg-5">
+            <div class="card mb-2 py-2">
+              <!-- Current Added medications card -->
+        
+              <div class="card-body pb-0 pt-3">
+                <h4 class="card-title fs-6 mb-1">Newly prescribed medications</h4>
+                <ul class="list p-1 m-0 ps-3">
+                  @for(medication of prescribedMedications;track $index){
+                  <li>
+                    <div class="mb-0">
+                      <div
+                        class="fw-bold fs-6 text-primary mb-0 d-flex justify-content-start align-middle align-items-center"
+                      >
+                        <span
+                          (click)="onClickEditMedication($index, medication)"
+                          style="cursor: pointer"
+                          class="d-flex justify-content-start align-middle align-items-center"
+                        >
+                          {{ medication.id }}
+                          <mat-icon class="fs-6">edit</mat-icon></span
+                        >
+                        <mat-icon
+                          class="fs-6 text-danger"
+                          (click)="onClickRemoveMedication($index, medication)"
+                          style="cursor: pointer; margin-left: -0.5rem"
+                          >delete</mat-icon
+                        >
+                      </div>
+                      <p class="fw-light fs-6 text-dark mb-0">
+                        {{
+                          medication.consumptionPeriod.isPermanent
+                            ? "Permanent"
+                            : getNumberOfDaysInRange(
+                                medication.consumptionPeriod.dateRange
+                              ) + " Days"
+                        }}
+                        <span style="font-size: small">
+                          {{
+                            medication.consumptionPeriod.dateRange?.at(0)?.getDate() +
+                              "/" +
+                              medication.consumptionPeriod.dateRange
+                                ?.at(0)
+                                ?.getMonth() +
+                              1 +
+                              "/" +
+                              medication.consumptionPeriod.dateRange
+                                ?.at(0)
+                                ?.getFullYear()
+                          }}</span
+                        >
+                        @if(!medication.consumptionPeriod.isPermanent){<span
+                          style="font-size: small"
+                        >
+                          {{
+                            " - " +
+                              medication.consumptionPeriod.dateRange?.at(1)?.getDate() +
+                              "/" +
+                              medication.consumptionPeriod.dateRange
+                                ?.at(1)
+                                ?.getMonth() +
+                              1 +
+                              "/" +
+                              medication.consumptionPeriod.dateRange
+                                ?.at(1)
+                                ?.getFullYear()
+                          }}</span
+                        >}
+                        @if(getPrescribedMedicationSummary(medication).numberOfCautions>0){
+                          <span style="position: relative; margin-left: 6px">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            <span class="icon-counter">{{getPrescribedMedicationSummary(medication).numberOfCautions}}</span>
+                          </span
+                        >}
+                        @if(getPrescribedMedicationSummary(medication).numberOfComments>0){<span
+                          style="position: relative; margin-left: 8px"
+                        >
+                          <i class="fa fa-comments-o" aria-hidden="true"></i>
+                          <span class="icon-counter">{{
+                            getPrescribedMedicationSummary(medication).numberOfComments
+                          }}</span> </span
+                        >}
+                      </p>
+        
+                      <p
+                        class="text-dark fw-bold"
+                        style="font-size: small; margin-top: -0.2rem"
+                      >
+                        <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
+                        @if(true){
+                        {{ getPrescribedMedicationSummary(medication).timesADay}}
+                        {{ getPrescribedMedicationSummary(medication).average }} units
+                        on avg | maximum dispense:
+                        {{
+                          getPrescribedMedicationSummary(medication)
+                            .maximumDispenseQuantity
+                        }}
+                        }
+                      </p>
+                      @if(medication.isForceOrder){
+                      <p class="fw-bold text-danger" style="margin-top: -0.7rem">
+                        External order
+                      </p>
+                      }
+                    </div>
+                  </li>
+                  }
+                </ul>
+              </div>
+            </div>
+            <!-- end cards container -->
           </div>
           }
         </div>
-      </div>
-      }
-    </form>
+      </td>
+      <td class="col-md-3">
+        <div [className]="selectedPatient == undefined && 'd-none'">
+          <app-patient-info-cards></app-patient-info-cards>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-    <button
-      type="button"
-      class="btn btn-primary text-white btn-lg px-5"
-      data-toggle="button"
-      aria-pressed="false"
-      autocomplete="off"
-      (click)="onAppendMedication()"
-    >
-      {{getAppendMedicationButtonLabel().label}}
-    </button>
-  </div>
-
-  <!-- Cards right side -->
-  @if(prescribedMedications.length >0){
-  <div class="d-flex flex-column gap-2 col-12 col-md-4 col-lg-5">
-    <div class="card mb-2 py-2">
-      <!-- Current Added medications card -->
-
-      <div class="card-body pb-0 pt-3">
-        <h4 class="card-title fs-6 mb-1">Newly prescribed medications</h4>
-        <ul class="list p-1 m-0 ps-3">
-          @for(medication of prescribedMedications;track $index){
-          <li>
-            <div class="mb-0">
-              <div
-                class="fw-bold fs-6 text-primary mb-0 d-flex justify-content-start align-middle align-items-center"
-              >
-                <span
-                  (click)="onClickEditMedication($index, medication)"
-                  style="cursor: pointer"
-                  class="d-flex justify-content-start align-middle align-items-center"
-                >
-                  {{ medication.id }}
-                  <mat-icon class="fs-6">edit</mat-icon></span
-                >
-                <mat-icon
-                  class="fs-6 text-danger"
-                  (click)="onClickRemoveMedication($index, medication)"
-                  style="cursor: pointer; margin-left: -0.5rem"
-                  >delete</mat-icon
-                >
-              </div>
-              <p class="fw-light fs-6 text-dark mb-0">
-                {{
-                  medication.consumptionPeriod.isPermanent
-                    ? "Permanent"
-                    : getNumberOfDaysInRange(
-                        medication.consumptionPeriod.dateRange
-                      ) + " Days"
-                }}
-                <span style="font-size: small">
-                  {{
-                    medication.consumptionPeriod.dateRange?.at(0)?.getDate() +
-                      "/" +
-                      medication.consumptionPeriod.dateRange
-                        ?.at(0)
-                        ?.getMonth() +
-                      1 +
-                      "/" +
-                      medication.consumptionPeriod.dateRange
-                        ?.at(0)
-                        ?.getFullYear()
-                  }}</span
-                >
-                @if(!medication.consumptionPeriod.isPermanent){<span
-                  style="font-size: small"
-                >
-                  {{
-                    " - " +
-                      medication.consumptionPeriod.dateRange?.at(1)?.getDate() +
-                      "/" +
-                      medication.consumptionPeriod.dateRange
-                        ?.at(1)
-                        ?.getMonth() +
-                      1 +
-                      "/" +
-                      medication.consumptionPeriod.dateRange
-                        ?.at(1)
-                        ?.getFullYear()
-                  }}</span
-                >}
-                @if(getPrescribedMedicationSummary(medication).numberOfCautions>0){
-                  <span style="position: relative; margin-left: 6px">
-                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                    <span class="icon-counter">{{getPrescribedMedicationSummary(medication).numberOfCautions}}</span>
-                  </span
-                >}
-                @if(getPrescribedMedicationSummary(medication).numberOfComments>0){<span
-                  style="position: relative; margin-left: 8px"
-                >
-                  <i class="fa fa-comments-o" aria-hidden="true"></i>
-                  <span class="icon-counter">{{
-                    getPrescribedMedicationSummary(medication).numberOfComments
-                  }}</span> </span
-                >}
-              </p>
-
-              <p
-                class="text-dark fw-bold"
-                style="font-size: small; margin-top: -0.2rem"
-              >
-                <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
-                @if(true){
-                {{ getPrescribedMedicationSummary(medication).timesADay}}
-                {{ getPrescribedMedicationSummary(medication).average }} units
-                on avg | maximum dispense:
-                {{
-                  getPrescribedMedicationSummary(medication)
-                    .maximumDispenseQuantity
-                }}
-                }
-              </p>
-              @if(medication.isForceOrder){
-              <p class="fw-bold text-danger" style="margin-top: -0.7rem">
-                External order
-              </p>
-              }
-            </div>
-          </li>
-          }
-        </ul>
-      </div>
-    </div>
-    <!-- end cards container -->
-  </div>
-  }
-</div>

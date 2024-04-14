@@ -1,88 +1,138 @@
-<div id="add-prescription-body">
-  <!-- main content -->
-  <div class="container-scroll bg-white pt-2">
-    <app-wizard-header
-      (currentStepChange)="SwitchToStep($event)"
-      [switchCondition]="selectedPatient != undefined"
-      [currentStep]="stepNumber"
-      [size]="3"
-      [IconSizeRatio]="0.6"
-      [validatePageSwitch]="validatePageSwitch"
-    ></app-wizard-header>
-    @if(selectedPatient && stepNumber!=0){
-    <div class="d-flex gap-2 justify-content-center " style="height: 2rem">
-      <p class="align-self-center m-0 ">Selected Patient :</p>
-      <span class="text-primary fw-bold align-self-center">
-        SN : {{ selectedPatient.sn }} | {{ selectedPatient.name }} -
-        {{ selectedPatient.age }} years</span
-      >
-      <mat-icon
-        class="align-self-center"
-        (click)="onSelectPatientChange(undefined)"
-        >close</mat-icon
-      >
-    </div>
-    }
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Prescription</h4>
+            <p class="card-subtitle card-subtitle-dash">Add new Prescription</p>
+          </div>
 
-    <!-- human body card -->
-    <div>
-      <div [className]="stepNumber != 1 && 'd-none'">
-        <app-patient-select
-          [(selectedPatient)]="selectedPatient"
-          (selectedPatientChange)="onSelectPatientChange($event)"
-          (onIsPatientSelectPageValidChange)="handleIsPatientSelectPageValidChange($event)"
-        />
+          <div class="btn-wrapper">
+            <a href="#" class="btn btn-outline-primary align-items-center"
+              ><i class="fa fa-paper-plane"></i> Forward</a
+            >
+
+            <a href="#" class="btn btn-outline-primary align-items-center"
+              ><i class="icon-printer"></i> Export PDF</a
+            >
+
+            <a
+              href="#"
+              class="btn btn-primary text-white align-items-center"
+              [routerLink]="['/', 'eScript']"
+              routerLinkActive="active"
+            >
+              <i class="fa fa-qrcode" aria-hidden="true"></i> eScript
+              (electronic prescription)
+            </a>
+            <a
+              href="#"
+              class="btn btn-danger text-white align-items-center"
+              [routerLink]="['/', 'report-issue-csv']"
+              style="border-color: red"
+            >
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
+        </div>
+            <div id="add-prescription-body">
+              <!-- Wizard header -->
+              <app-wizard-header
+                (currentStepChange)="SwitchToStep($event)"
+                [switchCondition]="selectedPatient != undefined"
+                [currentStep]="stepNumber"
+                [size]="3"
+                [IconSizeRatio]="0.6"
+                [validatePageSwitch]="validatePageSwitch"
+              ></app-wizard-header>
+
+              <!-- Wizard content -->
+              <div class="wizard-container" style="height: 490px; overflow-y: auto">
+                <!-- Step 1 : Patient information (before Select Patient) -->
+                <div [className]="stepNumber != 1 && 'd-none'">
+                  <app-patient-select
+                    [(selectedPatient)]="selectedPatient"
+                    (selectedPatientChange)="onSelectPatientChange($event)"
+                    (onIsPatientSelectPageValidChange)="
+                      handleIsPatientSelectPageValidChange($event)" />
+                </div>
+
+                 <!-- Step 1 : Patient information (after Select Patient) -->
+                @if(selectedPatient && stepNumber!=0){
+                  <div  class="d-flex gap-2 justify-content-center" style="height: 2rem">
+                    <p class="align-self-center m-0">Selected Patient :</p>
+                    <span class="text-primary fw-bold align-self-center">
+                      SN : {{ selectedPatient.sn }} | {{ selectedPatient.name }} - {{ selectedPatient.age }} years</span>
+                    <mat-icon  class="align-self-center" (click)="onSelectPatientChange(undefined)">close</mat-icon >
+                  </div>
+                  }
+
+                <!-- Step 2: Diagnostic -->
+                <div [className]="stepNumber != 2 && 'd-none'">
+                  <app-add-symptoms
+                    (onSelectedDiagnosisChange)="
+                      onSelectedDiagnosisChangeHandler($event)
+                    "
+                    (onSelectedSymptomsChange)="
+                      onSelectedSymptomsChangeHandler($event)
+                    "
+                    [selectedPatient]="selectedPatient"
+                    (onIsAddSymptomsPageValidChange)="
+                      handleIsAddSymptomsPageValidChange($event)
+                    "
+                  />
+                </div>
+
+                <!-- Step 3: Medication -->
+                <div [className]="stepNumber != 3 && 'd-none'">
+                  <app-prescribe-medication
+                    [events]="eventsSubject.asObservable()"
+                    [selectedPatient]="selectedPatient"
+                    (onIsMedicationPageValidChange)="
+                      handleIsMedicationPageValidChange($event)
+                    "
+                    (onSubmitChange)="handleSubmit()"
+                    (onMedicationsChange)="handleMedicationChange($event)"
+                  />
+                </div>
+
+                <!-- Additional Patient infos (Current Medication + Allergies) -->
+                <div *ngIf="stepNumber === 1" [className]="selectedPatient == undefined && 'd-none'">
+                  <app-patient-info-cards></app-patient-info-cards>
+                </div>
+              </div>
+
+            <!-- Wizard buttons -->
+            <div class="d-flex">
+              <div class="col-12 col-lg-8">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  (click)="onSelectPatientChange(undefined)"
+                >
+                  Cancel
+                </button>
+              </div>
+              <div class="col-lg-4 d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-primary text-white mr-3"
+                  (click)="onClickBackEvent()"
+                >
+                  {{ backButtonContent.label }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary text-white"
+                  (click)="onClickNextEvent()"
+                >
+                  {{ nextButtonContent.label }}
+                </button>
+              </div>
+            </div>
+          </div>
       </div>
-      <div [className]="stepNumber != 2 && 'd-none'">
-        <app-add-symptoms
-          (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
-          (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"
-          [selectedPatient]="selectedPatient"
-          (onIsAddSymptomsPageValidChange)="handleIsAddSymptomsPageValidChange($event)"
-        />
-      </div>
-      <div [className]="stepNumber != 3 && 'd-none'">
-        <app-prescribe-medication
-          [events]="eventsSubject.asObservable()"
-          [selectedPatient]="selectedPatient"
-          (onIsMedicationPageValidChange)="handleIsMedicationPageValidChange($event)"
-          (onSubmitChange)="handleSubmit()"
-          (onMedicationsChange)="handleMedicationChange($event)"
-        />
-      </div>
-      <div [className]="selectedPatient == undefined && 'd-none'">
-        <app-patient-info-cards></app-patient-info-cards>
-      </div>
-    </div>
-  </div>
-  <!-- wizard - navigation buttons -->
-  <div
-    class="d-flex justify-content-start"
-    style="
-      background-color: #f4f5f7;
-      width: 90vw;
-      min-height: 2.2rem;
-      padding: 0.1rem;
-      padding-top: 0.3rem;
-      padding-left: 0.3rem;
-    "
-  >
-    <div class="d-flex gap-1 col-7 col-md-5 col-lg-4 m-0 ">
-      <button
-        type="button"
-        style="padding: 0.8rem 0;"
-        [className]="backButtonContent.class"
-        (click)="onClickBackEvent()"
-      >
-        {{ backButtonContent.label }}
-      </button>
-      <button
-        type="button"
-        [className]="nextButtonContent.class"
-        (click)="onClickNextEvent()"
-      >
-        {{ nextButtonContent.label }}
-      </button>
     </div>
   </div>
 </div>
