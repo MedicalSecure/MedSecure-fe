@@ -14,16 +14,11 @@ import { CommonModule } from '@angular/common';
     imports: [ScheduleComponent, MatGridListModule, TasksComponent , GanttChartComponent, CommonModule]
 })
 export class TimelineComponent  {
-    isCurrentHour(hours: string[]): boolean {
-        const currentHour = new Date().getHours().toString().padStart(2, '0');
-        
-        // Debug output
-        console.log('Current Hour:', currentHour);
-        console.log('Target Hours:', hours);
-        
+    isCurrentHour(hours: number[]): boolean {
+        const currentHour = new Date().getHours();
+
         // Check if the current hour matches any of the provided hours
         const isCurrent = hours.includes(currentHour);
-        console.log('Is Current Hour:', isCurrent);
         
         return isCurrent;
       }

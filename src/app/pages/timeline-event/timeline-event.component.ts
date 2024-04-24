@@ -11,10 +11,10 @@ import { CommonModule } from '@angular/common';
 })
 export class GanttChartComponent implements OnInit{
 
-  isCurrentHour(hour: string): boolean {
+  isCurrentHour(hour: number): boolean {
     const currentHour = new Date().getHours();
     // Parse the input hour string to an integer
-    const inputHour = parseInt(hour, 10);
+    const inputHour = hour;
     // Debug output
     console.log("Hour:", hour);
     console.log("Input Hour:", inputHour);
@@ -27,7 +27,7 @@ calculateQuantity( be:number , ae:number):number {
   return be+ae ;
 }
   
-  @Input() targetHours : string[];
+  @Input() targetHours : number[];
   data_list: bacpatient[] = ELEMENT_DATA;
   uniqueroom :number[] = [];
   tableElements : bacpatient[] = [];
@@ -40,10 +40,10 @@ uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
 getUniqueRooms(): Map<number, bacpatient[]> {
   const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
   this.data_list.forEach(item => {
-      if (!uniqueRoomsMap.has(item.room)) {
-          uniqueRoomsMap.set(item.room, []);
+      if (!uniqueRoomsMap.has(item.room.number)) {
+          uniqueRoomsMap.set(item.room.number, []);
       }
-      const patientsInRoom = uniqueRoomsMap.get(item.room);
+      const patientsInRoom = uniqueRoomsMap.get(item.room.number);
       if (patientsInRoom) {
           patientsInRoom.push(item);
       }
@@ -56,17 +56,20 @@ getUniqueRooms(): Map<number, bacpatient[]> {
   });
   return uniqueRoomsMap;
 }
-getMedicineByHour(hour: string , name : string): Medicine[] {
+getMedicineByHour(hour: number , name : string): Medicine[] {
   const medicines = [];
   for (const patient of this.data_list) {
-    if(patient.patient === name){
+    if(patient.patient.name === name){
       for (const medicine of patient.medicines) {
         for (const posology of medicine.posology) {
-          for (const timeSlot of posology) {
-            if (timeSlot.hour === hour) {
+          for (let index = 0; index < posology.hours.length; index++) {
+            if (posology.hours[index] === hour) {
               medicines.push(medicine);
             }
+            
           }
+           
+          
         }
       }
     }

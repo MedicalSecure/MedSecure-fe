@@ -22,7 +22,7 @@ export class ScheduleComponent implements OnInit {
   checkednumber:number =0;
   fullyChecked:boolean = false ;
   showChoices: boolean = true;
-  @Input() hoursList : Posology[][]
+  @Input() hoursList : Posology[][];
 
 
 

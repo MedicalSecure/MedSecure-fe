@@ -151,7 +151,7 @@
                 class="element"
                 (click)="toggleExpanded(element)"
               >
-                {{ element.room }}
+                {{ element.room.number }}
               </td>
             </ng-container>
             <ng-container matColumnDef="bed">
@@ -173,14 +173,14 @@
                 class="element"
                 (click)="toggleExpanded(element)"
               >
-                {{ element.patient }}
+                {{ element.patient.name}}
               </td>
             </ng-container>
             <ng-container matColumnDef="age">
               <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
               <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)">
-                {{ element.bd | date : "yyyy-MM-dd" }}
-                <strong> ({{ calculateAge(element.bd) }}</strong> years
+                {{ element.patient.dateOfBirth | date : "yyyy-MM-dd" }}
+                <strong> ({{ calculateAge(element.patient.dateOfBirth) }}</strong> years
                 old)
               </td>
             </ng-container>
@@ -218,32 +218,32 @@
                 *matCellDef="let element"
                 (click)="toggleExpanded(element)"
               >
-                @if ( element.status === "Pending...") {
+                @if ( element.status === 0 ) {
                 <mat-chip
                   class="element mat-chip"
                   style="
                     background-color: rgba(255, 0, 0, 0.05);
                     border: 1px solid red;
                   "
-                  >{{ element.status }}</mat-chip
+                  >Pending...</mat-chip
                 >
-                } @else if (element.status === "On Progress") {
+                } @else if (element.status === 1 ) {
                 <mat-chip
                   class="element mat-chip"
                   style="
                     background-color: rgba(255, 247, 17, 0.05);
                     border: 1px solid yellow;
                   "
-                  >{{ element.status }}</mat-chip
+                  >On Progress </mat-chip
                 >
-                } @else if (element.status === "Completed") {
+                } @else if (element.status === 2 ) {
                 <mat-chip
                   class="element mat-chip"
                   style="
                     background-color: rgba(17, 255, 33, 0.05);
                     border: 1px solid green;
                   "
-                  >{{ element.status }}</mat-chip
+                  >Completed </mat-chip
                 >
                 }
               </td>
@@ -284,7 +284,7 @@
                           <ng-container matColumnDef="posology">
                             <th mat-header-cell *matHeaderCellDef>Posology</th>
                             <td class="element posology-cell" mat-cell *matCellDef="let elementt">
-                              <app-schedule [hoursList]="elementt.posology" (checkEmmiter)="onCheckEmitted($event, element)"></app-schedule>
+                              <app-schedule [hoursList]="elementt.posology.hours" (checkEmmiter)="onCheckEmitted($event, element)"></app-schedule>
                               <!-- <app-comment [note]="elementt.note"></app-comment> -->
                             </td>
                           </ng-container>

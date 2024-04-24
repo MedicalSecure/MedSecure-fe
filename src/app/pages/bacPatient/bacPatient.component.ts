@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ViewChild, Input, OnInit } from '@angular/cor
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { JsonPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +20,8 @@ import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommentComponent } from "../../components/comment/comment.component";
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'table-pagination-example',
@@ -33,7 +35,7 @@ import { RouterModule } from '@angular/router';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [RouterModule, DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, CommentComponent]
+  imports: [RouterModule ,DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, CommentComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
 
@@ -59,14 +61,40 @@ export class BacPatientComponent implements AfterViewInit {
     this.todayDate = selectedDate;
     this.today.setDate(new Date(selectedDate).getDate());
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()));
-
+   
   }
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog , private http: HttpClient) {
     const filteredData = ELEMENT_DATA.filter(item => new Date(item.servingDate).toLocaleDateString() === this.todayDate);
     this.dataSource.data = filteredData;
     this.uniqueRooms = this.getRoom(ELEMENT_DATA);
 
   }
+  ngOnInit() {
+
+    
+    this.getData();
+  }
+  getData() {
+    this.http.get<BacPatientResponse>('https://localhost:6065/v1/bacPatient')
+      .subscribe(
+        (response: BacPatientResponse) => {
+          console.log('Response:', response);
+          if (response && response.bacPatients && response.bacPatients.data) {
+            this.dataSource.data = response.bacPatients.data;
+            response.bacPatients.data.forEach(element => {
+              console.log(element);
+              ELEMENT_DATA.push(element);
+            });
+          } else {
+            console.error('Invalid response format:', response);
+          }
+        },
+        error => {
+          console.error('Error fetching data:', error);
+        }
+      );
+  }
+  
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate() - 1));
     this.today.setDate(this.today.getDate() - 1);
@@ -128,93 +156,147 @@ export class BacPatientComponent implements AfterViewInit {
   }
   
   onCheckEmitted(checkedNumber: Number, element: bacpatient) {
-    if (!this.checkedItems[element.id]) {
-      this.checkedItems[element.id] = [];
+    if (!this.checkedItems[parseInt(element.id)]) {
+      this.checkedItems[parseInt(element.id)] = [];
     }
-    this.checkedItems[element.id].push(checkedNumber);
+    this.checkedItems[parseInt(element.id)].push(checkedNumber);
     this.checkednumber = Object.values(this.checkedItems).flat().length;
     let allCheckBoxNumber: number = 0;
     element.medicines.forEach(medicine => {
-      allCheckBoxNumber += medicine.posology[0].length;
+      allCheckBoxNumber += medicine.posology.length;
     });
     console.log(this.checkednumber);
-    if (this.checkedItems[element.id].length !== 0) {
+    if (this.checkedItems[parseInt(element.id)].length !== 0) {
       const patientToUpdate = this.dataSource.data.find(patient => patient.id == element.id);
       if (patientToUpdate) {
-        patientToUpdate.status = 'On Progress';
-        if (this.checkedItems[element.id].length === allCheckBoxNumber) {
-          patientToUpdate.status = 'Completed';
-          this.checkedItems[element.id] = [];
+        patientToUpdate.status = 0;
+        if (this.checkedItems[parseInt(element.id)].length === allCheckBoxNumber) {
+          patientToUpdate.status = 1;
+          this.checkedItems[parseInt(element.id)] = [];
           this.checkednumber = Object.values(this.checkedItems).flat().length;
         }
       }
     }
   }
-
-
-  getRouteImage(route: string): string {
+  getRouteImage(route: number): string {
     switch (route) {
-      case 'Ophthalmic':
+      case 0:
         return 'assets/routes/eye.svg';
-      case 'Otic':
+      case 1:
         return 'assets/routes/ear.svg';
-      case 'Inhalation':
+      case 2:
         return 'assets/routes/lungs.svg';
-      case 'Bandage':
+      case  3:
         return 'assets/routes/bandage.svg';
-      case 'Syrup':
+      case 4:
         return 'assets/routes/syrup.svg';
-      case 'Transdermal':
+      case 5:
         return 'assets/routes/cream.svg';
-      case 'Sublingual':
+      case 6:
         return 'assets/routes/Sublingual.svg';
-      case 'Intramuscular':
+      case 7:
         return 'assets/routes/Intramuscular.svg';
-      case 'Intracardiac':
+      case 8:
         return 'assets/routes/Intracardiac.svg';
-      case 'Nebulizers':
+      case 9:
         return 'assets/routes/spray.svg';
-      case 'Injection':
+      case 10:
         return 'assets/routes/vaccine.svg';
-      case 'Oral':
+      case 11:
         return 'assets/routes/pills.svg';
       default:
         return '';
     }
   }
-  
-}
-export interface Medicine {
-  name: string;
-  posology: Posology[][];
-  root: string;
-  dose: number;
-  note: string[];
-  description: string;
 }
 export interface Posology {
-  [x: string]: any;
-  hour: string,
-  value: string,
-  quantityBE: number,
-  quantityAE: number,
-
+  id: string;
+  startDate: Date;
+  endDate: Date;
+  quantityBE: number;
+  quantityAE: number;
+  isPermanent: boolean;
+  hours: number[];
 }
+
+export interface Medicine {
+  id: string;
+  name: string;
+  form: string;
+  root:number;
+  dose: string;
+  unit: string;
+  dateExp: Date;
+  stock: number;
+  note: string[];
+  posology: Posology[];
+}
+
+export interface Patient {
+  id: string ,
+  name: string;
+  dateOfBirth: Date;
+  gender: string;
+  age: number;
+  height: number;
+  weight: number;
+  activityStatus: string;
+  allergies: string[];
+  riskFactor: string;
+  familyHistory: string;
+  createdAt: Date;
+  createdBy: string;
+  lastModified: Date;
+  lastModifiedBy: string;
+}
+
+export interface Room {
+ id : string
+  number: number;
+  status: number;
+  beds: number[];
+  createdAt: Date;
+  createdBy: string;
+  lastModified: Date;
+  lastModifiedBy: string;
+}
+
+export interface UnitCare {
+  id : string , 
+  title: string;
+  type: string;
+  description: string;
+  status: number;
+  createdAt: Date;
+  createdBy: string;
+  lastModified: Date;
+  lastModifiedBy: string;
+}
+
+export interface BacPatientResponse {
+  bacPatients: {
+    pageIndex: number;
+    pageSize: number;
+    count: number;
+    data: bacpatient[];
+  };
+}
+
 export interface bacpatient {
-  id: number;
-  room: number;
+  id: string;
+  room: Room;
   bed: number;
-  patient: string;
-  bd: Date;
+  patient: Patient;
+  unitCare: UnitCare;
   medicines: Medicine[];
   toServe: number;
   served: number;
-  status: string;
-  add: string;
+  status: number;
   servingDate: Date;
 }
-export const ELEMENT_DATA : bacpatient[] = [
-  {
+
+export let ELEMENT_DATA : bacpatient[] = [
+ /* {
     id: 1,
     room: 101,
     bed: 1,
@@ -541,5 +623,5 @@ export const ELEMENT_DATA : bacpatient[] = [
     status: 'Pending...',
     add: 'Add 6',
     servingDate: new Date()
-  }
+  }*/
 ];
