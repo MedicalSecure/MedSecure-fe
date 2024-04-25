@@ -22,7 +22,8 @@ export class ScheduleComponent implements OnInit {
   checkednumber:number =0;
   fullyChecked:boolean = false ;
   showChoices: boolean = true;
-  @Input() hoursList : Posology[][];
+  @Input() hoursList : Posology[];
+  selectedItems: any[] = []; // Initialize an array to store selected items
 
 
 
@@ -41,22 +42,23 @@ export class ScheduleComponent implements OnInit {
   }
 
   handleClickEvent(
-    currentitem: { hour: string; value: string; quantity: string },
+    currentitem: Posology,
     hourIndex: number,
     itemIndex: number
   ): void {
-    if (!currentitem.quantity) {
-      currentitem.quantity = this.posologieValue ? this.posologieValue : '?';
+    var quantity = (currentitem.quantityAE = currentitem.quantityBE).toString()
+    if (!quantity) {
+      quantity = this.posologieValue ? this.posologieValue : '?';
     } else {
-      if (currentitem.quantity === '?') {
-        currentitem.quantity = '1';
+      if (quantity === '?') {
+        quantity = '1';
       } else {
-        const parsedQuantity = parseFloat(currentitem.quantity);
+        const parsedQuantity = parseFloat(quantity);
 if (!isNaN(parsedQuantity)) {
   const incrementedQuantity = parsedQuantity + 1;
-  currentitem.quantity = (incrementedQuantity % 1 === 0) ? String(incrementedQuantity) : incrementedQuantity.toFixed(2);
+quantity = (incrementedQuantity % 1 === 0) ? String(incrementedQuantity) : incrementedQuantity.toFixed(2);
 } else {
-  currentitem.quantity = '1';
+  quantity = '1';
 }
       }
     }
@@ -73,22 +75,25 @@ if (!isNaN(parsedQuantity)) {
   }
   setDesiredHours(): void {
     const desiredHours = [8, 12, 17, 22, 0 ,1];
-    for (const hourArray of this.hoursList) {
-      const filteredHours = hourArray.filter((hourObj: any) =>
-        desiredHours.includes(parseInt(hourObj.value, 10))
-      );
-      this.selectedHours.push(filteredHours);
-    }
-    this.selectedHours = this.selectedHours.filter((hourObj, index, self) =>
-      index === self.findIndex((h) => h.value === hourObj.value)
-    );
+ this.selectedHours.push(this.hoursList[0].hours)
+   
+    
+    
   }
   toggleCheckbox(currentitem: any) {
-    currentitem.isSelected = !currentitem.isSelected;
-    if(currentitem.isSelected){
-      this.checkednumber++;
-      this.checkEmmiter.emit(this.checkednumber);
+    const index = this.selectedItems.indexOf(currentitem);
+    if (index === -1) {
+        this.selectedItems.push(currentitem); // Add item to the selected items array if not already selected
+        this.checkednumber++;
+    } else {
+        this.selectedItems.splice(index, 1); // Remove item from the selected items array if already selected
+        this.checkednumber--;
     }
+    this.checkEmmiter.emit(this.checkednumber);
+}
+
+isSelected(currentitem: any): boolean {
+    return this.selectedItems.includes(currentitem); // Check if the item is in the selected items array
 }
 }
 

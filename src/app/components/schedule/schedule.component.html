@@ -5,28 +5,31 @@
                 <ng-container>
                     <td>
                         <div class="d-flex flex-wrap" style="align-self: center;">
-                            <ng-container *ngFor="let currenthours of selectedHours; let hourIndex = index">
+                            <ng-container *ngFor="let currentitem of hoursList; let hourIndex = index">
+                                @for (item of currentitem.hours; track item) {
                                 <div class="card mr-1 w-3 h-3 mb-4 cursor-pointer bg-primary color-white"
                                     style="width: 3rem; height: 3rem; "
-                                    *ngFor="let currentitem of currenthours; let itemIndex = index">
+                                    >
+                                  
                                     <div class="card-header p-0 text-center">
-                                        <p class="font-weight-normal text-white mb-0">{{ currentitem.hour }} H</p>
+                                        <p class="font-weight-normal text-white mb-0">{{ item }} H</p>
                                     </div>
                                     <div class="card-body p-0 text-center">
                                         <input class="form-control text-center" style="padding: 0%; background-color: white;"
-                                            [value]="formatNumber(currentitem.quantityBE)" type="text" readonly />
+                                            [value]="formatNumber(currentitem.quantityBE.toString())" type="text" readonly />
                                     </div>
                                       <div class="card-body p-0 text-center" >
                                         <input class="form-control text-center" style="padding: 0%; background-color: white;"
-                                            [value]="formatNumber(currentitem.quantityAE)" type="text" readonly />
+                                            [value]="formatNumber(currentitem.quantityAE.toString())" type="text" readonly />
                                     </div>
                                     <div class="card-body p-0 text-center "
                                     style="margin-top: -10px; transform: scale(1.2);">
-                                    <input type="checkbox" class="form-check-input" [checked]="currentitem.isSelected" (change)="toggleCheckbox(currentitem)" [disabled]="currentitem.isSelected" />
+                                    <input type="checkbox" class="form-check-input"  [checked]="isSelected(item)" (change)="toggleCheckbox(currentitem)" [disabled]="isSelected(item)" />
                                 </div>
                              
-                                 
+                            
                                 </div>
+                            }
                             </ng-container>
                         </div>
                     </td>
@@ -48,27 +51,31 @@
                             </td>
                             <td>
                                 <div class="d-flex flex-wrap">
-                                    <ng-container *ngFor="let currenthours of selectedHours; let hourIndex = index">
+                                    <ng-container *ngFor="let currentitem of hoursList; let hourIndex = index">
+                                        @for (item of currentitem.hours; track item) {
                                         <div class="card mr-1 w-3 h-3 mb-4 cursor-pointer bg-primary color-white"
                                             style="width: 3rem; height: 3rem;"
-                                            *ngFor="let currentitem of currenthours; let itemIndex = index"
-                                            (click)="handleClickEvent(currentitem, hourIndex, itemIndex)">
+                                            (click)="handleClickEvent(currentitem, hourIndex, hourIndex)">
+                                           
                                             <div class="card-header p-0 text-center">
-                                                <p class="mb-0" class="font-weight-normal text-white">{{
-                                                    currentitem.hour }} H</p>
+                                                <p class="mb-0" class="font-weight-normal text-white">
+                                                        {{currentitem.hours}} H
+                                                    </p>
                                             </div>
+                                        
                                             <div class="card-body p-0 text-center">
-                                                <input (keydown)="onKeyDown($event, hourIndex, itemIndex)"
+                                                <input (keydown)="onKeyDown($event, hourIndex, hourIndex)"
                                                     class="form-control text-center" style="padding: 0%; background-color: white;"
-                                                    [value]="formatNumber(currentitem.quantity)" type="text" readonly/>
+                                                    [value]="formatNumber(currentitem.quantityBE.toString())" type="text" readonly/>
                                             </div>
                                             <div class="card-body p-0 text-center "
                                                 style="margin-top: -10px; transform: scale(1.2);">
                                                 <input type="checkbox" class="form-check-input"
-                                                    [checked]="currentitem.isSelected"
-                                                    (change)="toggleCheckbox(currentitem )" />
+                                                [checked]="isSelected(item)"
+                                                (change)="toggleCheckbox(currentitem)" />
                                             </div>
                                         </div>
+                                    }
                                     </ng-container>
                                 </div>
                             </td>
