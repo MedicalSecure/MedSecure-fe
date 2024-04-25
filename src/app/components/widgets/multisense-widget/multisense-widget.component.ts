@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EnvironmentWidget } from '../environment-widget/environment-widget.component'
 import { ChartOptionsCircle } from '../radialbar-charts/radialbar-charts.component'
 import { RadialbarChartsComponent} from '../radialbar-charts/radialbar-charts.component'
@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { formatDate } from '@angular/common';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { Subscription, interval, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-multisense-widget',
@@ -14,10 +15,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   templateUrl: './multisense-widget.component.html',
   styleUrl: './multisense-widget.component.css'
 })
-export class MultiSenseWidgetComponent {
+export class MultiSenseWidgetComponent implements OnInit , OnDestroy {
 
-  private readonly baseUrl = 'https://api.thingspeak.com/channels/2445450/feeds.json?api_key=RCTKIS245KTGZ01I&results=2';
-  private readonly baseUrlall='https://api.thingspeak.com/channels/2445450/feeds.json?api_key=RCTKIS245KTGZ01I'
+  private readonly baseUrl = 'https://api.thingspeak.com/channels/2523035/feeds.json?api_key=R8YQ581XJM22XBIA&results=2';
+  private readonly baseUrlall='https://api.thingspeak.com/channels/2523035/feeds.json?api_key=R8YQ581XJM22XBIA'
   TemperatureOptionsCircle: ChartOptionsCircle = {
    series: [],
    chart: {
@@ -154,12 +155,13 @@ HumidityOptionsCircle: ChartOptionsCircle = {
  categoriesData : Date[]=[]
  
  constructor(private http: HttpClient) { }
+ private subscription: Subscription;
+ 
  ngOnInit(): void {
-  this.getData();
-  this.getDataall()}
-
- getData() {
-  this.http.get<any>(this.baseUrl).subscribe(data => {
+  // Start calling the service every minute
+  this.subscription = interval(60000).pipe(
+    switchMap(() => this.http.get<any>(this.baseUrl))
+  ).subscribe(data => {
     var currenttemperature = parseFloat(data?.feeds[0]?.field1.replace(',', '.')).toFixed(2);
     var currenthumidity = parseFloat(data?.feeds[0]?.field2.replace(',', '.')).toFixed(2);
     var currentluminosity = parseFloat(data?.feeds[0]?.field3.replace(',', '.')).toFixed(2);
@@ -168,10 +170,25 @@ HumidityOptionsCircle: ChartOptionsCircle = {
     this.HumidityOptionsCircle.series=[parseFloat(currenthumidity)];
     this.LuminosityOptionsCircle.series=[parseFloat(currentluminosity)];
     this.ElectricityOptionsCircle.series=[parseFloat(currentlelectricity)];
-  
+  }, error => {
+    // Handle error if needed
   });
-}
-getDataall() {
+
+
+  this.subscription = interval(60000).pipe(
+    switchMap(() => this.http.get<any>(this.baseUrl))
+  ).subscribe(data => {
+    var currenttemperature = parseFloat(data?.feeds[0]?.field1.replace(',', '.')).toFixed(2);
+    var currenthumidity = parseFloat(data?.feeds[0]?.field2.replace(',', '.')).toFixed(2);
+    var currentluminosity = parseFloat(data?.feeds[0]?.field3.replace(',', '.')).toFixed(2);
+    var currentlelectricity = parseFloat(data?.feeds[0]?.field4.replace(',', '.')).toFixed(2);
+    this.TemperatureOptionsCircle.series = [parseFloat(currenttemperature)];
+    this.HumidityOptionsCircle.series=[parseFloat(currenthumidity)];
+    this.LuminosityOptionsCircle.series=[parseFloat(currentluminosity)];
+    this.ElectricityOptionsCircle.series=[parseFloat(currentlelectricity)];
+  }, error => {
+    console.error("Error fetching temperature data:", error);
+  });
   this.http.get<any>(this.baseUrlall).subscribe(data => {
     if (data && data.feeds) {
       this.temperatureData = data.feeds.map((feed: any) => {
@@ -211,5 +228,13 @@ getDataall() {
   }, error => {
     console.error("Error fetching temperature data:", error);
   });
+}
+
+ 
+ngOnDestroy() {
+  // Unsubscribe from the interval observable to prevent memory leaks
+  if (this.subscription) {
+    this.subscription.unsubscribe();
+  }
 }
 }
