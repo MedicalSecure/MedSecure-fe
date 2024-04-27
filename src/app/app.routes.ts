@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { BacPatientComponent } from './pages/bacPatient/bacPatient.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PharmacyComponent } from './pages/pharmacy/pharmacy.component';
-import { Visits } from './pages/visits/visits.component';
+import { VisitsComponent } from './pages/visits/visits.component';
 import { UnitSelectorComponent } from './components/unitselector/unitselector.component';
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
@@ -14,21 +14,30 @@ import { TasksComponent } from './pages/tasks/tasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { FailedComponent } from './pages/failed/failed.component';
+import { MsalGuard } from '@azure/msal-angular';
+import { DietComponent } from './pages/diet/diet.component';
+import { WasteComponent } from './pages/waste/waste.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'unit-care', component: UnitCareComponent },
-  { path: 'visits', component: Visits },
-  { path: 'widgets', component: WidgetsComponent },
-  { path: 'UnitSelector', component: UnitSelectorComponent },
-  { path: 'bac-patient', component: BacPatientComponent },
-  { path: 'timeline', component: TimelineComponent },
-  { path: 'tasks', component: TasksComponent },
-  { path: 'search', component: SearchBarComponent },
-  { path: 'pharmacy', component: PharmacyComponent },
-  { path: 'prescribe', component: AddPrescriptionComponent },
-  { path: 'register-details', component: MasonryDpiComponent },
-  { path: 'register-form', component: RegisterFormComponent },
-  { path: 'register', component: RegisterViewComponent },
+  { path: 'dashboard', component: DashboardComponent , canActivate: [MsalGuard] },
+  { path: 'unit-care', component: UnitCareComponent, canActivate: [MsalGuard] },
+  { path: 'visits', component: VisitsComponent , canActivate: [MsalGuard] },
+  { path: 'widgets', component: WidgetsComponent , canActivate: [MsalGuard] },
+  { path: 'UnitSelector', component: UnitSelectorComponent , canActivate: [MsalGuard] },
+  { path: 'bac-patient', component: BacPatientComponent , canActivate: [MsalGuard] },
+  { path: 'timeline', component: TimelineComponent, canActivate: [MsalGuard] },
+  { path: 'tasks', component: TasksComponent , canActivate: [MsalGuard] },
+  { path: 'search', component: SearchBarComponent , canActivate: [MsalGuard] },
+  { path: 'pharmacy', component: PharmacyComponent , canActivate: [MsalGuard] },
+  { path: 'prescribe', component: AddPrescriptionComponent, canActivate: [MsalGuard] },
+  { path: 'register-details', component: MasonryDpiComponent , canActivate: [MsalGuard] },
+  { path: 'register-form', component: RegisterFormComponent , canActivate: [MsalGuard] },
+  { path: 'register', component: RegisterViewComponent , canActivate: [MsalGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [MsalGuard] },
+  { path: 'login-failed', component: FailedComponent },
+  { path: 'diet', component: DietComponent },
+  { path: 'waste', component: WasteComponent },
 ];
