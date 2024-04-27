@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -8,11 +8,16 @@ import { NgIf } from '@angular/common';
 import * as XLSX from 'xlsx';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { MsalService } from '@azure/msal-angular';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { ProfileType } from '../../pages/profile/ProfileType';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  templateUrl: './navbar.component.html',providers: [provideNativeDateAdapter()],
+  templateUrl: './navbar.component.html',
+  providers: [provideNativeDateAdapter()],
   imports: [
     RouterModule,
     MatFormFieldModule,
@@ -25,14 +30,40 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatOption,
     FormsModule,
-    NavbarComponent
-]
+    NavbarComponent,
+  ],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+  profile: ProfileType | undefined;
 
-  constructor(private router: Router) {}
+  ngOnInit() {
+    this.getProfile(environment.apiConfig.uri);
+  }
 
-  displayTabs:boolean = true;
+  getProfile(url: string) {
+    this.http.get(url).subscribe((profile) => {
+      this.profile = profile;
+    });
+  }
+
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private authService: MsalService
+  ) {}
+
+  loginDisplay = false;
+  logout(popup?: boolean) {
+    if (popup) {
+      this.authService.logoutPopup({
+        mainWindowRedirectUri: '/',
+      });
+    } else {
+      this.authService.logoutRedirect();
+      this.authService.logout();
+    }
+  }
+  displayTabs: boolean = true;
   importedData: { [key: string]: any }[] = [];
   //after mapping :
   mappedData: MedicationType[] = [];
@@ -57,7 +88,6 @@ export class NavbarComponent {
   dbHeaders: (keyof MedicationType)[] = Object.keys(
     this.columnMappings
   ) as (keyof MedicationType)[];
-
 
   importExcelData(event: any) {
     const fileList: FileList = event.target.files;
