@@ -1,23 +1,44 @@
-// environment.ts
-
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+import { EnvironmentConfiguration } from "../app/models/environment-configuration";
+
+const localhostUrl = 'https://localhost:44364/';
+
+export const environment: EnvironmentConfiguration = {
   production: false,
   environmentName: 'development',
-  msalConfig: {
-    auth: {
-      clientId: 'ENTER_CLIENT_ID',
-      authority: 'ENTER_AUTHORITY',
-    },
+  apiUrl: localhostUrl,
+  apiEndpoints: {
+    getRoomByName: 'rooms/{roomName}',
+    getRooms: 'rooms',
+    updateRoom: 'rooms',
+    createRoom: 'rooms',
+    createWaste: 'wastes',
+    getWastes: 'wastes',
+    updateWaste: 'wastes',
+    getWastesByRoomId: 'wastes/room/{roomId}',
+    createProduct: 'products',
+    getProducts: 'products',
+    updateProduct: 'products',
+    getProductByName: 'products/{productName}',
   },
+  adb2cConfig: {
+    clientId: 'ba8bc284-466c-4627-a83a-9833f26db722',
+    readScopeUrl:
+      'https://medsecure.onmicrosoft.com/Data.Access/api/Waste.Read',
+    writeScopeUrl:
+      'https://medsecure.onmicrosoft.com/Data.Access/api/Waste.Write',
+    apiEndpointUrl: 'https://localhost:44364/',
+  },
+  cacheTimeInMinutes: 30,
   apiConfig: {
-    scopes: ['ENTER_SCOPE'],
-    uri: 'ENTER_URI',
+    scopes: ['user.read'],
+    uri: 'https://graph.microsoft.com/v1.0/me',
   },
 };
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file

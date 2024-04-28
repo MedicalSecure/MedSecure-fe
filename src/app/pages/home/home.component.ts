@@ -5,14 +5,7 @@ import { SettingsPanelComponent } from '../../partials/settings-panel/settings-p
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import {
-  AuthenticationResult,
-  EventMessage,
-  EventType,
-  InteractionStatus,
-} from '@azure/msal-browser';
-import { filter } from 'rxjs/operators';
+import { LoginService } from '../../service/login.service';
 
 @Component({
   selector: 'app-home',
@@ -28,36 +21,20 @@ import { filter } from 'rxjs/operators';
     CommonModule,
   ],
 })
+
 export class HomeComponent implements OnInit {
   loginDisplay = false;
 
   constructor(
     private router: Router,
-    private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
-  ) {}
+    private loginService: LoginService
+  ) {
+    
+  }
 
   ngOnInit(): void {
-    this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS)
-      )
-      .subscribe((result: EventMessage) => {
-        console.log(result);
-        const payload = result.payload as AuthenticationResult;
-        this.authService.instance.setActiveAccount(payload.account);
-      });
-
-    this.msalBroadcastService.inProgress$
-      .pipe(
-        filter((status: InteractionStatus) => status === InteractionStatus.None)
-      )
-      .subscribe(() => {
-        this.setLoginDisplay();
-      });
-  }
-
-  setLoginDisplay() {
-    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
-  }
+    this.loginDisplay = this.loginService.loginDisplay;
+    console.log("Assem u are " + this.loginDisplay);
 }
+}
+ 

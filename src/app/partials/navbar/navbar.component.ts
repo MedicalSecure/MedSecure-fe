@@ -10,8 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MsalService } from '@azure/msal-angular';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { ProfileType } from '../../pages/profile/ProfileType';
+import { protectedResources } from '../../auth-config';
 
 @Component({
   selector: 'app-navbar',
@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
   profile: ProfileType | undefined;
 
   ngOnInit() {
-    this.getProfile(environment.apiConfig.uri);
+    this.getProfile(protectedResources.apiConfig.uri);
   }
 
   getProfile(url: string) {
@@ -63,6 +63,8 @@ export class NavbarComponent implements OnInit {
       this.authService.logout();
     }
   }
+
+
   displayTabs: boolean = true;
   importedData: { [key: string]: any }[] = [];
   //after mapping :

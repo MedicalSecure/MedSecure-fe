@@ -16,28 +16,26 @@ import { RegisterFormComponent } from './pages/register-form/register-form.compo
 import { RegisterViewComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { FailedComponent } from './pages/failed/failed.component';
-import { MsalGuard } from '@azure/msal-angular';
-import { DietComponent } from './pages/diet/diet.component';
 import { WasteComponent } from './pages/waste/waste.component';
+import { RoleAuthGuard } from './core/role-auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent , canActivate: [MsalGuard] },
-  { path: 'unit-care', component: UnitCareComponent, canActivate: [MsalGuard] },
-  { path: 'visits', component: VisitsComponent , canActivate: [MsalGuard] },
-  { path: 'widgets', component: WidgetsComponent , canActivate: [MsalGuard] },
-  { path: 'UnitSelector', component: UnitSelectorComponent , canActivate: [MsalGuard] },
-  { path: 'bac-patient', component: BacPatientComponent , canActivate: [MsalGuard] },
-  { path: 'timeline', component: TimelineComponent, canActivate: [MsalGuard] },
-  { path: 'tasks', component: TasksComponent , canActivate: [MsalGuard] },
-  { path: 'search', component: SearchBarComponent , canActivate: [MsalGuard] },
-  { path: 'pharmacy', component: PharmacyComponent , canActivate: [MsalGuard] },
-  { path: 'prescribe', component: AddPrescriptionComponent, canActivate: [MsalGuard] },
-  { path: 'register-details', component: MasonryDpiComponent , canActivate: [MsalGuard] },
-  { path: 'register-form', component: RegisterFormComponent , canActivate: [MsalGuard] },
-  { path: 'register', component: RegisterViewComponent , canActivate: [MsalGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [MsalGuard] },
+  { path: 'dashboard', component: DashboardComponent , canActivate: [RoleAuthGuard] },
+  { path: 'unit-care', component: UnitCareComponent, canActivate: [RoleAuthGuard] },
+  { path: 'visits', component: VisitsComponent , canActivate: [RoleAuthGuard] },
+  { path: 'widgets', component: WidgetsComponent , canActivate: [RoleAuthGuard] },
+  { path: 'UnitSelector', component: UnitSelectorComponent , canActivate: [RoleAuthGuard] },
+  { path: 'bac-patient', component: BacPatientComponent , canActivate: [RoleAuthGuard] },
+  { path: 'timeline', component: TimelineComponent, canActivate: [RoleAuthGuard] },
+  { path: 'tasks', component: TasksComponent , canActivate: [RoleAuthGuard] },
+  { path: 'search', component: SearchBarComponent , canActivate: [RoleAuthGuard] },
+  { path: 'pharmacy', component: PharmacyComponent , canActivate: [RoleAuthGuard] },
+  { path: 'prescribe', component: AddPrescriptionComponent, canActivate: [RoleAuthGuard] },
+  { path: 'register-details', component: MasonryDpiComponent , canActivate: [RoleAuthGuard] },
+  { path: 'register-form', component: RegisterFormComponent , canActivate: [RoleAuthGuard] },
+  { path: 'register', component: RegisterViewComponent , canActivate: [RoleAuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [RoleAuthGuard] },
+  { path: 'waste', component: WasteComponent, canActivate: [RoleAuthGuard] },
   { path: 'login-failed', component: FailedComponent },
-  { path: 'diet', component: DietComponent },
-  { path: 'waste', component: WasteComponent },
 ];

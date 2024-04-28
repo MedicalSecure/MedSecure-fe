@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { ProfileType } from './ProfileType';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { EventMessage, EventType, InteractionStatus } from '@azure/msal-browser';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import {MatTableModule} from '@angular/material/table';
+import { protectedResources } from '../../auth-config';
 
 @Component({
     selector: 'app-profile',
@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
   constructor(private authService: MsalService, private msalBroadcastService: MsalBroadcastService,private http: HttpClient) { }
 
   ngOnInit() {
-    this.getProfile(environment.apiConfig.uri);
+    this.getProfile(protectedResources.apiConfig.uri);
 
     this.msalBroadcastService.inProgress$
       .pipe(

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { protectedResources } from './auth-config';
+import { protectedResources } from '../auth-config';
 
 @Injectable({
   providedIn: 'root'
@@ -39,29 +39,16 @@ export class ApiService {
   }
 
   // Function to fetch patients data
-getPatients(): Promise<any> {
+getWastes(): Promise<any> {
   // Extracting endpoint and scope from protectedResources for patientsApi
-  const patientsEndpoint = protectedResources.diet.patientsApi.endpoint;
-  const patientsScope = protectedResources.diet.scopes.read[0];
+  const wastesEndpoint = protectedResources.api.endpoint;
+  const wastesScope = protectedResources.api.scopes.read[0];
   
   // Logging the endpoint from which patients data is fetched
-  console.log('Fetching patients from:', patientsEndpoint);
+  console.log('Fetching wastes from:', wastesEndpoint);
   
   // Returning a promise for fetching patients data with authenticated request
-  return this.getAuthenticatedRequest(patientsEndpoint, patientsScope);
-}
-
-// Function to fetch diets data
-getDiets(): Promise<any> {
-  // Extracting endpoint and scope from protectedResources for dietsApi
-  const dietsEndpoint = protectedResources.diet.dietsApi.endpoint;
-  const dietsScope = protectedResources.diet.scopes.read[0];
-  
-  // Logging the endpoint from which diets data is fetched
-  console.log('Fetching diets from:', dietsEndpoint);
-  
-  // Returning a promise for fetching diets data with authenticated request
-  return this.getAuthenticatedRequest(dietsEndpoint, dietsScope);
+  return this.getAuthenticatedRequest(wastesEndpoint, wastesScope);
 }
 
 }

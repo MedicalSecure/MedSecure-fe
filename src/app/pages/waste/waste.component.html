@@ -1,1 +1,8 @@
-<p>waste works!</p>
+<div *ngIf="wastes">
+  <h2>Wastes</h2>
+  <pre>{{ wastes | json }}</pre>
+</div>
+
+<div>
+  Web API (Wastes): {{ wastesEndpoint }}
+</div>

@@ -5,9 +5,16 @@
  * in app.module.ts file.
  */
 
-import { LogLevel, Configuration, BrowserCacheLocation } from '@azure/msal-browser';
+import {
+  LogLevel,
+  Configuration,
+  BrowserCacheLocation,
+} from '@azure/msal-browser';
+import { environment } from '../environments/environment';
 
-const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1;
+const isIE =
+  window.navigator.userAgent.indexOf('MSIE ') > -1 ||
+  window.navigator.userAgent.indexOf('Trident/') > -1;
 
 /**
  * Enter here the user flows and custom policies for your B2C application,
@@ -15,23 +22,26 @@ const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigato
  * To learn more about custom policies, visit https://docs.microsoft.com/en-us/azure/active-directory-b2c/custom-policy-overview
  */
 export const b2cPolicies = {
-    names: {
-        signUpSignIn: 'B2C_1_susi_v2',
-        resetPassword: 'B2C_1_reset_v3',
-        editProfile: 'B2C_1_edit_profile_v2',
+  names: {
+    signUpSignIn: 'B2C_1_susi',
+    resetPassword: 'B2C_1_password_reset',
+    editProfile: 'B2C_1_profile_edit',
+  },
+  authorities: {
+    signUpSignIn: {
+      authority:
+        'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_susi',
     },
-    authorities: {
-        signUpSignIn: {
-            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/b2c_1_susi_v2',
-        },
-        resetPassword: {
-            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_reset_v3',
-        },
-        editProfile: {
-            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/b2c_1_edit_profile_v2',
-        },
+    resetPassword: {
+      authority:
+        'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_password_reset',
     },
-    authorityDomain: 'medsecure.b2clogin.com',
+    editProfile: {
+      authority:
+        'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_profile_edit',
+    },
+  },
+  authorityDomain: 'medsecure.b2clogin.com',
 };
 
 /**
@@ -40,62 +50,48 @@ export const b2cPolicies = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md
  */
 export const msalConfig: Configuration = {
-    auth: {
-        clientId: 'ba8bc284-466c-4627-a83a-9833f26db722', // This is the ONLY mandatory field that you need to supply.
-        authority: b2cPolicies.authorities.signUpSignIn.authority, // Defaults to "https://login.microsoftonline.com/common"
-        knownAuthorities: [b2cPolicies.authorityDomain], // Mark your B2C tenant's domain as trusted.
-        redirectUri: '/auth', // Points to window.location.origin by default. You must register this URI on Azure portal/App Registration.
-        postLogoutRedirectUri: '/', // Points to window.location.origin by default.
+  auth: {
+    clientId: environment.adb2cConfig.clientId, // This is the ONLY mandatory field that you need to supply.
+    authority: b2cPolicies.authorities.signUpSignIn.authority, // Defaults to "https://login.microsoftonline.com/common"
+    knownAuthorities: [b2cPolicies.authorityDomain], // Mark your B2C tenant's domain as trusted.
+    redirectUri: '/', // Points to window.location.origin by default. You must register this URI on Azure portal/App Registration.
+    postLogoutRedirectUri: '/', // Points to window.location.origin by default.
+  },
+  cache: {
+    cacheLocation: BrowserCacheLocation.LocalStorage, // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
+    storeAuthStateInCookie: isIE, // Set this to "true" if you are having issues on IE11 or Edge. Remove this line to use Angular Universal
+  },
+  system: {
+    /**
+     * Below you can configure MSAL.js logs. For more information, visit:
+     * https://docs.microsoft.com/azure/active-directory/develop/msal-logging-js
+     */
+    loggerOptions: {
+      loggerCallback(logLevel: LogLevel, message: string) {
+        console.log(message);
+      },
+      logLevel: LogLevel.Verbose,
+      piiLoggingEnabled: false,
     },
-    cache: {
-        cacheLocation: BrowserCacheLocation.LocalStorage, // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
-        storeAuthStateInCookie: isIE, // Set this to "true" if you are having issues on IE11 or Edge. Remove this line to use Angular Universal
-    },
-    system: {
-        /**
-         * Below you can configure MSAL.js logs. For more information, visit:
-         * https://docs.microsoft.com/azure/active-directory/develop/msal-logging-js
-         */
-        loggerOptions: {
-            loggerCallback(logLevel: LogLevel, message: string) {
-                console.log(message);
-            },
-            logLevel: LogLevel.Verbose,
-            piiLoggingEnabled: false
-        }
-    }
-}
+  },
+};
 
 /**
  * Add here the endpoints and scopes when obtaining an access token for protected web APIs. For more information, see:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
 export const protectedResources = {
-    diet: {
-      patientsApi: {
-        endpoint: 'https://localhost:44318/diet-service/patients?PageIndex=0&PageSize=10'
-      },
-      dietsApi: {
-        endpoint: 'https://localhost:44318/diet-service/diets?PageIndex=0&PageSize=10'
-      },
-      scopes: {
-        read: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Diet.Read'],
-        write: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Diet.Write']
-      }
+  api: {
+    endpoint: environment.adb2cConfig.apiEndpointUrl,
+    scopes: {
+      read: [environment.adb2cConfig.readScopeUrl],
+      write: [environment.adb2cConfig.writeScopeUrl],
     },
-    waste: {
-      wastesApi: {
-        endpoint: 'https://localhost:44318/waste-service/wastes?PageIndex=0&PageSize=10'
-      },
-      scopes: {
-        read: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Waste.Read'],
-        write: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Waste.Write']
-      }
-    }
-  };
-  
-
-  
+  },
+  apiConfig: {
+    uri: environment.apiConfig.uri,
+  }
+};
 
 /**
  * Scopes you add here will be prompted for user consent during sign-in.
@@ -104,5 +100,5 @@ export const protectedResources = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-  scopes: []
+  scopes: [],
 };
