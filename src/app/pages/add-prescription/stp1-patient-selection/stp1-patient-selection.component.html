@@ -1,4 +1,4 @@
-<div [className]="selectedPatient != undefined && ' d-none'">
+<div>
   <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
     <input
       type="text"
@@ -23,7 +23,8 @@
       <tr id="table-head-row">
         <th class="col-3">patient ID</th>
         <th class="col-3">Name</th>
-        <th class="col-3">Sex</th>
+        <th class="col-2">Registration Time</th>
+        <th class="col-1">Sex</th>
         <th class="col-1">Age</th>
         <th class="col-1">Height</th>
       </tr>
@@ -36,7 +37,8 @@
       >
         <td class="col-3">{{ data.sn }}</td>
         <td class="col-3">{{ data.name }}</td>
-        <td class="col-3">{{ data.sex }}</td>
+        <td class="col-2">{{ ('0' + data.registrationDate.getHours()).slice(-2) + ":" + ("0" + data.registrationDate.getMinutes()).slice(-2) }}</td>
+        <td class="col-1">{{ data.sex }}</td>
         <td class="col-1">{{ data.age }}</td>
         <td class="col-1">{{ data.height }}</td>
       </tr>
