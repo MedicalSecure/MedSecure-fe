@@ -256,7 +256,8 @@
                       <ng-container matColumnDef="note">
                         <th mat-header-cell *matHeaderCellDef>note</th>
                         <td class="element name-cell" mat-cell *matCellDef="let medicine" style="position: relative; top: 0%">
-                          <app-comment [note]="medicine.note"></app-comment>
+                          <app-comment [note]="medicine.note" [id]="medicine.id"></app-comment>
+                         
                         </td>
                       </ng-container>
                     

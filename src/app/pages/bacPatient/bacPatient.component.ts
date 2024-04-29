@@ -285,6 +285,7 @@ export interface BacPatientResponse {
 export interface bacpatient {
   id: string;
   room: Room;
+  nurseId : string , 
   bed: number;
   patient: Patient;
   unitCare: UnitCare;
