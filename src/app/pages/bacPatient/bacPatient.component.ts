@@ -79,9 +79,9 @@ export class BacPatientComponent implements AfterViewInit {
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
-          if (response && response.bacPatients && response.bacPatients.data) {
-            this.dataSource.data = response.bacPatients.data;
-            response.bacPatients.data.forEach(element => {
+          if (response && response && response.data) {
+            this.dataSource.data = response.data;
+            response.data.forEach(element => {
               console.log(element);
               ELEMENT_DATA.push(element);
             });
@@ -274,18 +274,17 @@ export interface UnitCare {
 }
 
 export interface BacPatientResponse {
-  bacPatients: {
+ 
     pageIndex: number;
     pageSize: number;
     count: number;
     data: bacpatient[];
-  };
+  
 }
 
 export interface bacpatient {
   id: string;
   room: Room;
-  nurseId : string , 
   bed: number;
   patient: Patient;
   unitCare: UnitCare;

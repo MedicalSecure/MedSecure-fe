@@ -26,7 +26,16 @@
         <div class="row">
           <div class="col-md-4" *ngFor="let status of [0,1 ,2 ]">
             <div class="status-columns">
-              <h3 class="mb-3">{{ status }}</h3>
+              <div *ngIf="status === 0">
+                <h3 class="mb-3">Pending...</h3>
+              </div>
+              <div *ngIf="status === 1">
+                <h3 class="mb-3">On Progress</h3>
+              </div>
+              <div *ngIf="status === 2">
+                <h3 class="mb-3">Completed</h3>
+              </div>
+             
               <div class="tasks-list">
                 <div class="task" *ngFor="let item of data_list">
                   <div *ngIf="item.status === status">
