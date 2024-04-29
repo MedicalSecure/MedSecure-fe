@@ -11,12 +11,16 @@ import {
 import { Stp2AddMedicationComponent } from '../stp3-add-medication/stp4-add-medication.component';
 import { onChipsSelectionEmitType } from '../../../components/chips-select/chips-select.component';
 import { MatIcon } from '@angular/material/icon';
-import { WizardHeaderComponent, wizardStepType } from '../../../components/wizard-header/wizard-header.component';
+import {
+  WizardHeaderComponent,
+  wizardStepType,
+} from '../../../components/wizard-header/wizard-header.component';
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 import { Subject } from 'rxjs';
 import { medicationType } from '../../../types';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { PrescriptionListComponent } from '../prescription-list/prescription-list.component';
 
 @Component({
   selector: 'app-add-prescription',
@@ -30,6 +34,7 @@ import { CommonModule } from '@angular/common';
     Stp2PatientDetailsComponent,
     RouterModule,
     CommonModule,
+    PrescriptionListComponent
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
@@ -43,7 +48,8 @@ export class AddPrescriptionComponent {
   selectedPatient: patientType | undefined;
   isAddDiagnosticPageValid: boolean = false;
   isAddMedicationPageValid: boolean = false;
-  wizardSteps: wizardStepType[]=_steps;
+  ViewPrescriptions: boolean = true;
+  wizardSteps: wizardStepType[] = _steps;
 
   eventsSubject: Subject<void> = new Subject<void>();
 
@@ -83,9 +89,9 @@ export class AddPrescriptionComponent {
     this.selectedMedications = medications;
   }
 
-  validatePageChange(pageIndex:number,isPageValid: boolean){
-    if(pageIndex==3) this.isAddDiagnosticPageValid = isPageValid;
-    else if(pageIndex==4) this.isAddMedicationPageValid = isPageValid;
+  validatePageChange(pageIndex: number, isPageValid: boolean) {
+    if (pageIndex == 3) this.isAddDiagnosticPageValid = isPageValid;
+    else if (pageIndex == 4) this.isAddMedicationPageValid = isPageValid;
   }
 
   onSelectedDiagnosisChangeHandler(
@@ -111,6 +117,14 @@ export class AddPrescriptionComponent {
       }
     }
     this._updateButtonsState();
+  }
+
+  onClickNewPrescriptionEventHandler(viewPrescriptions:boolean){
+    this.ViewPrescriptions=viewPrescriptions;
+  }
+
+  onClickViewPrescriptions() {
+    this.ViewPrescriptions = !this.ViewPrescriptions;
   }
 
   /* wizard buttons */

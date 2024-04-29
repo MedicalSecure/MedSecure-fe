@@ -2,22 +2,28 @@
   <div class="col-12 grid-margin stretch-card">
     <div class="card card-rounded">
       <div class="card-body">
+        @if(this.ViewPrescriptions==false){
         <div id="add-prescription-body">
+          <!-- Tools bar (report issue, forward ...) -->
           <div class="d-sm-flex justify-content-between align-items-start">
             <div>
               <h4 class="card-title card-title-dash">Prescription</h4>
-              <p class="card-subtitle card-subtitle-dash">Add new Prescription</p>
+              <p class="card-subtitle card-subtitle-dash">
+                Add new Prescription
+              </p>
             </div>
-  
+
             <div class="btn-wrapper">
               <a href="#" class="btn btn-outline-primary align-items-center"
                 ><i class="fa fa-paper-plane"></i> Forward</a
               >
-  
+
               <a href="#" class="btn btn-outline-primary align-items-center"
                 ><i class="icon-printer"></i> Export PDF</a
               >
-  
+              <span class="btn btn-primary text-white align-items-center" (click)="onClickViewPrescriptions()">
+                <i class="fa fa-qrcode" aria-hidden="true"></i> Prescriptions
+              </span>
               <a
                 href="#"
                 class="btn btn-primary text-white align-items-center"
@@ -138,6 +144,12 @@
             </div>
           </div>
         </div>
+        } 
+        @if(this.ViewPrescriptions==true){
+          <div id="add-prescription-body">
+            <app-prescription-list (onClickNewPrescriptionEvent)="onClickNewPrescriptionEventHandler($event)"></app-prescription-list>
+          </div>
+        }
       </div>
     </div>
   </div>
