@@ -1,18 +1,18 @@
 import { Component, EventEmitter } from '@angular/core';
 import {
-  AddSymptomsComponent,
+  Stp3AddDiagnosticComponent,
   diagnosisType,
   symptomType,
-} from '../add-symptoms/add-symptoms.component';
+} from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
 import {
-  PatientSelectComponent,
+  Stp1PatientSelection,
   patientType,
-} from '../patient-select/patient-select.component';
-import { PrescribeMedicationComponent } from '../prescribe-medication/prescribe-medication.component';
+} from '../stp1-patient-selection/stp1-patient-selection.component';
+import { Stp2AddMedicationComponent } from '../stp3-add-medication/stp4-add-medication.component';
 import { onChipsSelectionEmitType } from '../../../components/chips-select/chips-select.component';
 import { MatIcon } from '@angular/material/icon';
-import { WizardHeaderComponent } from '../../../components/wizard-header/wizard-header.component';
-import { PatientInfoCardsComponent } from '../patient-info-cards/patient-info-cards.component';
+import { WizardHeaderComponent, wizardStepType } from '../../../components/wizard-header/wizard-header.component';
+import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 import { Subject } from 'rxjs';
 import { medicationType } from '../../../types';
 import { RouterModule } from '@angular/router';
@@ -22,29 +22,28 @@ import { CommonModule } from '@angular/common';
   selector: 'app-add-prescription',
   standalone: true,
   imports: [
-    AddSymptomsComponent,
-    PatientSelectComponent,
-    PrescribeMedicationComponent,
+    Stp3AddDiagnosticComponent,
+    Stp1PatientSelection,
+    Stp2AddMedicationComponent,
     MatIcon,
     WizardHeaderComponent,
-    PatientInfoCardsComponent,
+    Stp2PatientDetailsComponent,
     RouterModule,
-    CommonModule, 
+    CommonModule,
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
   stepNumber: number = 1;
-  stepsLimit: number = 3;
+  stepsLimit: number = 4;
   selectedDiagnosis: diagnosisType[] = [];
   selectedSymptoms: symptomType[] = [];
   selectedMedications: medicationType[] = [];
   selectedPatient: patientType | undefined;
-  autoPageSwitchOnPatientSelection: boolean = false;
-  isPatientSelectPageValid: boolean = false;
-  isAddSymptomsPageValid: boolean = false;
-  isSelectMedicationPageValid: boolean = false;
+  isAddDiagnosticPageValid: boolean = false;
+  isAddMedicationPageValid: boolean = false;
+  wizardSteps: wizardStepType[]=_steps;
 
   eventsSubject: Subject<void> = new Subject<void>();
 
@@ -71,9 +70,8 @@ export class AddPrescriptionComponent {
     if (index < 1) return false;
     if (index >= 0 && index == this.stepNumber) return false;
     /* if (index != 1 && this.selectedPatient == undefined) return false; */
-    if (index != 1 && !this.isPatientSelectPageValid) return false;
-    if (index > 2 && !this.isAddSymptomsPageValid) return false;
-    if (index > 3 && !this.isSelectMedicationPageValid) return false;
+    if (index > 3 && !this.isAddDiagnosticPageValid) return false;
+    if (index > 4 && !this.isAddMedicationPageValid) return false;
     return true;
   };
 
@@ -85,15 +83,11 @@ export class AddPrescriptionComponent {
     this.selectedMedications = medications;
   }
 
-  handleIsMedicationPageValidChange(eventData: boolean) {
-    this.isSelectMedicationPageValid = eventData;
+  validatePageChange(pageIndex:number,isPageValid: boolean){
+    if(pageIndex==3) this.isAddDiagnosticPageValid = isPageValid;
+    else if(pageIndex==4) this.isAddMedicationPageValid = isPageValid;
   }
-  handleIsPatientSelectPageValidChange(eventData: boolean) {
-    this.isPatientSelectPageValid = eventData;
-  }
-  handleIsAddSymptomsPageValidChange(eventData: boolean) {
-    this.isAddSymptomsPageValid = eventData;
-  }
+
   onSelectedDiagnosisChangeHandler(
     event: onChipsSelectionEmitType<diagnosisType>
   ) {
@@ -112,7 +106,7 @@ export class AddPrescriptionComponent {
       this.selectedPatient = undefined;
       this.stepNumber = 1;
     } else {
-      if (this.autoPageSwitchOnPatientSelection && this.stepNumber == 1) {
+      if (this.stepNumber == 1) {
         this.SwitchToStep(2);
       }
     }
@@ -204,3 +198,30 @@ const _backButtonContent = {
   label: 'back',
   class: 'btn w-100 m-0 btn-warning fs-6 text-white',
 };
+
+const _steps: wizardStepType[] = [
+  {
+    id: 1,
+    title: 'Patient Selection',
+    matIconName: '',
+    iconClass: 'fa fa-list',
+  },
+  {
+    id: 2,
+    title: 'Patient Details',
+    matIconName: '',
+    iconClass: 'fa fa-user-md',
+  },
+  {
+    id: 3,
+    title: 'Add Diagnostic',
+    matIconName: '',
+    iconClass: 'fa fa-stethoscope',
+  },
+  {
+    id: 4,
+    title: 'Add Medication',
+    matIconName: '',
+    iconClass: 'fa fa-medkit',
+  },
+];

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrescribeMedicationComponent } from './prescribe-medication.component';
+import { PrescribeMedicationComponent } from './stp4-add-medication.component';
 
 describe('PrescribeMedicationComponent', () => {
   let component: PrescribeMedicationComponent;

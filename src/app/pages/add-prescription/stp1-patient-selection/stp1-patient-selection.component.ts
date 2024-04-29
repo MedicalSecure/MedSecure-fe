@@ -11,17 +11,17 @@ import { FormsModule } from '@angular/forms';
 import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-sn.pipe';
 
 @Component({
-  selector: 'app-patient-select',
+  selector: 'app-stp1-patient-selection',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     FilterPatientByNameAndSnPipe,
   ],
-  templateUrl: './patient-select.component.html',
-  styleUrl: './patient-select.component.css',
+  templateUrl: './stp1-patient-selection.component.html',
+  styleUrl: './stp1-patient-selection.component.css',
 })
-export class PatientSelectComponent implements OnChanges {
+export class Stp1PatientSelection implements OnChanges {
   @Input() selectedPatient: patientType | undefined = undefined;
   @Output() selectedPatientChange = new EventEmitter<patientType | undefined>();
   @Output() onIsPatientSelectPageValidChange = new EventEmitter<boolean>();

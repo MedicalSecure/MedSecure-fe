@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PatientSelectComponent } from './patient-select.component';
+import { AddSymptomsComponent } from './stp3-add-diagnostic.component';
 
-describe('PatientSelectComponent', () => {
-  let component: PatientSelectComponent;
-  let fixture: ComponentFixture<PatientSelectComponent>;
+describe('AddSymptomsComponent', () => {
+  let component: AddSymptomsComponent;
+  let fixture: ComponentFixture<AddSymptomsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PatientSelectComponent]
+      imports: [AddSymptomsComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PatientSelectComponent);
+    fixture = TestBed.createComponent(AddSymptomsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

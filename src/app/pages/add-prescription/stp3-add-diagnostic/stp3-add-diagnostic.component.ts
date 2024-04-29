@@ -8,14 +8,14 @@ import {
 } from '../../../components/chips-select/chips-select.component';
 import { HumanBodyViewerComponent } from '../../../components/human-body-viewer/human-body-viewer.component';
 import { CommonModule } from '@angular/common';
-import { patientType } from '../patient-select/patient-select.component';
-import { PatientInfoCardsComponent } from "../patient-info-cards/patient-info-cards.component";
+import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
+import { Stp2PatientDetailsComponent } from "../stp2-patient-details/stp2-patient-details.component";
 
 @Component({
-    selector: 'app-add-symptoms',
+    selector: 'app-stp3-add-diagnostic',
     standalone: true,
-    templateUrl: './add-symptoms.component.html',
-    styleUrl: './add-symptoms.component.css',
+    templateUrl: './stp3-add-diagnostic.component.html',
+    styleUrl: './stp3-add-diagnostic.component.css',
     imports: [
         FormsModule,
         MatFormFieldModule,
@@ -23,10 +23,10 @@ import { PatientInfoCardsComponent } from "../patient-info-cards/patient-info-ca
         ShipsSelectComponent,
         HumanBodyViewerComponent,
         CommonModule,
-        PatientInfoCardsComponent
+        Stp2PatientDetailsComponent
     ]
 })
-export class AddSymptomsComponent {
+export class Stp3AddDiagnosticComponent {
   @Input() selectedPatient: patientType | undefined;
   @Input() minimumRequiredSymptoms: number = 0;
   @Input() minimumRequiredDiagnosis: number = 0;

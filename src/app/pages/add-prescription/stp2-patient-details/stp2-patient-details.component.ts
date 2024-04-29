@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { patientType } from '../patient-select/patient-select.component';
+import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,13 +7,13 @@ import { CardMedicationComponent } from '../../../components/card-medication/car
 import { medicationType } from '../../../types';
 
 @Component({
-  selector: 'app-patient-info-cards',
+  selector: 'app-stp2-patient-details',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIcon, CardMedicationComponent],
-  templateUrl: './patient-info-cards.component.html',
-  styleUrl: './patient-info-cards.component.css',
+  templateUrl: './stp2-patient-details.component.html',
+  styleUrl: './stp2-patient-details.component.css',
 })
-export class PatientInfoCardsComponent {
+export class Stp2PatientDetailsComponent {
   @Input() selectedPatient: patientType | undefined = undefined;
   @Input()
   medication: medicationType[] = dummyData;

@@ -31,7 +31,7 @@ import {
   PartsOfDayComponent,
   hourType,
 } from '../../../components/parts-of-day/parts-of-day.component';
-import { patientType } from '../patient-select/patient-select.component';
+import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
 import {
   DateRangeType,
   DatepickerRangePopupComponent,
@@ -43,14 +43,14 @@ import {
   medicationType,
   styleClass,
 } from '../../../types';
-import { PatientInfoCardsComponent } from "../patient-info-cards/patient-info-cards.component";
+import { Stp2PatientDetailsComponent } from "../stp2-patient-details/stp2-patient-details.component";
 
 
 @Component({
-    selector: 'app-prescribe-medication',
+    selector: 'app-stp4-add-medication',
     standalone: true,
-    templateUrl: './prescribe-medication.component.html',
-    styleUrl: './prescribe-medication.component.css',
+    templateUrl: './stp4-add-medication.component.html',
+    styleUrl: './stp4-add-medication.component.css',
     imports: [
         MatFormFieldModule,
         MatInputModule,
@@ -69,10 +69,10 @@ import { PatientInfoCardsComponent } from "../patient-info-cards/patient-info-ca
         DatepickerRangePopupComponent,
         ToggleButtonComponent,
         MatChipsModule,
-        PatientInfoCardsComponent
+        Stp2PatientDetailsComponent
     ]
 })
-export class PrescribeMedicationComponent implements OnInit, OnDestroy {
+export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
   @Input()
   selectedPatient: patientType | undefined;
   /* on click finish listener */
