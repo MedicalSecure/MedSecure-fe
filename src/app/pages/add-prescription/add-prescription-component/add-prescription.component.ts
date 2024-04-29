@@ -74,8 +74,8 @@ export class AddPrescriptionComponent {
     // arrow function to hold they callback context xD
     if (index > this.stepsLimit + 1) return false;
     if (index < 1) return false;
-    if (index >= 0 && index == this.stepNumber) return false;
-    /* if (index != 1 && this.selectedPatient == undefined) return false; */
+    if (index >= 1 && index == this.stepNumber) return false;
+    if (index > 1 && this.selectedPatient == undefined) return false;
     if (index > 3 && !this.isAddDiagnosticPageValid) return false;
     if (index > 4 && !this.isAddMedicationPageValid) return false;
     return true;
