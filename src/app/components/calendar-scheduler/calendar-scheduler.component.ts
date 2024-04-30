@@ -3,7 +3,6 @@ import { startOfDay, isSameDay, eachDayOfInterval, isBefore, isToday, isAfter, e
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarView, } from 'angular-calendar';
-import { EventColor } from 'calendar-utils';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlatpickrModule } from 'angularx-flatpickr';
@@ -36,14 +35,18 @@ import { AppointmentComponent } from '../appointment/appointment.component'
 import { CalendarMonthViewDay } from 'angular-calendar';
 import { Patients } from '../../model/patients';
 import { Socket } from 'ngx-socket-io'
+import { EventColor } from 'calendar-utils';
 import { Router } from '@angular/router';
+import {VisitService} from '../../services/visits.service'
+import { ActionType } from '../../interface/ActionType';
+import {CalendarEventType} from '../../interface/CalendarEventType';
+import {TypeVisit} from '../../interface/TypeVisit'
+import {LocationVisit} from '../../interface/LocationVisit'
 const colors: Record<string, EventColor> = {
   red: { primary: '#ad2121', secondary: '#FAE3E3', },
   blue: { primary: '#1e90ff', secondary: '#D1E8FF', },
   yellow: { primary: '#e3bc08', secondary: '#FDF1BA', },
 };
-
-export enum ActionType { get, add, edit, delete, }
 @Component({
   selector: 'app-calendar-view',
   standalone: true,
@@ -149,7 +152,7 @@ export class CalendarShedulerComponent implements OnInit {
   ];
 
 
-  constructor(private modal: NgbModal, private http: HttpClient, private router: Router) {
+  constructor(private modal: NgbModal, private visitService: VisitService, private router: Router) {
     this.modalData = { action: '', event: {} as CalendarEventType<any> };
   }
 
@@ -165,9 +168,9 @@ export class CalendarShedulerComponent implements OnInit {
 
 
   loadEvents() {
-    this.http.get<any>('http://localhost:5004/v1/visits').subscribe(
+    this.visitService.getVisits().subscribe(
       (data) => {
-        this.CastedEvents = data.visits.data.map((event: any) => ({
+          this.CastedEvents = data.visits.data.map((event: any) => ({
           ...event,
           start: new Date(event.startDate),
           end: new Date(event.endDate),
@@ -197,26 +200,30 @@ export class CalendarShedulerComponent implements OnInit {
     this.CastedEvents.forEach((event) => {
       const eventStartDate = startOfDay(event.start);
       const eventEndDate = startOfDay(event.end);
+      
       if (isAfter(eventStartDate, today) || isSameDay(eventStartDate, today)) {
         if (!daysWithEvents.some((day) => isSameDay(day, eventStartDate))) {
           daysWithEvents.push(eventStartDate);
-        }  
+        }
+  
+        // Add events for each day between event start date and end date
+        for (let d = new Date(eventStartDate); d <= eventEndDate; d.setDate(d.getDate() + 1)) {
+          const day = startOfDay(d);
+          if (!daysWithEvents.some((existingDay) => isSameDay(existingDay, day))) {
+            daysWithEvents.push(day);
+          }
+        }
       }
-      // if (isAfter(eventStartDate, today) || isSameDay(eventStartDate, today) ||isAfter(eventEndDate, today) ){
-      //   for (let d = eventStartDate; d <= eventEndDate; d.setDate(d.getDate() + 1)) {
-      //   if (!daysWithEvents.some((day) => isSameDay(day, d))) {
-      //     daysWithEvents.push(new Date(d));
-      //   }
-      // }
-      // }
     });
-
+  
+    // Add "Create an appointment" event for each day with an event
     daysWithEvents.forEach((day) => {
       const eventExists = this.CastedEvents.some(
         (existingEvent) =>
           isSameDay(startOfDay(existingEvent.start), day) &&
           existingEvent.title === 'Create an appointment'
       );
+  
       if (!eventExists) {
         this.CastedEvents.push({
           start: day,
@@ -228,6 +235,8 @@ export class CalendarShedulerComponent implements OnInit {
       }
     });
   }
+  
+  
 
   generateActions(): void {
     this.CastedEvents.forEach((event) => {
@@ -413,6 +422,8 @@ export class CalendarShedulerComponent implements OnInit {
     this.CastedEvents = this.CastedEvents.filter((event) => event !== eventToDelete);
   }
 
+  
+
   setView(view: CalendarView) {
     this.view = view;
   }
@@ -426,39 +437,7 @@ export class CalendarShedulerComponent implements OnInit {
   }
 
   saveFormData(formData: any): void {
-    const typeVisitEnumValue: TypeVisit = TypeVisit[formData.typevisits as keyof typeof TypeVisit];
-    const locationVisitEnumValue: LocationVisit = LocationVisit[formData.disponibilite as keyof typeof LocationVisit];
-    // Soustraire deux heures pour ajuster l'heure à GMT+0
-    const startDate = new Date(formData.start);
-    startDate.setHours(startDate.getHours() + 2);
-    console.log("1111",startDate)
-    const visit1: VisitDtoType = {
-      startDate: startDate,
-      endDate: formData.end,
-      patient: {
-        id: formData.patient.id,
-        firstName: formData.patient.firstName,
-        lastName: formData.patient.lastName,
-        dateOfBirth: formData.patient.dateOfBirth,
-        gender: formData.patient.gender
-      },
-      doctorId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      title: 'Appointment with' + formData.patient.firstName + ' ' + formData.patient.lastName,
-      typeVisit: typeVisitEnumValue,
-      locationVisit: locationVisitEnumValue,
-      duration: formData.duration,
-      description: formData.description,
-      availability: formData.avaibility
-    };
-    const VisitDtoWrapper = {
-      Visit: visit1
-    };
-    console.log("this.formData.star", this.formData.start)
-    console.log("this.formData.startDate", this.formData.startDate)
-    console.log("this.formData.selected", this.formData.selectedDate)
-    console.log('VisitDtoWrapper', VisitDtoWrapper)
-    console.log("calendarformData.typeVisit", formData.typeVisit)
-    this.http.post<any>('http://localhost:5004/v1/visits', VisitDtoWrapper).subscribe(
+    this.visitService.creatVisits(formData).subscribe(
       (response) => {
         console.log('Données enregistrées avec succès !', response);
         this.modal.dismissAll();
@@ -474,39 +453,7 @@ export class CalendarShedulerComponent implements OnInit {
 
 
   updateEventData(formData: any): void {
-    const typeVisitEnumValue: TypeVisit = TypeVisit[formData.typevisits as keyof typeof TypeVisit];
-    const locationVisitEnumValue: LocationVisit = LocationVisit[formData.disponibilite as keyof typeof LocationVisit];
-    
-
-    // Soustraire deux heures pour ajuster l'heure à GMT+0
-    const startDate = new Date(formData.start);
-    startDate.setHours(startDate.getHours() + 2);
-    console.log("1111",startDate)
-    const visitupdate: VisitDtoType = {
-      id: formData.id,
-      startDate: startDate,
-      endDate: formData.end,
-      patient: {
-        id: formData.patient.id,
-        firstName: formData.patient.firstName,
-        lastName: formData.patient.lastName,
-        dateOfBirth: formData.patient.dateOfBirth,
-        gender: formData.patient.gender
-      },
-      doctorId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      title: 'Appointment with ' + formData.patient.firstName + ' ' + formData.patient.lastName,
-      typeVisit: TypeVisit[formData.typevisits as keyof typeof TypeVisit],
-      locationVisit: LocationVisit[formData.disponibilite as keyof typeof LocationVisit],
-      duration: formData.duration,
-      description: formData.description,
-      availability: formData.avaibility
-    };
-
-    const VisitDtoWrapper = {
-      Visit: visitupdate
-    };
-    console.log('VisitDtoWrapper', VisitDtoWrapper);
-    this.http.put<any>('http://localhost:5004/v1/visits/', VisitDtoWrapper).subscribe(
+    this.visitService.updateVisits(formData).subscribe(
       (response) => {
         console.log('Données mises à jour avec succès !', response);
         this.modal.dismissAll();
@@ -534,72 +481,14 @@ export class CalendarShedulerComponent implements OnInit {
 
 }
 
-export interface EventAction {
-  id?: string | number;
-  label: string;
-  cssClass?: string;
-  a11yLabel?: string;
-  onClick({ event, sourceEvent, }: {
-    event: CalendarEventType;
-    sourceEvent: MouseEvent | KeyboardEvent;
-  }): any;
-}
-
-export interface CalendarEventType<MetaType = any> {
-  typevisits?: TypeVisit;
-  disponibilite?: LocationVisit;
-  avaibility?: string;
-  description?: string;
-  duration?: string;
-  actionType: ActionType[];
-  patient?: Patients;
-  id?: number;
-  start: Date | any;
-  end?: Date | any;
-  title: string;
-  color?: EventColor;
-  actions?: EventAction[];
-  allDay?: boolean;
-  cssClass?: string;
-  resizable?: {
-    beforeStart?: boolean;
-    afterEnd?: boolean;
-  };
-  draggable?: boolean;
-  meta?: MetaType;
-}
-export enum TypeVisit {
-  Firstconsultation,
-  FollowUp,
-  Emergency,
-  other
-}
-
-export enum LocationVisit {
-  Online = 0,
-  InClinic = 1,
-  other = 2
-}
 
 
 
 
-export interface VisitDtoType {
-  id?: string;
-  startDate: Date ;
-  endDate: Date ;
-  patient: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: Date | string;
-    gender: number;
-  };
-  doctorId: string;
-  title: string;
-  typeVisit: TypeVisit;
-  locationVisit: LocationVisit;
-  duration: string;
-  description: string;
-  availability: string;
-}
+
+
+
+
+
+
+

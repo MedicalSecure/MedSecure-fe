@@ -6,10 +6,13 @@ import { ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarEventType } from '../calendar-scheduler/calendar-scheduler.component';
+import { CalendarEventType } from '../../interface/CalendarEventType';
 import { Patients } from '../../model/patients';
 import { visits } from '../../model/visits';
 import { Router } from '@angular/router';
+import {VisitService} from '../../services/visits.service';
+import {PatientService} from '../../services/patient.service'
+
 
 @Component({
   selector: 'app-appointment',
@@ -62,7 +65,7 @@ export class AppointmentComponent implements OnInit {
   @Output() eventDeleted: EventEmitter<any> = new EventEmitter<any>();
   @Output() eventCreated: EventEmitter<any> = new EventEmitter<any>();
   @Output() eventUpdated: EventEmitter<any> = new EventEmitter<any>();
-  constructor(private modal: NgbModal, private http: HttpClient, private router: Router) { }
+  constructor(private modal: NgbModal, private visitService: VisitService, private router: Router, private patientService :PatientService) { }
 
 
   ngOnInit(): void {
@@ -256,7 +259,7 @@ export class AppointmentComponent implements OnInit {
   }
 
   deleteVisit(visitId: string | number | undefined): void {
-    this.http.delete(`http://localhost:5004/v1/visits/${visitId}?Id=${visitId}`).subscribe(
+    this.visitService.deleteVisits(visitId).subscribe(
       () => {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
           this.router.navigate(['visits']);
@@ -268,10 +271,11 @@ export class AppointmentComponent implements OnInit {
       }
     );
   }
+  
 
 
   loadPatients() {
-    this.http.get<any>('assets/data/patients.json').subscribe(
+    this.patientService.getPatients().subscribe(
       (data) => {
         this.patients = data.patients.data;
         this.filteredPatients = this.patients;
