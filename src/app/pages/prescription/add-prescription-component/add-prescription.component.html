@@ -56,7 +56,7 @@
 
           <!-- Wizard content -->
           <div class="wizard-container" style="height: 490px; overflow-y: auto">
-            <!-- Step 1 : Patient Selection (before Select Patient) -->
+            <!-- Step 1 : Patient Selection -->
             <div [className]="stepNumber != 1 && 'd-none'">
               <app-stp1-patient-selection
                 [(selectedPatient)]="selectedPatient"
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Print a single line displaying Patient id | name - Age And Deselect Button -->
-            <!-- In Each of steps 2,3 and 4 -->
+            <!-- In Each of steps 2,3,4 and 5 -->
             @if(selectedPatient && stepNumber > 1){
             <div
               class="d-flex gap-2 justify-content-center"
@@ -89,7 +89,7 @@
               <app-stp2-patient-details />
             </div>
 
-            <!-- Step 2: Diagnostic -->
+            <!-- Step 2: Add Diagnostic -->
             <div [className]="stepNumber != 3 && 'd-none'">
               <app-stp3-add-diagnostic
                 (onSelectedDiagnosisChange)="
@@ -103,7 +103,7 @@
               />
             </div>
 
-            <!-- Step 3: Medication -->
+            <!-- Step 3: Add Medication -->
             <div [className]="stepNumber != 4 && 'd-none'">
               <app-stp4-add-medication
                 [events]="eventsSubject.asObservable()"

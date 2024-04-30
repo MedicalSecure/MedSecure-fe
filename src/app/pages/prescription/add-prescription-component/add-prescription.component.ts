@@ -48,7 +48,7 @@ export class AddPrescriptionComponent {
   selectedPatient: patientType | undefined;
   isAddDiagnosticPageValid: boolean = false;
   isAddMedicationPageValid: boolean = false;
-  ShowPrescriptionList: boolean = true;
+  ShowPrescriptionList: boolean = false;
   wizardSteps: wizardStepType[] = _steps;
 
   eventsSubject: Subject<void> = new Subject<void>();
