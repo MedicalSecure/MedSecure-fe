@@ -48,7 +48,7 @@ export class AddPrescriptionComponent {
   selectedPatient: patientType | undefined;
   isAddDiagnosticPageValid: boolean = false;
   isAddMedicationPageValid: boolean = false;
-  ViewPrescriptions: boolean = true;
+  ShowPrescriptionList: boolean = true;
   wizardSteps: wizardStepType[] = _steps;
 
   eventsSubject: Subject<void> = new Subject<void>();
@@ -120,11 +120,11 @@ export class AddPrescriptionComponent {
   }
 
   onClickNewPrescriptionEventHandler(viewPrescriptions:boolean){
-    this.ViewPrescriptions=viewPrescriptions;
+    this.ShowPrescriptionList=viewPrescriptions;
   }
 
   onClickViewPrescriptions() {
-    this.ViewPrescriptions = !this.ViewPrescriptions;
+    this.ShowPrescriptionList = !this.ShowPrescriptionList;
   }
 
   /* wizard buttons */
@@ -238,4 +238,5 @@ const _steps: wizardStepType[] = [
     matIconName: '',
     iconClass: 'fa fa-medkit',
   },
+  
 ];

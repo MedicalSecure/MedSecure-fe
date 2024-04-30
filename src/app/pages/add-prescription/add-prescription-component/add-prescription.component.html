@@ -2,7 +2,7 @@
   <div class="col-12 grid-margin stretch-card">
     <div class="card card-rounded">
       <div class="card-body">
-        @if(this.ViewPrescriptions==false){
+        @if(this.ShowPrescriptionList==false){
         <div id="add-prescription-body">
           <!-- Tools bar (report issue, forward ...) -->
           <div class="d-sm-flex justify-content-between align-items-start">
@@ -145,7 +145,7 @@
           </div>
         </div>
         } 
-        @if(this.ViewPrescriptions==true){
+        @if(this.ShowPrescriptionList==true){
           <div id="add-prescription-body">
             <app-prescription-list (onClickNewPrescriptionEvent)="onClickNewPrescriptionEventHandler($event)"></app-prescription-list>
           </div>
