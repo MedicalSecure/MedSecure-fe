@@ -7,9 +7,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-sn.pipe';
+
 import { MatIcon } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-id/filter-patient-by-name-and-sn.pipe';
 
 @Component({
   selector: 'app-prescription-list',

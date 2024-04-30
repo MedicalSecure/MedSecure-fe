@@ -6,7 +6,7 @@ import {
   ShipsSelectComponent,
   onChipsSelectionEmitType,
 } from '../../../components/chips-select/chips-select.component';
-import { HumanBodyViewerComponent } from '../../../components/human-body-viewer/human-body-viewer.component';
+import { HumanBodyViewerComponent } from '../human-body-viewer/human-body-viewer.component';
 import { CommonModule } from '@angular/common';
 import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
 import { Stp2PatientDetailsComponent } from "../stp2-patient-details/stp2-patient-details.component";
