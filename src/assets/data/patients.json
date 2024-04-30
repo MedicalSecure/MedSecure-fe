@@ -1,87 +1,30 @@
-[
-    {
-      "id": 1,
-      "nom": "Dupont",
-      "prenom": "Jean",
-      "age": 35,
-      "genre": "Homme",
-      "adresse": "123 rue de la Paix",
-      "ville": "Paris",
-      "pays": "France",
-      "numéro de téléphone": "0123456789",
-      "email": "jean.dupont@example.com"
-    },
-    {
-      "id": 2,
-      "nom": "Martin",
-      "prenom": "Marie",
-      "age": 28,
-      "genre": "Femme",
-      "adresse": "456 avenue des Roses",
-      "ville": "Lyon",
-      "pays": "France",
-      "numéro de téléphone": "0987654321",
-      "email": "marie.martin@example.com"
-    },
-    {
-      "id": 3,
-      "nom": "Garcia",
-      "prenom": "Carlos",
-      "age": 45,
-      "genre": "Homme",
-      "adresse": "789 calle de la Luna",
-      "ville": "Madrid",
-      "pays": "Espagne",
-      "numéro de téléphone": "1122334455",
-      "email": "carlos.garcia@example.com"
-    },
-    {
-      "id": 4,
-      "nom": "Chadha",
-      "prenom": "Jamel",
-      "age": 24,
-      "genre": "Femme",
-      "adresse": "123 rue de la Paix",
-      "ville": "Gabes",
-      "pays": "Tunisie",
-      "numéro de téléphone": "0123456789",
-      "email": "jean.dupont@example.com"
-    },
-    {
-      "id":5,
-      "nom": "Jouri",
-      "prenom": "Jamel",
-      "age": 3,
-      "genre": "Femme",
-      "adresse": "123 rue de la Paix",
-      "ville": "Gabes",
-      "pays": "Tunisie",
-      "numéro de téléphone": "0123456789",
-      "email": "jean.dupont@example.com"
-    },
-    {
-      "id": 6,
-      "nom": "Jouri",
-      "prenom": "Jamel",
-      "age": 3,
-      "genre": "Femme",
-      "adresse": "123 rue de la Paix",
-      "ville": "Gabes",
-      "pays": "Tunisie",
-      "numéro de téléphone": "0123456789",
-      "email": "jean.dupont@example.com"
-    },
-    {
-      "id": 7,
-      "nom": "chayma",
-      "prenom": "Jamel",
-      "age": 25,
-      "genre": "Femme",
-      "adresse": "123 rue de la Paix",
-      "ville": "Gabes",
-      "pays": "Tunisie",
-      "numéro de téléphone": "0123456789",
-      "email": "jean.dupont@example.com"
-    }
-  ]
-  
+{
+  "patients": {
+    "pageIndex": 1,
+    "pageSize": 10,
+    "count": 3,
+    "data": [
+      {
+        "id": "a8d7e695-c9e1-4c3e-bb42-518db3a628dc",
+        "firstName": "John",
+        "lastName": "Doe",
+        "dateOfBirth": "1990-05-15",
+        "gender": 1
+      },
+      {
+        "id": "e6510a1b-3d59-4903-9a6f-7a27e3b15aef",
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "dateOfBirth": "1985-10-20",
+        "gender": 2
+      },
+      {
+        "id": "f7ff7c44-fa63-4136-b10e-6d51458e5b7a",
+        "firstName": "Alice",
+        "lastName": "Johnson",
+        "dateOfBirth": "1978-03-08",
+        "gender": 2
+      }
+    ]
+  }
+}
