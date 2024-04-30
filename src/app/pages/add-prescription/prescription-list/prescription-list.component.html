@@ -12,9 +12,12 @@
     <a href="#" class="btn btn-outline-primary align-items-center"
       ><i class="icon-printer"></i> Export PDF</a
     >
-    <span class="btn btn-primary text-white align-items-center" (click)="onClickNewPrescription()">
-        <i class="fa fa-qrcode" aria-hidden="true"></i> New Prescription
-      </span>
+    <span
+      class="btn btn-primary text-white align-items-center"
+      (click)="onClickNewPrescription()"
+    >
+      <i class="fa fa-qrcode" aria-hidden="true"></i> New Prescription
+    </span>
     <a
       href="#"
       class="btn btn-primary text-white align-items-center"
@@ -36,77 +39,74 @@
 </div>
 <!-- content -->
 <div class="wizard-container" style="height: 490px; overflow-y: auto">
-  <!-- Search prescription -->
-  <div>
-    <div>
-      <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          name=""
-          id=""
-          aria-describedby="helpId"
-          [(ngModel)]="searchTerm"
-          placeholder="Enter Id or Patient Name"
-        />
-        <input
-          name=""
-          id=""
-          class="btn btn-outline-primary"
-          type="button"
-          value="Search"
-        />
-      </div>
-
-      <table class="table table-responsive">
-        <thead>
-          <tr id="table-head-row">
-            <th class="col-3">Prescription ID</th>
-            <th class="col-3">Patient Name</th>
-            <th class="col-2">Doctor Name</th>
-            <th class="col-2">Date</th>
-            <th class="col-1">Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="
-              let data of dataList | filterPatientByNameAndSn : searchTerm
-            "
-            (click)="onClickPrescription(data)"
-            [class]="data === selectedPrescription ? 'table-primary' : ''"
-          >
-            <td class="col-3">{{ data.sn }}</td>
-            <td class="col-3">{{ data.name }}</td>
-            <td class="col-2">{{ data.name }}</td>
-            <td class="col-2">
-              {{
-                ("0" + data.registrationDate.getHours()).slice(-2) +
-                  ":" +
-                  ("0" + data.registrationDate.getMinutes()).slice(-2)
-              }}
-            </td>
-            <td class="col-1">{{ "data.type" }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- If no prescription is selected: Search + table part -->
+  <div [className]="selectedPrescription != undefined && 'd-none'">
+    <!-- Search prescription -->
+    <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
+      <input
+        type="text"
+        class="form-control form-control-sm"
+        name=""
+        id=""
+        aria-describedby="helpId"
+        [(ngModel)]="searchTerm"
+        placeholder="Enter Id or Patient Name"
+      />
+      <input
+        name=""
+        id=""
+        class="btn btn-outline-primary"
+        type="button"
+        value="Search"
+      />
     </div>
+    <!-- Search result : Table of prescriptions -->
+    <table class="table table-responsive">
+      <thead>
+        <tr id="table-head-row">
+          <th class="col-3">Prescription ID</th>
+          <th class="col-3">Patient Name</th>
+          <th class="col-2">Doctor Name</th>
+          <th class="col-2">Date</th>
+          <th class="col-1">Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of dataList | filterPatientByNameAndSn : searchTerm"
+          (click)="onClickPrescription(data)"
+          [class]="data === selectedPrescription ? 'table-primary' : ''"
+        >
+          <td class="col-3">{{ data.sn }}</td>
+          <td class="col-3">{{ data.name }}</td>
+          <td class="col-2">{{ data.name }}</td>
+          <td class="col-2">
+            {{
+              ("0" + data.registrationDate.getHours()).slice(-2) +
+                ":" +
+                ("0" + data.registrationDate.getMinutes()).slice(-2)
+            }}
+          </td>
+          <td class="col-1">{{ "data.type" }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <!-- Print a single line displaying Patient id | name - Age And Deselect Button -->
-  <!-- In Each of steps 2,3 and 4 -->
+  <!-- If one prescription is selected:display result -->
   @if(selectedPrescription){
+  <!-- Print a single line displaying Prescription id | Date | Patient name | doctor name And Deselect Button -->
   <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
-    <p class="align-self-center m-0">Selected Patient :</p>
+    <p class="align-self-center m-0">Selected Prescription :</p>
     <span class="text-primary fw-bold align-self-center">
       Id : {{ selectedPrescription.sn }} | {{ selectedPrescription.name }} -
       {{ selectedPrescription.age }} years</span
     >
-    <mat-icon
-      class="align-self-center"
-      (click)="onClickPrescription(undefined)"
+    <mat-icon class="align-self-center" (click)="onClickPrescription(undefined)"
       >close</mat-icon
     >
   </div>
+  <!-- Display Prescription details component -->
+  <div>Prescription Details here (TODO)</div>
   }
 </div>
