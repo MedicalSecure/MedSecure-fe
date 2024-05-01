@@ -318,15 +318,15 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     let numberOfCautions:number=0;
     medication.administrationHours.forEach((medicationGroup) => {
       medicationGroup.forEach((hourObj) => {
-        if (hourObj.beforeFoodDispenseQuantity) {
-          const beforeFQ = parseInt(hourObj.beforeFoodDispenseQuantity);
+        if (hourObj.beforeFood?.DispenseQuantity) {
+          const beforeFQ = parseInt(hourObj.beforeFood?.DispenseQuantity);
           beforeFoodCounter += beforeFQ;
           timesADayCounter++;
           if (beforeFQ > maximumDispenseQuantity)
             maximumDispenseQuantity = beforeFQ;
         }
-        if (hourObj.afterFoodDispenseQuantity) {
-          const afterFQ = parseInt(hourObj.afterFoodDispenseQuantity);
+        if (hourObj.afterFood?.DispenseQuantity) {
+          const afterFQ = parseInt(hourObj.afterFood?.DispenseQuantity);
           afterFoodCounter += afterFQ;
           timesADayCounter++;
           if (afterFQ > maximumDispenseQuantity)

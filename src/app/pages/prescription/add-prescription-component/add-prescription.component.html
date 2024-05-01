@@ -89,7 +89,7 @@
               <app-stp2-patient-details />
             </div>
 
-            <!-- Step 2: Add Diagnostic -->
+            <!-- Step 3: Add Diagnostic -->
             <div [className]="stepNumber != 3 && 'd-none'">
               <app-stp3-add-diagnostic
                 (onSelectedDiagnosisChange)="
@@ -103,7 +103,7 @@
               />
             </div>
 
-            <!-- Step 3: Add Medication -->
+            <!-- Step 4: Add Medication -->
             <div [className]="stepNumber != 4 && 'd-none'">
               <app-stp4-add-medication
                 [events]="eventsSubject.asObservable()"

@@ -18,11 +18,16 @@
           >
             <div class="d-flex me-2">
               <div
-                class="mb-2"
+                class="mb-2 mt-1"
                 *ngFor="let hourItem of partOfDayHours; let hourIndex = index"
               >
                 <div
-                  *ngIf="true"
+                  *ngIf="
+                    showAllCases ||
+                    (!showAllCases &&
+                      (hourItem.afterFood?.DispenseQuantity ||
+                        hourItem.beforeFood?.DispenseQuantity))
+                  "
                   class="mr-1 mb-4 cursor-pointer {{
                     getBackgroundColor(partOfDayIndex)
                   }} color-white"
@@ -44,14 +49,16 @@
                         $event.preventDefault();
                         onClick(partOfDayIndex, hourIndex, -1, hourItem, true)
                       "
+                      class="parent"
                       title="Before food dispense quantity"
                     >
                       <input
                         class="form-control text-center"
                         style="padding: 0%"
+                        [disabled]="isReadOnly"
                         [value]="
-                          hourItem.beforeFoodDispenseQuantity
-                            ? hourItem.beforeFoodDispenseQuantity
+                          hourItem.beforeFood?.DispenseQuantity
+                            ? hourItem.beforeFood?.DispenseQuantity
                             : ''
                         "
                         (input)="onInputChange($event)"
@@ -80,6 +87,36 @@
                           )
                         "
                       />
+                      <div class="child d-flex justify-content-evenly">
+                        <!-- [disabled]="(canUncheckBoxAfterChecking == false) && hourItem.beforeFood!.isValid" -->
+                        @if(canValid){<input
+                          class="form-check-input checkbox"
+                          title="Nurse validation"
+                          type="checkbox"
+                          [disabled]="
+                            canUncheckBoxAfterChecking == false &&
+                            hourItem.beforeFood!.isValid
+                          "
+                          [checked]="hourItem.beforeFood!.isValid"
+                          (change)="
+                            onIsValidCheckBoxClick($event, hourItem, true)
+                          "
+                          id="flexCheckDefault"
+                        />} @if(canPostValid){<input
+                          class="form-check-input checkbox"
+                          title="Nurse validation"
+                          type="checkbox"
+                          [disabled]="
+                            canUncheckBoxAfterChecking == false &&
+                            hourItem.beforeFood!.isPostValid
+                          "
+                          [checked]="hourItem.beforeFood!.isPostValid"
+                          (change)="
+                            onIsPostValidCheckBoxClick($event, hourItem, true)
+                          "
+                          id="flexCheckDefault"
+                        />}
+                      </div>
                     </div>
                     <mat-divider
                       class="m-1"
@@ -90,14 +127,16 @@
                         $event.preventDefault();
                         onClick(partOfDayIndex, hourIndex, -1, hourItem, false)
                       "
+                      class="parent"
                       title="After food dispense quantity"
                     >
                       <input
                         class="form-control text-center"
                         style="padding: 0%"
+                        [disabled]="isReadOnly"
                         [value]="
-                          hourItem.afterFoodDispenseQuantity
-                            ? hourItem.afterFoodDispenseQuantity
+                          hourItem.afterFood?.DispenseQuantity
+                            ? hourItem.afterFood?.DispenseQuantity
                             : ''
                         "
                         (input)="onInputChange($event)"
@@ -126,6 +165,10 @@
                           )
                         "
                       />
+                      <div class="child d-flex justify-content-evenly ">
+                        @if(canValid){<input class="form-check-input checkbox" title="Nurse validation" type="checkbox" [disabled]="(canUncheckBoxAfterChecking == false) && hourItem.beforeFood!.isValid" [checked]="hourItem.beforeFood!.isValid" (change)="onIsValidCheckBoxClick($event,hourItem,false)" id="flexCheckDefault">}
+                        @if(canPostValid){<input class="form-check-input checkbox" title="Nurse validation" type="checkbox" [disabled]="(canUncheckBoxAfterChecking == false) && hourItem.beforeFood!.isPostValid" [checked]="hourItem.beforeFood!.isPostValid" (change)="onIsPostValidCheckBoxClick($event,hourItem,false)" id="flexCheckDefault">}  
+                    </div>
                     </div>
                   </div>
                 </div>

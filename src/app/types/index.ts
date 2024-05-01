@@ -1,5 +1,5 @@
 import { hourType } from '../components/parts-of-day/parts-of-day.component';
-import { ConsumptionPeriodType } from '../pages/prescription/stp3-add-medication/stp4-add-medication.component';
+import { ConsumptionPeriodType } from '../pages/prescription/stp4-add-medication/stp4-add-medication.component';
 
 export type styleClass = { [klass: string]: any } | null | undefined;
 

@@ -8,7 +8,7 @@ import {
   Stp1PatientSelection,
   patientType,
 } from '../stp1-patient-selection/stp1-patient-selection.component';
-import { Stp2AddMedicationComponent } from '../stp3-add-medication/stp4-add-medication.component';
+import { Stp2AddMedicationComponent } from '../stp4-add-medication/stp4-add-medication.component';
 import { onChipsSelectionEmitType } from '../../../components/chips-select/chips-select.component';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -40,14 +40,14 @@ import { PrescriptionListComponent } from '../prescription-list/prescription-lis
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 1;
-  stepsLimit: number = 4;
+  stepNumber: number = 4;
+  stepsLimit: number = _steps.length;
   selectedDiagnosis: diagnosisType[] = [];
   selectedSymptoms: symptomType[] = [];
   selectedMedications: medicationType[] = [];
   selectedPatient: patientType | undefined;
   isAddDiagnosticPageValid: boolean = false;
-  isAddMedicationPageValid: boolean = false;
+  isAddMedicationPageValid: boolean = true;
   ShowPrescriptionList: boolean = false;
   wizardSteps: wizardStepType[] = _steps;
 
@@ -78,6 +78,7 @@ export class AddPrescriptionComponent {
     if (index > 1 && this.selectedPatient == undefined) return false;
     if (index > 3 && !this.isAddDiagnosticPageValid) return false;
     if (index > 4 && !this.isAddMedicationPageValid) return false;
+    if (index > 5) return false;
     return true;
   };
 
@@ -237,6 +238,12 @@ const _steps: wizardStepType[] = [
     title: 'Add Medication',
     matIconName: '',
     iconClass: 'fa fa-medkit',
+  },
+  {
+    id: 5,
+    title: 'Hospitalization',
+    matIconName: '',
+    iconClass: 'fa fa-hospital-o',
   },
   
 ];
