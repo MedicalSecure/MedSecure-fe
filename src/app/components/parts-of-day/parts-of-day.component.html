@@ -12,7 +12,7 @@
         <div class="d-flex flex-wrap">
           <ng-container
             *ngFor="
-              let partOfDayHours of partsOfDayHours;
+              let partOfDayHours of partsOfDayHoursMapped;
               let partOfDayIndex = index
             "
           >
@@ -29,13 +29,13 @@
                         hourItem.beforeFood?.DispenseQuantity))
                   "
                   class="mr-1 mb-4 cursor-pointer {{
-                    getBackgroundColor(partOfDayIndex)
+                   hourClasses[hourItem.hour]
                   }} color-white"
                   style="width: 2.2rem; height: 4rem; border-radius: 8px"
                 >
                   <div
                     class="card-header p-0 text-center"
-                    [title]="getTitle(partOfDayIndex)"
+                    [title]="partsOfDayNames[hourItem.hour]"
                   >
                     <p class="mb-0 font-weight-normal text-white">
                       {{ hourItem.hour }} H

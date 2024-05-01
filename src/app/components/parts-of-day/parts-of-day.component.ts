@@ -19,41 +19,42 @@ import { FormsModule } from '@angular/forms';
 })
 export class PartsOfDayComponent implements OnInit {
   @Output()
-  partsOfDayHoursChange = new EventEmitter<hourType[][]>();
+  partsOfDayHoursChange = new EventEmitter<hourType[]>();
   @Output()
-  filteredPartsOfDayHoursChange = new EventEmitter<hourType[][]>();
+  filteredPartsOfDayHoursChange = new EventEmitter<hourType[]>();
   @Input()
-  partsOfDayHours: hourType[][] = _initialPartsOfDayHours;
+  partsOfDayHours: hourType[] = _initialPartsOfDayHours;
   @Input() canValid: boolean = false; //role : nurse ==true
   @Input() canPostValid: boolean = false; //role : doctor==true
   @Input() canUncheckBoxAfterChecking: boolean = true;
   @Input() isReadOnly: boolean = false;
   @Input() showAllCases: boolean = true;
 
-  private _partsOfDayNames: string[] = [
-    'Late Night',
-    'Pre-Dawn/Dawn',
-    'Early Morning',
-    'Mid-Morning',
-    'Noon/Midday',
-    'Afternoon',
-    'Mid-Afternoon',
-    'Evening',
-    'Dusk',
-  ];
+  private _partsOfDayHoursMapped: hourType[][];
 
-  private _hourClasses: string[] = [
-    'bg-dark',
-    'bg-info',
-    'bg-info',
-    'bg-success',
-    'bg-warning',
-    'bg-primary',
-    'bg-danger',
-    'bg-warning',
-    'bg-danger',
-    'bg-dark',
-  ];
+  get hourClasses() {
+    return _hourClassesMap;
+  }
+  get partsOfDayNames() {
+    return _partsOfDayNamesMap;
+  }
+
+  get partsOfDayHoursMapped(): hourType[][] {
+    const result: hourType[][] = [];
+    for (const timezone of hoursCategorized) {
+      const timezoneHours: hourType[] = [];
+      for (const hoursNumber of timezone) {
+        for (const hourObj of this.partsOfDayHours) {
+          if (hoursNumber === hourObj.hour) {
+            timezoneHours.push(hourObj);
+          }
+        }
+      }
+      if (timezoneHours.length > 0) result.push(timezoneHours);
+    }
+    this._partsOfDayHoursMapped = result;
+    return result;
+  }
 
   constructor() {}
 
@@ -104,9 +105,9 @@ export class PartsOfDayComponent implements OnInit {
     newValue: hourType
   ) {
     if (this.isReadOnly) return;
-    let oldPartOfDayArray = this.partsOfDayHours[partOfDayIndex];
+    let oldPartOfDayArray = this._partsOfDayHoursMapped[partOfDayIndex];
     oldPartOfDayArray[hourIndex] = newValue;
-    this._emitChanges()
+    this._emitChanges();
   }
 
   getUpdatedHourValue(
@@ -176,7 +177,7 @@ export class PartsOfDayComponent implements OnInit {
   ) {
     if (this.isReadOnly) return;
 
-    let oldPartOfDayArray = this.partsOfDayHours[partOfDayIndex];
+    let oldPartOfDayArray = this._partsOfDayHoursMapped[partOfDayIndex];
     let oldHourObject = oldPartOfDayArray[hourIndex];
     /* this method is just to apply the values from an object to another object without changing the memory id of the 
     destination object, instead of resObj=SrcObj, we will assign their values one by one */
@@ -184,19 +185,7 @@ export class PartsOfDayComponent implements OnInit {
     oldHourObject.afterFood = newValue.afterFood;
     oldHourObject.beforeFood = newValue.beforeFood;
     oldHourObject.hour = newValue.hour;
-    this._emitChanges()
-  }
-
-  getBackgroundColor(index: number): string {
-    return index >= 0 && index < this._hourClasses.length
-      ? this._hourClasses[index]
-      : 'bg-dark';
-  }
-
-  getTitle(index: number) {
-    return index >= 0 && index < this._hourClasses.length
-      ? this._partsOfDayNames[index]
-      : '';
+   //this._emitChanges();
   }
 
   //this function will be called when you are typing in the input field
@@ -256,7 +245,7 @@ export class PartsOfDayComponent implements OnInit {
     if (isBeforeFood == true) newDispenseObject = hourItem.beforeFood!;
     else newDispenseObject = hourItem.afterFood!;
     newDispenseObject.isValid = newValue;
-    this._emitChanges()
+    this._emitChanges();
   }
 
   onIsPostValidCheckBoxClick(
@@ -269,93 +258,139 @@ export class PartsOfDayComponent implements OnInit {
     if (isBeforeFood == true) newDispenseObject = hourItem.beforeFood!;
     else newDispenseObject = hourItem.afterFood!;
     newDispenseObject.isPostValid = newValue;
-    this._emitChanges()
+    this._emitChanges();
   }
-  
 
-  private _emitChanges(){
+  private _emitChanges() {
     // filter empty objects before emitting in some cases
     this.partsOfDayHoursChange.emit(this.partsOfDayHours);
-    let filteredList=this.partsOfDayHours.map(listObj=>{
-      let newObjList=listObj.filter(item=>{
-        let isBeforeFoodEmpty = item.beforeFood == undefined || item.beforeFood.DispenseQuantity == "" || item.beforeFood.DispenseQuantity == undefined ;
-        let isAfterFoodEmpty = item.afterFood == undefined || item.afterFood.DispenseQuantity == "" || item.afterFood.DispenseQuantity == undefined ;
-        if(isBeforeFoodEmpty && isAfterFoodEmpty) return false;
-        return true;
-      })
-      return newObjList;
-    })
-    const finalFilteredList=filteredList.filter(item=> item.length>0) ;
-    console.log(finalFilteredList)
-    debugger;
-    this.filteredPartsOfDayHoursChange.emit(finalFilteredList);
+    let filteredList = this.partsOfDayHours.filter((item) => {
+      let isBeforeFoodEmpty =
+        item.beforeFood == undefined ||
+        item.beforeFood.DispenseQuantity == '' ||
+        item.beforeFood.DispenseQuantity == undefined;
+      let isAfterFoodEmpty =
+        item.afterFood == undefined ||
+        item.afterFood.DispenseQuantity == '' ||
+        item.afterFood.DispenseQuantity == undefined;
+      if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
+      return true;
+    });
+    this.filteredPartsOfDayHoursChange.emit(filteredList);
   }
-  /* private _emitChanges(){
-    // filter empty objects before emitting in some cases
-    let c1= this.canValid==true || this.canPostValid==true ;
-    let c2=this.showAllCases==false || this.isReadOnly == true;
-    if(c1 || c2) {
-      this.partsOfDayHoursChange.emit(this.partsOfDayHours);
-      return;
-    };
-    let filteredList=this.partsOfDayHours.map(listObj=>{
-      let newObjList=listObj.filter(item=>{
-        let isBeforeFoodEmpty = item.beforeFood == undefined || item.beforeFood.DispenseQuantity == "" || item.beforeFood.DispenseQuantity == undefined ;
-        let isAfterFoodEmpty = item.afterFood == undefined || item.afterFood.DispenseQuantity == "" || item.afterFood.DispenseQuantity == undefined ;
-        if(isBeforeFoodEmpty && isAfterFoodEmpty) return false;
-        return true;
-      })
-      return newObjList;
-    })
-    const finalFilteredList=filteredList.filter(item=> item.length>0) ;
-    console.log(finalFilteredList)
-    debugger;
-    this.partsOfDayHoursChange.emit(finalFilteredList);
-  } */
 
   //
   private _fillInitialData(initialData = this.partsOfDayHours) {
     if (this.showAllCases == false) return;
-    this.partsOfDayHours = initialData.map((hourObjList) => {
-      hourObjList = hourObjList.map((hourObj) => {
-        if (hourObj.afterFood == undefined)
-          hourObj.afterFood = {
-            DispenseQuantity: '',
-            isPostValid: false,
-            isValid: false,
-          };
-        if (hourObj.beforeFood == undefined)
-          hourObj.beforeFood = {
-            DispenseQuantity: '',
-            isPostValid: false,
-            isValid: false,
-          };
-        return hourObj;
-      });
-      return hourObjList;
+    this.partsOfDayHours = initialData.map((hourObj) => {
+      if (hourObj.afterFood == undefined)
+        hourObj.afterFood = {
+          DispenseQuantity: '',
+          isPostValid: false,
+          isValid: false,
+        };
+      if (hourObj.beforeFood == undefined)
+        hourObj.beforeFood = {
+          DispenseQuantity: '',
+          isPostValid: false,
+          isValid: false,
+        };
+      return hourObj;
     });
   }
 }
 
-const _initialPartsOfDayHours: hourType[][] = [
-  // Late Night
-  [{ hour: '00' }, { hour: '01' }, { hour: '02' }],
-  // Pre-Dawn/Dawn
-  [{ hour: '03' }, { hour: '04' }, { hour: '05' }],
-  // Early Morning
-  [{ hour: '06' }, { hour: '07' }, { hour: '08' }],
-  // Mid-Morning
-  [{ hour: '09' }, { hour: '10' }, { hour: '11' }],
-  // Noon/Midday
-  [{ hour: '12' }],
-  // Afternoon
-  [{ hour: '13' }, { hour: '14' }, { hour: '15' }],
-  // Mid-Afternoon
-  [{ hour: '16' }, { hour: '17' }],
-  // Evening
-  [{ hour: '18' }, { hour: '19' }, { hour: '20' }, { hour: '21' }],
-  // Dusk
-  [{ hour: '22' }, { hour: '23' }],
+const _initialPartsOfDayHours: hourType[] = [
+  { hour: '00' },
+  { hour: '01' },
+  { hour: '02' },
+  { hour: '03' },
+  { hour: '04' },
+  { hour: '05' },
+  { hour: '06' },
+  { hour: '07' },
+  { hour: '08' },
+  { hour: '09' },
+  { hour: '10' },
+  { hour: '11' },
+  { hour: '12' },
+  { hour: '13' },
+  { hour: '14' },
+  { hour: '15' },
+  { hour: '16' },
+  { hour: '17' },
+  { hour: '18' },
+  { hour: '19' },
+  { hour: '20' },
+  { hour: '21' },
+  { hour: '22' },
+  { hour: '23' },
+];
+
+const _partsOfDayNamesMap: { [hour: string]: string } = {
+  '00': 'Late Night',
+  '01': 'Late Night',
+  '02': 'Late Night',
+  '03': 'Pre-Dawn/Dawn',
+  '04': 'Pre-Dawn/Dawn',
+  '05': 'Pre-Dawn/Dawn',
+  '06': 'Early Morning',
+  '07': 'Early Morning',
+  '08': 'Early Morning',
+  '09': 'Mid-Morning',
+  '10': 'Mid-Morning',
+  '11': 'Mid-Morning',
+  '12': 'Noon/Midday',
+  '13': 'Afternoon',
+  '14': 'Afternoon',
+  '15': 'Afternoon',
+  '16': 'Mid-Afternoon',
+  '17': 'Mid-Afternoon',
+  '18': 'Evening',
+  '19': 'Evening',
+  '20': 'Evening',
+  '21': 'Evening',
+  '22': 'Dusk',
+  '23': 'Dusk',
+};
+
+const _hourClassesMap: { [hour: string]: string } = {
+  '00': 'bg-dark',
+  '01': 'bg-dark',
+  '02': 'bg-dark',
+  '03': 'bg-info',
+  '04': 'bg-info',
+  '05': 'bg-info',
+  '06': 'bg-info',
+  '07': 'bg-info',
+  '08': 'bg-info',
+  '09': 'bg-success',
+  '10': 'bg-success',
+  '11': 'bg-success',
+  '12': 'bg-warning',
+  '13': 'bg-primary',
+  '14': 'bg-primary',
+  '15': 'bg-primary',
+  '16': 'bg-danger',
+  '17': 'bg-danger',
+  '18': 'bg-warning',
+  '19': 'bg-warning',
+  '20': 'bg-warning',
+  '21': 'bg-warning',
+  '22': 'bg-danger',
+  '23': 'bg-danger',
+};
+
+const hoursCategorized = [
+  ['00', '01', '02'], // Late Night
+  ['03', '04', '05'], // Pre-Dawn/Dawn
+  ['06', '07', '08'], // Early Morning
+  ['09', '10', '11'], // Mid-Morning
+  ['12'], // Noon/Midday
+  ['13', '14', '15'], // Afternoon
+  ['16', '17'], // Mid-Afternoon
+  ['18', '19', '20', '21'], // Evening
+  ['22', '23'], // Dusk
 ];
 
 export type hourType = {
