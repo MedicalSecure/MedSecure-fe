@@ -1,3 +1,4 @@
+              <!-- search bar -->
 <div class="form-container">
   <div class="content-wrap p-2">
     <div class="input-group">
@@ -14,10 +15,13 @@
       />
     </div>
 
+
     <br />
     <h4 class="card-title">Add Unit Care</h4>
+          <!-- begin of the form  -->
 
-    <form class="forms-sample">
+    <form class="forms-sample"  [formGroup]="unitCareForm"  (ngSubmit)="onSubmit()">
+           <!-- title -->
       <div class="form-group">
         <label for="Title">Title</label>
         <input
@@ -26,17 +30,22 @@
           id="Title"
           placeholder="Title"
           style="height: 40px"
+          formControlName="Title"
         />
       </div>
+
+                 <!-- Description -->
       <div class="form-group">
         <label for="Description">Description</label>
         <textarea
           class="form-control"
           id="Description"
           placeholder="Description"
+          formControlName="Description"
         ></textarea>
       </div>
 
+                 <!-- type -->
       <div class="form-group">
         Type
         <mat-select
@@ -44,6 +53,7 @@
           class="form-control"
           style="height: 45px"
           [(value)]="selected"
+          formControlName="Type"
         >
           <mat-option value="none">None</mat-option>
           <mat-option value="general">
@@ -61,6 +71,8 @@
           <mat-option> Obstetrics </mat-option>
         </mat-select>
       </div>
+
+           <!-- Personnels -->
       <hr />
       <p class="card-description my-auto">Affect Personnel</p>
       <div class="form-group">
@@ -76,10 +88,13 @@
           [minimumSearchLength]="2"
           [isStartWithSearch]="true"
           [searchPropertyName]="'name'"
+          formControlName="Type"
         ></chips-select>
       </div>
-      <hr class="mb-0" />
 
+           <!-- the Rooms Part -->
+
+      <hr class="mb-0" />
       <div style="display: flex; align-items: center">
         <h6 class="card-description my-auto">Add rooms</h6>
 
@@ -148,8 +163,7 @@
         </div>
       </form>
       <br />
-
-      <button type="submit" class="btn btn-primary me-2" style="color: white;">Submit</button>
+      <button class="btn btn-primary me-2" style="color: white;" type="submit" [disabled]="!unitCareForm.valid">Submit</button>
       <button class="btn btn-light">Cancel</button>
     </form>
   </div>

@@ -2,7 +2,7 @@
   <div class="row">
     @for (card of cards; track card.title;) {
     <div class="col-md-6">
-      <div class="card" (click)="showRooms(card)">
+      <div class="card" >
         <div class="card-body">
           <div style="display: flex; align-items: center">
             <h4 class="card-title" style="margin-right: auto; margin-top: 15px">
@@ -31,14 +31,14 @@
             HealthCare Personnels
           </h3>
 
-          @for (person of card.personnel; track person.name){
+          @for (person of card.personnels; track person.name){
           <div class="image-pers">
             <div href="#" class="icon-div" >
               <img
                 [src]="
-                  person.shift === 'day'
+                  person.shift === 0
                     ? '../../../assets/icons/sun-s.svg'
-                    : person.shift === 'night'
+                    : person.shift === 1
                     ? '../../../assets/icons/moon.svg'
                     : '../../../assets/icons/eclipse-moon-svgrepo-com.svg'
                 "
@@ -54,7 +54,7 @@
 
               <img
                 [src]="
-                  person.gender === 'Male'
+                  person.gender === 1
                     ? '../../../assets/images/men.png'
                     : 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp'
                 "
@@ -62,9 +62,9 @@
                 style="width: 40px"
                 alt="Avatar"
                 [ngClass]="{
-                  'day-shift': person.shift === 'day',
-                  'night-shift': person.shift === 'night',
-                  'half-shift': person.shift === 'half'
+                  'day-shift': person.shift === 1,
+                  'night-shift': person.shift === 2,
+                  'half-shift': person.shift === 3
                 }"
               />
             </div>

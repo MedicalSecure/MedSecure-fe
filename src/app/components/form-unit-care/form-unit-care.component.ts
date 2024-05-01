@@ -32,6 +32,12 @@ export class FormUnitCareComponent {
   });
 
 
+  unitCareForm = new FormGroup({
+    Title: new FormControl(''),
+    Description: new FormControl(''),
+    Type: new FormControl(''),
+  });
+
   constructor(private _formBuilder: FormBuilder)
   {this.form = new FormGroup({
    room: new FormArray([
@@ -43,6 +49,11 @@ export class FormUnitCareComponent {
 
        //Methods
 
+
+       onSubmit() {
+        // TODO: Use EventEmitter with form value
+        console.warn(this.unitCareForm.value);
+      }
   selectedChipsChange(result: onChipsSelectionEmitType<any>) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
@@ -81,3 +92,6 @@ export class FormUnitCareComponent {
     this.selectedRoomEquipments = room.equipments;
 }
 }
+
+
+
