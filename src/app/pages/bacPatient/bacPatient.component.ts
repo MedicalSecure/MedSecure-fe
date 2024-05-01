@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ViewChild, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, Input, OnInit, Type } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox'
@@ -14,13 +14,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ScheduleComponent } from "../../components/schedule/schedule.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommentComponent } from "../../components/comment/comment.component";
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { BacPatientService } from '../../services/bac-patient-services.service';
 
 
 @Component({
@@ -35,7 +35,7 @@ import { HttpClient } from '@angular/common/http';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [RouterModule ,DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, ScheduleComponent, CommentComponent]
+  imports: [RouterModule ,DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
 
@@ -55,6 +55,7 @@ export class BacPatientComponent implements AfterViewInit {
   tomorrow = new Date();
   yesterday = new Date();
   uniqueRooms: any;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
   changeDate(selectedDate: string) {
@@ -63,38 +64,18 @@ export class BacPatientComponent implements AfterViewInit {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()));
    
   }
-  constructor(public dialog: MatDialog , private http: HttpClient) {
+  constructor(public dialog: MatDialog , private http: HttpClient , private bacPatientService :BacPatientService ) {
     const filteredData = ELEMENT_DATA.filter(item => new Date(item.servingDate).toLocaleDateString() === this.todayDate);
     this.dataSource.data = filteredData;
     this.uniqueRooms = this.getRoom(ELEMENT_DATA);
 
   }
   ngOnInit() {
-
-    
-    this.getData();
-  }
-  getData() {
-    this.http.get<BacPatientResponse>('https://localhost:6065/v1/bacPatient')
-      .subscribe(
-        (response: BacPatientResponse) => {
-          console.log('Response:', response);
-          if (response && response && response.data) {
-            this.dataSource.data = response.data;
-            response.data.forEach(element => {
-              console.log(element);
-              ELEMENT_DATA.push(element);
-            });
-          } else {
-            console.error('Invalid response format:', response);
-          }
-        },
-        error => {
-          console.error('Error fetching data:', error);
-        }
-      );
-  }
   
+    
+   this.bacPatientService.getData(this.dataSource);
+  }
+ 
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate() - 1));
     this.today.setDate(this.today.getDate() - 1);
@@ -154,30 +135,38 @@ export class BacPatientComponent implements AfterViewInit {
     }
     return age;
   }
-  
-  onCheckEmitted(checkedNumber: Number, element: bacpatient) {
-    if (!this.checkedItems[parseInt(element.id)]) {
-      this.checkedItems[parseInt(element.id)] = [];
+
+  onCheckEmitted(event: { checkedNumber: number, index: number }, element: bacpatient) {    
+    if (!this.checkedItems[event.index]) {
+      this.checkedItems[event.index] = [];
     }
-    this.checkedItems[parseInt(element.id)].push(checkedNumber);
+    this.checkedItems[event.index].push(event.checkedNumber);
     this.checkednumber = Object.values(this.checkedItems).flat().length;
     let allCheckBoxNumber: number = 0;
     element.medicines.forEach(medicine => {
-      allCheckBoxNumber += medicine.posology.length;
+      medicine.posology.forEach(pos=>{
+        allCheckBoxNumber = pos.hours.length ;
+      })
+      
     });
-    console.log(this.checkednumber);
-    if (this.checkedItems[parseInt(element.id)].length !== 0) {
+   
+    if (this.checkedItems[event.index].length !== 0) {
       const patientToUpdate = this.dataSource.data.find(patient => patient.id == element.id);
       if (patientToUpdate) {
-        patientToUpdate.status = 0;
-        if (this.checkedItems[parseInt(element.id)].length === allCheckBoxNumber) {
-          patientToUpdate.status = 1;
-          this.checkedItems[parseInt(element.id)] = [];
+        patientToUpdate.status = 1;
+        if (this.checkedItems[event.index].length === allCheckBoxNumber) {
+          patientToUpdate.status = 2;
+          this.checkedItems[event.index] = [];
           this.checkednumber = Object.values(this.checkedItems).flat().length;
         }
       }
     }
+    console.log("allCheckBoxNumberallCheckBoxNumber"+allCheckBoxNumber === this.checkedItems[event.index] );
+  
   }
+
+
+  
   getRouteImage(route: number): string {
     switch (route) {
       case 0:
@@ -280,6 +269,18 @@ export interface BacPatientResponse {
     count: number;
     data: bacpatient[];
   
+}
+export type hourType = {
+  hour: string ; 
+  beforeFood? : dispense ; 
+  afterFood? : dispense ;
+
+}
+export type dispense = {
+DispenseQuantity? : string ; 
+isValid : boolean ;
+isPostValid:boolean ; 
+takeMeal? : boolean ; 
 }
 
 export interface bacpatient {
@@ -625,3 +626,5 @@ export let ELEMENT_DATA : bacpatient[] = [
     servingDate: new Date()
   }*/
 ];
+
+

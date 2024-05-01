@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { bacpatient } from '../../pages/bacPatient/bacPatient.component';
 import { HttpClient } from '@angular/common/http';
+import { BacPatientService } from '../../services/bac-patient-services.service';
 @Component({
   selector: 'app-comment',
   standalone: true,
@@ -13,7 +14,7 @@ export class CommentComponent {
   @Input()DATA: bacpatient;
   @Input() id : string ; 
   todayDate: string = new Date().getDate().toString();
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient , private bacPatientService :BacPatientService) {
 
 
   }
@@ -24,21 +25,10 @@ export class CommentComponent {
       this.note = this.note;
       commentInput.value = '';
     }
-  this.updateComment(this.id , newComment )
+   this.bacPatientService.updateComment(this.id , newComment )
 
-  
-   
+
   }
-  updateComment( id : string ,note:string){
-    const body = { Id: id, Note: note };
-    return this.http.put('https://localhost:6065/v1/bacPatient/note', body).subscribe(response => {
-      console.log('Response:', response); // Log the response
-    },
-    error => {
-      console.error('Error:', error); // Log any error
-    }
-  );
-
-   }
+ 
 
 }
