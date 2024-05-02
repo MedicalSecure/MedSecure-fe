@@ -30,7 +30,7 @@ export class ScheduleComponent implements OnInit {
   filteredPartsOfDayHoursChange = new EventEmitter<Dispense[]>();
   @Input()
   partsOfDayHours: Dispense[] = _initialPartsOfDayHours;
-  @Input() canValid: boolean = true; //role : nurse ==true
+  @Input() canValid: boolean = false; //role : nurse ==true
   @Input() canPostValid: boolean = false; //role : doctor==true
   @Input() canUncheckBoxAfterChecking: boolean = false;
   @Input() isDispenseQuantityReadOnly: boolean = true;
