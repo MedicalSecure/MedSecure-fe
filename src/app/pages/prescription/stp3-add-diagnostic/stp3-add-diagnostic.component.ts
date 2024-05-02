@@ -9,22 +9,22 @@ import {
 import { HumanBodyViewerComponent } from '../human-body-viewer/human-body-viewer.component';
 import { CommonModule } from '@angular/common';
 import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
-import { Stp2PatientDetailsComponent } from "../stp2-patient-details/stp2-patient-details.component";
+import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 
 @Component({
-    selector: 'app-stp3-add-diagnostic',
-    standalone: true,
-    templateUrl: './stp3-add-diagnostic.component.html',
-    styleUrl: './stp3-add-diagnostic.component.css',
-    imports: [
-        FormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ShipsSelectComponent,
-        HumanBodyViewerComponent,
-        CommonModule,
-        Stp2PatientDetailsComponent
-    ]
+  selector: 'app-stp3-add-diagnostic',
+  standalone: true,
+  templateUrl: './stp3-add-diagnostic.component.html',
+  styleUrl: './stp3-add-diagnostic.component.css',
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ShipsSelectComponent,
+    HumanBodyViewerComponent,
+    CommonModule,
+    Stp2PatientDetailsComponent,
+  ],
 })
 export class Stp3AddDiagnosticComponent {
   @Input() selectedPatient: patientType | undefined;
@@ -40,14 +40,13 @@ export class Stp3AddDiagnosticComponent {
 
   selectedDiagnosis: diagnosisType[] = [];
   selectedSymptoms: symptomType[] = [];
-  @Input() diagnosesData=diagnosesData;
-  @Input() symptomsData=symptomsData;
+  @Input() diagnosesData = diagnosesData;
+  @Input() symptomsData = symptomsData;
 
   ngOnInit() {
     this.onIsPageValidChange();
   }
 
-  
   selectedSymptomsChipsChange(result: onChipsSelectionEmitType<symptomType>) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
@@ -64,7 +63,7 @@ export class Stp3AddDiagnosticComponent {
   }
 
   selectedDiagnosisChipsChange(
-    result: onChipsSelectionEmitType<diagnosisType>
+    result: onChipsSelectionEmitType<diagnosisType>,
   ) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
@@ -86,7 +85,7 @@ export class Stp3AddDiagnosticComponent {
     const areSymptomsValid =
       this.selectedSymptoms.length >= this.minimumRequiredSymptoms;
     this.onIsAddSymptomsPageValidChange.emit(
-      areDiagnosisValid && areSymptomsValid
+      areDiagnosisValid && areSymptomsValid,
     );
   }
 }

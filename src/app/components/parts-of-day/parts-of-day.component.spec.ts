@@ -8,10 +8,9 @@ describe('PartsOfDayComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PartsOfDayComponent]
-    })
-    .compileComponents();
-    
+      imports: [PartsOfDayComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PartsOfDayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

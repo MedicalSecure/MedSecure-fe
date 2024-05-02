@@ -20,10 +20,6 @@ export class Stp2PatientDetailsComponent {
 
   onClickEditMedication(x: any, y: any) {}
   onClickRemoveMedication(x: any, y: any) {}
-
 }
 
-const dummyData: medicationType[] = [
-  
-];
-
+const dummyData: medicationType[] = [];

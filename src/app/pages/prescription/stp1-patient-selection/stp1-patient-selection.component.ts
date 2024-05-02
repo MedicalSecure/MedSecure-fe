@@ -13,11 +13,7 @@ import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-n
 @Component({
   selector: 'app-stp1-patient-selection',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    FilterPatientByNameAndSnPipe,
-  ],
+  imports: [CommonModule, FormsModule, FilterPatientByNameAndSnPipe],
   templateUrl: './stp1-patient-selection.component.html',
   styleUrl: './stp1-patient-selection.component.css',
 })
@@ -28,16 +24,86 @@ export class Stp1PatientSelection implements OnChanges {
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   dataList: patientType[] = [
-    { sn: '001', name: 'John', sex: 'Male', age: 30, height: 180, registrationDate:new Date() },
-    { sn: '002', name: 'Jane', sex: 'Female', age: 25, height: 165,registrationDate:new Date() },
-    { sn: '003', name: 'Alice', sex: 'Female', age: 28, height: 170, registrationDate:new Date() },
-    { sn: '004', name: 'Bob', sex: 'Male', age: 35, height: 175, registrationDate:new Date() },
-    { sn: '005', name: 'Eve', sex: 'Female', age: 22, height: 160, registrationDate:new Date() },
-    { sn: '006', name: 'Mike', sex: 'Male', age: 32, height: 185, registrationDate:new Date() },
-    { sn: '007', name: 'Sarah', sex: 'Female', age: 27, height: 168, registrationDate:new Date() },
-    { sn: '008', name: 'David', sex: 'Male', age: 29, height: 176, registrationDate:new Date() },
-    { sn: '009', name: 'Emily', sex: 'Female', age: 31, height: 162, registrationDate:new Date() },
-    { sn: '010', name: 'Alex', sex: 'Male', age: 26, height: 178, registrationDate:new Date() },
+    {
+      sn: '001',
+      name: 'John',
+      sex: 'Male',
+      age: 30,
+      height: 180,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '002',
+      name: 'Jane',
+      sex: 'Female',
+      age: 25,
+      height: 165,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '003',
+      name: 'Alice',
+      sex: 'Female',
+      age: 28,
+      height: 170,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '004',
+      name: 'Bob',
+      sex: 'Male',
+      age: 35,
+      height: 175,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '005',
+      name: 'Eve',
+      sex: 'Female',
+      age: 22,
+      height: 160,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '006',
+      name: 'Mike',
+      sex: 'Male',
+      age: 32,
+      height: 185,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '007',
+      name: 'Sarah',
+      sex: 'Female',
+      age: 27,
+      height: 168,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '008',
+      name: 'David',
+      sex: 'Male',
+      age: 29,
+      height: 176,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '009',
+      name: 'Emily',
+      sex: 'Female',
+      age: 31,
+      height: 162,
+      registrationDate: new Date(),
+    },
+    {
+      sn: '010',
+      name: 'Alex',
+      sex: 'Male',
+      age: 26,
+      height: 178,
+      registrationDate: new Date(),
+    },
   ];
   checked: boolean = true;
   searchTerm: string = '';
@@ -62,5 +128,5 @@ export type patientType = {
   sex: string;
   age: number;
   height: number;
-  registrationDate:Date;
+  registrationDate: Date;
 };

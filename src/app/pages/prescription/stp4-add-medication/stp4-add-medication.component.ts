@@ -71,7 +71,7 @@ import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patien
     Stp2PatientDetailsComponent,
   ],
 })
-export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
+export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   @Input()
   selectedPatient: patientType | undefined;
   /* on click finish listener */
@@ -104,11 +104,11 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
       .get('medicationNameInputFormControl')!
       .valueChanges.pipe(
         startWith(''),
-        map((value) => this._filterGroup(value || ''))
+        map((value) => this._filterGroup(value || '')),
       );
 
     this.finishEventSubscription = this.events.subscribe(() =>
-      this.onClickFinish()
+      this.onClickFinish(),
     );
 
     /* if is caution enabled by default => add a caution comment at the beginning of the array  */
@@ -135,8 +135,8 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     this.isSelectedForceOrder = group.option.group.label === 'out of stock';
   }
 
-  HandleScheduleChange(FilteredHoursList:Dispense[]){
-    console.log(FilteredHoursList)
+  HandleScheduleChange(FilteredHoursList: Dispense[]) {
+    console.log(FilteredHoursList);
   }
   onIsCautionEnabledChange(caution: boolean) {
     this.isCautionEnabled = caution;
@@ -230,7 +230,7 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     }
     this.isEditingMode = true;
     this.prescribedMedications = this.prescribedMedications.filter(
-      (item, i) => index != i
+      (item, i) => index != i,
     );
     this.selectedMedication = medication;
     this.medicationFormGroup.setValue({
@@ -242,7 +242,7 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
       (item, i) => {
         if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
         return index != i;
-      }
+      },
     );
     console.log('result ' + this.isFilteredForceOrder);
   }
@@ -320,20 +320,20 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     let numberOfComments: number = 0;
     let numberOfCautions: number = 0;
     medication.administrationHours.forEach((hourObj) => {
-        if (hourObj.beforeMeal?.Quantity) {
-          const beforeFQ = parseInt(hourObj.beforeMeal?.Quantity);
-          beforeFoodCounter += beforeFQ;
-          timesADayCounter++;
-          if (beforeFQ > maximumDispenseQuantity)
-            maximumDispenseQuantity = beforeFQ;
-        }
-        if (hourObj.afterMeal?.Quantity) {
-          const afterFQ = parseInt(hourObj.afterMeal?.Quantity);
-          afterFoodCounter += afterFQ;
-          timesADayCounter++;
-          if (afterFQ > maximumDispenseQuantity)
-            maximumDispenseQuantity = afterFQ;
-        }
+      if (hourObj.beforeMeal?.Quantity) {
+        const beforeFQ = parseInt(hourObj.beforeMeal?.Quantity);
+        beforeFoodCounter += beforeFQ;
+        timesADayCounter++;
+        if (beforeFQ > maximumDispenseQuantity)
+          maximumDispenseQuantity = beforeFQ;
+      }
+      if (hourObj.afterMeal?.Quantity) {
+        const afterFQ = parseInt(hourObj.afterMeal?.Quantity);
+        afterFoodCounter += afterFQ;
+        timesADayCounter++;
+        if (afterFQ > maximumDispenseQuantity)
+          maximumDispenseQuantity = afterFQ;
+      }
     });
     medication.comments.forEach((comment) => {
       if (comment.label === 'Caution') numberOfCautions++;
@@ -397,7 +397,7 @@ export type ConsumptionPeriodType = {
 
 export const _filterInputAutoCompleteOptions = (
   opt: string[],
-  value: string
+  value: string,
 ): string[] => {
   const filterValue = value.toLowerCase();
   return opt.filter((item) => item.toLowerCase().includes(filterValue));
@@ -439,7 +439,7 @@ function _getFormInitialValues(): medicationType {
 }
 
 function _getACopyOfAdministrationHours(
-  source = _initialPartsOfDayHours
+  source = _initialPartsOfDayHours,
 ): Dispense[] {
   /* get a copy of the objects one by one to change their memory id; */
   let result: Dispense[] = [];
@@ -458,7 +458,7 @@ function getInitialDateRange(startDay = new Date()): [Date, Date] {
   return [startDay, twoWeeksLater];
 }
 
-const _initialPartsOfDayHours: Dispense[]= [
+const _initialPartsOfDayHours: Dispense[] = [
   { hour: '00' },
   { hour: '01' },
   { hour: '02' },

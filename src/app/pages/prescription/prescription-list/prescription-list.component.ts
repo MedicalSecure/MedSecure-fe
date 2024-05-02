@@ -15,7 +15,13 @@ import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-n
 @Component({
   selector: 'app-prescription-list',
   standalone: true,
-  imports: [CommonModule, FormsModule,FilterPatientByNameAndSnPipe,MatIcon,RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    FilterPatientByNameAndSnPipe,
+    MatIcon,
+    RouterModule,
+  ],
   templateUrl: './prescription-list.component.html',
   styleUrl: './prescription-list.component.css',
 })
@@ -109,7 +115,6 @@ export class PrescriptionListComponent {
   checked: boolean = true;
   searchTerm: string = '';
 
-
   onClickPrescription(Prescription: any) {
     this.selectedPrescription = Prescription;
   }
@@ -122,7 +127,7 @@ export class PrescriptionListComponent {
     }
   }
 
-  onClickNewPrescription(){
+  onClickNewPrescription() {
     this.onClickNewPrescriptionEvent.emit(false);
     this.onClickPrescription(undefined);
   }

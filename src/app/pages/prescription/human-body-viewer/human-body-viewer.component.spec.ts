@@ -8,10 +8,9 @@ describe('HumanBodyViewerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HumanBodyViewerComponent]
-    })
-    .compileComponents();
-    
+      imports: [HumanBodyViewerComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(HumanBodyViewerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

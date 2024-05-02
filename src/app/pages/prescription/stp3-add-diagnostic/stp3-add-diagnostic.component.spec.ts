@@ -8,10 +8,9 @@ describe('AddSymptomsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddSymptomsComponent]
-    })
-    .compileComponents();
-    
+      imports: [AddSymptomsComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AddSymptomsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

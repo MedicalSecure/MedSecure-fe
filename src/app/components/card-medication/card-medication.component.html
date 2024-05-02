@@ -2,9 +2,9 @@
   <div [ngClass]="CardBodyClass">
     <h4 [ngClass]="CardTitleClass">{{ title }}</h4>
     <ul [ngClass]="ULClass">
-      @for(medication of medicationList;track $index){
-      <li>
-<!--         <div class="mb-0 content-limit-vw">
+      @for (medication of medicationList; track $index) {
+        <li>
+          <!--         <div class="mb-0 content-limit-vw">
           <div [ngClass]="TitleAndIconsClass">
             <span
               (click)="canEdit && onClickEditMedication($index, medication)"
@@ -62,7 +62,7 @@
           </p>
           }
         </div> -->
-      </li>
+        </li>
       }
     </ul>
   </div>

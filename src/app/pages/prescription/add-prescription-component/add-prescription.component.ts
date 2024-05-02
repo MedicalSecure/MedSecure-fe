@@ -8,7 +8,7 @@ import {
   Stp1PatientSelection,
   patientType,
 } from '../stp1-patient-selection/stp1-patient-selection.component';
-import { Stp2AddMedicationComponent } from '../stp4-add-medication/stp4-add-medication.component';
+import { Stp4AddMedicationComponent } from '../stp4-add-medication/stp4-add-medication.component';
 import { onChipsSelectionEmitType } from '../../../components/chips-select/chips-select.component';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -28,13 +28,13 @@ import { PrescriptionListComponent } from '../prescription-list/prescription-lis
   imports: [
     Stp3AddDiagnosticComponent,
     Stp1PatientSelection,
-    Stp2AddMedicationComponent,
+    Stp4AddMedicationComponent,
     MatIcon,
     WizardHeaderComponent,
     Stp2PatientDetailsComponent,
     RouterModule,
     CommonModule,
-    PrescriptionListComponent
+    PrescriptionListComponent,
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
@@ -96,12 +96,12 @@ export class AddPrescriptionComponent {
   }
 
   onSelectedDiagnosisChangeHandler(
-    event: onChipsSelectionEmitType<diagnosisType>
+    event: onChipsSelectionEmitType<diagnosisType>,
   ) {
     this.selectedDiagnosis = event.SelectedObjectList;
   }
   onSelectedSymptomsChangeHandler(
-    event: onChipsSelectionEmitType<symptomType>
+    event: onChipsSelectionEmitType<symptomType>,
   ) {
     this.selectedSymptoms = event.SelectedObjectList;
   }
@@ -120,8 +120,8 @@ export class AddPrescriptionComponent {
     this._updateButtonsState();
   }
 
-  onClickNewPrescriptionEventHandler(viewPrescriptions:boolean){
-    this.ShowPrescriptionList=viewPrescriptions;
+  onClickNewPrescriptionEventHandler(viewPrescriptions: boolean) {
+    this.ShowPrescriptionList = viewPrescriptions;
   }
 
   onClickViewPrescriptions() {
@@ -245,5 +245,4 @@ const _steps: wizardStepType[] = [
     matIconName: '',
     iconClass: 'fa fa-hospital-o',
   },
-  
 ];

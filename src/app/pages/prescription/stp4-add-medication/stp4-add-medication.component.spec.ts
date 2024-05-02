@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrescribeMedicationComponent } from './stp4-add-medication.component';
+import { Stp4AddMedicationComponent } from './stp4-add-medication.component';
 
-describe('PrescribeMedicationComponent', () => {
-  let component: PrescribeMedicationComponent;
-  let fixture: ComponentFixture<PrescribeMedicationComponent>;
+describe('Stp4AddMedicationComponent', () => {
+  let component: Stp4AddMedicationComponent;
+  let fixture: ComponentFixture<Stp4AddMedicationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PrescribeMedicationComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(PrescribeMedicationComponent);
+      imports: [Stp4AddMedicationComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(Stp4AddMedicationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

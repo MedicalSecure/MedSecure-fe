@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output,OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 import { DatepickerRangePopupComponent } from '../datepicker-range-popup/datepicker-range-popup.component';
@@ -30,7 +38,7 @@ export class PartsOfDayComponent implements OnInit {
   @Input() isDispenseQuantityReadOnly: boolean = true;
   @Input() showEmptyCases: boolean = false;
 
-  persistCache:boolean=true;
+  persistCache: boolean = true;
   private _partsOfDayHoursMapped: Dispense[][];
 
   get hourClasses() {
@@ -42,9 +50,10 @@ export class PartsOfDayComponent implements OnInit {
 
   get partsOfDayHoursMapped(): Dispense[][] {
     //this line is for using the cached variable for performance issues
-    if(this._partsOfDayHoursMapped!=undefined && this.persistCache) return this._partsOfDayHoursMapped;
-    this.persistCache=true;
-    //update the cached variable 
+    if (this._partsOfDayHoursMapped != undefined && this.persistCache)
+      return this._partsOfDayHoursMapped;
+    this.persistCache = true;
+    //update the cached variable
     const result: Dispense[][] = [];
     for (const timezone of hoursCategorized) {
       const timezoneHours: Dispense[] = [];
@@ -74,47 +83,34 @@ export class PartsOfDayComponent implements OnInit {
 
       //make the getter ( get partsOfDayHoursMapped ) on waiting state for the next input changes
       //so the next input change will force remap the objects in the getter
-      this.persistCache=false;
+      this.persistCache = false;
       //Do the changes that the getter is waiting for
-      this._fillInitialData(this.partsOfDayHours)
+      this._fillInitialData(this.partsOfDayHours);
     }
   }
 
-  onClick(
-    increment: number,
-    HourObject: Dispense,
-    isBeforeFood: boolean
-  ) {
+  onClick(increment: number, HourObject: Dispense, isBeforeFood: boolean) {
     if (this.isDispenseQuantityReadOnly) return;
-    this.updateHourValue(
-      HourObject,
-      isBeforeFood,
-      increment
-    );
+    this.updateHourValue(HourObject, isBeforeFood, increment);
     this._emitChanges();
   }
 
   onScroll(
     event: WheelEvent,
     HourObject: Dispense,
-    isBeforeFood: boolean = false
+    isBeforeFood: boolean = false,
   ) {
     if (this.isDispenseQuantityReadOnly) return;
     let increment = event.deltaY < 0 ? 1 : -1;
-    this.updateHourValue(
-      HourObject,
-      isBeforeFood,
-      increment
-    );
+    this.updateHourValue(HourObject, isBeforeFood, increment);
     this._emitChanges();
   }
-
 
   updateHourValue(
     HourObject: Dispense,
     isBeforeFood: boolean,
     increment: number,
-    newHourValue?: number
+    newHourValue?: number,
   ): Dispense {
     let newHourObject = { ...HourObject };
     let oldValue = 0;
@@ -170,7 +166,6 @@ export class PartsOfDayComponent implements OnInit {
     return newHourObject;
   }
 
-
   //this function will be called when you are typing in the input field
   //it will print only numbers and filter other chars
   onInputChange(event: any) {
@@ -198,7 +193,7 @@ export class PartsOfDayComponent implements OnInit {
     partOfDayIndex: number,
     hourIndex: number,
     HourObject: Dispense,
-    isBeforeFood: boolean = true
+    isBeforeFood: boolean = true,
   ) {
     if (this.isDispenseQuantityReadOnly) return;
 
@@ -209,7 +204,7 @@ export class PartsOfDayComponent implements OnInit {
       HourObject,
       isBeforeFood,
       0,
-      parsedHourValue
+      parsedHourValue,
     );
     this._emitChanges();
   }
@@ -217,7 +212,7 @@ export class PartsOfDayComponent implements OnInit {
   onIsValidCheckBoxClick(
     event: any,
     hourItem: Dispense,
-    isBeforeFood: boolean
+    isBeforeFood: boolean,
   ) {
     let newDispenseObject: Dose;
     let newValue: boolean = event.target.checked;
@@ -230,7 +225,7 @@ export class PartsOfDayComponent implements OnInit {
   onIsPostValidCheckBoxClick(
     event: any,
     hourItem: Dispense,
-    isBeforeFood: boolean
+    isBeforeFood: boolean,
   ) {
     let newDispenseObject: Dose;
     let newValue: boolean = event.target.checked;

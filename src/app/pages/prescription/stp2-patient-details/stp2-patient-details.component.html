@@ -1,9 +1,8 @@
 <div class="d-flex flex-row flex-wrap gap-2 justify-content-center align-middle mt-md-3">
   <div class="col-12">
-    @if(medication.length > 0)
-    {
-    <!-- Current Added medications card -->
-    <app-card-medication [medicationList]="medication" [containerClass]="'card mb-2 py-2'"></app-card-medication>
+    @if (medication.length > 0) {
+      <!-- Current Added medications card -->
+      <app-card-medication [medicationList]="medication" [containerClass]="'card mb-2 py-2'"></app-card-medication>
     }
   </div>
 
@@ -51,4 +50,3 @@
     </div>
   </div>
 </div>
-
