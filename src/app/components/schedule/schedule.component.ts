@@ -4,13 +4,11 @@ import {
   Input,
   OnInit,
   Output,
-  OnChanges,
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 import { DatepickerRangePopupComponent } from '../datepicker-range-popup/datepicker-range-popup.component';
-import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -32,7 +30,7 @@ export class ScheduleComponent implements OnInit {
   filteredPartsOfDayHoursChange = new EventEmitter<Dispense[]>();
   @Input()
   partsOfDayHours: Dispense[] = _initialPartsOfDayHours;
-  @Input() canValid: boolean = false; //role : nurse ==true
+  @Input() canValid: boolean = true; //role : nurse ==true
   @Input() canPostValid: boolean = false; //role : doctor==true
   @Input() canUncheckBoxAfterChecking: boolean = false;
   @Input() isDispenseQuantityReadOnly: boolean = true;
@@ -98,7 +96,7 @@ export class ScheduleComponent implements OnInit {
   onScroll(
     event: WheelEvent,
     HourObject: Dispense,
-    isBeforeFood: boolean = false,
+    isBeforeFood: boolean = false
   ) {
     if (this.isDispenseQuantityReadOnly) return;
     let increment = event.deltaY < 0 ? 1 : -1;
@@ -110,7 +108,7 @@ export class ScheduleComponent implements OnInit {
     HourObject: Dispense,
     isBeforeFood: boolean,
     increment: number,
-    newHourValue?: number,
+    newHourValue?: number
   ): Dispense {
     let newHourObject = { ...HourObject };
     let oldValue = 0;
@@ -193,7 +191,7 @@ export class ScheduleComponent implements OnInit {
     partOfDayIndex: number,
     hourIndex: number,
     HourObject: Dispense,
-    isBeforeFood: boolean = true,
+    isBeforeFood: boolean = true
   ) {
     if (this.isDispenseQuantityReadOnly) return;
 
@@ -204,7 +202,7 @@ export class ScheduleComponent implements OnInit {
       HourObject,
       isBeforeFood,
       0,
-      parsedHourValue,
+      parsedHourValue
     );
     this._emitChanges();
   }
@@ -212,7 +210,7 @@ export class ScheduleComponent implements OnInit {
   onIsValidCheckBoxClick(
     event: any,
     hourItem: Dispense,
-    isBeforeFood: boolean,
+    isBeforeFood: boolean
   ) {
     let newDispenseObject: Dose;
     let newValue: boolean = event.target.checked;
@@ -225,7 +223,7 @@ export class ScheduleComponent implements OnInit {
   onIsPostValidCheckBoxClick(
     event: any,
     hourItem: Dispense,
-    isBeforeFood: boolean,
+    isBeforeFood: boolean
   ) {
     let newDispenseObject: Dose;
     let newValue: boolean = event.target.checked;
