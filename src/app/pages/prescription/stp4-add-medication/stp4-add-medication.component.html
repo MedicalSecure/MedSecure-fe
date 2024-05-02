@@ -57,7 +57,10 @@
       <!-- <app-medication-search></app-medication-search> -->
 
       <!-- part of day -->
-      <app-parts-of-day (filteredPartsOfDayHoursChange)="HandleScheduleChange($event)" [partsOfDayHours]="selectedMedication.administrationHours"
+      <app-parts-of-day (filteredPartsOfDayHoursChange)="HandleScheduleChange($event)" 
+      [partsOfDayHours]="selectedMedication.administrationHours"
+      [isDispenseQuantityReadOnly]="false"
+      [showEmptyCases]="true"
       ></app-parts-of-day>
       <!-- period -->
       <div

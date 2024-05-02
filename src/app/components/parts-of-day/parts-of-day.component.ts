@@ -19,19 +19,19 @@ import { FormsModule } from '@angular/forms';
 })
 export class PartsOfDayComponent implements OnInit {
   @Output()
-  partsOfDayHoursChange = new EventEmitter<hourType[]>();
+  partsOfDayHoursChange = new EventEmitter<Dispense[]>();
   @Output()
-  filteredPartsOfDayHoursChange = new EventEmitter<hourType[]>();
+  filteredPartsOfDayHoursChange = new EventEmitter<Dispense[]>();
   @Input()
-  partsOfDayHours: hourType[] = _initialPartsOfDayHours;
-  @Input() canValid: boolean = true; //role : nurse ==true
-  @Input() canPostValid: boolean = true; //role : doctor==true
-  @Input() canUncheckBoxAfterChecking: boolean = true;
-  @Input() isDispenseQuantityReadOnly: boolean = false;
-  @Input() showEmptyCases: boolean = true;
+  partsOfDayHours: Dispense[] = _initialPartsOfDayHours;
+  @Input() canValid: boolean = false; //role : nurse ==true
+  @Input() canPostValid: boolean = false; //role : doctor==true
+  @Input() canUncheckBoxAfterChecking: boolean = false;
+  @Input() isDispenseQuantityReadOnly: boolean = true;
+  @Input() showEmptyCases: boolean = false;
 
   persistCache:boolean=true;
-  private _partsOfDayHoursMapped: hourType[][];
+  private _partsOfDayHoursMapped: Dispense[][];
 
   get hourClasses() {
     return _hourClassesMap;
@@ -40,14 +40,14 @@ export class PartsOfDayComponent implements OnInit {
     return _partsOfDayNamesMap;
   }
 
-  get partsOfDayHoursMapped(): hourType[][] {
+  get partsOfDayHoursMapped(): Dispense[][] {
     //this line is for using the cached variable for performance issues
     if(this._partsOfDayHoursMapped!=undefined && this.persistCache) return this._partsOfDayHoursMapped;
     this.persistCache=true;
     //update the cached variable 
-    const result: hourType[][] = [];
+    const result: Dispense[][] = [];
     for (const timezone of hoursCategorized) {
-      const timezoneHours: hourType[] = [];
+      const timezoneHours: Dispense[] = [];
       for (const hoursNumber of timezone) {
         for (const hourObj of this.partsOfDayHours) {
           if (hoursNumber === hourObj.hour) {
@@ -82,7 +82,7 @@ export class PartsOfDayComponent implements OnInit {
 
   onClick(
     increment: number,
-    HourObject: hourType,
+    HourObject: Dispense,
     isBeforeFood: boolean
   ) {
     if (this.isDispenseQuantityReadOnly) return;
@@ -96,7 +96,7 @@ export class PartsOfDayComponent implements OnInit {
 
   onScroll(
     event: WheelEvent,
-    HourObject: hourType,
+    HourObject: Dispense,
     isBeforeFood: boolean = false
   ) {
     if (this.isDispenseQuantityReadOnly) return;
@@ -111,11 +111,11 @@ export class PartsOfDayComponent implements OnInit {
 
 
   updateHourValue(
-    HourObject: hourType,
+    HourObject: Dispense,
     isBeforeFood: boolean,
     increment: number,
     newHourValue?: number
-  ): hourType {
+  ): Dispense {
     let newHourObject = { ...HourObject };
     let oldValue = 0;
     // this function is created to increment the values of the inputs, which are stored as strings
@@ -123,18 +123,18 @@ export class PartsOfDayComponent implements OnInit {
     // if the values is 0 => parse it into EmptyString ""
 
     if (isBeforeFood) {
-      if (newHourObject.beforeFood?.DispenseQuantity != undefined) {
+      if (newHourObject.beforeMeal?.Quantity != undefined) {
         try {
-          oldValue = parseInt(newHourObject.beforeFood?.DispenseQuantity || '');
+          oldValue = parseInt(newHourObject.beforeMeal?.Quantity || '');
           if (Number.isNaN(oldValue)) oldValue = 0;
         } catch (error) {
           oldValue = 0;
         }
       }
     } else {
-      if (newHourObject.afterFood?.DispenseQuantity != undefined) {
+      if (newHourObject.afterMeal?.Quantity != undefined) {
         try {
-          oldValue = parseInt(newHourObject.afterFood?.DispenseQuantity || '');
+          oldValue = parseInt(newHourObject.afterMeal?.Quantity || '');
           if (Number.isNaN(oldValue)) oldValue = 0;
         } catch (error) {
           oldValue = 0;
@@ -145,25 +145,25 @@ export class PartsOfDayComponent implements OnInit {
       newHourValue != undefined ? newHourValue : oldValue + increment;
     let finalValue: string = newHoursValue > 0 ? newHoursValue.toString() : '';
     if (isBeforeFood) {
-      if (newHourObject.beforeFood == undefined) {
-        newHourObject.beforeFood = {
-          DispenseQuantity: finalValue,
+      if (newHourObject.beforeMeal == undefined) {
+        newHourObject.beforeMeal = {
+          Quantity: finalValue,
           isPostValid: false,
           isValid: false,
         };
       } else {
-        newHourObject.beforeFood.DispenseQuantity = finalValue;
+        newHourObject.beforeMeal.Quantity = finalValue;
       }
     }
     if (!isBeforeFood) {
-      if (newHourObject.afterFood == undefined) {
-        newHourObject.afterFood = {
-          DispenseQuantity: finalValue,
+      if (newHourObject.afterMeal == undefined) {
+        newHourObject.afterMeal = {
+          Quantity: finalValue,
           isPostValid: false,
           isValid: false,
         };
       } else {
-        newHourObject.afterFood.DispenseQuantity = finalValue;
+        newHourObject.afterMeal.Quantity = finalValue;
       }
     }
 
@@ -190,14 +190,14 @@ export class PartsOfDayComponent implements OnInit {
    * @param {any} $event - The event object triggered by the input change.
    * @param {number} partOfDayIndex - The index representing the part of the day.
    * @param {number} hourIndex - The index representing the hour.
-   * @param {hourType} HourObject - The object containing the hour data.
+   * @param {Dispense} HourObject - The object containing the hour data.
    * @param {boolean} [isBeforeFood=true] - Optional parameter indicating if it's before food.
    */
   onInputFinalChange(
     $event: any,
     partOfDayIndex: number,
     hourIndex: number,
-    HourObject: hourType,
+    HourObject: Dispense,
     isBeforeFood: boolean = true
   ) {
     if (this.isDispenseQuantityReadOnly) return;
@@ -205,7 +205,7 @@ export class PartsOfDayComponent implements OnInit {
     const newHourValue: string = $event.target.value;
     const parsedHourValue: number =
       newHourValue != '' ? parseInt(newHourValue) : 0;
-    let newValue: hourType = this.updateHourValue(
+    let newValue: Dispense = this.updateHourValue(
       HourObject,
       isBeforeFood,
       0,
@@ -216,26 +216,26 @@ export class PartsOfDayComponent implements OnInit {
 
   onIsValidCheckBoxClick(
     event: any,
-    hourItem: hourType,
+    hourItem: Dispense,
     isBeforeFood: boolean
   ) {
-    let newDispenseObject: dispense;
+    let newDispenseObject: Dose;
     let newValue: boolean = event.target.checked;
-    if (isBeforeFood == true) newDispenseObject = hourItem.beforeFood!;
-    else newDispenseObject = hourItem.afterFood!;
+    if (isBeforeFood == true) newDispenseObject = hourItem.beforeMeal!;
+    else newDispenseObject = hourItem.afterMeal!;
     newDispenseObject.isValid = newValue;
     this._emitChanges();
   }
 
   onIsPostValidCheckBoxClick(
     event: any,
-    hourItem: hourType,
+    hourItem: Dispense,
     isBeforeFood: boolean
   ) {
-    let newDispenseObject: dispense;
+    let newDispenseObject: Dose;
     let newValue: boolean = event.target.checked;
-    if (isBeforeFood == true) newDispenseObject = hourItem.beforeFood!;
-    else newDispenseObject = hourItem.afterFood!;
+    if (isBeforeFood == true) newDispenseObject = hourItem.beforeMeal!;
+    else newDispenseObject = hourItem.afterMeal!;
     newDispenseObject.isPostValid = newValue;
     this._emitChanges();
   }
@@ -245,13 +245,13 @@ export class PartsOfDayComponent implements OnInit {
     this.partsOfDayHoursChange.emit(this.partsOfDayHours);
     let filteredList = this.partsOfDayHours.filter((item) => {
       let isBeforeFoodEmpty =
-        item.beforeFood == undefined ||
-        item.beforeFood.DispenseQuantity == '' ||
-        item.beforeFood.DispenseQuantity == undefined;
+        item.beforeMeal == undefined ||
+        item.beforeMeal.Quantity == '' ||
+        item.beforeMeal.Quantity == undefined;
       let isAfterFoodEmpty =
-        item.afterFood == undefined ||
-        item.afterFood.DispenseQuantity == '' ||
-        item.afterFood.DispenseQuantity == undefined;
+        item.afterMeal == undefined ||
+        item.afterMeal.Quantity == '' ||
+        item.afterMeal.Quantity == undefined;
       if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
       return true;
     });
@@ -262,15 +262,15 @@ export class PartsOfDayComponent implements OnInit {
   private _fillInitialData(initialData = this.partsOfDayHours) {
     if (this.showEmptyCases == false) return;
     this.partsOfDayHours = initialData.map((hourObj) => {
-      if (hourObj.afterFood == undefined)
-        hourObj.afterFood = {
-          DispenseQuantity: '',
+      if (hourObj.afterMeal == undefined)
+        hourObj.afterMeal = {
+          Quantity: '',
           isPostValid: false,
           isValid: false,
         };
-      if (hourObj.beforeFood == undefined)
-        hourObj.beforeFood = {
-          DispenseQuantity: '',
+      if (hourObj.beforeMeal == undefined)
+        hourObj.beforeMeal = {
+          Quantity: '',
           isPostValid: false,
           isValid: false,
         };
@@ -279,7 +279,7 @@ export class PartsOfDayComponent implements OnInit {
   }
 }
 
-const _initialPartsOfDayHours: hourType[] = [
+const _initialPartsOfDayHours: Dispense[] = [
   { hour: '00' },
   { hour: '01' },
   { hour: '02' },
@@ -372,14 +372,14 @@ const hoursCategorized = [
   ['22', '23'], // Dusk
 ];
 
-export type hourType = {
+export type Dispense = {
   hour: string;
-  beforeFood?: dispense;
-  afterFood?: dispense;
+  beforeMeal?: Dose;
+  afterMeal?: Dose;
 };
 
-export type dispense = {
-  DispenseQuantity?: string;
+export type Dose = {
+  Quantity?: string;
   isValid: boolean;
   isPostValid: boolean;
 };

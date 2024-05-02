@@ -29,7 +29,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import {
   PartsOfDayComponent,
-  hourType,
+  Dispense,
 } from '../../../components/parts-of-day/parts-of-day.component';
 import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
 import {
@@ -135,7 +135,7 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     this.isSelectedForceOrder = group.option.group.label === 'out of stock';
   }
 
-  HandleScheduleChange(FilteredHoursList:hourType[]){
+  HandleScheduleChange(FilteredHoursList:Dispense[]){
     console.log(FilteredHoursList)
   }
   onIsCautionEnabledChange(caution: boolean) {
@@ -320,15 +320,15 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     let numberOfComments: number = 0;
     let numberOfCautions: number = 0;
     medication.administrationHours.forEach((hourObj) => {
-        if (hourObj.beforeFood?.DispenseQuantity) {
-          const beforeFQ = parseInt(hourObj.beforeFood?.DispenseQuantity);
+        if (hourObj.beforeMeal?.Quantity) {
+          const beforeFQ = parseInt(hourObj.beforeMeal?.Quantity);
           beforeFoodCounter += beforeFQ;
           timesADayCounter++;
           if (beforeFQ > maximumDispenseQuantity)
             maximumDispenseQuantity = beforeFQ;
         }
-        if (hourObj.afterFood?.DispenseQuantity) {
-          const afterFQ = parseInt(hourObj.afterFood?.DispenseQuantity);
+        if (hourObj.afterMeal?.Quantity) {
+          const afterFQ = parseInt(hourObj.afterMeal?.Quantity);
           afterFoodCounter += afterFQ;
           timesADayCounter++;
           if (afterFQ > maximumDispenseQuantity)
@@ -440,9 +440,9 @@ function _getFormInitialValues(): medicationType {
 
 function _getACopyOfAdministrationHours(
   source = _initialPartsOfDayHours
-): hourType[] {
+): Dispense[] {
   /* get a copy of the objects one by one to change their memory id; */
-  let result: hourType[] = [];
+  let result: Dispense[] = [];
   source.forEach((hourElement) => {
     let hourElementClone = { ...hourElement };
     result.push(hourElementClone);
@@ -458,7 +458,7 @@ function getInitialDateRange(startDay = new Date()): [Date, Date] {
   return [startDay, twoWeeksLater];
 }
 
-const _initialPartsOfDayHours: hourType[]= [
+const _initialPartsOfDayHours: Dispense[]= [
   { hour: '00' },
   { hour: '01' },
   { hour: '02' },

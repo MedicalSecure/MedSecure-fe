@@ -4,7 +4,7 @@
 
 .child {
   position: absolute;
-  top: 1.05rem; /* 20 pixels from the top of the parent */
+  top: 1.2rem; /* 20 pixels from the top of the parent */
   left: 0px; /* 20 pixels from the left side of the parent */
   width: 2.21rem;
 }
