@@ -1,9 +1,11 @@
 <!-- Content area if login failed -->
+<div style="background-color: rgb(236, 223, 240);">
 <li><a *ngIf="loginDisplay" (click)="editProfile()">Edit Profile</a></li>
 <li><a *ngIf="!loginDisplay" (click)="login()">Login</a></li>
 <li><a *ngIf="loginDisplay" (click)="logout()">Logout</a></li>  
-<router-outlet></router-outlet>
-@if (!loginDisplay) {<div style="background-color: brown;"><router-outlet></router-outlet></div>
+</div>
+
+@if (!loginDisplay) {<div><router-outlet></router-outlet></div>
 }
 <!-- Content area for different routes -->
 @if (loginDisplay) 

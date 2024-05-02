@@ -21,7 +21,7 @@ import { RoleAuthGuard } from './core/role-auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent ,canActivate: [RoleAuthGuard] },
+  { path: 'dashboard', component: DashboardComponent }, //canActivate: [RoleAuthGuard] },
   { path: 'unit-care', component: UnitCareComponent}, // canActivate: [RoleAuthGuard] },
   { path: 'visits', component: VisitsComponent }, // canActivate: [RoleAuthGuard] },
   { path: 'widgets', component: WidgetsComponent }, // canActivate: [RoleAuthGuard] },
