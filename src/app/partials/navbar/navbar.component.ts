@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -8,10 +8,18 @@ import { NgIf } from '@angular/common';
 import * as XLSX from 'xlsx';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { MsalService } from '@azure/msal-angular';
+import {
+  MSAL_GUARD_CONFIG,
+  MsalBroadcastService,
+  MsalGuardConfiguration,
+  MsalService,
+} from '@azure/msal-angular';
 import { HttpClient } from '@angular/common/http';
 import { ProfileType } from '../../pages/profile/ProfileType';
-import { protectedResources } from '../../auth-config';
+import { b2cPolicies, protectedResources } from '../../auth-config';
+import { AccountInfo, AuthenticationResult, EventMessage, EventType, IdTokenClaims, InteractionStatus, InteractionType, PopupRequest, PromptValue, RedirectRequest, SsoSilentRequest } from '@azure/msal-browser';
+import { Subject, filter, takeUntil } from 'rxjs';
+import { SpinnerService } from '../../service/spinner.service';
 
 @Component({
   selector: 'app-navbar',
@@ -33,11 +41,37 @@ import { protectedResources } from '../../auth-config';
     NavbarComponent,
   ],
 })
+
 export class NavbarComponent implements OnInit {
   profile: ProfileType | undefined;
+  displayTabs: boolean = true;
+  importedData: { [key: string]: any }[] = [];
+  //after mapping :
+  mappedData: MedicationType[] = [];
+  importedDataHeaders: string[] = [];
+  isImportValid: boolean = false;
+  isShowImportModal = false;
 
-  ngOnInit() {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    public spinnerService: SpinnerService,
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+    private authService: MsalService,
+    private msalBroadcastService: MsalBroadcastService
+  ) {}
+
+  title = 'Microsoft identity platform';
+  isIframe = false;
+  loginDisplay = false;
+  private readonly _destroying$ = new Subject<void>();
+
+  ngOnInit(): void {
     this.getProfile(protectedResources.apiConfig.uri);
+  }
+
+  setLoginDisplay() {
+    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
   }
 
   getProfile(url: string) {
@@ -46,32 +80,27 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private authService: MsalService
-  ) {}
+  logout() {
+    const activeAccount =
+      this.authService.instance.getActiveAccount() ||
+      this.authService.instance.getAllAccounts()[0];
 
-  loginDisplay = false;
-  logout(popup?: boolean) {
-    if (popup) {
+    if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
       this.authService.logoutPopup({
-        mainWindowRedirectUri: '/',
+        account: activeAccount,
       });
     } else {
-      this.authService.logoutRedirect();
-      this.authService.logout();
+      this.authService.logoutRedirect({
+        account: activeAccount,
+      });
     }
   }
 
-
-  displayTabs: boolean = true;
-  importedData: { [key: string]: any }[] = [];
-  //after mapping :
-  mappedData: MedicationType[] = [];
-  importedDataHeaders: string[] = [];
-  isImportValid: boolean = false;
-  isShowImportModal = false;
+  // unsubscribe to events when component is destroyed
+  ngOnDestroy(): void {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
+  }
 
   columnMappings: MedicationType = {
     Name: NOT_ASSIGNED,

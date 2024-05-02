@@ -76,7 +76,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
       interactionType: InteractionType.Redirect,
       authRequest: loginRequest,
-      loginFailedRoute: '/login-failed'
+      //loginFailedRoute: '/login-failed'
   };
 }
 
