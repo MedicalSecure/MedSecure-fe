@@ -28,9 +28,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import {
-  PartsOfDayComponent,
+  ScheduleComponent,
   Dispense,
-} from '../../../components/parts-of-day/parts-of-day.component';
+} from '../../../components/schedule/schedule.component';
 import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
 import {
   DateRangeType,
@@ -64,7 +64,7 @@ import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patien
     CommonModule,
     MatCardModule,
     MatDatepickerModule,
-    PartsOfDayComponent,
+    ScheduleComponent,
     DatepickerRangePopupComponent,
     ToggleButtonComponent,
     MatChipsModule,
@@ -104,11 +104,11 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       .get('medicationNameInputFormControl')!
       .valueChanges.pipe(
         startWith(''),
-        map((value) => this._filterGroup(value || '')),
+        map((value) => this._filterGroup(value || ''))
       );
 
     this.finishEventSubscription = this.events.subscribe(() =>
-      this.onClickFinish(),
+      this.onClickFinish()
     );
 
     /* if is caution enabled by default => add a caution comment at the beginning of the array  */
@@ -230,7 +230,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     }
     this.isEditingMode = true;
     this.prescribedMedications = this.prescribedMedications.filter(
-      (item, i) => index != i,
+      (item, i) => index != i
     );
     this.selectedMedication = medication;
     this.medicationFormGroup.setValue({
@@ -242,7 +242,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       (item, i) => {
         if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
         return index != i;
-      },
+      }
     );
     console.log('result ' + this.isFilteredForceOrder);
   }
@@ -397,7 +397,7 @@ export type ConsumptionPeriodType = {
 
 export const _filterInputAutoCompleteOptions = (
   opt: string[],
-  value: string,
+  value: string
 ): string[] => {
   const filterValue = value.toLowerCase();
   return opt.filter((item) => item.toLowerCase().includes(filterValue));
@@ -439,7 +439,7 @@ function _getFormInitialValues(): medicationType {
 }
 
 function _getACopyOfAdministrationHours(
-  source = _initialPartsOfDayHours,
+  source = _initialPartsOfDayHours
 ): Dispense[] {
   /* get a copy of the objects one by one to change their memory id; */
   let result: Dispense[] = [];

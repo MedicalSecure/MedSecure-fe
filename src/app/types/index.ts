@@ -1,4 +1,4 @@
-import { Dispense } from '../components/parts-of-day/parts-of-day.component';
+import { Dispense } from '../components/schedule/schedule.component';
 import { ConsumptionPeriodType } from '../pages/prescription/stp4-add-medication/stp4-add-medication.component';
 
 export type styleClass = { [klass: string]: any } | null | undefined;
