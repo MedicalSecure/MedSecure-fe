@@ -43,34 +43,33 @@ import {
   medicationType,
   styleClass,
 } from '../../../types';
-import { Stp2PatientDetailsComponent } from "../stp2-patient-details/stp2-patient-details.component";
-
+import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 
 @Component({
-    selector: 'app-stp4-add-medication',
-    standalone: true,
-    templateUrl: './stp4-add-medication.component.html',
-    styleUrl: './stp4-add-medication.component.css',
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-        MatCheckboxModule,
-        AsyncPipe,
-        MatSelectModule,
-        JsonPipe,
-        MatIcon,
-        CommonModule,
-        MatCardModule,
-        MatDatepickerModule,
-        PartsOfDayComponent,
-        DatepickerRangePopupComponent,
-        ToggleButtonComponent,
-        MatChipsModule,
-        Stp2PatientDetailsComponent
-    ]
+  selector: 'app-stp4-add-medication',
+  standalone: true,
+  templateUrl: './stp4-add-medication.component.html',
+  styleUrl: './stp4-add-medication.component.css',
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    AsyncPipe,
+    MatSelectModule,
+    JsonPipe,
+    MatIcon,
+    CommonModule,
+    MatCardModule,
+    MatDatepickerModule,
+    PartsOfDayComponent,
+    DatepickerRangePopupComponent,
+    ToggleButtonComponent,
+    MatChipsModule,
+    Stp2PatientDetailsComponent,
+  ],
 })
 export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
   @Input()
@@ -134,6 +133,10 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
       isForceOrder: group.option.group.label === 'out of stock',
     };
     this.isSelectedForceOrder = group.option.group.label === 'out of stock';
+  }
+
+  HandleScheduleChange(FilteredHoursList:hourType[]){
+    console.log(FilteredHoursList)
   }
   onIsCautionEnabledChange(caution: boolean) {
     this.isCautionEnabled = caution;
@@ -283,7 +286,7 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     /* handle prescription submission to backend */
 
     console.log('valid medication: ');
-    console.log(this.prescribedMedications); 
+    console.log(this.prescribedMedications);
     this.onSubmitChange.emit();
   }
 
@@ -306,18 +309,17 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
     afterFoodCounter: number;
     maximumDispenseQuantity: number;
     average: number;
-    numberOfCautions:number,
-    numberOfComments:number
+    numberOfCautions: number;
+    numberOfComments: number;
   } {
     let timesADay: string = '';
     let afterFoodCounter: number = 0;
     let beforeFoodCounter: number = 0;
     let timesADayCounter: number = 0;
     let maximumDispenseQuantity: number = 0;
-    let numberOfComments:number=0;
-    let numberOfCautions:number=0;
-    medication.administrationHours.forEach((medicationGroup) => {
-      medicationGroup.forEach((hourObj) => {
+    let numberOfComments: number = 0;
+    let numberOfCautions: number = 0;
+    medication.administrationHours.forEach((hourObj) => {
         if (hourObj.beforeFood?.DispenseQuantity) {
           const beforeFQ = parseInt(hourObj.beforeFood?.DispenseQuantity);
           beforeFoodCounter += beforeFQ;
@@ -332,10 +334,9 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
           if (afterFQ > maximumDispenseQuantity)
             maximumDispenseQuantity = afterFQ;
         }
-      });
     });
-    medication.comments.forEach(comment => {
-      if(comment.label==="Caution") numberOfCautions++;
+    medication.comments.forEach((comment) => {
+      if (comment.label === 'Caution') numberOfCautions++;
       else numberOfComments++;
     });
     if (timesADayCounter > 1) timesADay = timesADayCounter + ' times a day : ';
@@ -348,7 +349,7 @@ export class Stp2AddMedicationComponent implements OnInit, OnDestroy {
       maximumDispenseQuantity,
       average: !Number.isNaN(average) ? Number(average.toFixed(1)) : 0,
       numberOfCautions,
-      numberOfComments
+      numberOfComments,
     };
   }
   getNumberOfDaysInRange(dateRange: [Date, Date | null] | null): number | null {
@@ -389,26 +390,6 @@ export interface MedicationGroupType {
   labels: string[];
 }
 
-const _initialPartsOfDayHours: hourType[][] = [
-  // Late Night
-  [{ hour: '00' }, { hour: '01' }, { hour: '02' }],
-  // Pre-Dawn/Dawn
-  [{ hour: '03' }, { hour: '04' }, { hour: '05' }],
-  // Early Morning
-  [{ hour: '06' }, { hour: '07' }, { hour: '08' }],
-  // Mid-Morning
-  [{ hour: '09' }, { hour: '10' }, { hour: '11' }],
-  // Noon/Midday
-  [{ hour: '12' }],
-  // Afternoon
-  [{ hour: '13' }, { hour: '14' }, { hour: '15' }],
-  // Mid-Afternoon
-  [{ hour: '16' }, { hour: '17' }],
-  // Evening
-  [{ hour: '18' }, { hour: '19' }, { hour: '20' }, { hour: '21' }],
-  // Dusk
-  [{ hour: '22' }, { hour: '23' }],
-];
 export type ConsumptionPeriodType = {
   isPermanent: boolean;
   dateRange: [Date, Date | null] | null;
@@ -459,16 +440,12 @@ function _getFormInitialValues(): medicationType {
 
 function _getACopyOfAdministrationHours(
   source = _initialPartsOfDayHours
-): hourType[][] {
+): hourType[] {
   /* get a copy of the objects one by one to change their memory id; */
-  let result: hourType[][] = [];
-  source.forEach((hourGroup: hourType[]) => {
-    let newHoursGroup: hourType[] = [];
-    hourGroup.forEach((hourElement) => {
-      let hourElementClone = { ...hourElement };
-      newHoursGroup.push(hourElementClone);
-    });
-    result.push(newHoursGroup);
+  let result: hourType[] = [];
+  source.forEach((hourElement) => {
+    let hourElementClone = { ...hourElement };
+    result.push(hourElementClone);
   });
 
   return result;
@@ -480,3 +457,30 @@ function getInitialDateRange(startDay = new Date()): [Date, Date] {
   twoWeeksLater.setHours(0, 0, 0, 0);
   return [startDay, twoWeeksLater];
 }
+
+const _initialPartsOfDayHours: hourType[]= [
+  { hour: '00' },
+  { hour: '01' },
+  { hour: '02' },
+  { hour: '03' },
+  { hour: '04' },
+  { hour: '05' },
+  { hour: '06' },
+  { hour: '07' },
+  { hour: '08' },
+  { hour: '09' },
+  { hour: '10' },
+  { hour: '11' },
+  { hour: '12' },
+  { hour: '13' },
+  { hour: '14' },
+  { hour: '15' },
+  { hour: '16' },
+  { hour: '17' },
+  { hour: '18' },
+  { hour: '19' },
+  { hour: '20' },
+  { hour: '21' },
+  { hour: '22' },
+  { hour: '23' },
+];

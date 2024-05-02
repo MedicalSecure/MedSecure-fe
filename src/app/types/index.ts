@@ -20,7 +20,7 @@ export type medicationType = {
   dispenseUnit: string;
   consumptionPeriod: ConsumptionPeriodType;
   isForceOrder?: boolean;
-  administrationHours: hourType[][];
+  administrationHours: hourType[];
   Caution?: string;
   comments: Array<commentType>;
   summary?:object;

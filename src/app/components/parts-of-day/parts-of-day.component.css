@@ -1,25 +1,33 @@
 .parent {
-    position: relative; 
-
+  position: relative;
 }
 
 .child {
-    position: absolute; 
-    top: 1.05rem;          /* 20 pixels from the top of the parent */
-    left: 0px;         /* 20 pixels from the left side of the parent */
-    width: 2.21rem;
+  position: absolute;
+  top: 1.05rem; /* 20 pixels from the top of the parent */
+  left: 0px; /* 20 pixels from the left side of the parent */
+  width: 2.21rem;
 }
 
-.checkbox{
-    width: 0.8rem;
-    height: 0.85rem;
+.checkbox {
+  width: 0.8rem;
+  height: 0.85rem;
 }
 
 input:disabled {
-    background-color: #f4f4f5; /* Lighter grey, adjust as needed */
+  background-color: #f4f4f5; /* Lighter grey, adjust as needed */
 }
 
-input[type="checkbox"]:disabled:checked {
-    background-color: #609fff;
-    border-color: #0d6efd; /* Same color as the background */
-  }
+#nurseInput[type="checkbox"]:disabled:checked {
+  background-color: #609fff;
+  border-color: #0d6efd; /* Same color as the background */
+}
+#doctorInput[type="checkbox"]:disabled:checked {
+  background-color: #15992f;
+  border-color: #0dfd2d; /* Same color as the background */
+}
+
+#doctorInput[type="checkbox"]:checked {
+  background-color: #15992f;
+  border-color: #0b801b; /* Same color as the background */
+}

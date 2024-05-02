@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 import { DatepickerRangePopupComponent } from '../datepicker-range-popup/datepicker-range-popup.component';
@@ -24,12 +24,13 @@ export class PartsOfDayComponent implements OnInit {
   filteredPartsOfDayHoursChange = new EventEmitter<hourType[]>();
   @Input()
   partsOfDayHours: hourType[] = _initialPartsOfDayHours;
-  @Input() canValid: boolean = false; //role : nurse ==true
-  @Input() canPostValid: boolean = false; //role : doctor==true
+  @Input() canValid: boolean = true; //role : nurse ==true
+  @Input() canPostValid: boolean = true; //role : doctor==true
   @Input() canUncheckBoxAfterChecking: boolean = true;
-  @Input() isReadOnly: boolean = false;
-  @Input() showAllCases: boolean = true;
+  @Input() isDispenseQuantityReadOnly: boolean = false;
+  @Input() showEmptyCases: boolean = true;
 
+  persistCache:boolean=true;
   private _partsOfDayHoursMapped: hourType[][];
 
   get hourClasses() {
@@ -40,6 +41,10 @@ export class PartsOfDayComponent implements OnInit {
   }
 
   get partsOfDayHoursMapped(): hourType[][] {
+    //this line is for using the cached variable for performance issues
+    if(this._partsOfDayHoursMapped!=undefined && this.persistCache) return this._partsOfDayHoursMapped;
+    this.persistCache=true;
+    //update the cached variable 
     const result: hourType[][] = [];
     for (const timezone of hoursCategorized) {
       const timezoneHours: hourType[] = [];
@@ -62,55 +67,50 @@ export class PartsOfDayComponent implements OnInit {
     this._fillInitialData();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    // Check if partsOfDayHours has changed
+    if (changes['partsOfDayHours']) {
+      //handle changes coming from the parent, like when switching between medications => force change the prefilled values inside the input
+
+      //make the getter ( get partsOfDayHoursMapped ) on waiting state for the next input changes
+      //so the next input change will force remap the objects in the getter
+      this.persistCache=false;
+      //Do the changes that the getter is waiting for
+      this._fillInitialData(this.partsOfDayHours)
+    }
+  }
+
   onClick(
-    partOfDayIndex: number,
-    hourIndex: number,
     increment: number,
     HourObject: hourType,
     isBeforeFood: boolean
   ) {
-    if (this.isReadOnly) return;
-    let newHourObject = this.getUpdatedHourValue(
+    if (this.isDispenseQuantityReadOnly) return;
+    this.updateHourValue(
       HourObject,
       isBeforeFood,
       increment
     );
-    this.applyHourModificationWithoutChangingMemoryId(
-      partOfDayIndex,
-      hourIndex,
-      newHourObject
-    );
+    this._emitChanges();
   }
 
   onScroll(
-    partOfDayIndex: number,
-    hourIndex: number,
     event: WheelEvent,
     HourObject: hourType,
     isBeforeFood: boolean = false
   ) {
-    if (this.isReadOnly) return;
+    if (this.isDispenseQuantityReadOnly) return;
     let increment = event.deltaY < 0 ? 1 : -1;
-    let newHourObject = this.getUpdatedHourValue(
+    this.updateHourValue(
       HourObject,
       isBeforeFood,
       increment
     );
-    this.applyHourModification(partOfDayIndex, hourIndex, newHourObject);
-  }
-
-  applyHourModification(
-    partOfDayIndex: number,
-    hourIndex: number,
-    newValue: hourType
-  ) {
-    if (this.isReadOnly) return;
-    let oldPartOfDayArray = this._partsOfDayHoursMapped[partOfDayIndex];
-    oldPartOfDayArray[hourIndex] = newValue;
     this._emitChanges();
   }
 
-  getUpdatedHourValue(
+
+  updateHourValue(
     HourObject: hourType,
     isBeforeFood: boolean,
     increment: number,
@@ -170,28 +170,11 @@ export class PartsOfDayComponent implements OnInit {
     return newHourObject;
   }
 
-  applyHourModificationWithoutChangingMemoryId(
-    partOfDayIndex: number,
-    hourIndex: number,
-    newValue: hourType
-  ) {
-    if (this.isReadOnly) return;
-
-    let oldPartOfDayArray = this._partsOfDayHoursMapped[partOfDayIndex];
-    let oldHourObject = oldPartOfDayArray[hourIndex];
-    /* this method is just to apply the values from an object to another object without changing the memory id of the 
-    destination object, instead of resObj=SrcObj, we will assign their values one by one */
-    /* this is due to a bug when assigning them directly after a click on the input, the cursor will disappear */
-    oldHourObject.afterFood = newValue.afterFood;
-    oldHourObject.beforeFood = newValue.beforeFood;
-    oldHourObject.hour = newValue.hour;
-   //this._emitChanges();
-  }
 
   //this function will be called when you are typing in the input field
   //it will print only numbers and filter other chars
   onInputChange(event: any) {
-    if (this.isReadOnly) {
+    if (this.isDispenseQuantityReadOnly) {
       event.target.value = '';
       return;
     }
@@ -217,22 +200,18 @@ export class PartsOfDayComponent implements OnInit {
     HourObject: hourType,
     isBeforeFood: boolean = true
   ) {
-    if (this.isReadOnly) return;
+    if (this.isDispenseQuantityReadOnly) return;
 
     const newHourValue: string = $event.target.value;
     const parsedHourValue: number =
       newHourValue != '' ? parseInt(newHourValue) : 0;
-    let newValue: hourType = this.getUpdatedHourValue(
+    let newValue: hourType = this.updateHourValue(
       HourObject,
       isBeforeFood,
       0,
       parsedHourValue
     );
-    this.applyHourModificationWithoutChangingMemoryId(
-      partOfDayIndex,
-      hourIndex,
-      newValue
-    );
+    this._emitChanges();
   }
 
   onIsValidCheckBoxClick(
@@ -281,7 +260,7 @@ export class PartsOfDayComponent implements OnInit {
 
   //
   private _fillInitialData(initialData = this.partsOfDayHours) {
-    if (this.showAllCases == false) return;
+    if (this.showEmptyCases == false) return;
     this.partsOfDayHours = initialData.map((hourObj) => {
       if (hourObj.afterFood == undefined)
         hourObj.afterFood = {
