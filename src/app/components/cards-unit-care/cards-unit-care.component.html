@@ -1,8 +1,8 @@
-<div class="container">
-  <div class="row">
+
+  <div class="d-flex flex-wrap gap-3 ">
     @for (card of cards; track card.title;) {
-    <div class="col-md-6">
-      <div class="card" >
+
+      <div class="card flex-grow"  style="min-width: 22rem; max-width: 45rem;">
         <div class="card-body">
           <div style="display: flex; align-items: center">
             <h4 class="card-title" style="margin-right: auto; margin-top: 15px">
@@ -18,7 +18,7 @@
               <mat-icon>edit</mat-icon>
             </button>
 
-            <button mat-icon-button aria-label="delete_forever" color="warn">
+            <button mat-icon-button (click)="onDelete(card.id)" aria-label="delete_forever" color="warn">
               <mat-icon>delete_forever</mat-icon>
             </button>
           </div>
@@ -36,9 +36,9 @@
             <div href="#" class="icon-div" >
               <img
                 [src]="
-                  person.shift === 0
+                  person.shift === 1
                     ? '../../../assets/icons/sun-s.svg'
-                    : person.shift === 1
+                    : person.shift === 2
                     ? '../../../assets/icons/moon.svg'
                     : '../../../assets/icons/eclipse-moon-svgrepo-com.svg'
                 "
@@ -88,8 +88,8 @@
           }
         </div>
       </div>
-    </div>
+
 
     }
   </div>
-</div>
+

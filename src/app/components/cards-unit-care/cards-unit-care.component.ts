@@ -2,9 +2,12 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { UnitCareService } from '../../services/unit-care.service';
+import { Router } from '@angular/router';
 
-interface UnitCareData {
+
+
+ export interface UnitCareData {
   unitCares: {
     pageIndex: number;
     pageSize: number;
@@ -13,7 +16,7 @@ interface UnitCareData {
   };
 }
 
-interface UnitCare {
+ export interface UnitCare {
   id: string;
   type: string;
   description: string;
@@ -60,7 +63,7 @@ interface Personnel {
 export class CardsUnitCareComponent {
 
   cards: UnitCare[] = [];
-  constructor(private http: HttpClient) { }
+  constructor(public unitcare : UnitCareService , private router :Router ) { }
 
   //Methods
 
@@ -81,22 +84,52 @@ export class CardsUnitCareComponent {
 
 
 
-getCardData() {
-  this.http.get<UnitCareData>('http://localhost:5102/unitCares')
-  .subscribe(response => {
-    response.unitCares.data
-this.cards=(response.unitCares.data)
-  },
-  error => {
-    console.error('Error fetching unit care data:', error);
-  });
-}
+
 
 ngOnInit() {
-  this.getCardData();
+  this.fetchUnitCares();
+
+
+}
+
+fetchUnitCares() {
+  this.unitcare.getCardData().subscribe(
+    (response: UnitCareData) => {
+      this.cards = response.unitCares.data;
+    },
+    (error: any) => {
+      console.error('Error fetching Unitcares:', error);
+    }
+  );
+}
+onDelete(id: number|string) {
+  this.unitcare.deleteCardData(id)
+    .subscribe(
+      response => {
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['unit-care']);
+          })
+        console.log('Data deleted successfully!');
+
+      },
+      error => {
+        if (error.status === 409) {
+          console.error('Optimistic concurrency exception:', error);
+          // Display an error message to the user
+          alert('Data has been modified by another user. Please refresh and try again.');
+        } else {
+          console.error('Error deleting data:', error);
+          // Handle other errors
+        }
+      }
+    );
+}
+
+
+
 }
 
 
 
 
-}
+

@@ -13,4 +13,10 @@
   width: 100%;
 }
 
+.vl {
+  border-left: 1px solid black;
+  min-height: 100%;
+  width: 0.5rem ;
+  margin-left: 0.5rem ;
+}
 

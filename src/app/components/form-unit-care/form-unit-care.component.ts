@@ -8,11 +8,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-form-unit-care',
   standalone: true,
-  imports: [MatSelectModule,ShipsSelectComponent,MatIconModule,FormsModule,CommonModule,ReactiveFormsModule,MatCheckboxModule,MatButtonModule],
+  imports: [MatSelectModule,ShipsSelectComponent,MatIconModule,
+    FormsModule,CommonModule,ReactiveFormsModule,MatCheckboxModule,
+    MatButtonModule,MatDividerModule,RouterModule],
   templateUrl: './form-unit-care.component.html',
   styleUrl: './form-unit-care.component.css'
 })
