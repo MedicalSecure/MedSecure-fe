@@ -1,16 +1,11 @@
 import { TypeVisit } from "./TypeVisit";
 import { LocationVisit } from "./LocationVisit";
+import { Patients } from "../model/patients";
 export interface VisitDtoType {
     id?: string;
     startDate: Date ;
     endDate: Date ;
-    patient: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      dateOfBirth: Date | string;
-      gender: number;
-    };
+    patient:Patients;
     doctorId: string;
     title: string;
     typeVisit: TypeVisit;
