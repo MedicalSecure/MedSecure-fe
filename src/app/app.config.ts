@@ -8,14 +8,29 @@ import { GanttChartComponent } from 'smart-webcomponents-angular/ganttchart';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { IPublicClientApplication, PublicClientApplication, InteractionType, LogLevel } from '@azure/msal-browser';
-import { MsalInterceptor, MSAL_INSTANCE, MsalInterceptorConfiguration, MsalGuardConfiguration, MSAL_GUARD_CONFIG, MSAL_INTERCEPTOR_CONFIG, MsalService, MsalGuard, MsalBroadcastService, ProtectedResourceScopes } from '@azure/msal-angular';
+import {
+  MSAL_GUARD_CONFIG,
+  MSAL_INSTANCE,
+  MSAL_INTERCEPTOR_CONFIG,
+  MsalBroadcastService,
+  MsalGuard,
+  MsalGuardConfiguration,
+  MsalInterceptor,  
+  MsalRedirectComponent,
+  MsalService,  
+} from '@azure/msal-angular';
+import {
+  IPublicClientApplication,
+  PublicClientApplication,
+  InteractionType,
+} from '@azure/msal-browser';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule} from '@angular/material/list';
-import { loginRequest, msalConfig, protectedResources } from './auth-config';
+import { loginRequest, msalConfig} from './auth-config';
 import { HttpInterceptorService } from './service/spinner-interceptor.service';
+import { MSALInterceptorConfigFactory } from './service/interceptor-config';
 
 
 export const appConfig: ApplicationConfig = {
@@ -34,31 +49,30 @@ export const appConfig: ApplicationConfig = {
       multi: true
     },
     {
-        provide: HTTP_INTERCEPTORS,
-        useClass: MsalInterceptor,
-        multi: true
+      provide: HTTP_INTERCEPTORS,
+      useClass: MsalInterceptor,
+      multi: true,
     },
     {
-        provide: MSAL_INSTANCE,
-        useFactory: MSALInstanceFactory
+      provide: MSAL_INSTANCE,
+      useFactory: MSALInstanceFactory,
     },
     {
-        provide: MSAL_GUARD_CONFIG,
-        useFactory: MSALGuardConfigFactory
+      provide: MSAL_GUARD_CONFIG,
+      useFactory: MSALGuardConfigFactory,
     },
     {
-        provide: MSAL_INTERCEPTOR_CONFIG,
-        useFactory: MSALInterceptorConfigFactory
+      provide: MSAL_INTERCEPTOR_CONFIG,
+      useFactory: MSALInterceptorConfigFactory,
     },
     MsalService,
     MsalGuard,
-    MsalBroadcastService
+    MsalBroadcastService,
   ],
 };
 
-export function loggerCallback(logLevel: LogLevel, message: string) {
-  console.log(message);
-}
+
+
 
 /**
  * Here we pass the configuration parameters to create an MSAL instance.
@@ -68,48 +82,14 @@ export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication(msalConfig);
 }
 
+
 /**
-* Set your default interaction type for MSALGuard here. If you have any
-* additional scopes you want the user to consent upon login, add them here as well.
-*/
+ * Set your default interaction type for MSALGuard here. If you have any
+ * additional scopes you want the user to consent upon login, add them here as well.
+ */
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
-      interactionType: InteractionType.Redirect,
-      authRequest: loginRequest,
-      //loginFailedRoute: '/login-failed'
-  };
-}
-
-
-/**
-* MSAL Angular will automatically retrieve tokens for resources
-* added to protectedResourceMap. For more info, visit:
-* https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/docs/v2-docs/initialization.md#get-tokens-for-web-api-calls
-*/
-export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
-  const protectedResourceMap = new Map<string, Array<string | ProtectedResourceScopes> | null>();
-
-  protectedResourceMap.set(protectedResources.api.endpoint, [
-      {
-          httpMethod: 'GET',
-          scopes: [...protectedResources.api.scopes.read]
-      },
-      {
-          httpMethod: 'POST',
-          scopes: [...protectedResources.api.scopes.write]
-      },
-      {
-          httpMethod: 'PUT',
-          scopes: [...protectedResources.api.scopes.write]
-      },
-      {
-          httpMethod: 'DELETE',
-          scopes: [...protectedResources.api.scopes.write]
-      }
-  ]);
-
-  return {
-      interactionType: InteractionType.Popup,
-      protectedResourceMap,
+    interactionType: InteractionType.Redirect,
+    authRequest: loginRequest,
   };
 }

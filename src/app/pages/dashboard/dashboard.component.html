@@ -1,3 +1,11 @@
+<!-- Content area if login failed -->
+<div style="background-color: rgb(236, 223, 240); min-height: 200px;">
+  <a *ngIf="!loginDisplay" (click)="login()" style="color: black;"><i class="fa fa-user"></i> Login</a>
+  <a *ngIf="loginDisplay" (click)="editProfile()"><i class="fa fa-user"></i> Edit Profile</a>
+  <a *ngIf="loginDisplay" (click)="logout()">Logout</a>
+</div>
+
+@if (loginDisplay) {
 
 <div class="tab-content tab-content-basic">
   <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
@@ -692,3 +700,5 @@
     </div>
   </div>
 </div>
+
+}

@@ -67,6 +67,7 @@ export class NavbarComponent implements OnInit {
   private readonly _destroying$ = new Subject<void>();
 
   ngOnInit(): void {
+    this.setLoginDisplay();
     this.getProfile(protectedResources.apiConfig.uri);
   }
 
@@ -95,7 +96,6 @@ export class NavbarComponent implements OnInit {
       });
     }
   }
-
   // unsubscribe to events when component is destroyed
   ngOnDestroy(): void {
     this._destroying$.next(undefined);

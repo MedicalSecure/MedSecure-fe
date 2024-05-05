@@ -21,7 +21,7 @@ export const environment: EnvironmentConfiguration = {
     getProductByName: 'products/{productName}',
   },
   adb2cConfig: {
-    clientId: 'ba8bc284-466c-4627-a83a-9833f26db722',
+    clientId: '8c20d337-b4ca-473a-a65a-5de0dc1bdec7',
     readScopeUrl:
       'https://medsecure.onmicrosoft.com/Data.Access/api/Waste.Read',
     writeScopeUrl:

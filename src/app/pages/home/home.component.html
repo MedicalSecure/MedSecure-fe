@@ -1,15 +1,4 @@
-<!-- Content area if login failed -->
-<div style="background-color: rgb(236, 223, 240);">
-<li><a *ngIf="loginDisplay" (click)="editProfile()">Edit Profile</a></li>
-<li><a *ngIf="!loginDisplay" (click)="login()">Login</a></li>
-<li><a *ngIf="loginDisplay" (click)="logout()">Logout</a></li>  
-</div>
-
-@if (!loginDisplay) {<div><router-outlet></router-outlet></div>
-}
 <!-- Content area for different routes -->
-@if (loginDisplay) 
-{
 <div class="container-scroller">
   <!-- Include the navbar component -->
   <app-navbar></app-navbar>
@@ -141,4 +130,3 @@
     </div>
   </div>
 </div>
-}

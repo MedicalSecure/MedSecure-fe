@@ -83,8 +83,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "development": {
-              "buildTarget": "medsecure-fe:build:development",
-              "ssl": true
+              "buildTarget": "medsecure-fe:build:development"
+             
             },
             "staging": {
               "buildTarget": "medsecure-fe:build:staging"

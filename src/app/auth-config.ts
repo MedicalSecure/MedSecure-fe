@@ -5,12 +5,9 @@
  * in app.module.ts file.
  */
 
-import {
-  LogLevel,
-  Configuration,
-  BrowserCacheLocation,
-} from '@azure/msal-browser';
+import { LogLevel, Configuration, BrowserCacheLocation } from '@azure/msal-browser';
 import { environment } from '../environments/environment';
+
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1;
 
@@ -28,15 +25,15 @@ export const b2cPolicies = {
   authorities: {
     signUpSignIn: {
       authority:
-        'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_susi',
+        'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_signin',
     },
     resetPassword: {
       authority:
-        'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_password_reset',
+        'https://learnsmartcoding.b2clogin.com/learnsmartcoding.onmicrosoft.com/B2C_1_password_reset',
     },
     editProfile: {
       authority:
-        'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_profile_edit',
+        'https://learnsmartcoding.b2clogin.com/learnsmartcoding.onmicrosoft.com/B2C_1_profile_edit',
     },
   },
   authorityDomain: 'medsecure.b2clogin.com',
@@ -49,7 +46,7 @@ export const b2cPolicies = {
  */
 export const msalConfig: Configuration = {
   auth: {
-    clientId: environment.adb2cConfig.clientId, // This is the ONLY mandatory field that you need to supply.
+    clientId: '8c20d337-b4ca-473a-a65a-5de0dc1bdec7', // This is the ONLY mandatory field that you need to supply.
     authority: b2cPolicies.authorities.signUpSignIn.authority, // Defaults to "https://login.microsoftonline.com/common"
     knownAuthorities: [b2cPolicies.authorityDomain], // Mark your B2C tenant's domain as trusted.
     redirectUri: '/', // Points to window.location.origin by default. You must register this URI on Azure portal/App Registration.
@@ -88,7 +85,7 @@ export const protectedResources = {
   },
   apiConfig: {
     uri: environment.apiConfig.uri,
-  }
+  },
 };
 
 /**
