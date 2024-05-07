@@ -61,11 +61,11 @@ export class BacPatientComponent implements AfterViewInit {
   changeDate(selectedDate: string) {
     this.todayDate = selectedDate;
     this.today.setDate(new Date(selectedDate).getDate());
-    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate()));
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate()));
    
   }
   constructor(public dialog: MatDialog , private http: HttpClient , private bacPatientService :BacPatientService ) {
-    const filteredData = ELEMENT_DATA.filter(item => new Date(item.servingDate).toLocaleDateString() === this.todayDate);
+    const filteredData = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).toLocaleDateString() === this.todayDate);
     this.dataSource.data = filteredData;
     this.uniqueRooms = this.getRoom(ELEMENT_DATA);
 
@@ -77,13 +77,13 @@ export class BacPatientComponent implements AfterViewInit {
   }
  
   onLeftButtonClick() {
-    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate() - 1));
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate() - 1));
     this.today.setDate(this.today.getDate() - 1);
     this.todayDate = this.today.toLocaleDateString();
 
   }
   onRightButtonClick() {
-    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.servingDate).getDate() === (this.today.getDate() + 1));
+    this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate() + 1));
     this.today.setDate(this.today.getDate() + 1)
     this.todayDate = this.today.toLocaleDateString();
   }
@@ -136,7 +136,7 @@ export class BacPatientComponent implements AfterViewInit {
     return age;
   }
 
-  onCheckEmitted(event: { checkedNumber: number, index: number }, element: bacpatient) {    
+ /* onCheckEmitted(event: { checkedNumber: number, index: number }, element: bacpatient) {    
     if (!this.checkedItems[event.index]) {
       this.checkedItems[event.index] = [];
     }
@@ -165,7 +165,7 @@ export class BacPatientComponent implements AfterViewInit {
   
   }
 
-
+*/
   
   getRouteImage(route: number): string {
     switch (route) {
@@ -198,103 +198,44 @@ export class BacPatientComponent implements AfterViewInit {
     }
   }
 }
-export interface Posology {
-  id: string;
-  startDate: Date;
-  endDate: Date;
-  quantityBE: number;
-  quantityAE: number;
-  isPermanent: boolean;
-  hours: number[];
-}
 
-export interface Medicine {
-  id: string;
-  name: string;
-  form: string;
-  root:number;
-  dose: string;
-  unit: string;
-  dateExp: Date;
-  stock: number;
-  note: string[];
-  posology: Posology[];
-}
-
-export interface Patient {
-  id: string ,
-  name: string;
-  dateOfBirth: Date;
-  gender: string;
-  age: number;
-  height: number;
-  weight: number;
-  activityStatus: string;
-  allergies: string[];
-  riskFactor: string;
-  familyHistory: string;
-  createdAt: Date;
-  createdBy: string;
-  lastModified: Date;
-  lastModifiedBy: string;
-}
-
-export interface Room {
- id : string
-  number: number;
-  status: number;
-  beds: number[];
-  createdAt: Date;
-  createdBy: string;
-  lastModified: Date;
-  lastModifiedBy: string;
-}
-
-export interface UnitCare {
-  id : string , 
-  title: string;
-  type: string;
-  description: string;
-  status: number;
-  createdAt: Date;
-  createdBy: string;
-  lastModified: Date;
-  lastModifiedBy: string;
-}
 
 export interface BacPatientResponse {
- 
-    pageIndex: number;
-    pageSize: number;
-    count: number;
-    data: bacpatient[];
-  
-}
-export type hourType = {
-  hour: string ; 
-  beforeFood? : dispense ; 
-  afterFood? : dispense ;
-
-}
-export type dispense = {
-DispenseQuantity? : string ; 
-isValid : boolean ;
-isPostValid:boolean ; 
-takeMeal? : boolean ; 
+  pageIndex: number;
+  pageSize: number;
+  count: number;
+  data: bacpatient[];
 }
 
 export interface bacpatient {
   id: string;
-  room: Room;
+  prescription: Prescription;
   bed: number;
-  patient: Patient;
-  unitCare: UnitCare;
-  medicines: Medicine[];
-  toServe: number;
+  nurseId: string;
   served: number;
+  toServe: number;
   status: number;
-  servingDate: Date;
 }
+
+export interface Prescription {
+  id: string;
+  register: Register;
+  createdAt : Date ;
+}
+
+export interface Register {
+  id: string;
+  patient: Patient;
+}
+
+export interface Patient {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+}
+
+
 
 export let ELEMENT_DATA : bacpatient[] = [
  /* {

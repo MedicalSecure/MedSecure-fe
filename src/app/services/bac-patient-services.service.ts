@@ -8,7 +8,6 @@ import { MatPaginator } from '@angular/material/paginator';
   providedIn: 'root'
 })
 export class BacPatientService {
-
   constructor(private http: HttpClient) { }
   getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) {
     this.http.get<BacPatientResponse>('https://localhost:6065/v1/bacPatient')
