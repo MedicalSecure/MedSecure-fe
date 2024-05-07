@@ -17,11 +17,11 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of dataList | filterPatientByNameAndSn: searchTerm" (click)="onClickPatient(data)" [class]="data === selectedPatient ? 'table-primary' : ''">
-        <td class="col-3">{{ data.sn }}</td>
-        <td class="col-3">{{ data.name }}</td>
-        <td class="col-2">{{ ("0" + data.registrationDate.getHours()).slice(-2) + ":" + ("0" + data.registrationDate.getMinutes()).slice(-2) }}</td>
-        <td class="col-1">{{ data.sex }}</td>
-        <td class="col-1">{{ data.age }}</td>
+        <td class="col-3">{{ data.id.length >10 ?  (data.id.slice(0,10) + "...") : data.id}}</td>
+        <td class="col-3">{{ data.firstName + " " + data.lastName }}</td>
+        <td class="col-2">{{ getDateString(data.createdAt ,"dd-mm-yyyy - HH:MM") }}</td>
+        <td class="col-1">{{ data.gender }}</td>
+        <td class="col-1">{{ getAge(data.dateOfBirth) + " years" }}</td>
         <td class="col-1">{{ data.height }}</td>
       </tr>
     </tbody>

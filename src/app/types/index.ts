@@ -1,3 +1,4 @@
+
 import { Dispense } from '../components/schedule/schedule.component';
 import { ConsumptionPeriodType } from '../pages/prescription/stp4-add-medication/stp4-add-medication.component';
 
@@ -25,3 +26,10 @@ export type medicationType = {
   comments: Array<commentType>;
   summary?:object;
 };
+
+export type Entity = {
+  createdAt:Date,
+  modifiedAt?:Date,
+  createdBy:string,
+  modifiedBy?:string,
+}

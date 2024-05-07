@@ -47,7 +47,7 @@
               @if (selectedPatient && stepNumber > 1) {
                 <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
                   <p class="align-self-center m-0">Selected Patient :</p>
-                  <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPatient.sn }} | {{ selectedPatient.name }} - {{ selectedPatient.age }} years</span>
+                  <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPatient.id.slice(10)+".." }} | {{ selectedPatient.firstName + " " + selectedPatient.lastName }} - {{ calculateAge(selectedPatient.dateOfBirth) }} years</span>
                   <mat-icon class="align-self-center" (click)="onSelectPatientChange(undefined)">close</mat-icon>
                 </div>
               }
@@ -62,7 +62,6 @@
                 <app-stp3-add-diagnostic
                   (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
                   (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"
-                  [selectedPatient]="selectedPatient"
                   (onIsAddSymptomsPageValidChange)="validatePageChange(3, $event)"
                 />
               </div>
@@ -71,10 +70,9 @@
               <div [className]="stepNumber != 4 && 'd-none'">
                 <app-stp4-add-medication
                   [events]="eventsSubject.asObservable()"
-                  [selectedPatient]="selectedPatient"
                   (onIsMedicationPageValidChange)="validatePageChange(4, $event)"
                   (onSubmitChange)="handleSubmit()"
-                  (onMedicationsChange)="handleMedicationChange($event)"
+                  (onPosologiesChange)="handlePosologyChange($event)"
                 />
               </div>
             </div>

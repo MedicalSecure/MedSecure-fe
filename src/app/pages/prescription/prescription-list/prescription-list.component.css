@@ -1,0 +1,8 @@
+#refresh-icon {
+    cursor: pointer;
+    transition: transform 0.3s; /* Add a smooth transition for the transform property */
+}
+
+#refresh-icon:active {
+    transform: scale(1.2) rotate(360deg); /* Scale down the icon and rotate it 360 degrees on click */
+}

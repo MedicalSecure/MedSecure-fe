@@ -1,13 +1,6 @@
 import { Component, EventEmitter } from '@angular/core';
-import {
-  Stp3AddDiagnosticComponent,
-  diagnosisType,
-  symptomType,
-} from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
-import {
-  Stp1PatientSelection,
-  patientType,
-} from '../stp1-patient-selection/stp1-patient-selection.component';
+import { Stp3AddDiagnosticComponent } from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
+import { Stp1PatientSelection } from '../stp1-patient-selection/stp1-patient-selection.component';
 import { Stp4AddMedicationComponent } from '../stp4-add-medication/stp4-add-medication.component';
 import { onChipsSelectionEmitType } from '../../../components/chips-select/chips-select.component';
 import { MatIcon } from '@angular/material/icon';
@@ -21,6 +14,9 @@ import { medicationType } from '../../../types';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PrescriptionListComponent } from '../prescription-list/prescription-list.component';
+import { PatientDto } from '../../../types/registerDTOs';
+import { calculateAge } from '../../../shared/utilityFunctions';
+import { DiagnosisDto, MedicationDto, PosologyDto, SymptomDto } from '../../../types/prescriptionDTOs';
 
 @Component({
   selector: 'app-add-prescription',
@@ -40,12 +36,12 @@ import { PrescriptionListComponent } from '../prescription-list/prescription-lis
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 4;
+  stepNumber: number = 1;
   stepsLimit: number = _steps.length;
-  selectedDiagnosis: diagnosisType[] = [];
-  selectedSymptoms: symptomType[] = [];
-  selectedMedications: medicationType[] = [];
-  selectedPatient: patientType | undefined;
+  selectedDiagnosis: DiagnosisDto[] = [];
+  selectedSymptoms: SymptomDto[] = [];
+  newPosologies: PosologyDto[] = [];
+  selectedPatient: PatientDto | undefined;
   isAddDiagnosticPageValid: boolean = false;
   isAddMedicationPageValid: boolean = true;
   ShowPrescriptionList: boolean = false;
@@ -65,7 +61,7 @@ export class AddPrescriptionComponent {
       patient: this.selectedPatient,
       symptoms: this.selectedSymptoms,
       diagnosis: this.selectedDiagnosis,
-      medications: this.selectedMedications,
+      posologies: this.newPosologies,
     };
     console.log(finalPrescription);
   }
@@ -86,8 +82,8 @@ export class AddPrescriptionComponent {
     this.eventsSubject.next();
   }
 
-  handleMedicationChange(medications: medicationType[]) {
-    this.selectedMedications = medications;
+  handlePosologyChange(posologies: PosologyDto[]) {
+    this.newPosologies = posologies;
   }
 
   validatePageChange(pageIndex: number, isPageValid: boolean) {
@@ -95,20 +91,23 @@ export class AddPrescriptionComponent {
     else if (pageIndex == 4) this.isAddMedicationPageValid = isPageValid;
   }
 
+  calculateAge(dateOfB: Date | undefined | null): string {
+    if (!dateOfB) return '';
+    return calculateAge(dateOfB).toString();
+  }
+
   onSelectedDiagnosisChangeHandler(
-    event: onChipsSelectionEmitType<diagnosisType>,
+    event: onChipsSelectionEmitType<DiagnosisDto>
   ) {
     this.selectedDiagnosis = event.SelectedObjectList;
   }
-  onSelectedSymptomsChangeHandler(
-    event: onChipsSelectionEmitType<symptomType>,
-  ) {
+  onSelectedSymptomsChangeHandler(event: onChipsSelectionEmitType<SymptomDto>) {
     this.selectedSymptoms = event.SelectedObjectList;
   }
   onClickFinish() {
     this.emitFinishEventToChild();
   }
-  onSelectPatientChange(patient: patientType | undefined) {
+  onSelectPatientChange(patient: PatientDto | undefined) {
     if (patient == undefined) {
       this.selectedPatient = undefined;
       this.stepNumber = 1;

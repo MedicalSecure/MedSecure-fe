@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
+
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,6 @@ import { medicationType } from '../../../types';
   styleUrl: './stp2-patient-details.component.css',
 })
 export class Stp2PatientDetailsComponent {
-  @Input() selectedPatient: patientType | undefined = undefined;
   @Input()
   medication: medicationType[] = dummyData;
 
