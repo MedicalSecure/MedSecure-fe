@@ -1,5 +1,5 @@
-import { hourType } from '../components/parts-of-day/parts-of-day.component';
-import { ConsumptionPeriodType } from '../pages/add-prescription/prescribe-medication/prescribe-medication.component';
+import { Dispense } from '../components/schedule/schedule.component';
+import { ConsumptionPeriodType } from '../pages/prescription/stp4-add-medication/stp4-add-medication.component';
 
 export type styleClass = { [klass: string]: any } | null | undefined;
 
@@ -20,7 +20,7 @@ export type medicationType = {
   dispenseUnit: string;
   consumptionPeriod: ConsumptionPeriodType;
   isForceOrder?: boolean;
-  administrationHours: hourType[][];
+  administrationHours: Dispense[];
   Caution?: string;
   comments: Array<commentType>;
   summary?:object;
