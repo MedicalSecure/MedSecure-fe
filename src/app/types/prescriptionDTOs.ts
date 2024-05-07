@@ -95,5 +95,6 @@ export type MedicationDto = {
   minStock: number;
   safetyStock: number;
   reservedStock: number;
+  availableStock:number;
   price: number;
 };

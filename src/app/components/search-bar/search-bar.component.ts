@@ -1,5 +1,5 @@
 import { MatSelectModule } from '@angular/material/select';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +13,8 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltip } from '@angular/material/tooltip';
-import { Medication } from '../../model/Medications';
+import { MedicationDto } from '../../types/prescriptionDTOs';
+
 
 @Component({
   selector: 'app-search-bar',
@@ -37,13 +38,22 @@ import { Medication } from '../../model/Medications';
 })
 export class SearchBarComponent implements OnInit {
   searchControl = new FormControl();
-  searchKeys: string[] = ['Nom', 'Laboratoire', 'Indications'];
-  searchKey: string = '';
-  Medications: Medication[] = [];
-  filteredMedications: Observable<Medication[]>;
-  selectedMedications: Medication[] = [];
+  @Input()
+  displaySelectedMedication=true;
+  @Input()
+  containerClasses:string="d-flex gap-3 flex-wrap justify-content-center";
+  @Input()
+  searchTerms: searchTerm[] = [
+    { label: 'Name', medicationKey: 'name' },
+    { label: 'Laboratory', medicationKey: 'lab' },
+    { label: 'Indications', medicationKey: 'DCI' },
+  ];
+  selectedSearchTerm: searchTerm = this.searchTerms.length > 0 ? this.searchTerms[0] : { label: 'Name', medicationKey: 'name' } ;
+  Medications: MedicationDto[] = [];
+  filteredMedications: Observable<MedicationDto[]>;
+  selectedMedications: MedicationDto[] = [];
 
-  @Output() searchMedicationsChange = new EventEmitter<Medication[]>();
+  @Output() searchMedicationsChange = new EventEmitter<MedicationDto[]>();
 
   constructor(private medicationService: MedicationService) {
     this.filteredMedications = this.searchControl.valueChanges.pipe(
@@ -58,19 +68,19 @@ export class SearchBarComponent implements OnInit {
     });
   }
 
-  filterMedications(searchTerm: string): Medication[] {
+  filterMedications(searchTerm: string): MedicationDto[] {
     if (typeof searchTerm !== 'string' || searchTerm.trim() === '') {
       return [];
     } else {
       return this.Medications.filter((medication) =>
-        medication[this.searchKey]
-          ?.toLowerCase()
+        medication[this.selectedSearchTerm.medicationKey as keyof(MedicationDto)]
+          ?.toString().toLowerCase()
           .includes(searchTerm.toLowerCase())
       );
     }
   }
 
-  onChangeSelectedMedication(medication: Medication): void {
+  onChangeSelectedMedication(medication: MedicationDto): void {
     if (!this.selectedMedications.includes(medication)) {
       this.selectedMedications.push(medication);
       this.emitSelectedMedications();
@@ -78,25 +88,16 @@ export class SearchBarComponent implements OnInit {
     this.searchControl.setValue('');
   }
 
-  onSelectionChange(event: MatChipListboxChange) {
-    this.searchKey = event.source.value;
+  onSearchKeySelectionChange(event: MatChipListboxChange) {
+    this.selectedSearchTerm = event.source.value;
     this.emitSelectedMedications();
   }
 
-  getMedicationProperty(medication: Medication): string {
-    switch (this.searchKey) {
-      case 'Nom':
-        return medication['Nom'];
-      case 'Laboratoire':
-        return medication['Laboratoire'];
-      case 'Indications':
-        return medication['Indications'];
-      default:
-        return '';
-    }
+  getMedicationProperty(medication: MedicationDto): string {
+    return medication[this.selectedSearchTerm.medicationKey as keyof(MedicationDto)].toString();
   }
 
-  removemedication(medication: Medication): void {
+  removeMedication(medication: MedicationDto): void {
     const index = this.selectedMedications.indexOf(medication);
     if (index !== -1) {
       this.selectedMedications.splice(index, 1);
@@ -108,3 +109,8 @@ export class SearchBarComponent implements OnInit {
     this.searchMedicationsChange.emit(this.selectedMedications);
   }
 }
+
+export type searchTerm = {
+  label: string;
+  medicationKey: string;
+};

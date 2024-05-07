@@ -36,7 +36,7 @@ import { DiagnosisDto, MedicationDto, PosologyDto, SymptomDto } from '../../../t
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 1;
+  stepNumber: number = 4;
   stepsLimit: number = _steps.length;
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];

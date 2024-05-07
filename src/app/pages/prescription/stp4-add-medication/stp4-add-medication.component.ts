@@ -37,16 +37,12 @@ import {
   DatepickerRangePopupComponent,
 } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
 import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
-import {
-  commentType,
-  medicationHourType,
-  medicationType,
-  styleClass,
-} from '../../../types';
+
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 import { CommentsDto, MedicationDto, PosologyDto } from '../../../types/prescriptionDTOs';
-import { getDate } from 'date-fns';
+
 import { getDateString } from '../../../shared/utilityFunctions';
+import { SearchBarComponent, searchTerm } from '../../../components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-stp4-add-medication',
@@ -72,6 +68,7 @@ import { getDateString } from '../../../shared/utilityFunctions';
     ToggleButtonComponent,
     MatChipsModule,
     Stp2PatientDetailsComponent,
+    SearchBarComponent
   ],
 })
 export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
@@ -81,6 +78,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   @Output() onIsMedicationPageValidChange = new EventEmitter<boolean>();
   @Output() onSubmitChange = new EventEmitter<void>();
 
+  searchTerms =_searchTerms;
   isSelectedForceOrder: boolean = false;
   isFilteredForceOrder: boolean = false;
   isEditingMode: boolean = false;
@@ -396,6 +394,16 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     return MedicationGroups;
   }
 }
+const MedicationGroups: MedicationGroupType[] = [
+  {
+    letter: 'in stock',
+    labels: ['Doliprane', 'Fervex', 'Aspirin'],
+  },
+  {
+    letter: 'out of stock',
+    labels: ['ARPL'],
+  },
+];
 export interface MedicationGroupType {
   letter: string;
   labels: string[];
@@ -414,17 +422,11 @@ export const _filterInputAutoCompleteOptions = (
   return opt.filter((item) => item.toLowerCase().includes(filterValue));
 };
 
-const MedicationGroups: MedicationGroupType[] = [
-  {
-    letter: 'in stock',
-    labels: ['Doliprane', 'Fervex', 'Aspirin'],
-  },
-  {
-    letter: 'out of stock',
-    labels: ['ARPL'],
-  },
-];
 
+const _searchTerms: searchTerm[] = [
+  { label: 'Name', medicationKey: 'name' },
+  { label: 'Active Substance', medicationKey: 'as' },
+];
 const initialCautionComment:CommentsDto = {
   id: null,
   label: 'Caution',
@@ -495,19 +497,6 @@ const _initialPartsOfDayHours: Dispense[] = [
   { hour: '23' },
 ];
 
-/* export type Dispense = {
-  hour: string;
-  beforeMeal?: Dose;
-  afterMeal?: Dose;
-};
-
-export type Dose = {
-  Quantity?: string;
-  isValid: boolean;
-  isPostValid: boolean;
-}; */
-
-
 const initialEmptyMedication: MedicationDto = {
   id: '',
   name: '',
@@ -523,5 +512,6 @@ const initialEmptyMedication: MedicationDto = {
   minStock: 0,
   safetyStock: 0,
   reservedStock: 0,
+  availableStock:0,
   price: 0
 };
