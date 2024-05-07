@@ -1,0 +1,100 @@
+<div class="row d-flex justify-content-between align-items-start">
+  <div style="margin-top: 48px; width: 35px" class="col-md-1">
+    <i style="margin-right: 5px; color: #203bad; font-size: 30px" class="material-icons">dining</i>
+  </div>
+  <div class="col">
+    <div class="d-flex flex-wrap">
+      <div class="d-flex me-2" *ngFor="let partOfDayHours of partsOfDayHoursMapped; let partOfDayIndex = index">
+        <div class="py-1" *ngFor="let hourItem of partOfDayHours; let hourIndex = index">
+          <div
+            *ngIf="showEmptyCases || (!showEmptyCases && (hourItem.afterMeal?.Quantity || hourItem.beforeMeal?.Quantity))"
+            class="mr-1 cursor-pointer {{ hourClasses[hourItem.hour] }} color-white"
+            style="width: 2.2rem; height: fit-content; border-radius: 8px"
+          >
+            <div class="card-header p-0 text-center" [title]="partsOfDayNames[hourItem.hour]">
+              <p class="mb-0 font-weight-normal text-white">{{ hourItem.hour }} H</p>
+            </div>
+            <div class="card-body p-0 text-center bg-secondary color-white" style="height: fit-content">
+              <div (contextmenu)="$event.preventDefault(); onClick(-1, hourItem, true)" class="parent" title="Before food dispense quantity">
+                <input
+                  class="form-control text-center"
+                  style="padding: 0%"
+                  [disabled]="isDispenseQuantityReadOnly"
+                  [value]="hourItem.beforeMeal?.Quantity ? hourItem.beforeMeal?.Quantity : ''"
+                  (input)="onInputChange($event)"
+                  pattern="[0-9]*"
+                  (change)="onInputFinalChange($event, partOfDayIndex, hourIndex, hourItem, true)"
+                  type="text"
+                  (click)="onClick(1, hourItem, true)"
+                  (wheel)="$event.preventDefault(); onScroll($event, hourItem, true)"
+                />
+                <div class="child d-flex justify-content-evenly">
+                  <!-- [disabled]="(canUncheckBoxAfterChecking == false) && hourItem.beforeMeal!.isValid" -->
+                  @if (canValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Nurse validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.beforeMeal!.isValid"
+                    [checked]="hourItem.beforeMeal!.isValid"
+                    (change)="onIsValidCheckBoxClick($event, hourItem, true)"
+                    id="nurseInput"
+                  />
+                  } @if (canPostValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Doctor validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.beforeMeal!.isPostValid"
+                    [checked]="hourItem.beforeMeal!.isPostValid"
+                    (change)="onIsPostValidCheckBoxClick($event, hourItem, true)"
+                    id="doctorInput"
+                  />
+                  }
+                </div>
+              </div>
+              <mat-divider class="m-1 mt-2" style="border-top-color: #203bad"></mat-divider>
+              <div (contextmenu)="$event.preventDefault(); onClick(-1, hourItem, false)" class="parent" title="After food dispense quantity">
+                <input
+                  class="form-control text-center"
+                  style="padding: 0%"
+                  [disabled]="isDispenseQuantityReadOnly"
+                  [value]="hourItem.afterMeal?.Quantity ? hourItem.afterMeal?.Quantity : ''"
+                  (input)="onInputChange($event)"
+                  pattern="[0-9]*"
+                  (change)="onInputFinalChange($event, partOfDayIndex, hourIndex, hourItem, false)"
+                  type="text"
+                  (click)="onClick(1, hourItem, false)"
+                  (wheel)="$event.preventDefault(); onScroll($event, hourItem, false)"
+                />
+                <div class="child d-flex justify-content-evenly">
+                  @if (canValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Nurse validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.afterMeal!.isValid"
+                    [checked]="hourItem.afterMeal!.isValid"
+                    (change)="onIsValidCheckBoxClick($event, hourItem, false)"
+                    id="nurseInput"
+                  />
+                  } @if (canPostValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Doctor validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.afterMeal!.isPostValid"
+                    [checked]="hourItem.afterMeal!.isPostValid"
+                    (change)="onIsPostValidCheckBoxClick($event, hourItem, false)"
+                    id="doctorInput"
+                  />
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
