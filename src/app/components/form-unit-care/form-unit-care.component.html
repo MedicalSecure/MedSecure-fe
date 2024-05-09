@@ -1,197 +1,84 @@
-<div class="row flex-grow mt-2">
-  <div class="col-12 grid-margin stretch-card">
-    <div class="card card-rounded">
-      <div class="card-body">
-        <div class="d-sm-flex justify-content-between align-items-start">
-          <div>
-            <h4 class="card-title card-title-dash">UnitCare</h4>
-            <p class="card-subtitle card-subtitle-dash">
-              Create infrastructure as crafts
-            </p>
-          </div>
+<form [formGroup]="unitCareForm" (ngSubmit)="onSubmit()">
+  <label class="form-label "> Title</label> <br>
+  <input type="text" formControlName="Title" style="width: 400px"  class="form-control"/>
 
-          <div class="btn-wrapper">
-            <a
-              href="#"
-              class="btn btn-primary text-white align-items-center"
-              [routerLink]="['/', 'unit-care']"
-              routerLinkActive="active"
-            >
-              <i class="fa fa-address-book-o" aria-hidden="true"></i> UnitCare List
-            </a>
-            <a
-              href="#"
-              class="btn btn-danger text-white align-items-center"
+  <label class="form-label"> Type</label>
+  <select class="form-select" formControlName="Type" style="width: 400px">
+    <option selected disabled value="">Choose...</option>
+    <option value="general">General</option>
+    <option value="Intensive">Intensive</option>
+    <option value="Coronary">Coronary</option>
+    <option value="Surgical">Surgical</option>
+    <option value="Pediatric">Pediatric</option>
+    <option value="Obstetrics">Obstetrics</option>
+  </select>
 
-              style="border-color: red"
-            >
-              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
-            </a>
-          </div>
+  <label class="form-label"> Description</label>
+  <textarea
+    class="form-control"
+    formControlName="Description"
+    style="height: 60px; width: 400px"
+  >
+ description
+ </textarea
+  >
+
+  <div formArrayName="personnels">
+    @for ( room of unitCareForm.controls.personnels.controls; track
+    personnelIndex; let personnelIndex = $index ) {
+    <div class="question" [formGroupName]="personnelIndex">
+      <input
+        type="text"
+        formControlName="name"
+        placeholder="name"
+      />
+    
+
+    </div>
+    }
+  </div>
+
+
+
+
+  <div formArrayName="rooms">
+    @for ( room of unitCareForm.controls.rooms.controls; track
+    roomIndex; let roomIndex = $index ) {
+    <div class="question" [formGroupName]="roomIndex">
+      <input
+        type="number"
+        formControlName="roomNumber"
+        placeholder="Room number"
+      />
+      <span (click)="removeRoom(roomIndex)" class="remove">✗</span>
+      <div formArrayName="equipments" class="answers">
+        <div>equipments</div>
+        @for ( room of
+        unitCareForm.controls.rooms.controls.at(roomIndex)
+        ?.controls?.equipments?.controls; track equipmentIndex; let equipmentIndex =
+        $index ) {
+        <div [formGroupName]="equipmentIndex" class="answer">
+          <input type="text" placeholder="Answer" formControlName="text" />
+          <span
+            (click)="removeEquipment(roomIndex, equipmentIndex)"
+            class="remove"
+            >✗</span
+          >
         </div>
-
-        <div class="card-body">
-        <form class="forms-sample" [formGroup]="unitCareForm" (ngSubmit)="onSubmit()" style="margin-top: 10%;">
-          <div class="d-flex justify-content-evenly" style="flex-wrap: wrap;">
-              <!-- Partie 1 -->
-              <div class="col-md-4" style="max-width: 30rem;">
-                  <div class="form-group">
-
-                      <input type="text" class="form-control" id="Title" placeholder="Title" style="height: 40px" formControlName="Title" />
-                  </div>
-
-                  <!-- <div class="form-group">
-
-                      <textarea class="form-control" id="Description" placeholder="Description" formControlName="Description" minlength="100"></textarea>
-                  </div> -->
-
-                  <textarea  class="form-control" id="textAreaExample1" rows="4"></textarea>
-
-
-
-                  <select class="form-select" aria-label="Default select example" formControlName="Type">
-                    <option selected>Type</option>
-                    <option value="general">General</option>
-                    <option value= "Intensive">Intensive</option>
-                    <option  value="Coronary">Coronary</option>
-                    <option value="Surgical">Surgical</option>
-                    <option value="Pediatric">Pediatric</option>
-                    <option value="Obstetrics">Obstetrics</option>
-                  </select>
-
-
-
-
-              </div>
-              <!-- Fin de la partie 1 -->
-
-              <mat-divider  [vertical]="true" style="background-color: #c4c4d4;"></mat-divider>
-
-              <!-- Partie du room -->
-                <div class="col-md-4" style="max-width: 25rem;">
-                  <div style="display: flex; align-items: center">
-                    <h6 class="card-description my-auto">Add rooms</h6>
-
-                    <div style="margin-left: auto">
-                      <button
-                        class="float-left"
-                        mat-icon-button
-                        color="primary"
-                        aria-label="Add"
-                        matTooltip="Add"
-                        (click)="addRoom()"
-                      >
-                        <mat-icon>add_circle_outline</mat-icon>
-                      </button>
-                    </div>
-                  </div>
-                  <form [formGroup]="form">
-                    <div formArrayName="room">
-                      <div
-                        *ngFor="let roomGroup of room.controls; let i = index"
-                        [formGroupName]="i"
-                      >
-                        <div style="display: flex; align-items: center">
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="roomNumber"
-                            placeholder="room-number"
-                          />
-                          <div style="margin-left: auto">
-                            <button
-                              class="float-left"
-                              mat-icon-button
-                              color="warn"
-                              aria-label="Remove/clear"
-                              (click)="removeRoom(i)"
-                              matTooltip="Remove"
-                            >
-                              <mat-icon>highlight_off</mat-icon>
-                            </button>
-                          </div>
-                        </div>
-                        @if(roomGroup.get('roomNumber')?.value.length > 0){
-
-                        <section class="example-section" [formGroup]="equipments">
-                          <h4>Select your equipments:</h4>
-                          <p>
-                            <mat-checkbox formControlName="Equipment1"
-                              >Equipment1</mat-checkbox
-                            >
-                          </p>
-                          <p>
-                            <mat-checkbox formControlName="Equipment2"
-                              >Equipment2</mat-checkbox
-                            >
-                          </p>
-                          <p>
-                            <mat-checkbox formControlName="Equipment3"
-                              >Equipment3</mat-checkbox
-                            >
-                          </p>
-                        </section>
-
-                        }
-                      </div>
-                    </div>
-                  </form>
-
-                </div>
-              <!-- Fin de la partie du room -->
-
-
-              <!-- Séparateur vertical -->
-              <mat-divider  [vertical]="true" style="background-color: #c4c4d4;"></mat-divider>
-
-              <!-- Partie du personnel -->
-              <div class="col-md-4" style="max-width: 30rem;">
-                  <p class="card-description my-auto">Affect Personnel</p>
-                  <div class="form-group">
-                      <chips-select class="form-control" [ObjectName]="'personnel'" [customLabel]="'personnel'" class="w-100"
-                          (selectedChipsChange)="selectedChipsChange($event)" [enableCustomAdditions]="false"
-                          [enableQuickSelectFromSuggestions]="true" [fullData]="personnels" [minimumSearchLength]="2"
-                          [isStartWithSearch]="true" [searchPropertyName]="'name'" formControlName="Type">
-                      </chips-select>
-                  </div>
-              </div>
-              <!-- Fin de la partie du personnel -->
-
-
-
-
-
-
-            </div>
-
-            <div class="d-flex">
-              <div class="col-12 col-lg-8">
-
-              </div>
-              <div class="col-lg-4 d-flex justify-content-end">
-                <button
-                type="button"
-                class="btn btn-outline-primary"
-
-              >
-                Cancel
-              </button>
-                <button
-                  type="button"
-                  class="btn btn-primary text-white"
-
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-
-        </form>
-
-      </div>
-
-
+        }
+        <button
+          type="button"
+          class="add-answer"
+          (click)="addEquipment(roomIndex)"
+        >
+          Add Equipment
+        </button>
       </div>
     </div>
+    }
   </div>
-</div>
+  <div class="add-question">
+    <button (click)="addRoom()" type="button">Add Room</button>
+  </div>
+  <div><button type="submit">Submit</button></div>
+</form>

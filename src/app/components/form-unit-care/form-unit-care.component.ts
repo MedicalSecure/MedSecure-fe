@@ -1,102 +1,92 @@
-import { Component } from '@angular/core';
-import { MatSelectModule } from '@angular/material/select';
-import {MatIconModule} from '@angular/material/icon';
-import { ShipsSelectComponent, onChipsSelectionEmitType } from '../chips-select/chips-select.component';
-import { personnel } from '../../personnel-data';
-import {FormGroup,FormControl,FormArray,FormBuilder} from '@angular/forms';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
-import {MatDividerModule} from '@angular/material/divider';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+} from '@angular/forms';
+
+type FormEquipment = FormGroup<{ text: FormControl<string> }>;
+
+type FormRoom = FormGroup<{
+  roomNumber: FormControl<string>;
+  equipments: FormArray<FormEquipment>;
+}>;
+
+type FormPersonnel=FormGroup<{
+  name: FormControl<string>;
+
+}>;
+
+type Form = FormGroup<{
+  Title:FormControl,
+  Type:FormControl,
+  Description:FormControl,
+  rooms: FormArray<FormRoom>;
+  personnels:FormArray<FormPersonnel>;
+}>;
+
+
 
 
 @Component({
   selector: 'app-form-unit-care',
   standalone: true,
-  imports: [MatSelectModule,ShipsSelectComponent,MatIconModule,
-    FormsModule,CommonModule,ReactiveFormsModule,MatCheckboxModule,
-    MatButtonModule,MatDividerModule,RouterModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './form-unit-care.component.html',
   styleUrl: './form-unit-care.component.css'
 })
 export class FormUnitCareComponent {
-       //Data
-  selected = '';
-  selectedPersonnels:any[]=[];
-  personnels=personnel;
-  form!: FormGroup;
-  i: any;
-  selectedRoomEquipments: any[] = [];
-
-  equipments = this._formBuilder.group({
-    Equipment1: false,
-    Equipment2: false,
-    Equipment3: false,
+  
+  fb = inject(NonNullableFormBuilder);
+  unitCareForm: Form = this.fb.group({
+    Title:'',
+    Description:'',
+    Type:'',
+    rooms: this.fb.array<FormRoom>([this.generateRoom()]),
+    personnels: this.fb.array<FormPersonnel>([this.generatePersonnel()]),
   });
 
+  generateRoom(): FormRoom {
+    return this.fb.group({
+      roomNumber: '',
+      equipments: this.fb.array<FormEquipment>([]),
+    });
+  }
 
-  unitCareForm = new FormGroup({
-    Title: new FormControl(''),
-    Description: new FormControl(''),
-    Type: new FormControl(''),
-  });
+  addRoom(): void {
+    this.unitCareForm.controls.rooms.push(this.generateRoom());
+  }
 
-  constructor(private _formBuilder: FormBuilder)
-  {this.form = new FormGroup({
-   room: new FormArray([
-     new FormGroup({
-       roomNumber: new FormControl(''),
-     })
-   ])
- });}
-
-       //Methods
-
-
-       onSubmit() {
-        // TODO: Use EventEmitter with form value
-        console.warn(this.unitCareForm.value);
-      }
-  selectedChipsChange(result: onChipsSelectionEmitType<any>) {
-    // Access and use the selected indexes here
-    if (result.lastAddedItem) {
-      console.log('added custom item :', result.lastAddedItem);
-    } else if (result.lastSelectedItem) {
-      console.log('added item from search :', result.lastSelectedItem);
-    } else if (result.lastRemovedItem) {
-      console.log('removed item :', result.lastRemovedItem);
-    }
-    console.log('updated Selected chips:', result.SelectedObjectList);
-    this.selectedPersonnels=result.SelectedObjectList;
-
+  removeRoom(roomIndex: number): void {
+    this.unitCareForm.controls.rooms.removeAt(roomIndex);
   }
 
 
-  get room(): FormArray {
-    return this.form.get('room') as FormArray;
+  generatePersonnel(): FormPersonnel {
+    return this.fb.group({
+      name: '',
+
+    });
   }
 
-
-  addRoom() {
-    this.room.push(
-      new FormGroup({
-        roomNumber: new FormControl(''),
-
-      })
-    );
+  addEquipment(roomIndex: number): void {
+    const newEquipment: FormEquipment = this.fb.group({
+      text: '',
+    });
+    this.unitCareForm.controls.rooms
+      .at(roomIndex)
+      ?.controls?.equipments?.push(newEquipment);
   }
 
-  removeRoom(index: number) {
-    this.room.removeAt(index);
+  removeEquipment(roomIndex: number, equipmentIndex: number): void {
+    this.unitCareForm.controls.rooms
+      .at(roomIndex)
+      ?.controls?.equipments?.removeAt(equipmentIndex);
   }
 
-
-  selectRoomEquipments(room: any) {
-    this.selectedRoomEquipments = room.equipments;
+  onSubmit() {
+    console.log(this.unitCareForm.getRawValue());
+  }
 }
-}
-
-
-
