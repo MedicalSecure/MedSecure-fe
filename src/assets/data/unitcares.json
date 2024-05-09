@@ -1,0 +1,195 @@
+{
+  "unitCares": {
+    "pageIndex": 1,
+    "pageSize": 6,
+    "count": 6,
+    "data": [
+      {
+        "id": "1",
+        "type": "Type 1",
+        "description": "Description 1",
+        "title": "Title 1",
+        "rooms": [
+          {
+            "id": "1",
+            "unitCareId": "1",
+            "roomNumber": 101,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "1",
+                "roomId": "1",
+                "name": "Equipment 1",
+                "reference": "Ref 1"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "1",
+            "unitCareId": "1",
+            "name": "Personnel 1",
+            "shift": 1,
+            "gender": 1
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "type": "Type 2",
+        "description": "Description 2",
+        "title": "Title 2",
+        "rooms": [
+          {
+            "id": "2",
+            "unitCareId": "2",
+            "roomNumber": 102,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "2",
+                "roomId": "2",
+                "name": "Equipment 2",
+                "reference": "Ref 2"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "2",
+            "unitCareId": "2",
+            "name": "Personnel 2",
+            "shift": 2,
+            "gender": 2
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "type": "Type 3",
+        "description": "Description 3",
+        "title": "Title 3",
+        "rooms": [
+          {
+            "id": "3",
+            "unitCareId": "3",
+            "roomNumber": 103,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "3",
+                "roomId": "3",
+                "name": "Equipment 3",
+                "reference": "Ref 3"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "3",
+            "unitCareId": "3",
+            "name": "Personnel 3",
+            "shift": 3,
+            "gender": 1
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "type": "Type 4",
+        "description": "Description 4",
+        "title": "Title 4",
+        "rooms": [
+          {
+            "id": "4",
+            "unitCareId": "4",
+            "roomNumber": 104,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "4",
+                "roomId": "4",
+                "name": "Equipment 4",
+                "reference": "Ref 4"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "4",
+            "unitCareId": "4",
+            "name": "Personnel 4",
+            "shift": 1,
+            "gender": 2
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "type": "Type 5",
+        "description": "Description 5",
+        "title": "Title 5",
+        "rooms": [
+          {
+            "id": "5",
+            "unitCareId": "5",
+            "roomNumber": 105,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "5",
+                "roomId": "5",
+                "name": "Equipment 5",
+                "reference": "Ref 5"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "5",
+            "unitCareId": "5",
+            "name": "Personnel 5",
+            "shift": 2,
+            "gender": 1
+          }
+        ]
+      },
+      {
+        "id": "6",
+        "type": "Type 6",
+        "description": "Description 6",
+        "title": "Title 6",
+        "rooms": [
+          {
+            "id": "6",
+            "unitCareId": "6",
+            "roomNumber": 106,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "6",
+                "roomId": "6",
+                "name": "Equipment 6",
+                "reference": "Ref 6"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "6",
+            "unitCareId": "6",
+            "name": "Personnel 6",
+            "shift": 3,
+            "gender": 2
+          }
+        ]
+      }
+    ]
+  }
+}

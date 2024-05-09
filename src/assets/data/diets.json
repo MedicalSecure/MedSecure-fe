@@ -1,0 +1,171 @@
+{
+  "diets": {
+    "pageIndex": 1,
+    "pageSize": 10,
+    "count": 6,
+    "data": [
+      {
+        "Id": "1",
+        "PatientId": "P001",
+        "DietType": "Low Carb",
+        "StartDate": "2024-05-01T00:00:00.000Z",
+        "EndDate": "2024-05-10T00:00:00.000Z",
+        "Meals": [
+          {
+            "Id": "1",
+            "Name": "Breakfast",
+            "Time": "08:00",
+            "FoodItems": ["Eggs", "Avocado", "Spinach"]
+          },
+          {
+            "Id": "2",
+            "Name": "Lunch",
+            "Time": "12:30",
+            "FoodItems": ["Grilled Chicken", "Broccoli", "Brown Rice"]
+          },
+          {
+            "Id": "3",
+            "Name": "Dinner",
+            "Time": "18:00",
+            "FoodItems": ["Salmon", "Asparagus", "Quinoa"]
+          }
+        ]
+      },
+      {
+        "Id": "2",
+        "PatientId": "P002",
+        "DietType": "Keto",
+        "StartDate": "2024-04-25T00:00:00.000Z",
+        "EndDate": "2024-05-15T00:00:00.000Z",
+        "Meals": [
+          {
+            "Id": "1",
+            "Name": "Breakfast",
+            "Time": "07:30",
+            "FoodItems": ["Bacon", "Eggs", "Cheese"]
+          },
+          {
+            "Id": "2",
+            "Name": "Lunch",
+            "Time": "13:00",
+            "FoodItems": ["Salad with Chicken", "Avocado", "Olive Oil"]
+          },
+          {
+            "Id": "3",
+            "Name": "Dinner",
+            "Time": "19:00",
+            "FoodItems": ["Steak", "Broccoli", "Butter"]
+          }
+        ]
+      },
+      {
+        "Id": "3",
+        "PatientId": "P003",
+        "DietType": "Mediterranean",
+        "StartDate": "2024-05-03T00:00:00.000Z",
+        "EndDate": "2024-05-12T00:00:00.000Z",
+        "Meals": [
+          {
+            "Id": "1",
+            "Name": "Breakfast",
+            "Time": "08:30",
+            "FoodItems": ["Oatmeal", "Greek Yogurt", "Fruits"]
+          },
+          {
+            "Id": "2",
+            "Name": "Lunch",
+            "Time": "13:30",
+            "FoodItems": ["Grilled Fish", "Vegetable Salad", "Olive Oil Dressing"]
+          },
+          {
+            "Id": "3",
+            "Name": "Dinner",
+            "Time": "19:30",
+            "FoodItems": ["Whole Wheat Pasta", "Tomato Sauce", "Parmesan Cheese"]
+          }
+        ]
+      },
+      {
+        "Id": "4",
+        "PatientId": "P004",
+        "DietType": "Vegetarian",
+        "StartDate": "2024-05-02T00:00:00.000Z",
+        "EndDate": "2024-05-11T00:00:00.000Z",
+        "Meals": [
+          {
+            "Id": "1",
+            "Name": "Breakfast",
+            "Time": "09:00",
+            "FoodItems": ["Smoothie (Banana, Spinach, Almond Milk)", "Whole Grain Toast"]
+          },
+          {
+            "Id": "2",
+            "Name": "Lunch",
+            "Time": "14:00",
+            "FoodItems": ["Vegetable Stir-Fry", "Tofu", "Brown Rice"]
+          },
+          {
+            "Id": "3",
+            "Name": "Dinner",
+            "Time": "20:00",
+            "FoodItems": ["Chickpea Curry", "Basmati Rice", "Naan Bread"]
+          }
+        ]
+      },
+      {
+        "Id": "5",
+        "PatientId": "P005",
+        "DietType": "Paleo",
+        "StartDate": "2024-05-04T00:00:00.000Z",
+        "EndDate": "2024-05-13T00:00:00.000Z",
+        "Meals": [
+          {
+            "Id": "1",
+            "Name": "Breakfast",
+            "Time": "08:00",
+            "FoodItems": ["Scrambled Eggs", "Bacon", "Mixed Berries"]
+          },
+          {
+            "Id": "2",
+            "Name": "Lunch",
+            "Time": "13:00",
+            "FoodItems": ["Grilled Chicken Salad", "Nuts", "Vinaigrette Dressing"]
+          },
+          {
+            "Id": "3",
+            "Name": "Dinner",
+            "Time": "19:00",
+            "FoodItems": ["Grass-Fed Beef", "Sweet Potato Mash", "Steamed Vegetables"]
+          }
+        ]
+      },
+      {
+        "Id": "6",
+        "PatientId": "P006",
+        "DietType": "Gluten-Free",
+        "StartDate": "2024-05-01T00:00:00.000Z",
+        "EndDate": "2024-05-10T00:00:00.000Z",
+        "Meals": [
+          {
+            "Id": "1",
+            "Name": "Breakfast",
+            "Time": "07:30",
+            "FoodItems": ["Quinoa Porridge", "Almond Milk", "Berries"]
+          },
+          {
+            "Id": "2",
+            "Name": "Lunch",
+            "Time": "12:30",
+            "FoodItems": ["Grilled Salmon", "Quinoa Salad", "Lemon Dressing"]
+          },
+          {
+            "Id": "3",
+            "Name": "Dinner",
+            "Time": "18:30",
+            "FoodItems": ["Stir-Fried Tofu", "Vegetables", "Tamari Sauce"]
+          }
+        ]
+      }
+    ]
+  }
+}

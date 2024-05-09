@@ -14,10 +14,14 @@
             [minimumSearchLength]="1"
             [minimumAddedLabelLength]="5"
             [isStartWithSearch]="false"
-            [searchPropertyName]="'label'"
+            [searchPropertyName]="'name'"
+            [disabled]="symptomsData.length===0"
+            [selectedChips]="selectedSymptoms"
           ></chips-select>
 
-          <chips-select
+          <div id="diagnosis-chips-select-container">
+
+            <chips-select
             [ObjectName]="'Diagnosis'"
             [customLabel]="'Diagnosis'"
             class="w-100"
@@ -28,8 +32,11 @@
             [minimumSearchLength]="1"
             [minimumAddedLabelLength]="5"
             [isStartWithSearch]="false"
-            [searchPropertyName]="'label'"
-          ></chips-select>
+            [searchPropertyName]="'name'"
+            [disabled]="diagnosesData.length===0"
+            [selectedChips]="selectedDiagnosis"
+            ></chips-select>
+          </div>
         </div>
       </td>
       <td class="col-md-3">

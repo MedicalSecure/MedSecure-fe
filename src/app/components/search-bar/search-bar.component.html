@@ -1,5 +1,6 @@
 <div [className]="containerClasses">
-  <div class="search " style="min-width: 20rem">
+  @if(!(hideSearchIfMaximumReached && hasReachedLimit)){
+    <div class="search" style="min-width: 20rem">
     <div class="position-relative mt-1">
       <input
         type="text"
@@ -7,9 +8,10 @@
         [formControl]="searchControl"
         [matAutocomplete]="auto"
         class="form-control shadow-sm"
-        style="border-color: rgb(238, 238, 238);height: 2.6rem;"
+        style="border-color: rgb(238, 238, 238); height: 2.6rem"
+        
       />
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" >
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
         <ng-container *ngFor="let medication of filteredMedications | async" class="d-flex align-items-center">
           <mat-option (onSelectionChange)="onChangeSelectedMedication(medication)" class="result">
             {{ getMedicationProperty(medication) }}
@@ -22,50 +24,45 @@
     </div>
   </div>
 
-  <div style="width: fit-content" >
+  <div style="width: fit-content" class="d-flex align-items-center">
     <mat-chip-listbox [value]="selectedSearchTerm" (change)="onSearchKeySelectionChange($event)">
       @for(searchTerm of searchTerms;track $index){
       <mat-chip-option [value]="searchTerm">{{ searchTerm.label }}</mat-chip-option>
       }
     </mat-chip-listbox>
-  </div>
+  </div>}
 
-  <!--     @if (displaySelectedMedication && selectedMedications.length > 0) {
-    <div class="mt-3">
-      <h4>Selected Medicines:</h4>
-      <div
-        *ngFor="let medication of selectedMedications"
-        class="medication-item"
-      >
-        <div>
-          <p class="d-flex gap-3 mt-1">
-            <img
-              width="30"
-              height="30"
-              src="https://img.icons8.com/external-konkapp-flat-konkapp/64/external-syringe-emergency-services-konkapp-flat-konkapp.png"
-              alt="external-syringe-emergency-services-konkapp-flat-konkapp"
-            />
+  @if (displaySelectedMedication && selectedMedications.length > 0) {
+  <div class="mt-3 align-self-start ">
+    <h4>Selected medication{{ selectedMedications.length > 1 ? "s" : "" }}:</h4>
+    <div *ngFor="let medication of selectedMedications" class="medication-item">
+      <div  class="d-flex gap-3 mt-1 align-middle justify-content-start align-items-center   ">
+        <p class="d-flex gap-3 mt-1 align-middle align-items-center">
+          <img
+            width="30"
+            height="30"
+            src="https://img.icons8.com/external-konkapp-flat-konkapp/64/external-syringe-emergency-services-konkapp-flat-konkapp.png"
+            alt="external-syringe-emergency-services-konkapp-flat-konkapp"
+          />
 
-            <strong>{{ medication["Nom"] }}</strong>
-            <strong>{{ medication["Dosage"] }}</strong>
-            <strong>{{ medication["Unit"] }}</strong>
-            <strong>{{ medication["DCI"] }}</strong>
-            <strong>{{ medication["Stock dispo"] }}</strong>
-            <img
-              src="assets/images/info.svg"
-              alt="info"
-              style="
-                height: 15px;
-                width: 15px;
-                margin-top: 3px;
-              "
-              matTooltip="
-                Indications: {{ medication['Indications'] }}
+          <strong>{{ medication.name }}</strong>
+          <strong>{{ medication.dosage }}</strong>
+          <strong>{{ medication.unit }}</strong>
+          <strong>{{ medication.code }}</strong>
+          <strong>{{ medication.stock }}</strong>
+          <img
+            src="assets/images/info.svg"
+            alt="info"
+            style="height: 15px; width: 15px; margin-top: 3px"
+            matTooltip="
+                Indications: {{ medication.description }}
                 "
-            />
-          </p>
-        </div>
+          />
+        </p>
+        <i class="fa fa-times-circle clickable" aria-hidden="true" (click)="removeMedication(medication)"></i>
+
       </div>
     </div>
-    } -->
+  </div>
+  }
 </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { Stp3AddDiagnosticComponent } from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
 import { Stp1PatientSelection } from '../stp1-patient-selection/stp1-patient-selection.component';
 import { Stp4AddMedicationComponent } from '../stp4-add-medication/stp4-add-medication.component';
@@ -10,24 +10,29 @@ import {
 } from '../../../components/wizard-header/wizard-header.component';
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 import { Subject } from 'rxjs';
-import { medicationType } from '../../../types';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PrescriptionListComponent } from '../prescription-list/prescription-list.component';
 import { PatientDto } from '../../../types/registerDTOs';
 import { calculateAge } from '../../../shared/utilityFunctions';
-import { DiagnosisDto, MedicationDto, PosologyDto, SymptomDto } from '../../../types/prescriptionDTOs';
+import {
+  DiagnosisDto,
+  PosologyDto,
+  SymptomDto,
+} from '../../../types/prescriptionDTOs';
+import { Stp5HospitalizationComponent, stp5FormsValueEvent } from '../stp5-hospitalization/stp5-hospitalization.component';
 
 @Component({
   selector: 'app-add-prescription',
   standalone: true,
   imports: [
-    Stp3AddDiagnosticComponent,
     Stp1PatientSelection,
+    Stp2PatientDetailsComponent,
+    Stp3AddDiagnosticComponent,
     Stp4AddMedicationComponent,
+    Stp5HospitalizationComponent,
     MatIcon,
     WizardHeaderComponent,
-    Stp2PatientDetailsComponent,
     RouterModule,
     CommonModule,
     PrescriptionListComponent,
@@ -36,7 +41,7 @@ import { DiagnosisDto, MedicationDto, PosologyDto, SymptomDto } from '../../../t
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 4;
+  stepNumber: number = 1;
   stepsLimit: number = _steps.length;
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];
@@ -46,6 +51,7 @@ export class AddPrescriptionComponent {
   isAddMedicationPageValid: boolean = true;
   ShowPrescriptionList: boolean = false;
   wizardSteps: wizardStepType[] = _steps;
+  Hospitalization : stp5FormsValueEvent = {unitCare:null, diet:null}
 
   eventsSubject: Subject<void> = new Subject<void>();
 
@@ -62,8 +68,10 @@ export class AddPrescriptionComponent {
       symptoms: this.selectedSymptoms,
       diagnosis: this.selectedDiagnosis,
       posologies: this.newPosologies,
+      unitCare:this.Hospitalization.unitCare,
+      diet:this.Hospitalization.diet
     };
-    console.log(finalPrescription);
+    console.log(finalPrescription.posologies);
   }
 
   validatePageSwitch = (index: number): boolean => {
@@ -125,6 +133,10 @@ export class AddPrescriptionComponent {
 
   onClickViewPrescriptions() {
     this.ShowPrescriptionList = !this.ShowPrescriptionList;
+  }
+
+  HandleHospitalizationChange(event:stp5FormsValueEvent){
+    this.Hospitalization=event;
   }
 
   /* wizard buttons */

@@ -17,8 +17,6 @@ export class Stp2PatientDetailsComponent {
   @Input()
   medication: medicationType[] = dummyData;
 
-  onClickEditMedication(x: any, y: any) {}
-  onClickRemoveMedication(x: any, y: any) {}
 }
 
 const dummyData: medicationType[] = [];

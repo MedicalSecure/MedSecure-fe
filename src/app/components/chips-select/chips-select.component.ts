@@ -44,28 +44,30 @@ import { URL_REGEX } from '../../shared/const';
 export class ShipsSelectComponent<T> {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
-  @Input() searchPropertyName: string = 'label';
-  @Input() imagePropertyName: string = ''; // optional : add the property name of the image
+  @Input() searchPropertyName: keyof(T);
+  @Input() imagePropertyName: keyof(T); // optional : add the property name of the image
   @Input() minimumSearchLength: number = 2;
   @Input() minimumAddedLabelLength: number = 5;
   @Input() class: string = '';
   @Input() enableCustomAdditions: boolean = true;
   @Input() enableQuickSelectFromSuggestions: boolean = true;
   @Input() isStartWithSearch: boolean = false;
-  @Input() fullData: any[] = [{ index: 1, label: 'test', value: '5555' }];
+  @Input() fullData: T[] = [];
+  @Input() disabled:boolean=false;
+  @Input() selectedChips: T[] = [];
+  @Output() selectedChipsChange = new EventEmitter<onChipsSelectionEmitType<T>>();
+
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   ObjectControl = new FormControl<string | any>('');
   filteredDataByInput: Observable<any[]>;
   filteredDataSubscription!: Subscription;
   updatedSuggestionList: any[] = [];
-  selectedObjects: any[] = [];
   private _isAdditionEnabled: boolean = false;
 
   @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
   announcer = inject(LiveAnnouncer);
 
-  @Output() selectedChipsChange = new EventEmitter<onChipsSelectionEmitType<T>>();
 
   constructor() {
     this.filteredDataByInput = this.ObjectControl.valueChanges.pipe(
@@ -80,7 +82,7 @@ export class ShipsSelectComponent<T> {
     this.filteredDataSubscription = this.filteredDataByInput.subscribe(
       (data) => {
         this.updatedSuggestionList = data.filter(
-          (item) => !this.selectedObjects.includes(item)
+          (item) => !this.selectedChips.includes(item)
         );
       }
     );
@@ -99,7 +101,7 @@ export class ShipsSelectComponent<T> {
   ) {
     // Emit the updated array to the parent component
     this.selectedChipsChange.emit({
-      SelectedObjectList: this.selectedObjects,
+      SelectedObjectList: this.selectedChips,
       lastAddedItem,
       lastSelectedItem,
       lastRemovedItem,
@@ -141,7 +143,7 @@ export class ShipsSelectComponent<T> {
     }
     // Proceed to Add custom value
     let isAlreadyRegistered = false;
-    this.selectedObjects.forEach((selectedObject) => {
+    this.selectedChips.forEach((selectedObject) => {
       if (value.toLowerCase() == this._getStringToCompareTo(selectedObject)) {
         isAlreadyRegistered = true;
         /*  TODO : display input error message [ 'customLabel' length must be at least 'this.minimumSearchLength' ] */
@@ -162,7 +164,7 @@ export class ShipsSelectComponent<T> {
   }
 
   remove(objectToRemove: any): void {
-    this.selectedObjects = this.selectedObjects.filter(
+    this.selectedChips = this.selectedChips.filter(
       (chipObject: any) => chipObject != objectToRemove
     );
     this.onSelectionChange(undefined, undefined, objectToRemove);
@@ -172,7 +174,7 @@ export class ShipsSelectComponent<T> {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    if (!this.selectedObjects.includes(event.option.value)) {
+    if (!this.selectedChips.includes(event.option.value)) {
       this._addChipToSelection(event.option.value);
       this.ValueInput.nativeElement.value = '';
     }
@@ -198,7 +200,7 @@ export class ShipsSelectComponent<T> {
   }
 
   private _addChipToSelection(newChip: any, isAdded = false): void {
-    this.selectedObjects.push(newChip);
+    this.selectedChips.push(newChip);
     this.ObjectControl.setValue(null);
     let lastAddedItem, lastSelectedItem;
     if (isAdded) lastAddedItem = newChip;
@@ -232,22 +234,25 @@ export class ShipsSelectComponent<T> {
 
   private _verifySearchPropertyName(): void {
     if (!this.fullData || this.fullData.length == 0) return;
-    if (!this.fullData[0].hasOwnProperty(this.searchPropertyName)) {
+    const firstDataItem = this.fullData[0] as Record<string, any>;
+    if (!firstDataItem.hasOwnProperty(this.searchPropertyName)) {
+      this.disabled=true;
       throw new TypeError(
         'Chip select component : ' +
           " the provided data doesn't contain the searchPropertyName : " +
-          this.searchPropertyName +
+          this.searchPropertyName.toString() +
           ' || Component Label : ' +
           this.customLabel
       );
     }
     let searchablePropertyType =
-      typeof this.fullData[0][this.searchPropertyName];
+      typeof this.fullData[0][this.searchPropertyName as keyof(T)];
     if (['number', 'string'].includes(searchablePropertyType) == false) {
+      this.disabled=true;
       throw new TypeError(
         'Chip select component : ' +
           'the provided searchPropertyName ( ' +
-          this.searchPropertyName +
+          this.searchPropertyName.toString() +
           " ) isn't of type String Or Number" +
           ' || Component Label : ' +
           this.customLabel
@@ -258,7 +263,9 @@ export class ShipsSelectComponent<T> {
     if (!this.fullData || this.fullData.length == 0) return;
     if (this.imagePropertyName === '' || this.imagePropertyName === undefined)
       return;
-    if (!this.fullData[0].hasOwnProperty(this.imagePropertyName)) {
+    const firstDataItem = this.fullData[0] as Record<string, any>;
+
+    /* if (!firstDataItem.hasOwnProperty(this.imagePropertyName)) {
       throw new TypeError(
         'Chip select component : ' +
           " the provided data doesn't contain the image property name : " +
@@ -267,7 +274,7 @@ export class ShipsSelectComponent<T> {
           this.customLabel
       );
     }
-    let imagePropertyType = typeof this.fullData[0][this.imagePropertyName];
+    let imagePropertyType = typeof firstDataItem[this.imagePropertyName];
     if (imagePropertyType != 'string') {
       throw new TypeError(
         'Chip select component : ' +
@@ -278,7 +285,7 @@ export class ShipsSelectComponent<T> {
           this.customLabel
       );
     }
-    let imageUrl = this.fullData[0][this.imagePropertyName];
+    let imageUrl = firstDataItem[this.imagePropertyName];
     const isValidUrl = URL_REGEX.test(imageUrl);
     if (!isValidUrl) {
       throw new TypeError(
@@ -289,7 +296,7 @@ export class ShipsSelectComponent<T> {
           ' || Component Label : ' +
           this.customLabel
       );
-    }
+    } */
   }
 }
 

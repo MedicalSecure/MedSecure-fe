@@ -24,6 +24,9 @@ export class DatepickerRangePopupComponent {
   @Input()
   maxDate:Date=new Date('9999/01/01');
 
+  @Input()
+  disabled:boolean=false
+
   panelStyle: string = 'd-none';
   @Output()
   DateRangeChange: EventEmitter<DateRangeType> =

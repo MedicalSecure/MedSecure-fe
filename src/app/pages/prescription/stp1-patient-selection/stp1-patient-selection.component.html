@@ -1,9 +1,10 @@
 <div>
   <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
-    <input type="text" class="form-control form-control-sm" name="" id="" aria-describedby="helpId" [(ngModel)]="searchTerm" placeholder="Enter Name OR Serial number" />
-    <input name="" id="" class="btn btn-outline-primary" type="button" value="Search" />
+    <input type="text" class="form-control form-control-sm" name="" id="" aria-describedby="helpId" [disabled]="IsPatientListLoading" [(ngModel)]="searchTerm" placeholder="Enter Name OR Serial number" />
+    <input name="" id="" class="btn btn-outline-primary" type="button" value="Search" [disabled]="IsPatientListLoading" />
   </div>
 
+  @if(IsPatientListLoading==false){
   <table class="table table-responsive">
     <thead>
       <tr id="table-head-row">
@@ -16,14 +17,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of dataList | filterPatientByNameAndSn: searchTerm" (click)="onClickPatient(data)" [class]="data === selectedPatient ? 'table-primary' : ''">
-        <td class="col-3">{{ data.id.length >10 ?  (data.id.slice(0,10) + "...") : data.id}}</td>
+      <tr *ngFor="let data of PatientList | filterPatientByNameAndSn : searchTerm" (click)="onClickPatient(data)" [class]="data === selectedPatient ? 'table-primary' : ''">
+        <td class="col-3">{{ data.id.length > 10 ? data.id.slice(0, 10) + "..." : data.id }}</td>
         <td class="col-3">{{ data.firstName + " " + data.lastName }}</td>
-        <td class="col-2">{{ getDateString(data.createdAt ,"dd-mm-yyyy - HH:MM") }}</td>
+        <td class="col-2">{{ getDateString(data.createdAt, "dd-mm-yyyy - HH:MM") }}</td>
         <td class="col-1">{{ data.gender }}</td>
         <td class="col-1">{{ getAge(data.dateOfBirth) + " years" }}</td>
         <td class="col-1">{{ data.height }}</td>
       </tr>
     </tbody>
   </table>
+  } @else {<div class="mx-auto pe-5 mt-5" style="width:fit-content"><mat-spinner></mat-spinner></div>}
 </div>

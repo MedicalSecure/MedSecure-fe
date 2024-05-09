@@ -11,12 +11,21 @@ import { CommonModule } from '@angular/common';
 
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 import { DiagnosisDto, SymptomDto } from '../../../types/prescriptionDTOs';
+import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-stp3-add-diagnostic',
   standalone: true,
   templateUrl: './stp3-add-diagnostic.component.html',
   styleUrl: './stp3-add-diagnostic.component.css',
+  animations: [
+    trigger('loadingAnimation', [
+      state('true', style({ opacity: 1 })),
+      state('false', style({ opacity: 0 })),
+      transition('false <=> true', animate('300ms ease-in-out')),
+    ]),
+  ],
   imports: [
     FormsModule,
     MatFormFieldModule,
@@ -30,21 +39,36 @@ import { DiagnosisDto, SymptomDto } from '../../../types/prescriptionDTOs';
 export class Stp3AddDiagnosticComponent {
   @Input() minimumRequiredSymptoms: number = 0;
   @Input() minimumRequiredDiagnosis: number = 0;
-  @Output() onSelectedDiagnosisChange = new EventEmitter<
+  @Output()
+  onSelectedDiagnosisChange = new EventEmitter<
     onChipsSelectionEmitType<DiagnosisDto>
   >();
-  @Output() onSelectedSymptomsChange = new EventEmitter<
+  @Output()
+  onSelectedSymptomsChange = new EventEmitter<
     onChipsSelectionEmitType<SymptomDto>
   >();
-  @Output() onIsAddSymptomsPageValidChange = new EventEmitter<boolean>();
+  @Output()
+  onIsAddSymptomsPageValidChange = new EventEmitter<boolean>();
 
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];
-  @Input() diagnosesData = [];
-  @Input() symptomsData = [];
+  @Input()
+  diagnosesData: DiagnosisDto[] = [];
+  @Input()
+  symptomsData: SymptomDto[] = [];
+
+  minimumSymptomsForPrediction: number = 3;
+  continuePredicting: boolean = true;
+
+  isSymptomsLoading = true;
+  isDiagnosisLoading = true;
+
+  constructor(private prescriptionService: PrescriptionApiService) {}
 
   ngOnInit() {
     this.onIsPageValidChange();
+    this.fetchSymptoms();
+    this.fetchDiagnosis();
   }
 
   selectedSymptomsChipsChange(result: onChipsSelectionEmitType<SymptomDto>) {
@@ -60,11 +84,18 @@ export class Stp3AddDiagnosticComponent {
     this.selectedSymptoms = result.SelectedObjectList;
     this.onIsPageValidChange();
     this.onSelectedSymptomsChange.emit(result);
+    const predictCondition =
+      this.minimumSymptomsForPrediction <= this.selectedSymptoms.length && this.continuePredicting;
+    if (predictCondition) this.predictDiagnosis(result.SelectedObjectList);
   }
 
-  selectedDiagnosisChipsChange(
-    result: onChipsSelectionEmitType<DiagnosisDto>,
-  ) {
+  selectedDiagnosisChipsChange(result: onChipsSelectionEmitType<DiagnosisDto>) {
+    this.continuePredicting = false;
+    if (result.SelectedObjectList.length ===0) {
+      //if its empty, continue predicting
+      this.continuePredicting = true;
+    }
+    //debugger;
     // Access and use the selected indexes here
     if (result.lastAddedItem) {
       console.log('added custom item :', result.lastAddedItem);
@@ -85,7 +116,61 @@ export class Stp3AddDiagnosticComponent {
     const areSymptomsValid =
       this.selectedSymptoms.length >= this.minimumRequiredSymptoms;
     this.onIsAddSymptomsPageValidChange.emit(
-      areDiagnosisValid && areSymptomsValid,
+      areDiagnosisValid && areSymptomsValid
     );
+  }
+
+  fetchSymptoms() {
+    this.isSymptomsLoading = true;
+    this.prescriptionService.getSymptoms(0, 200).subscribe(
+      (response) => (this.symptomsData = response.symptom.data),
+      (error) => console.error(error),
+      () => (this.isSymptomsLoading = false)
+    );
+  }
+
+  fetchDiagnosis() {
+    this.isDiagnosisLoading = true;
+    this.prescriptionService.getDiagnosis(0, 200).subscribe(
+      (response) => {
+        this.diagnosesData = response.diagnosis.data;
+      },
+      (error) => console.error(error),
+      () => (this.isDiagnosisLoading = false)
+    );
+  }
+
+  predictDiagnosis(symptoms: SymptomDto[]) {
+    this.isDiagnosisLoading = true;
+    this.prescriptionService.getPredictedDiagnosis(symptoms).subscribe(
+      (response) => {
+        //add to existing!
+        //this.selectedDiagnosis = [...this.selectedDiagnosis,response.predictedDiagnosis]
+
+        //replace existing !!
+        this.selectedDiagnosis = [response.predictedDiagnosis];
+
+        //shake the input
+        this.triggerShakeAnimation()
+
+        console.log("new prediction")
+        console.log(response.predictedDiagnosis)
+      },
+      (error) => console.error(error),
+      () => (this.isDiagnosisLoading = false)
+    );
+  }
+
+
+  triggerShakeAnimation() {
+    if (this.isDiagnosisLoading) {
+      const element = document.getElementById('diagnosis-chips-select-container');
+      if (element) {
+        element.classList.add('shake-animation');
+        setTimeout(() => {
+          element.classList.remove('shake-animation');
+        }, 100); // Adjust this value to match the animation duration
+      }
+    }
   }
 }

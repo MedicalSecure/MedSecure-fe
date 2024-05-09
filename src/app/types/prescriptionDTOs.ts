@@ -1,3 +1,7 @@
+import { DietDto } from './DietDTOs';
+import { UnitCareDTO } from './UnitCareDTOs';
+import { MedicationDto } from './medicationDTOs';
+
 export type PaginatedResult<TEntity> = {
   pageIndex: number;
   pageSize: number;
@@ -8,6 +12,19 @@ export type PaginatedResult<TEntity> = {
 export type GetPrescriptionsResponse = {
   prescriptions: PaginatedResult<PrescriptionDto>;
 };
+export type GetDiagnosisResponse = {
+  diagnosis: PaginatedResult<DiagnosisDto>;
+};
+export type GetSymptomsResponse = {
+  symptom: PaginatedResult<SymptomDto>;
+};
+
+export type PostPredictDiagnosisResponse = {
+  predictedDiagnosis: DiagnosisDto;
+};
+export type PostPredictDiagnosisCommand = {
+  symptoms: SymptomDto[];
+};
 
 export type PrescriptionDto = {
   id: string;
@@ -16,6 +33,8 @@ export type PrescriptionDto = {
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyDto[];
+  unitCare?: UnitCareDTO | null;
+  diet?: DietDto | null;
   createdAt: Date;
   lastModified?: Date | null;
   createdBy: string;
@@ -78,23 +97,4 @@ export type DoctorDto = {
   lastName: string;
   specialty: string;
   dateOfBirth: Date;
-};
-
-export type MedicationDto = {
-  id: string;
-  name: string;
-  dosage: string;
-  form: string;
-  code: string;
-  unit: string;
-  description: string;
-  expiredAt: Date;
-  stock: number;
-  alertStock: number;
-  avrgStock: number;
-  minStock: number;
-  safetyStock: number;
-  reservedStock: number;
-  availableStock:number;
-  price: number;
 };

@@ -75,6 +75,13 @@
                   (onPosologiesChange)="handlePosologyChange($event)"
                 />
               </div>
+
+              <!-- Step 5: Hospitalization -->
+              <div [className]="stepNumber != 5 && 'd-none'">
+                <app-stp5-hospitalization
+                  (formValueChange)="HandleHospitalizationChange($event)"
+                />
+              </div>
             </div>
 
             <!-- Wizard buttons -->

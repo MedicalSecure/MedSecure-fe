@@ -2,18 +2,23 @@
   <!-- left side : add medication -->
   <div class="col-12 col-md-7 p-0">
     <form class="d-flex flex-column gap-2 justify-content-center align-middle py-2">
-      <div class="d-flex align-middle justify-content-around" [formGroup]="medicationFormGroup">
+      <div class="d-flex align-middle justify-content-between">
         <app-search-bar
-         [displaySelectedMedication]="false"
-         [containerClasses]="'d-flex gap-3 flex-wrap-reverse justify-content-center'"
+         [displaySelectedMedication]="true"
+         [containerClasses]="'d-flex gap-3 flex-wrap justify-content-center'"
          [searchTerms]="searchTerms"
+         [minimumNumberOfCharacters]="1"
+         [maxNumberOfSelectedMedications]="1"
+         [hideSearchIfMaximumReached]="true"
+         [selectedMedications]="selectedMedications"
+         (selectedMedicationsChange)="onSelectedMedicationChange($event)"
          />
         <div class="d-flex gap-2 justify-content-center align-middle">
           <div title="Add medication" (click)="onAppendMedication()" class="pt-2" style="cursor: pointer">
-            <i class="fa fa-plus-circle fs-2" aria-hidden="true"></i>
+            <i class="fa fa-plus-circle fs-3" aria-hidden="true"></i>
           </div>
-          <div title="Add comment" (click)="onAddComment()" class="pt-2" style="cursor: pointer">
-            <i class="fa-solid fa-comment-medical fs-2"></i>
+          <div title="Add comment" (click)="onAddComment()" class="pt-2" style="cursor: pointer" >
+            <i class="fa-solid fa-comment-medical fs-3"></i>
           </div>
         </div>
       </div>
@@ -29,18 +34,21 @@
         [partsOfDayHours]="selectedPosology.dispenses"
         [isDispenseQuantityReadOnly]="false"
         [showEmptyCases]="true"
+        [isDispenseQuantityReadOnly]="!canUpdatePosology"
       ></app-schedule>
       <!-- period -->
       <div class="border border-black p-2 mt-1 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center">
         <p class="position-absolute px-2 bg-white fit-content" style="z-index: 2; top: -0.8em; left: 1em">Period*</p>
 
         <app-datepicker-range-popup
-          [dateRange]="[selectedPosology.startDate, selectedPosology.endDate]"
+          [dateRange]="selectedPosologyDateRange"
           (DateRangeChange)="onPeriodChange($event)"
           [minDate]="consumptionMinStartDate"
+          [disabled]="!canUpdatePosology"
         ></app-datepicker-range-popup>
-        <mat-chip-option (selectionChange)="onIsPermanentChange($event.selected)" [selected]="selectedPosology.isPermanent ? true : false" color="warn">Permanent</mat-chip-option>
-        <mat-chip-option (selectionChange)="onIsCautionEnabledChange($event.selected)" [selected]="isCautionEnabled" color="accent">Caution</mat-chip-option>
+        
+        <mat-chip-option (selectionChange)="onIsPermanentChange($event.selected)" [disabled]="!canUpdatePosology" [selected]="selectedPosology.isPermanent" color="warn">Permanent</mat-chip-option>
+        <mat-chip-option (selectionChange)="onIsCautionEnabledChange($event.selected)" [disabled]="!canUpdatePosology" [selected]="isCautionEnabled" color="accent">Caution</mat-chip-option>
       </div>
 
       <!-- Additional information -->
@@ -61,7 +69,7 @@
       }
     </form>
 
-    <button type="button" class="btn btn-primary text-white btn-lg px-5" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onAppendMedication()">
+    <button type="button" class="btn btn-primary text-white btn-lg px-5" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onAppendMedication()" [disabled]="!canUpdatePosology">
       {{ getAppendMedicationButtonLabel().label }}
     </button>
   </div>
@@ -83,13 +91,13 @@
             <div class="mb-0">
               <div class="fw-bold fs-6 text-primary mb-0 d-flex justify-content-start align-middle align-items-center">
                 <span (click)="onClickEditMedication($index, posology)" style="cursor: pointer" class="d-flex justify-content-start align-middle align-items-center">
-                  {{ posology.id.length > 10 ? posology.id.slice(0, 10) + "..." : posology.id }}
+                  {{ posology.medication.name.length > 30 ? posology.medication.name.slice(0, 30) + "..." : posology.medication.name}}
                   <mat-icon class="fs-6">edit</mat-icon></span
                 >
                 <mat-icon class="fs-6 text-danger" (click)="onClickRemoveMedication($index)" style="cursor: pointer; margin-left: -0.5rem">delete</mat-icon>
               </div>
               <p class="fw-light fs-6 text-dark mb-0">
-                {{ posology.isPermanent ? "Permanent" : getNumberOfDaysInRange([selectedPosology.startDate, selectedPosology.endDate]) + " Days" }}
+                {{ posology.isPermanent ? "Permanent" : getNumberOfDaysInRange([posology.startDate, posology.endDate]) + " Days" }}
                 <span style="font-size: small">{{ getDateString(posology.startDate, "dd/mm/yyyy") }}</span>
                 @if (!posology.isPermanent) {
                 <span style="font-size: small">{{ " - " + getDateString(posology.endDate!, "dd/mm/yyyy") }}</span>
@@ -111,7 +119,7 @@
                 @if (true) {
                 {{ getPosologySummary(posology).timesADay }}
                 <!--   {{ getPosologySummary(posology).average }} units on avg | -->
-                maximum dispense: {{ getPosologySummary(posology).maximumDispenseQuantity }}
+                max dose: {{ getPosologySummary(posology).maximumDispenseQuantity }}
                 }
               </p>
               <!--                   @if (medication.isForceOrder) {

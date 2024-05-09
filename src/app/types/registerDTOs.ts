@@ -38,9 +38,9 @@ export type PatientDto = {
     familyStatus?: FamilyStatus | null;
     children?: number | null;
     createdAt:Date,
-    modifiedAt?:Date,
+    modifiedAt?:Date | null,
     createdBy:string,
-    modifiedBy?:string,
+    modifiedBy?:string | null,
 }
 
 export type History ={
@@ -76,4 +76,8 @@ export type Test ={
 
 export type GetRegistrationsResponse={
     registrations:PaginatedResult<RegisterDto>
+}
+
+export type GetPatientsResponse={
+    patients:PaginatedResult<PatientDto>
 }
