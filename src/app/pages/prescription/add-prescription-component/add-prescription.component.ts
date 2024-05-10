@@ -17,10 +17,18 @@ import { PatientDto } from '../../../types/registerDTOs';
 import { calculateAge } from '../../../shared/utilityFunctions';
 import {
   DiagnosisDto,
+  PosologyCreateDto,
   PosologyDto,
+  PrescriptionCreateDto,
+  PrescriptionDto,
   SymptomDto,
 } from '../../../types/prescriptionDTOs';
-import { Stp5HospitalizationComponent, stp5FormsValueEvent } from '../stp5-hospitalization/stp5-hospitalization.component';
+import {
+  Stp5HospitalizationComponent,
+  stp5FormsValueEvent,
+} from '../stp5-hospitalization/stp5-hospitalization.component';
+import { filterScheduleItems } from '../../../components/schedule/schedule.component';
+import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 
 @Component({
   selector: 'app-add-prescription',
@@ -51,27 +59,58 @@ export class AddPrescriptionComponent {
   isAddMedicationPageValid: boolean = true;
   ShowPrescriptionList: boolean = false;
   wizardSteps: wizardStepType[] = _steps;
-  Hospitalization : stp5FormsValueEvent = {unitCare:null, diet:null}
+  Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
 
   eventsSubject: Subject<void> = new Subject<void>();
 
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
   backButtonContent: { label: string; class: string } = _backButtonContent;
 
+  constructor(private prescriptionApiService: PrescriptionApiService) {}
   ngOnInit() {
     this._updateButtonsState();
   }
 
   handleSubmit() {
-    const finalPrescription = {
+    const summary = {
       patient: this.selectedPatient,
       symptoms: this.selectedSymptoms,
       diagnosis: this.selectedDiagnosis,
       posologies: this.newPosologies,
-      unitCare:this.Hospitalization.unitCare,
-      diet:this.Hospitalization.diet
+      unitCare: this.Hospitalization.unitCare,
+      diet: this.Hospitalization.diet,
     };
-    console.log(finalPrescription.posologies);
+    //console.log(summary);
+    const filteredPosologies: PosologyCreateDto[] = this.newPosologies.map(
+      (posology) => {
+         var x : PosologyCreateDto={
+          medicationId:posology.medication.id,
+          startDate:posology.startDate,
+          endDate:posology.endDate,
+          isPermanent:posology.isPermanent,
+          comments:posology.comments,
+          dispenses: filterScheduleItems(posology.dispenses),
+        };
+        return x;
+      }
+    );
+    const finalPrescription: PrescriptionCreateDto = {
+      //@ts-ignore im sure, on submit, patient is selected and not undefined
+      registerId: this.selectedPatient.registerId,
+      doctorId: '', //TODO
+      diagnoses: this.selectedDiagnosis,
+      symptoms: this.selectedSymptoms,
+      createdAt: new Date(),
+      createdBy: '',
+      posologies: filteredPosologies,
+      unitCareId: this.Hospitalization.unitCare?.id,
+      dietId: this.Hospitalization.diet?.Id,
+    };
+    console.log(JSON.stringify(finalPrescription));
+    this.prescriptionApiService.postPrescriptions(finalPrescription).subscribe(
+      (response) => console.log(response),
+      (error) => console.error(error) 
+    );
   }
 
   validatePageSwitch = (index: number): boolean => {
@@ -135,8 +174,8 @@ export class AddPrescriptionComponent {
     this.ShowPrescriptionList = !this.ShowPrescriptionList;
   }
 
-  HandleHospitalizationChange(event:stp5FormsValueEvent){
-    this.Hospitalization=event;
+  HandleHospitalizationChange(event: stp5FormsValueEvent) {
+    this.Hospitalization = event;
   }
 
   /* wizard buttons */

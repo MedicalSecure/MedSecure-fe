@@ -22,6 +22,7 @@ export type RegisterDto = {
 
 export type PatientDto = {
     id: string;
+    registerId: string;
     firstName: string;
     lastName?: string | null;
     dateOfBirth?: Date | null;

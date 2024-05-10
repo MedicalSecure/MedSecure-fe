@@ -45,6 +45,9 @@ export class ShipsSelectComponent<T> {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
   @Input() searchPropertyName: keyof(T);
+
+  @Input() tooltipPropertyName: keyof(T);// optional : add the property name to display tooltip text
+
   @Input() imagePropertyName: keyof(T); // optional : add the property name of the image
   @Input() minimumSearchLength: number = 2;
   @Input() minimumAddedLabelLength: number = 5;
@@ -57,6 +60,17 @@ export class ShipsSelectComponent<T> {
   @Input() selectedChips: T[] = [];
   @Output() selectedChipsChange = new EventEmitter<onChipsSelectionEmitType<T>>();
 
+
+  /* assure that the input propertyName refers to string prop?
+  
+    type StringKeys<T> = {
+    [K in keyof T]: T[K] extends string ? K : never;
+  }[keyof T];
+
+  interface MyComponent<T extends object> {
+    @Input() tooltipPropertyName: StringKeys<T>;
+  }
+  */
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   ObjectControl = new FormControl<string | any>('');

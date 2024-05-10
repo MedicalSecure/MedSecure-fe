@@ -141,11 +141,17 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     //this.isSelectedForceOrder = group.option.group.label === 'out of stock';
   }
 
-  HandleScheduleChange(FilteredHoursList: Dispense[]) {
-    //console.log(FilteredHoursList);
-  }
-
   onIsCautionEnabledChange(caution: boolean) {
+    const bugCondition =
+      caution &&
+      this.isEditingMode &&
+      this.selectedPosology.comments.length > 0 &&
+      this.selectedPosology.comments[0].label === 'Caution';
+    if (bugCondition) {
+      // in this if, i will handle the caution enabling in case of editing a medication (click on edit)
+      //and this medication has a caution comment => it will trigger this function and cause comment duplication
+      return;
+    }
     this.isCautionEnabled = caution;
     let commentList = this.selectedPosology.comments;
     if (caution) {
@@ -161,10 +167,10 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   }
 
   onIsPermanentChange(newIsPermanentState: boolean) {
-    this.switchIsPermanent(newIsPermanentState);
+    //debugger;
+    this.selectedPosology.isPermanent = newIsPermanentState;
     let startDate = this.selectedPosology.startDate;
     let endDate = this.selectedPosology.endDate;
-
     if (newIsPermanentState == true) {
       endDate = null;
     } else {
@@ -183,6 +189,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   }
 
   onPeriodChange(newDateRange: DateRangeType) {
+    //debugger;
     if (newDateRange === null) {
       //clear button disabling
       newDateRange = getInitialDateRange();
@@ -199,12 +206,6 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     let NewIsPermanentState = newDateRange[1] === null; // EndDate==Null => NewIsPermanentState = true
     this.selectedPosology.isPermanent = NewIsPermanentState;
     this.changeDetector.detectChanges();
-  }
-
-  switchIsPermanent(newState: boolean) {
-    this.selectedPosology.isPermanent = newState;
-    if (newState === true) this.selectedPosology.endDate = null;
-    //if (newState === false) this.selectedPosology.endDate = null;
   }
 
   /* Comments */
@@ -254,8 +255,14 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       (item, i) => index != i
     );
     this.selectedPosology = posology;
+    this.selectedPosologyDateRange=[posology.startDate,posology.endDate];
     this.selectedMedications = [posology.medication];
     this.canUpdatePosology = this.selectedMedications.length > 0;
+    //Caution comment is always the first one, so we can change the state here!
+    this.isCautionEnabled =
+      this.selectedPosology.comments.length > 0
+        ? this.selectedPosology.comments[0].label === 'Caution'
+        : false;
   }
   onClickRemoveMedication(index: number) {
     this.newPosologiesList = this.newPosologiesList.filter((item, i) => {
@@ -280,6 +287,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       this.newPosologiesList.push(CurrentPosology);
       this.onSelectedMedicationChange([]);
       this.isEditingMode = false;
+      this.isCautionEnabled = false;
       /*       if (this.isFilteredForceOrder === false)
         this.isFilteredForceOrder =
           CurrentPosology.isForceOrder == undefined

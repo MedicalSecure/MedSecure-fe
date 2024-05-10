@@ -30,7 +30,6 @@
 
       <!-- part of day -->
       <app-schedule
-        (filteredPartsOfDayHoursChange)="HandleScheduleChange($event)"
         [partsOfDayHours]="selectedPosology.dispenses"
         [isDispenseQuantityReadOnly]="false"
         [showEmptyCases]="true"

@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, timer } from 'rxjs';
 import {
+  CreatePrescriptionRequest,
+  CreatePrescriptionResponse,
   GetDiagnosisResponse,
   GetPrescriptionsResponse,
   GetSymptomsResponse,
   PaginatedResult,
   PostPredictDiagnosisCommand,
   PostPredictDiagnosisResponse,
+  PrescriptionCreateDto,
   PrescriptionDto,
   SymptomDto,
 } from '../../types/prescriptionDTOs';
@@ -32,6 +35,17 @@ export class PrescriptionApiService {
       .set('PageSize', pageSize.toString());
 
     let x = this.http.get<GetPrescriptionsResponse>(this.apiUrl, { params });
+    return x;
+  }
+
+  postPrescriptions(prescriptionDto: PrescriptionCreateDto) {
+    const postPrescriptionRequest: CreatePrescriptionRequest = {
+      prescription: prescriptionDto,
+    };
+    let x = this.http.post<CreatePrescriptionResponse>(
+      this.apiUrl,
+      postPrescriptionRequest
+    );
     return x;
   }
 

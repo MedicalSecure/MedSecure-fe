@@ -17,6 +17,7 @@
             [searchPropertyName]="'name'"
             [disabled]="symptomsData.length===0"
             [selectedChips]="selectedSymptoms"
+            [tooltipPropertyName]="'shortDescription'"
           ></chips-select>
 
           <div id="diagnosis-chips-select-container">
@@ -35,6 +36,7 @@
             [searchPropertyName]="'name'"
             [disabled]="diagnosesData.length===0"
             [selectedChips]="selectedDiagnosis"
+            [tooltipPropertyName]="'shortDescription'"
             ></chips-select>
           </div>
         </div>

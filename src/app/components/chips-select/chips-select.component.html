@@ -3,7 +3,7 @@
     @if(customLabel){<mat-label >{{ customLabel }}</mat-label>}
     <mat-chip-grid #chipGrid aria-label="object selection ">
       @for (object of selectedChips; track object) {
-      <mat-chip-row (removed)="remove(object)">
+      <mat-chip-row (removed)="remove(object)" [aria-description]="'test'" [title]="tooltipPropertyName ? object[tooltipPropertyName] : ''">
         @if(isViewImage(object)){
           <img
             matChipAvatar

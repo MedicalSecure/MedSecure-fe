@@ -35,7 +35,7 @@ export class DatepickerRangePopupComponent {
   inputStyle: object = this.isMinimalisticView ? { maxWidth: '14.2rem' } : {};
 
   emitFinalDateRange() {
-    console.log('selected range :', this.dateRange);
+    //console.log('selected range :', this.dateRange);
     this.DateRangeChange.emit(this.dateRange);
   }
 

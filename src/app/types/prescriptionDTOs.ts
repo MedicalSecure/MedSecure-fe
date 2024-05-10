@@ -25,6 +25,13 @@ export type PostPredictDiagnosisResponse = {
 export type PostPredictDiagnosisCommand = {
   symptoms: SymptomDto[];
 };
+export type CreatePrescriptionRequest = {
+  prescription: PrescriptionCreateDto;
+};
+export type CreatePrescriptionResponse = {
+  id: string;
+};
+
 
 export type PrescriptionDto = {
   id: string;
@@ -33,12 +40,24 @@ export type PrescriptionDto = {
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyDto[];
-  unitCare?: UnitCareDTO | null;
-  diet?: DietDto | null;
+  unitCareId?: string | null;//match these types
+  dietId?: string | null;
   createdAt: Date;
   lastModified?: Date | null;
   createdBy: string;
   lastModifiedBy?: string | null;
+};
+
+export type PrescriptionCreateDto = {
+  registerId: string;
+  doctorId: string;
+  symptoms: SymptomDto[];
+  diagnoses: DiagnosisDto[];
+  posologies: PosologyCreateDto[];
+  unitCareId?: string | null;//match these types
+  dietId?: string | null;
+  createdAt: Date;
+  createdBy: string;
 };
 
 export type GetPrescriptionsResult = {
@@ -49,6 +68,15 @@ export type PosologyDto = {
   id: string;
   prescriptionId: string;
   medication: MedicationDto;
+  startDate: Date;
+  endDate: Date | null;
+  isPermanent: boolean;
+  comments: CommentsDto[];
+  dispenses: DispenseDto[];
+};
+
+export type PosologyCreateDto = {
+  medicationId: string;
   startDate: Date;
   endDate: Date | null;
   isPermanent: boolean;

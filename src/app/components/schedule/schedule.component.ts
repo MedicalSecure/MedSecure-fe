@@ -236,18 +236,7 @@ export class ScheduleComponent implements OnInit {
   private _emitChanges() {
     // filter empty objects before emitting in some cases
     this.partsOfDayHoursChange.emit(this.partsOfDayHours);
-    let filteredList = this.partsOfDayHours.filter((item) => {
-      let isBeforeFoodEmpty =
-        item.beforeMeal == undefined ||
-        item.beforeMeal.Quantity == '' ||
-        item.beforeMeal.Quantity == undefined;
-      let isAfterFoodEmpty =
-        item.afterMeal == undefined ||
-        item.afterMeal.Quantity == '' ||
-        item.afterMeal.Quantity == undefined;
-      if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
-      return true;
-    });
+    let filteredList = filterScheduleItems(this.partsOfDayHours);
     this.filteredPartsOfDayHoursChange.emit(filteredList);
   }
 
@@ -270,6 +259,21 @@ export class ScheduleComponent implements OnInit {
       return hourObj;
     });
   }
+}
+
+export function filterScheduleItems(unFilteredList: Dispense[]): Dispense[] {
+  return unFilteredList.filter((item) => {
+    let isBeforeFoodEmpty =
+      item.beforeMeal == undefined ||
+      item.beforeMeal.Quantity == '' ||
+      item.beforeMeal.Quantity == undefined;
+    let isAfterFoodEmpty =
+      item.afterMeal == undefined ||
+      item.afterMeal.Quantity == '' ||
+      item.afterMeal.Quantity == undefined;
+    if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
+    return true;
+  });
 }
 
 const _initialPartsOfDayHours: Dispense[] = [
@@ -376,4 +380,3 @@ export type Dose = {
   isValid: boolean;
   isPostValid: boolean;
 };
-
