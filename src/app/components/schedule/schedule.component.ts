@@ -73,7 +73,7 @@ export class ScheduleComponent implements OnInit {
   ngOnInit(): void {
     this._fillInitialData();
   }
-
+ 
   ngOnChanges(changes: SimpleChanges) {
     // Check if partsOfDayHours has changed
     if (changes['partsOfDayHours']) {

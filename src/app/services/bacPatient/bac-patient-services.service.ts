@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BacPatientResponse, ELEMENT_DATA, bacpatient } from '../pages/bacPatient/bacPatient.component';
+import { ELEMENT_DATA } from '../../pages/bacPatient/bacPatient.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { BacPatientResponse, bacpatient } from '../../model/BacPatient';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +11,16 @@ import { MatPaginator } from '@angular/material/paginator';
 export class BacPatientService {
   constructor(private http: HttpClient) { }
   getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) {
-    this.http.get<BacPatientResponse>('https://localhost:6065/v1/bacPatient')
+    this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
-          if (response && response && response.data) {
-           dataSource.data = response.data;
-            response.data.forEach(element => {
+          if (response && response.bacPatients.data) {
+           dataSource.data = response.bacPatients.data;
+           response.bacPatients.data.forEach(element => {
               console.log(element);
               ELEMENT_DATA.push(element);
-            });
+            }); 
           } else {
             console.error('Invalid response format:', response);
           }

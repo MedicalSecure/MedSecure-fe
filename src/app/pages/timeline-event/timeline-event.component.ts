@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ELEMENT_DATA, Medicine, bacpatient } from '../bacPatient/bacPatient.component';
+import { ELEMENT_DATA, bacpatient } from '../bacPatient/bacPatient.component';
 import { CommonModule } from '@angular/common';
+import { Medication } from '../../model/BacPatient';
 
 @Component({
   selector: 'app-timeline-event',
@@ -9,7 +10,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './timeline-event.component.html',
   styleUrl: './timeline-event.component.css'
 })
-export class GanttChartComponent implements OnInit{
+export class GanttChartComponent implements OnInit {
 
   isCurrentHour(hour: number): boolean {
     const currentHour = new Date().getHours();
@@ -23,63 +24,57 @@ export class GanttChartComponent implements OnInit{
     return inputHour === currentHour;
   }
 
-calculateQuantity( be:number , ae:number):number {
-  return be+ae ;
-}
-  
-  @Input() targetHours : number[];
-  data_list: bacpatient[] = ELEMENT_DATA;
-  uniqueroom :number[] = [];
-  tableElements : bacpatient[] = [];
-  medicines : Medicine[] = [] ;
-  medicineByHour: Map<string, Medicine[]> = new Map();
- hours:string[]=[];
+  calculateQuantity(be: number, ae: number): number {
+    return be + ae;
+  }
 
-  medicinesByHourMap: Map<string, Medicine[]> = new Map();
-uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
-getUniqueRooms(): Map<number, bacpatient[]> {
-  const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
-  this.data_list.forEach(item => {
-      if (!uniqueRoomsMap.has(item.room.number)) {
-          uniqueRoomsMap.set(item.room.number, []);
+  @Input() targetHours: number[];
+  data_list: bacpatient[] = ELEMENT_DATA;
+  uniqueroom: number[] = [];
+  tableElements: bacpatient[] = [];
+  medicines: Medication[] = [];
+  medicineByHour: Map<string, Medication[]> = new Map();
+  hours: string[] = [];
+
+  medicinesByHourMap: Map<string, Medication[]> = new Map();
+  uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
+  getUniqueRooms(): Map<number, bacpatient[]> {
+    const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
+    this.data_list.forEach(item => {
+      if (!uniqueRoomsMap.has(item.room.roomNumber)) {
+        uniqueRoomsMap.set(item.room.roomNumber, []);
       }
-      const patientsInRoom = uniqueRoomsMap.get(item.room.number);
+      const patientsInRoom = uniqueRoomsMap.get(item.room.roomNumber);
       if (patientsInRoom) {
-          patientsInRoom.push(item);
+        patientsInRoom.push(item);
       }
-  });
-  this.uniqueroom =Array.from(uniqueRoomsMap.keys());
-  Array.from(uniqueRoomsMap.values()).forEach(element => {
-   for (let index = 0; index < element.length; index++) {
-   this.tableElements.push(element[index]) 
-   }
-  });
-  return uniqueRoomsMap;
-}
-getMedicineByHour(hour: number , name : string): Medicine[] {
-  const medicines = [];
-  for (const patient of this.data_list) {
-    if(patient.patient.name === name){
-      for (const medicine of patient.medicines) {
-        for (const posology of medicine.posology) {
-          for (let index = 0; index < posology.hours.length; index++) {
-            if (posology.hours[index] === hour) {
-              medicines.push(medicine);
+    });
+    this.uniqueroom = Array.from(uniqueRoomsMap.keys());
+    Array.from(uniqueRoomsMap.values()).forEach(element => {
+      for (let index = 0; index < element.length; index++) {
+        this.tableElements.push(element[index])
+      }
+    });
+    return uniqueRoomsMap;
+  }
+  getMedicineByHour(hour: number, name: string): Medication[] {
+    const medicines: Medication[] = [];
+    for (const patient of this.data_list) {
+      if (patient.prescription.register.patient.firstName === name) {
+        for (const posology of patient.prescription.posologies) {
+          for (const dispense of posology.dispenses) {
+            if (dispense.hour === hour) {
+              medicines.push(posology.medication);
+              break;
             }
-            
           }
-           
-          
         }
       }
     }
-   
+    return medicines;
   }
- 
-  
-  return medicines;
-}
-ngOnInit(): void {
-  this.getUniqueRooms();
-}
+
+  ngOnInit(): void {
+    this.getUniqueRooms();
+  }
 }

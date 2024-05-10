@@ -20,22 +20,24 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommentComponent } from "../../components/comment/comment.component";
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BacPatientService } from '../../services/bac-patient-services.service';
+import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
+import { ScheduleComponent } from "../../components/schedule/schedule.component";
+import { bacpatient } from '../../model/BacPatient';
 
 
 @Component({
-  selector: 'table-pagination-example',
-  templateUrl: './bacPatient.component.html',
-  styleUrl: './bacPatient.component.css',
-  standalone: true,
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
-  imports: [RouterModule ,DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent]
+    selector: 'table-pagination-example',
+    templateUrl: './bacPatient.component.html',
+    styleUrl: './bacPatient.component.css',
+    standalone: true,
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
+    imports: [RouterModule, DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
 
@@ -197,42 +199,6 @@ export class BacPatientComponent implements AfterViewInit {
         return '';
     }
   }
-}
-
-
-export interface BacPatientResponse {
-  pageIndex: number;
-  pageSize: number;
-  count: number;
-  data: bacpatient[];
-}
-
-export interface bacpatient {
-  id: string;
-  prescription: Prescription;
-  bed: number;
-  nurseId: string;
-  served: number;
-  toServe: number;
-  status: number;
-}
-
-export interface Prescription {
-  id: string;
-  register: Register;
-  createdAt : Date ;
-}
-
-export interface Register {
-  id: string;
-  patient: Patient;
-}
-
-export interface Patient {
-  id: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: Date;
 }
 
 
@@ -568,4 +534,6 @@ export let ELEMENT_DATA : bacpatient[] = [
   }*/
 ];
 
+
+export { bacpatient };
 

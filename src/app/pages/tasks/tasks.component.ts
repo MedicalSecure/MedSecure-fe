@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ELEMENT_DATA, bacpatient } from '../bacPatient/bacPatient.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-tasks',
   standalone: true,

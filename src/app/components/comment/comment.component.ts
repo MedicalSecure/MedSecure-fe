@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { bacpatient } from '../../pages/bacPatient/bacPatient.component';
 import { HttpClient } from '@angular/common/http';
-import { BacPatientService } from '../../services/bac-patient-services.service';
+import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
 @Component({
   selector: 'app-comment',
   standalone: true,
