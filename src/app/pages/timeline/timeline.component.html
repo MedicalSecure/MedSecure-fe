@@ -1,52 +1,212 @@
-<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4" aria-label="Slide 5"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="5" aria-label="Slide 6"></button>
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Registration details</h4>
+            <p class="card-subtitle card-subtitle-dash">Registration details</p>
+          </div>
+          <div class="btn-wrapper">
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="fa fa-paper-plane"></i> Forward
+            </a>
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export CSV
+            </a>
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="icon-printer"></i> Export PDF
+            </a>
+            <a href="#" class="btn btn btn-primary text-white">
+              <i class="icon-plus"></i> Add Task
+            </a>
+          </div>
+        </div>
+        <div 
+          id="carouselExampleCaptions"
+          class="carousel slide"
+          data-bs-ride="carousel"
+        >
+          <div class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="0"
+              class="active"
+              aria-current="true"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="2"
+              aria-label="Slide 3"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="3"
+              aria-label="Slide 4"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="4"
+              aria-label="Slide 5"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="5"
+              aria-label="Slide 6"
+            ></button>
+          </div>
+
+          <div class="carousel-inner">
+            <!-- Hour range 01-04 -->
+            <ng-container *ngIf="isCurrentHour(['01', '02', '03', '04'])">
+              <div class="carousel-item active">
+                <app-timeline-event
+                  [targetHours]="['01', '02', '03', '04']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isCurrentHour(['01', '02', '03', '04'])">
+              <div class="carousel-item">
+                <app-timeline-event
+                  [targetHours]="['01', '02', '03', '04']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+
+            <!-- Hour range 05-08 -->
+            <ng-container *ngIf="isCurrentHour(['05', '06', '07', '08'])">
+              <div class="carousel-item active">
+                <app-timeline-event
+                  [targetHours]="['05', '06', '07', '08']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isCurrentHour(['05', '06', '07', '08'])">
+              <div class="carousel-item">
+                <app-timeline-event
+                  [targetHours]="['05', '06', '07', '08']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+
+            <!-- Hour range 09-12 -->
+            <ng-container *ngIf="isCurrentHour(['09', '10', '11', '12'])">
+              <div class="carousel-item active">
+                <app-timeline-event
+                  [targetHours]="['09', '10', '11', '12']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isCurrentHour(['09', '10', '11', '12'])">
+              <div class="carousel-item">
+                <app-timeline-event
+                  [targetHours]="['09', '10', '11', '12']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+
+            <!-- Hour range 13-16 -->
+            <ng-container *ngIf="isCurrentHour(['13', '14', '15', '16'])">
+              <div class="carousel-item active">
+                <app-timeline-event
+                  [targetHours]="['13', '14', '15', '16']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isCurrentHour(['13', '14', '15', '16'])">
+              <div class="carousel-item">
+                <app-timeline-event
+                  [targetHours]="['13', '14', '15', '16']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+
+            <!-- Hour range 17-20 -->
+            <ng-container *ngIf="isCurrentHour(['17', '18', '19', '20'])">
+              <div class="carousel-item active">
+                <app-timeline-event
+                  [targetHours]="['17', '18', '19', '20']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isCurrentHour(['17', '18', '19', '20'])">
+              <div class="carousel-item">
+                <app-timeline-event
+                  [targetHours]="['17', '18', '19', '20']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+
+            <!-- Hour range 21-00 -->
+            <ng-container *ngIf="isCurrentHour(['21', '22', '23', '00'])">
+              <div class="carousel-item active">
+                <app-timeline-event
+                  [targetHours]="['21', '22', '23', '00']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isCurrentHour(['21', '22', '23', '00'])">
+              <div class="carousel-item">
+                <app-timeline-event
+                  [targetHours]="['21', '22', '23', '00']"
+                ></app-timeline-event>
+                <div class="carousel-caption d-none d-md-block"></div>
+              </div>
+            </ng-container>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide="prev"
+            style="color: black; position: absolute; left: -7%"
+          >
+            <span>
+              <img
+                src="assets/left_arrow_icon.svg"
+                style="width: 70px; height: 70px"
+            /></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide="next"
+            style="color: black; position: absolute; right: -7%"
+          >
+            <span>
+              <img
+                src="assets/right_arrow_icon.svg"
+                style="width: 70px; height: 70px"
+            /></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <app-gantt-chart [targetHours]="['01', '02', '03', '04']"></app-gantt-chart>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <app-gantt-chart [targetHours]="['05', '06', '07', '08']"></app-gantt-chart>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <app-gantt-chart [targetHours]="['09', '10', '11', '12']"></app-gantt-chart>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <app-gantt-chart [targetHours]="['13', '14', '15', '16']"></app-gantt-chart>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <app-gantt-chart [targetHours]="['17', '18', '19', '20']"></app-gantt-chart>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <app-gantt-chart [targetHours]="['21', '22', '23', '00']"></app-gantt-chart>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev" style="color: black; position: absolute; left:  -7%;">
-    <span> <img src="assets/left_arrow_icon.svg" style="width: 70px;height: 70px;"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next"style="color: black; position: absolute; right:  -7%; " >
-    <span> <img src="assets/right_arrow_icon.svg" style="width: 70px;height: 70px;" ></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-<div style="margin-top: 5%;">
 </div>

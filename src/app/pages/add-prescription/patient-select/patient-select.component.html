@@ -1,4 +1,3 @@
-
 <div [className]="selectedPatient != undefined && ' d-none'">
   <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
     <input
@@ -19,28 +18,28 @@
     />
   </div>
 
-<table class="table table-responsive">
-  <thead>
-    <tr id="table-head-row">
-      <th class="col-3">patient ID</th>
-      <th class="col-3">Name</th>
-      <th class="col-3">Sex</th>
-      <th class="col-1">Age</th>
-      <th class="col-1">Height</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr
-      *ngFor="let data of dataList | filterPatientByNameAndSn : searchTerm"
-      (click)="onClickPatient(data)"
-      [class]="data === selectedPatient ? 'table-primary' : ''"
-    >
-      <td class="col-3">{{ data.sn }}</td>
-      <td class="col-3">{{ data.name }}</td>
-      <td class="col-3">{{ data.sex }}</td>
-      <td class="col-1">{{ data.age }}</td>
-      <td class="col-1">{{ data.height }}</td>
-    </tr>
-  </tbody>
-</table>
+  <table class="table table-responsive">
+    <thead>
+      <tr id="table-head-row">
+        <th class="col-3">patient ID</th>
+        <th class="col-3">Name</th>
+        <th class="col-3">Sex</th>
+        <th class="col-1">Age</th>
+        <th class="col-1">Height</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let data of dataList | filterPatientByNameAndSn : searchTerm"
+        (click)="onClickPatient(data)"
+        [class]="data === selectedPatient ? 'table-primary' : ''"
+      >
+        <td class="col-3">{{ data.sn }}</td>
+        <td class="col-3">{{ data.name }}</td>
+        <td class="col-3">{{ data.sex }}</td>
+        <td class="col-1">{{ data.age }}</td>
+        <td class="col-1">{{ data.height }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

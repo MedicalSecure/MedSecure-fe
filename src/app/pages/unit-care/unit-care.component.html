@@ -1,12 +1,43 @@
-<div class="row">
-  <div class="col-lg-3 d-flex flex-column">
-   <!-- <app-form-unit-care></app-form-unit-care> -->
-   <app-unit-care-details></app-unit-care-details>
-  </div>
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Unit Care</h4>
+            <p class="card-subtitle card-subtitle-dash">
+              Create infrastructure as crafts
+            </p>
+          </div>
 
-  <div class="col-lg-9 d-flex flex-column">
-  <app-cards-unit-care></app-cards-unit-care>
-  </div>
+          <div class="btn-wrapper">
+            <a href="#" class="btn btn-outline-primary align-items-center"><i class="fa fa-paper-plane"></i> Forward</a>
+            <a href="#" class="btn btn-outline-primary align-items-center"><i class="fa fa-file-excel-o"
+                aria-hidden="true"></i> Export
+              CSV</a>
 
-  </div>
+            <a href="#" class="btn btn-outline-primary align-items-center"><i class="icon-printer"></i> Export PDF</a>
+            <a href="#" class="btn btn-danger text-white align-items-center" [routerLink]="['/', 'report-issue-csv']"
+              style="border-color: red">
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
+        </div>
 
+        <div class="row">
+          <div class="col-lg-3 d-flex flex-column">
+            <!-- <app-form-unit-care></app-form-unit-care> -->
+            <app-unit-care-details></app-unit-care-details>
+          </div>
+
+          <div class="col-lg-9 d-flex flex-column">
+            <app-cards-unit-care></app-cards-unit-care>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

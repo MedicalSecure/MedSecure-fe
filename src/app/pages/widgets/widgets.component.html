@@ -1,0 +1,44 @@
+<!-- This component displays the list of medications with their respective stock -->
+<div>
+  <app-medications-widget
+    [medicationData]="medicationData"
+  ></app-medications-widget>
+</div>
+
+<div style="margin-top: 20px"></div>
+
+<!-- This component displays the medications that are out of stock -->
+<div>
+  <app-medications-in-rupture
+    [medicationsInRupture]="medicationsInRupture"
+    [medicationData]="medicationData"
+  ></app-medications-in-rupture>
+</div>
+
+<div style="margin-top: 20px"></div>
+
+<!-- This component displays the medications that are in the stock Armoire -->
+<app-armoire-widget
+  [medicationArmoireStock]="medicationArmoireStock"
+></app-armoire-widget>
+
+<div style="margin-top: 20px"></div>
+
+<!-- This component displays the medications that are on prescription along with their quantities -->
+<app-prescription-widget
+  [prescriptions]="Dataprescription"
+></app-prescription-widget>
+
+<div style="margin-top: 20px"></div>
+
+<!-- This component displays the detections of temperature, humidity, electricity, and luminosity -->
+<app-multisense-widget></app-multisense-widget>
+
+<div style="margin-top: 20px"></div>
+
+<!-- This component displays the progress of checkin, checkout, register -->
+<app-check-in-progress
+  [checkin]="checkin"
+  [checkout]="checkout"
+  [register]="register"
+></app-check-in-progress>

@@ -43,32 +43,34 @@ import {
   medicationType,
   styleClass,
 } from '../../../types';
+import { PatientInfoCardsComponent } from "../patient-info-cards/patient-info-cards.component";
 
 
 @Component({
-  selector: 'app-prescribe-medication',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatCheckboxModule,
-    AsyncPipe,
-    MatSelectModule,
-    JsonPipe,
-    MatIcon,
-    CommonModule,
-    MatCardModule,
-    MatDatepickerModule,
-    PartsOfDayComponent,
-    DatepickerRangePopupComponent,
-    ToggleButtonComponent,
-    MatChipsModule,
-  ],
-  templateUrl: './prescribe-medication.component.html',
-  styleUrl: './prescribe-medication.component.css',
+    selector: 'app-prescribe-medication',
+    standalone: true,
+    templateUrl: './prescribe-medication.component.html',
+    styleUrl: './prescribe-medication.component.css',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        MatCheckboxModule,
+        AsyncPipe,
+        MatSelectModule,
+        JsonPipe,
+        MatIcon,
+        CommonModule,
+        MatCardModule,
+        MatDatepickerModule,
+        PartsOfDayComponent,
+        DatepickerRangePopupComponent,
+        ToggleButtonComponent,
+        MatChipsModule,
+        PatientInfoCardsComponent
+    ]
 })
 export class PrescribeMedicationComponent implements OnInit, OnDestroy {
   @Input()
