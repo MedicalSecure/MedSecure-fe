@@ -15,6 +15,7 @@ import { MasonryDpiComponent } from './pages/register-details/register-details.c
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
 import {FormUnitCareComponent} from './components/form-unit-care/form-unit-care.component';
+import { AddPersonelsComponent } from './components/add-personels/add-personels.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -33,4 +34,5 @@ export const routes: Routes = [
   { path: 'register-form', component: RegisterFormComponent },
   { path: 'register', component: RegisterViewComponent },
   { path: 'unitCare-form', component: FormUnitCareComponent },
+  {path: 'personels', component : AddPersonelsComponent},
 ];

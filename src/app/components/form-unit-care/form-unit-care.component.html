@@ -1,84 +1,190 @@
-<form [formGroup]="unitCareForm" (ngSubmit)="onSubmit()">
-  <label class="form-label "> Title</label> <br>
-  <input type="text" formControlName="Title" style="width: 400px"  class="form-control"/>
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">UnitCare</h4>
+            <p class="card-subtitle card-subtitle-dash">
+              Create infrastructure as crafts
+            </p>
+          </div>
 
-  <label class="form-label"> Type</label>
-  <select class="form-select" formControlName="Type" style="width: 400px">
-    <option selected disabled value="">Choose...</option>
-    <option value="general">General</option>
-    <option value="Intensive">Intensive</option>
-    <option value="Coronary">Coronary</option>
-    <option value="Surgical">Surgical</option>
-    <option value="Pediatric">Pediatric</option>
-    <option value="Obstetrics">Obstetrics</option>
-  </select>
+          <div class="btn-wrapper">
+            <a
+              href="#"
+              class="btn btn-primary text-white align-items-center"
+              [routerLink]="['/', 'unit-care']"
+              routerLinkActive="active"
+            >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> UnitCare List
+            </a>
+            <a
+              href="#"
+              class="btn btn-danger text-white align-items-center"
 
-  <label class="form-label"> Description</label>
-  <textarea
-    class="form-control"
-    formControlName="Description"
-    style="height: 60px; width: 400px"
-  >
- description
- </textarea
-  >
-
-  <div formArrayName="personnels">
-    @for ( room of unitCareForm.controls.personnels.controls; track
-    personnelIndex; let personnelIndex = $index ) {
-    <div class="question" [formGroupName]="personnelIndex">
-      <input
-        type="text"
-        formControlName="name"
-        placeholder="name"
-      />
-    
-
-    </div>
-    }
-  </div>
-
-
-
-
-  <div formArrayName="rooms">
-    @for ( room of unitCareForm.controls.rooms.controls; track
-    roomIndex; let roomIndex = $index ) {
-    <div class="question" [formGroupName]="roomIndex">
-      <input
-        type="number"
-        formControlName="roomNumber"
-        placeholder="Room number"
-      />
-      <span (click)="removeRoom(roomIndex)" class="remove">✗</span>
-      <div formArrayName="equipments" class="answers">
-        <div>equipments</div>
-        @for ( room of
-        unitCareForm.controls.rooms.controls.at(roomIndex)
-        ?.controls?.equipments?.controls; track equipmentIndex; let equipmentIndex =
-        $index ) {
-        <div [formGroupName]="equipmentIndex" class="answer">
-          <input type="text" placeholder="Answer" formControlName="text" />
-          <span
-            (click)="removeEquipment(roomIndex, equipmentIndex)"
-            class="remove"
-            >✗</span
-          >
+              style="border-color: red"
+            >
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
         </div>
-        }
-        <button
-          type="button"
-          class="add-answer"
-          (click)="addEquipment(roomIndex)"
-        >
-          Add Equipment
-        </button>
+
+        <div class="card-body">
+        <form [formGroup]="unitCareForm" (ngSubmit)="onSubmit()" style="margin-top: 10%;">
+          <div class="d-flex justify-content-evenly" style="flex-wrap: wrap;">
+              <!-- Partie 1 -->
+              <div class="col-md-4" style="max-width: 30rem;">
+                <label class="form-label "> Title</label> <br>
+                <input type="text" formControlName="Title"   class="form-control"/>
+
+                <label class="form-label"> Type</label>
+                <select class="form-select" formControlName="Type" >
+                  <option selected disabled value="">Choose...</option>
+                  <option value="general">General</option>
+                  <option value="Intensive">Intensive</option>
+                  <option value="Coronary">Coronary</option>
+                  <option value="Surgical">Surgical</option>
+                  <option value="Pediatric">Pediatric</option>
+                  <option value="Obstetrics">Obstetrics</option>
+                </select>
+
+                <label class="form-label"> Description</label>
+                <textarea
+                  class="form-control"
+                  formControlName="Description"
+                  style="height: 60px; "
+                >
+               description
+               </textarea
+                >
+
+
+
+
+              </div>
+              <!-- Fin de la partie 1 -->
+
+              <mat-divider  [vertical]="true" style="background-color: #c4c4d4;"></mat-divider>
+
+              <!-- Partie du room -->
+                <div class="col-md-4" style="max-width: 25rem;">
+                  <div style="display: flex; align-items: center">
+                    <h6 class="card-description my-auto">Add Rooms</h6>
+                  </div> <br>
+                  <div formArrayName="rooms">
+                    @for ( room of unitCareForm.controls.rooms.controls; track
+                    roomIndex; let roomIndex = $index ) {
+                    <div class="question" [formGroupName]="roomIndex">
+                      <input
+                        type="number"
+                        formControlName="roomNumber"
+                        placeholder="Room number"
+                      />
+                      <span (click)="removeRoom(roomIndex)" class="remove">✗</span>
+                      <div formArrayName="equipments" class="answers">
+                        <div>equipments</div>
+                        @for ( room of
+                        unitCareForm.controls.rooms.controls.at(roomIndex)
+                        ?.controls?.equipments?.controls; track equipmentIndex; let equipmentIndex =
+                        $index ) {
+                        <div [formGroupName]="equipmentIndex" class="answer">
+                          <input type="text" placeholder="Answer" formControlName="text" />
+                          <!-- <span
+                            (click)="removeEquipment(roomIndex, equipmentIndex)"
+                            class="remove"
+                            >✗</span
+                          > -->
+                          <button
+                          class="float-left"
+                          mat-icon-button
+                          color="warn"
+                          aria-label="Remove/clear"
+                          (click)="removeEquipment(roomIndex, equipmentIndex)"
+                          matTooltip="Remove"
+                        >
+                          <mat-icon>highlight_off</mat-icon>
+                        </button>
+                        </div>
+                        }
+                        <button
+                          type="button"
+                          class="add-answer"
+                          (click)="addEquipment(roomIndex)"
+                        >
+                          Add Equipment
+                        </button>
+                      </div>
+                    </div>
+                    }
+                  </div>
+                  <div class="add-question">
+                    <button (click)="addRoom()" type="button">Add Room</button>
+                  </div>
+
+                </div>
+              <!-- Fin de la partie du room -->
+
+
+              <!-- Séparateur vertical -->
+              <mat-divider  [vertical]="true" style="background-color: #c4c4d4;"></mat-divider>
+
+              <!-- Partie du personnel -->
+              <div class="col-md-4" style="max-width: 25rem;">
+                <ng-multiselect-dropdown
+                [placeholder]="'custom placeholder'"
+                [settings]="dropdownSettings"
+                [data]="dropdownList"
+                (onSelect)="onItemSelect($event)"
+                (onDeSelect)="onItemDeSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                (onDeSelectAll)="onDeSelectAll()"
+              >
+              </ng-multiselect-dropdown>
+
+
+
+              <button (click)="saveSelectedItems()">Save Selected Items</button>
+              </div>
+
+              <!-- Fin de la partie du personnel -->
+
+
+
+
+
+
+
+            </div>
+
+            <div class="d-flex">
+              <div class="col-12 col-lg-8">
+
+              </div>
+              <div class="col-lg-4 d-flex justify-content-end">
+                <button
+                type="button"
+                class="btn btn-outline-primary"
+
+              >
+                Cancel
+              </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary text-white"
+
+                >
+                Submit
+                </button>
+              </div>
+            </div>
+
+        </form>
+
+      </div>
+
+
       </div>
     </div>
-    }
   </div>
-  <div class="add-question">
-    <button (click)="addRoom()" type="button">Add Room</button>
-  </div>
-  <div><button type="submit">Submit</button></div>
-</form>
+</div>

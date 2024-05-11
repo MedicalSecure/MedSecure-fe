@@ -1,32 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatIconModule} from '@angular/material/icon';
+import { Component, OnInit } from '@angular/core';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-
-type FormEquipment = FormGroup<{ text: FormControl<string> }>;
-
-type FormRoom = FormGroup<{
-  roomNumber: FormControl<string>;
-  equipments: FormArray<FormEquipment>;
-}>;
-
-
-
-type Form = FormGroup<{
-  Title:FormControl,
-  Type:FormControl,
-  Description:FormControl,
-  rooms: FormArray<FormRoom>;
-  personnels:FormArray<any>;
-}>;
 
 export interface IDropdownSettings {
   singleSelection?: boolean;
@@ -42,18 +15,17 @@ export interface DropdownItem {
   item_id: number;
   item_text: string;
   isSelected: boolean;
-  unitcareId: string;}
-
-
+  unitcareId: string;
+}
 
 @Component({
-  selector: 'app-form-unit-care',
+  selector: 'app-add-personels',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterModule,MatDividerModule,MatIconModule,NgMultiSelectDropDownModule],
-  templateUrl: './form-unit-care.component.html',
-  styleUrl: './form-unit-care.component.css'
+  imports: [NgMultiSelectDropDownModule],
+  templateUrl: './add-personels.component.html',
+  styleUrl: './add-personels.component.css'
 })
-export class FormUnitCareComponent  implements OnInit {
+export class AddPersonelsComponent  implements OnInit {
   dropdownList: DropdownItem[] = [];
   selectedItems: DropdownItem[] = [];
   dropdownSettings: IDropdownSettings = {};
@@ -85,21 +57,19 @@ export class FormUnitCareComponent  implements OnInit {
   onItemSelect(item: any) {
     console.log("our item is", item);
 
-  // Find the item in dropdownList with matching item_id
-  const selectedItem = this.dropdownList.find(x => x.item_id === item.item_id);
+    // Find the item in dropdownList with matching item_id
+    const selectedItem = this.dropdownList.find(x => x.item_id === item.item_id);
 
-  if (selectedItem) {
-    selectedItem.isSelected = true;
-    selectedItem.unitcareId = this.unitcareId;
+    if (selectedItem) {
+        // Update isSelected and unitcareId properties of the selected item
+        selectedItem.isSelected = true;
+        selectedItem.unitcareId = this.unitcareId;
 
-    // Update personnels form array
-    const personnelArray = this.unitCareForm.get('personnels') as FormArray;
-    personnelArray.push(new FormControl(selectedItem));
-
-    console.log('Selected items:', this.dropdownList.filter(x => x.isSelected));
-  } else {
-    console.log('Item not found in dropdownList');
-  }
+        // Logging the selected items
+        console.log('Selected items:', this.dropdownList.filter(x => x.isSelected));
+    } else {
+        console.log('Item not found in dropdownList');
+    }
 }
 
 onItemDeSelect(item: any) {
@@ -162,50 +132,4 @@ saveSelectedItems() {
   // You can perform further actions here, such as sending the registerObject to a server or storing it locally
 }
 
-  fb = inject(NonNullableFormBuilder);
-  unitCareForm: Form = this.fb.group({
-    Title:'',
-    Description:'',
-    Type:'',
-    rooms: this.fb.array<FormRoom>([this.generateRoom()]),
-    personnels: this.fb.array<any>([])
-
-  });
-
-  generateRoom(): FormRoom {
-    return this.fb.group({
-      roomNumber: '',
-      equipments: this.fb.array<FormEquipment>([]),
-    });
-  }
-
-  addRoom(): void {
-    this.unitCareForm.controls.rooms.push(this.generateRoom());
-  }
-
-  removeRoom(roomIndex: number): void {
-    this.unitCareForm.controls.rooms.removeAt(roomIndex);
-  }
-
-
-
-
-  addEquipment(roomIndex: number): void {
-    const newEquipment: FormEquipment = this.fb.group({
-      text: '',
-    });
-    this.unitCareForm.controls.rooms
-      .at(roomIndex)
-      ?.controls?.equipments?.push(newEquipment);
-  }
-
-  removeEquipment(roomIndex: number, equipmentIndex: number): void {
-    this.unitCareForm.controls.rooms
-      .at(roomIndex)
-      ?.controls?.equipments?.removeAt(equipmentIndex);
-  }
-
-  onSubmit() {
-    console.log('test',this.unitCareForm.getRawValue());
-  }
 }
