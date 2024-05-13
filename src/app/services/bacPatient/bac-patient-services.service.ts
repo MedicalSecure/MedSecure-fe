@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ELEMENT_DATA } from '../../pages/bacPatient/bacPatient.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { BacPatientResponse, bacpatient } from '../../model/BacPatient';
+import { BacPatientResponse, Comment, bacpatient } from '../../model/BacPatient';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,7 @@ export class BacPatientService {
           console.log('Response:', response);
           if (response && response.bacPatients.data) {
            dataSource.data = response.bacPatients.data;
+           
            response.bacPatients.data.forEach(element => {
               console.log(element);
               ELEMENT_DATA.push(element);
@@ -30,7 +31,7 @@ export class BacPatientService {
         }
       );
   }
-  updateComment( id : string ,note:string){
+  updateComment( id : string ,note:Comment){
     const body = { Id: id, Note: note };
     return this.http.put('https://localhost:6065/v1/bacPatient/note', body).subscribe(response => {
       console.log('Response:', response); // Log the response

@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { bacpatient } from '../../pages/bacPatient/bacPatient.component';
 import { HttpClient } from '@angular/common/http';
 import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
+import { Comment } from '../../model/BacPatient';
 @Component({
   selector: 'app-comment',
   standalone: true,
@@ -10,7 +11,7 @@ import { BacPatientService } from '../../services/bacPatient/bac-patient-service
   styleUrl: './comment.component.css'
 })
 export class CommentComponent {
-  @Input() note : string[];
+  @Input() note : Comment[];
   @Input()DATA: bacpatient;
   @Input() id : string ; 
   todayDate: string = new Date().getDate().toString();
@@ -18,16 +19,19 @@ export class CommentComponent {
 
 
   }
-  onCommentsend( commentInput: HTMLInputElement) {
-    const newComment = commentInput.value;
-     if (newComment.trim() !== '') {
+  onCommentsend(commentInput: HTMLInputElement) {
+    const newCommentContent = commentInput.value.trim();
+    if (newCommentContent !== '') {
+      const newComment: Comment = {
+        id: '', // Generate a unique ID here if needed
+        posologyId: '', // Set the posology ID if applicable
+        label: '', // Set the label if applicable
+        content: newCommentContent
+      };
       this.note.push(newComment);
-      this.note = this.note;
       commentInput.value = '';
+      this.bacPatientService.updateComment(this.id, newComment);
     }
-   this.bacPatientService.updateComment(this.id , newComment )
-
-
   }
  
 

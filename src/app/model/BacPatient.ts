@@ -1,3 +1,5 @@
+import { Dispense } from "../components/schedule/schedule.component";
+
 export interface BacPatientResponse {
     bacPatients: {
       pageIndex: number;
@@ -64,7 +66,7 @@ export interface BacPatientResponse {
     id: string;
     name: string;
     dosage: string;
-    form: string;
+    form: number;
     description: string;
   }
   
@@ -74,12 +76,4 @@ export interface BacPatientResponse {
     label: string;
     content: string;
   }
-  
-  export interface Dispense {
-    id: string;
-    posologyId: string;
-    hour: number;
-    quantityBE: number;
-    quantityAE: number;
-  }
-  
+ 

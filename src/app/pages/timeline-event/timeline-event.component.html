@@ -42,8 +42,8 @@
                   @for (item of posology.dispenses; track item) {
                     {{
                       calculateQuantity(
-                        item.quantityBE,
-                        item.quantityAE
+                       item.beforeMeal?.quantity,
+                         item.afterMeal?.quantity
                       )
                     }}
                   }
@@ -81,9 +81,9 @@
                             @for (item of posology.dispenses; track item) {
                               {{
                                 calculateQuantity(
-                                  item.quantityBE,
-                                  item.quantityAE
-                                )
+                       item.beforeMeal?.quantity,
+                         item.afterMeal?.quantity
+                      )
                               }}
                             }
                         </small>
@@ -122,10 +122,10 @@
                           <small class="text-muted">
                             @for (item of posology.dispenses; track item) {
                               {{
-                                calculateQuantity(
-                                  item.quantityBE,
-                                  item.quantityAE
-                                )
+                               calculateQuantity(
+                       item.beforeMeal?.quantity,
+                         item.afterMeal?.quantity
+                      )
                               }}
                             }
                           </small>
@@ -165,9 +165,9 @@
                           <small class="text-muted">   @for (item of posology.dispenses; track item) {
                             {{
                               calculateQuantity(
-                                item.quantityBE,
-                                item.quantityAE
-                              )
+                       item.beforeMeal?.quantity,
+                         item.afterMeal?.quantity
+                      )
                             }}
                           }</small>
                         </div>

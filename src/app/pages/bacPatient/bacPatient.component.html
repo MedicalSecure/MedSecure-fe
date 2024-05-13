@@ -158,24 +158,25 @@
                       class="mat-elevation-z0 extended-table" style="border: 1px solid rgba(0, 0, 0, 0.155)">
                       <ng-container matColumnDef="note">
                         <th mat-header-cell *matHeaderCellDef>note</th>
-                        <td class="element name-cell" mat-cell *matCellDef="let medicine"
+                        <td class="element name-cell" mat-cell *matCellDef="let posology"
                           style="position: relative; top: 0%">
-                          <app-comment [note]="medicine.note" [id]="medicine.id"></app-comment>
+                          
+                          <app-comment [note]="posology.comments" [id]="posology.id"></app-comment>
 
                         </td>
                       </ng-container>
 
                       <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef>Name</th>
-                        <td class="element name-cell" mat-cell *matCellDef="let medicine"
+                        <td class="element name-cell" mat-cell *matCellDef="let posology"
                           style="position: relative; top: 0%">
-                          <strong>{{ medicine.name }}</strong>
+                          <strong>{{ posology.medication.name}}</strong>
                           <img src="assets/info.svg" alt="info" class="image" style="
                               height: 15px;
                               width: 15px;
                               margin-top: 5px;
                               margin-left: 5px;
-                            " matTooltip="{{ medicine.description}}" />
+                            " matTooltip="{{ posology.medication.description}}" />
                         </td>
                       </ng-container>
 
@@ -184,19 +185,16 @@
                           class="mat-elevation-z8 extended-table-cell">
                           <ng-container matColumnDef="posology">
                             <th mat-header-cell *matHeaderCellDef>Posology</th>
-                            <td class="element posology-cell" mat-cell *matCellDef="let elementt">
+                            <td class="element posology-cell" mat-cell *matCellDef="let elementt" style="text-align: center;">
                               @for ( posology of element.prescription.posologies; track posology) {
                               
-                                  <app-schedule [canValid]="true" [canPostValid]="true"
+                                  <app-schedule [canValid]="true" [canPostValid]="false"
                                   [partsOfDayHours]="posology.dispenses"
-                                  [isDispenseQuantityReadOnly]="false" [showEmptyCases]="true"></app-schedule>
-                              
-                               
-                              }
-                             
-                            
-
-                            </td>
+                                  
+                                   [showEmptyCases]="true"></app-schedule > 
+                                }
+                                 
+                              </td>
                           </ng-container>
                           <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
                         </table>
@@ -205,7 +203,8 @@
                       <ng-container matColumnDef="root">
                         <th mat-header-cell *matHeaderCellDef>Route</th>
                         <td class="element root-cell" mat-cell *matCellDef="let medicine">
-                          <img [src]="getRouteImage(medicine.root)" alt="{{ medicine.root }}"
+                          {{medicine}}
+                          <img [src]="getRouteImage(medicine.medication.form)" alt="{{ medicine.medication.form }}"
                             style="height: 40px; width: 40px; margin-top: 5px; margin-left: 5px;" />
                         </td>
                       </ng-container>

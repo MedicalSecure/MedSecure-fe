@@ -20,27 +20,27 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommentComponent } from "../../components/comment/comment.component";
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
-import { ScheduleComponent } from "../../components/schedule/schedule.component";
+import { Dispense, ScheduleComponent } from "../../components/schedule/schedule.component";
 import { bacpatient } from '../../model/BacPatient';
+import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
 
 
 @Component({
-    selector: 'table-pagination-example',
-    templateUrl: './bacPatient.component.html',
-    styleUrl: './bacPatient.component.css',
-    standalone: true,
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({ height: '0px', minHeight: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ],
-    imports: [RouterModule, DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
+  selector: 'table-pagination-example',
+  templateUrl: './bacPatient.component.html',
+  styleUrl: './bacPatient.component.css',
+  standalone: true,
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
+  imports: [RouterModule, DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
-
+  dispenseQuantity: number = 0; 
   today: Date = new Date();
   checkednumber: Number = 0;
   checkedItems: any[] = [];
@@ -50,34 +50,37 @@ export class BacPatientComponent implements AfterViewInit {
   todayDate: string = new Date().toLocaleDateString();
   dateToShow: string;
   columnsToDisplay = ['add', 'room', 'bed', 'patient', 'age', 'progress', 'status'];
-  columnsToDisplayMedicines = ['name', 'posology', 'root' , 'note']
+  columnsToDisplayMedicines = ['name', 'posology', 'root', 'note']
   expandedElement: bacpatient | null;
   selectedIndex: number | null = null;
   servingDay: Date[];
   tomorrow = new Date();
   yesterday = new Date();
   uniqueRooms: any;
-
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
   changeDate(selectedDate: string) {
     this.todayDate = selectedDate;
     this.today.setDate(new Date(selectedDate).getDate());
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate()));
-   
+
   }
-  constructor(public dialog: MatDialog , private http: HttpClient , private bacPatientService :BacPatientService ) {
+  constructor(public dialog: MatDialog, private http: HttpClient, private bacPatientService: BacPatientService) {
     const filteredData = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).toLocaleDateString() === this.todayDate);
     this.dataSource.data = filteredData;
     this.uniqueRooms = this.getRoom(ELEMENT_DATA);
 
   }
   ngOnInit() {
-  
+
+
+    this.bacPatientService.getData(this.dataSource);
     
-   this.bacPatientService.getData(this.dataSource);
   }
- 
+
+
+
+
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate() - 1));
     this.today.setDate(this.today.getDate() - 1);
@@ -138,37 +141,37 @@ export class BacPatientComponent implements AfterViewInit {
     return age;
   }
 
- /* onCheckEmitted(event: { checkedNumber: number, index: number }, element: bacpatient) {    
-    if (!this.checkedItems[event.index]) {
-      this.checkedItems[event.index] = [];
-    }
-    this.checkedItems[event.index].push(event.checkedNumber);
-    this.checkednumber = Object.values(this.checkedItems).flat().length;
-    let allCheckBoxNumber: number = 0;
-    element.medicines.forEach(medicine => {
-      medicine.posology.forEach(pos=>{
-        allCheckBoxNumber = pos.hours.length ;
-      })
-      
-    });
+  /* onCheckEmitted(event: { checkedNumber: number, index: number }, element: bacpatient) {    
+     if (!this.checkedItems[event.index]) {
+       this.checkedItems[event.index] = [];
+     }
+     this.checkedItems[event.index].push(event.checkedNumber);
+     this.checkednumber = Object.values(this.checkedItems).flat().length;
+     let allCheckBoxNumber: number = 0;
+     element.medicines.forEach(medicine => {
+       medicine.posology.forEach(pos=>{
+         allCheckBoxNumber = pos.hours.length ;
+       })
+       
+     });
+    
+     if (this.checkedItems[event.index].length !== 0) {
+       const patientToUpdate = this.dataSource.data.find(patient => patient.id == element.id);
+       if (patientToUpdate) {
+         patientToUpdate.status = 1;
+         if (this.checkedItems[event.index].length === allCheckBoxNumber) {
+           patientToUpdate.status = 2;
+           this.checkedItems[event.index] = [];
+           this.checkednumber = Object.values(this.checkedItems).flat().length;
+         }
+       }
+     }
+     console.log("allCheckBoxNumberallCheckBoxNumber"+allCheckBoxNumber === this.checkedItems[event.index] );
    
-    if (this.checkedItems[event.index].length !== 0) {
-      const patientToUpdate = this.dataSource.data.find(patient => patient.id == element.id);
-      if (patientToUpdate) {
-        patientToUpdate.status = 1;
-        if (this.checkedItems[event.index].length === allCheckBoxNumber) {
-          patientToUpdate.status = 2;
-          this.checkedItems[event.index] = [];
-          this.checkednumber = Object.values(this.checkedItems).flat().length;
-        }
-      }
-    }
-    console.log("allCheckBoxNumberallCheckBoxNumber"+allCheckBoxNumber === this.checkedItems[event.index] );
-  
-  }
+   }
+ 
+ */
 
-*/
-  
   getRouteImage(route: number): string {
     switch (route) {
       case 0:
@@ -177,7 +180,7 @@ export class BacPatientComponent implements AfterViewInit {
         return 'assets/routes/ear.svg';
       case 2:
         return 'assets/routes/lungs.svg';
-      case  3:
+      case 3:
         return 'assets/routes/bandage.svg';
       case 4:
         return 'assets/routes/syrup.svg';
@@ -203,335 +206,335 @@ export class BacPatientComponent implements AfterViewInit {
 
 
 
-export let ELEMENT_DATA : bacpatient[] = [
- /* {
-    id: 1,
-    room: 101,
-    bed: 1,
-    patient: 'rahma',
-    bd: new Date('5/13/2000'),
-    medicines: [
-      {
-        name: 'Acetylsalicylic', posology: [
-          [
-            { hour: '02', value: '8', quantityBE: 1 , quantityAE :2},
-            { hour: '07', value: '2', quantityBE: 1 , quantityAE :2},
-            { hour: '08', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '14', value: '04', quantityBE: 1 , quantityAE :2 },
-            { hour: '19', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '23', value: '04', quantityBE: 1 , quantityAE :2 },
-          ]], 
-        root: 'Injection', dose: 2, 
-        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"],
-        description : 'some description',
-      },
-      {
-        name: 'Hydrochlorothiazide', posology: [
-          [
-            { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '19', value: '17', quantityBE: 1 , quantityAE :2 },
-            { hour: '21', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '23', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '07', value: '17', quantityBE: 1 , quantityAE :2 },
-            { hour: '13', value: '22', quantityBE: 1 , quantityAE :2 },
-          ]
-        ], 
-        root: 'Nebulizers', 
-        dose: 2, 
-        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-        ,description : 'some description'
-      },
-    
-    ],
-    toServe: 20,
-    served: 7,
-    status: 'Pending...',
-    add: 'Add 1',
-    servingDate: new Date()
-  },
-  {
-    id: 2,
-    room: 102,
-    bed: 2,
-    patient: 'mehrez',
-    bd: new Date('5/13/2000'),
-    medicines: [
-      {
-        name: 'Esomeprazole', posology: [
-          [
-            { hour: '04', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '10', value: '02', quantityBE: 1 , quantityAE :2 },
-
-          ]
-        ], root: 'Intracardiac', dose: 1, 
-        note:['']
-        ,description : 'some description'
-      },
-      {
-        name: 'Levothyroxine', posology: [
-          [
-            { hour: '05', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '03', value: '03', quantityBE: 1 , quantityAE :2 },
-            { hour: '15', value: '04', quantityBE: 1 , quantityAE :2 },
-
-          ]
-        ], root: 'Intramuscular', dose: 1, 
-        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-        ,description : 'some description'
-      },
-      {
-        name: 'Pantoprazole', posology: [
-          [
-            { hour: '10', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '23', value: '04', quantityBE: 1 , quantityAE :2 },
-            { hour: '15', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '16', value: '04', quantityBE: 1 , quantityAE :2 },
-            { hour: '11', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '07', value: '04', quantityBE: 1 , quantityAE :2 },
-
-          ]
-        ], 
-        root: 'Sublingual', dose: 1, 
-        note:['']
-        ,description : 'some description'
-      }
-    ],
-    toServe: 15,
-    served: 5,
-    status: 'Completed',
-    add: 'Add 2',
-    servingDate: new Date()
-  },
-  {
-    id: 3,
-    room: 101,
-    bed: 3,
-    patient: 'nejma',
-    bd: new Date('5/13/2000'),
-    medicines: [
-      {
-        name: 'Ceftriaxone', posology: [
-          [
-            { hour: '02', value: '02', quantityBE: 1 , quantityAE :2 },
-            { hour: '17', value: '17', quantityBE: 1 , quantityAE :2 },
-            { hour: '22', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '05', value: '02', quantityBE: 1 , quantityAE :2 },
-            { hour: '03', value: '17', quantityBE: 1 , quantityAE :2 },
-            { hour: '19', value: '22', quantityBE: 1 , quantityAE :2 },
-       
-          ]
-        ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-        ,description : 'some description'
-      },
-      {
-        name: 'Azithromycin', posology: [
-          [
-            { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '23', value: '03', quantityBE: 1 , quantityAE :2 },
-            { hour: '13', value: '04', quantityBE: 1 , quantityAE :2 },
-          
-          ]
-
-        ], root: 'Syrup', dose: 1, note:['']
-        ,description : 'some description'
-      },
-      {
-        name: 'Lisdexamfetamine', posology: [
-          [
-            { hour: '09', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '11', value: '02', quantityBE: 1 , quantityAE :2 },
-            { hour: '16', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '20', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '06', value: '02', quantityBE: 1 , quantityAE :2 },
-            { hour: '21', value: '22', quantityBE: 1 , quantityAE :2 },
+export let ELEMENT_DATA: bacpatient[] = [
+  /* {
+     id: 1,
+     room: 101,
+     bed: 1,
+     patient: 'rahma',
+     bd: new Date('5/13/2000'),
+     medicines: [
+       {
+         name: 'Acetylsalicylic', posology: [
+           [
+             { hour: '02', value: '8', quantityBE: 1 , quantityAE :2},
+             { hour: '07', value: '2', quantityBE: 1 , quantityAE :2},
+             { hour: '08', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '14', value: '04', quantityBE: 1 , quantityAE :2 },
+             { hour: '19', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '23', value: '04', quantityBE: 1 , quantityAE :2 },
+           ]], 
+         root: 'Injection', dose: 2, 
+         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"],
+         description : 'some description',
+       },
+       {
+         name: 'Hydrochlorothiazide', posology: [
+           [
+             { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '19', value: '17', quantityBE: 1 , quantityAE :2 },
+             { hour: '21', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '23', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '07', value: '17', quantityBE: 1 , quantityAE :2 },
+             { hour: '13', value: '22', quantityBE: 1 , quantityAE :2 },
+           ]
+         ], 
+         root: 'Nebulizers', 
+         dose: 2, 
+         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+         ,description : 'some description'
+       },
      
-          ]
-        ], root: 'Bandage', dose: 1, note:['']
-        ,description : 'some description'
-      }
-    ],
-    toServe: 18,
-    served: 6,
-    status: 'On Progress',
-    
-    add: 'Add 3',
-    servingDate: new Date()
-  }, 
-  {
-    id: 3,
-    room: 102,
-    bed: 3,
-    patient: 'vasco',
-    bd: new Date('5/13/2000'),
-    medicines: [
-      {
-        name: 'Ceftriaxone', posology: [
-          [
-            { hour: '09', value: '02', quantityBE: 1 , quantityAE :2 },
-            { hour: '18', value: '17', quantityBE: 1 , quantityAE :2 },
-            { hour: '23', value: '22', quantityBE: 1 , quantityAE :2 },
-            { hour: '05', value: '02', quantityBE: 1 , quantityAE :2 },
-            { hour: '12', value: '17', quantityBE: 1 , quantityAE :2 },
-            { hour: '08', value: '22', quantityBE: 1 , quantityAE :2 },
-       
-          ]
-        ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-        ,description : 'some description'
-      },
-      {
-        name: 'Azithromycin', posology: [
-          [
-            { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '12', value: '03', quantityBE: 1 , quantityAE :2 },
-            { hour: '17', value: '04', quantityBE: 1 , quantityAE :2 },
-          
-          ]
-
-        ], root: 'Syrup', dose: 1, note:['']
-        ,description : 'some description'
-      },
-      {
-        name: 'Lisdexamfetamine', posology: [
-          [
-            { hour: '09', value: '8', quantityBE: 1 , quantityAE :2 },
-            { hour: '18', value: '02', quantityBE: 1 , quantityAE :2 },
-          
+     ],
+     toServe: 20,
+     served: 7,
+     status: 'Pending...',
+     add: 'Add 1',
+     servingDate: new Date()
+   },
+   {
+     id: 2,
+     room: 102,
+     bed: 2,
+     patient: 'mehrez',
+     bd: new Date('5/13/2000'),
+     medicines: [
+       {
+         name: 'Esomeprazole', posology: [
+           [
+             { hour: '04', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '10', value: '02', quantityBE: 1 , quantityAE :2 },
+ 
+           ]
+         ], root: 'Intracardiac', dose: 1, 
+         note:['']
+         ,description : 'some description'
+       },
+       {
+         name: 'Levothyroxine', posology: [
+           [
+             { hour: '05', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '03', value: '03', quantityBE: 1 , quantityAE :2 },
+             { hour: '15', value: '04', quantityBE: 1 , quantityAE :2 },
+ 
+           ]
+         ], root: 'Intramuscular', dose: 1, 
+         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+         ,description : 'some description'
+       },
+       {
+         name: 'Pantoprazole', posology: [
+           [
+             { hour: '10', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '23', value: '04', quantityBE: 1 , quantityAE :2 },
+             { hour: '15', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '16', value: '04', quantityBE: 1 , quantityAE :2 },
+             { hour: '11', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '07', value: '04', quantityBE: 1 , quantityAE :2 },
+ 
+           ]
+         ], 
+         root: 'Sublingual', dose: 1, 
+         note:['']
+         ,description : 'some description'
+       }
+     ],
+     toServe: 15,
+     served: 5,
+     status: 'Completed',
+     add: 'Add 2',
+     servingDate: new Date()
+   },
+   {
+     id: 3,
+     room: 101,
+     bed: 3,
+     patient: 'nejma',
+     bd: new Date('5/13/2000'),
+     medicines: [
+       {
+         name: 'Ceftriaxone', posology: [
+           [
+             { hour: '02', value: '02', quantityBE: 1 , quantityAE :2 },
+             { hour: '17', value: '17', quantityBE: 1 , quantityAE :2 },
+             { hour: '22', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '05', value: '02', quantityBE: 1 , quantityAE :2 },
+             { hour: '03', value: '17', quantityBE: 1 , quantityAE :2 },
+             { hour: '19', value: '22', quantityBE: 1 , quantityAE :2 },
+        
+           ]
+         ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+         ,description : 'some description'
+       },
+       {
+         name: 'Azithromycin', posology: [
+           [
+             { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '23', value: '03', quantityBE: 1 , quantityAE :2 },
+             { hour: '13', value: '04', quantityBE: 1 , quantityAE :2 },
+           
+           ]
+ 
+         ], root: 'Syrup', dose: 1, note:['']
+         ,description : 'some description'
+       },
+       {
+         name: 'Lisdexamfetamine', posology: [
+           [
+             { hour: '09', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '11', value: '02', quantityBE: 1 , quantityAE :2 },
+             { hour: '16', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '20', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '06', value: '02', quantityBE: 1 , quantityAE :2 },
+             { hour: '21', value: '22', quantityBE: 1 , quantityAE :2 },
+      
+           ]
+         ], root: 'Bandage', dose: 1, note:['']
+         ,description : 'some description'
+       }
+     ],
+     toServe: 18,
+     served: 6,
+     status: 'On Progress',
      
-          ]
-        ], root: 'Bandage', dose: 1, note:['']
-        ,description : 'some description'
-      }
-    ],
-    toServe: 18,
-    served: 6,
-    status: 'On Progress',
-    
-    add: 'Add 3',
-    servingDate: new Date()
-  },
-  {
-    id: 4,
-    room: 103,
-    bed: 1,
-    patient: 'Sara',
-    bd: new Date('3/24/1985'),
-    medicines: [
-      {
-        name: 'Metformin',
-        posology: [
-          [
-            { hour: '08', value: '10', quantityBE: 1, quantityAE: 2 },
-            { hour: '14', value: '15', quantityBE: 1, quantityAE: 2 },
-            { hour: '20', value: '20', quantityBE: 1, quantityAE: 2 }
-          ]
-        ],
-        root: 'Oral',
-        dose: 1,
-        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-        ,description : 'some description'
-      },
-      {
-        name: 'Atorvastatin',
-        posology: [
-          [
-            { hour: '10', value: '20', quantityBE: 1, quantityAE: 2 },
-            { hour: '18', value: '30', quantityBE: 1, quantityAE: 2 }
-          ]
-        ],
-        root: 'Oral',
-        dose: 1,
-        note: ['']
-        ,description : 'some description'
-      }
-    ],
-    toServe: 10,
-    served: 3,
-    status: 'Pending...',
-    add: 'Add 4',
-    servingDate: new Date()
-  },
-  {
-    id: 5,
-    room: 104,
-    bed: 2,
-    patient: 'John',
-    bd: new Date('7/12/1978'),
-    medicines: [
-      {
-        name: 'Amlodipine',
-        posology: [
-          [
-            { hour: '04', value: '10', quantityBE: 1, quantityAE: 2 },
-            { hour: '15', value: '20', quantityBE: 1, quantityAE: 2 },
-            { hour: '21', value: '30', quantityBE: 1, quantityAE: 2 }
-          ]
-        ],
-        root: 'Oral',
-        dose: 1,
-        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-        ,description : 'some description'
-      },
-      {
-        name: 'Losartan',
-        posology: [
-          [
-            { hour: '08', value: '20', quantityBE: 1, quantityAE: 2 },
-            { hour: '16', value: '30', quantityBE: 1, quantityAE: 2 }
-          ]
-        ],
-        root: 'Oral',
-        dose: 1,
-        note: ['']
-        ,description : 'some description'
-      }
-    ],
-    toServe: 12,
-    served: 6,
-    status: 'On Progress',
-    add: 'Add 5',
-    servingDate: new Date()
-  },
-  {
-    id: 6,
-    room: 105,
-    bed: 3,
-    patient: 'Emily',
-    bd: new Date('10/05/1993'),
-    medicines: [
-      {
-        name: 'Paracetamol',
-        posology: [
-          [
-            { hour: '07', value: '10', quantityBE: 1, quantityAE: 2 },
-            { hour: '03', value: '20', quantityBE: 1, quantityAE: 2 },
-            { hour: '19', value: '30', quantityBE: 1, quantityAE: 2 }
-          ]
-        ],
-        root: 'Oral',
-        dose: 1,
-        note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
-        ,description : 'some description'
-      },
-      {
-        name: 'Ibuprofen',
-        posology: [
-          [
-            { hour: '02', value: '20', quantityBE: 1, quantityAE: 2 },
-            { hour: '14', value: '30', quantityBE: 1, quantityAE: 2 }
-          ]
-        ],
-        root: 'Oral',
-        dose: 1,
-        note: ['']
-        ,description : 'some description'
-      }
-    ],
-    toServe: 8,
-    served: 2,
-    status: 'Pending...',
-    add: 'Add 6',
-    servingDate: new Date()
-  }*/
+     add: 'Add 3',
+     servingDate: new Date()
+   }, 
+   {
+     id: 3,
+     room: 102,
+     bed: 3,
+     patient: 'vasco',
+     bd: new Date('5/13/2000'),
+     medicines: [
+       {
+         name: 'Ceftriaxone', posology: [
+           [
+             { hour: '09', value: '02', quantityBE: 1 , quantityAE :2 },
+             { hour: '18', value: '17', quantityBE: 1 , quantityAE :2 },
+             { hour: '23', value: '22', quantityBE: 1 , quantityAE :2 },
+             { hour: '05', value: '02', quantityBE: 1 , quantityAE :2 },
+             { hour: '12', value: '17', quantityBE: 1 , quantityAE :2 },
+             { hour: '08', value: '22', quantityBE: 1 , quantityAE :2 },
+        
+           ]
+         ], root: 'Transdermal', dose: 1, note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+         ,description : 'some description'
+       },
+       {
+         name: 'Azithromycin', posology: [
+           [
+             { hour: '01', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '12', value: '03', quantityBE: 1 , quantityAE :2 },
+             { hour: '17', value: '04', quantityBE: 1 , quantityAE :2 },
+           
+           ]
+ 
+         ], root: 'Syrup', dose: 1, note:['']
+         ,description : 'some description'
+       },
+       {
+         name: 'Lisdexamfetamine', posology: [
+           [
+             { hour: '09', value: '8', quantityBE: 1 , quantityAE :2 },
+             { hour: '18', value: '02', quantityBE: 1 , quantityAE :2 },
+           
+      
+           ]
+         ], root: 'Bandage', dose: 1, note:['']
+         ,description : 'some description'
+       }
+     ],
+     toServe: 18,
+     served: 6,
+     status: 'On Progress',
+     
+     add: 'Add 3',
+     servingDate: new Date()
+   },
+   {
+     id: 4,
+     room: 103,
+     bed: 1,
+     patient: 'Sara',
+     bd: new Date('3/24/1985'),
+     medicines: [
+       {
+         name: 'Metformin',
+         posology: [
+           [
+             { hour: '08', value: '10', quantityBE: 1, quantityAE: 2 },
+             { hour: '14', value: '15', quantityBE: 1, quantityAE: 2 },
+             { hour: '20', value: '20', quantityBE: 1, quantityAE: 2 }
+           ]
+         ],
+         root: 'Oral',
+         dose: 1,
+         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+         ,description : 'some description'
+       },
+       {
+         name: 'Atorvastatin',
+         posology: [
+           [
+             { hour: '10', value: '20', quantityBE: 1, quantityAE: 2 },
+             { hour: '18', value: '30', quantityBE: 1, quantityAE: 2 }
+           ]
+         ],
+         root: 'Oral',
+         dose: 1,
+         note: ['']
+         ,description : 'some description'
+       }
+     ],
+     toServe: 10,
+     served: 3,
+     status: 'Pending...',
+     add: 'Add 4',
+     servingDate: new Date()
+   },
+   {
+     id: 5,
+     room: 104,
+     bed: 2,
+     patient: 'John',
+     bd: new Date('7/12/1978'),
+     medicines: [
+       {
+         name: 'Amlodipine',
+         posology: [
+           [
+             { hour: '04', value: '10', quantityBE: 1, quantityAE: 2 },
+             { hour: '15', value: '20', quantityBE: 1, quantityAE: 2 },
+             { hour: '21', value: '30', quantityBE: 1, quantityAE: 2 }
+           ]
+         ],
+         root: 'Oral',
+         dose: 1,
+         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+         ,description : 'some description'
+       },
+       {
+         name: 'Losartan',
+         posology: [
+           [
+             { hour: '08', value: '20', quantityBE: 1, quantityAE: 2 },
+             { hour: '16', value: '30', quantityBE: 1, quantityAE: 2 }
+           ]
+         ],
+         root: 'Oral',
+         dose: 1,
+         note: ['']
+         ,description : 'some description'
+       }
+     ],
+     toServe: 12,
+     served: 6,
+     status: 'On Progress',
+     add: 'Add 5',
+     servingDate: new Date()
+   },
+   {
+     id: 6,
+     room: 105,
+     bed: 3,
+     patient: 'Emily',
+     bd: new Date('10/05/1993'),
+     medicines: [
+       {
+         name: 'Paracetamol',
+         posology: [
+           [
+             { hour: '07', value: '10', quantityBE: 1, quantityAE: 2 },
+             { hour: '03', value: '20', quantityBE: 1, quantityAE: 2 },
+             { hour: '19', value: '30', quantityBE: 1, quantityAE: 2 }
+           ]
+         ],
+         root: 'Oral',
+         dose: 1,
+         note: ["Lorem Ipsum is simply dummy text of the printing and typesetting industry"]
+         ,description : 'some description'
+       },
+       {
+         name: 'Ibuprofen',
+         posology: [
+           [
+             { hour: '02', value: '20', quantityBE: 1, quantityAE: 2 },
+             { hour: '14', value: '30', quantityBE: 1, quantityAE: 2 }
+           ]
+         ],
+         root: 'Oral',
+         dose: 1,
+         note: ['']
+         ,description : 'some description'
+       }
+     ],
+     toServe: 8,
+     served: 2,
+     status: 'Pending...',
+     add: 'Add 6',
+     servingDate: new Date()
+   }*/
 ];
 
 
