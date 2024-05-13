@@ -49,7 +49,7 @@ import { PrescriptionApiService } from '../../../services/prescription/prescript
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 1;
+  stepNumber: number = 4;
   stepsLimit: number = _steps.length;
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];
@@ -97,11 +97,11 @@ export class AddPrescriptionComponent {
     const finalPrescription: PrescriptionCreateDto = {
       //@ts-ignore im sure, on submit, patient is selected and not undefined
       registerId: this.selectedPatient.registerId,
-      doctorId: '', //TODO
+      doctorId: '55555555-5555-5555-5555-555555555554', //TODO
       diagnoses: this.selectedDiagnosis,
       symptoms: this.selectedSymptoms,
       createdAt: new Date(),
-      createdBy: '',
+      createdBy: '55555555-5555-5555-5555-555555555554',
       posologies: filteredPosologies,
       unitCareId: this.Hospitalization.unitCare?.id,
       dietId: this.Hospitalization.diet?.Id,
@@ -109,7 +109,7 @@ export class AddPrescriptionComponent {
     console.log(JSON.stringify(finalPrescription));
     this.prescriptionApiService.postPrescriptions(finalPrescription).subscribe(
       (response) => console.log(response),
-      (error) => console.error(error) 
+      (error) => {console.error(error)} 
     );
   }
 

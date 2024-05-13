@@ -13,6 +13,7 @@ import { MatIcon } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-id/filter-patient-by-name-and-sn.pipe';
 import {
+  GetPrescriptionsByRegisterIdResponse,
   GetPrescriptionsResponse,
   PrescriptionDto,
 } from '../../../types/prescriptionDTOs';
@@ -23,12 +24,22 @@ import {
 } from '../../../types/registerDTOs';
 import { Status } from '../../../enums/enum';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { getDateString, getTimeString } from '../../../shared/utilityFunctions';
+import {
+  calculateAge,
+  getDateString,
+  getTimeString,
+} from '../../../shared/utilityFunctions';
 
 @Component({
   selector: 'app-prescription-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIcon, RouterModule,MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIcon,
+    RouterModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './prescription-list.component.html',
   styleUrl: './prescription-list.component.css',
 })
@@ -38,11 +49,22 @@ export class PrescriptionListComponent implements OnInit {
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   checked: boolean = true;
+
+  selectedRegister: RegisterDto | undefined = undefined;
   searchTerm: string = '';
-  prescriptions: PrescriptionDto[] = [];
   registrations: RegisterDto[] = [];
+  prescriptionsGroupedByRegisterIds: { [key: string]: PrescriptionDto[] } = {};
   isLoading: boolean = false;
 
+  get prescriptions(): PrescriptionDto[] {
+    let result: PrescriptionDto[] = [];
+    this.registrations.forEach((register) => {
+      if (register.prescriptions && register.prescriptions.length > 0)
+        result = [...result, ...register.prescriptions];
+    });
+    debugger;
+    return result;
+  }
 
   constructor(private prescriptionApiService: PrescriptionApiService) {}
 
@@ -55,19 +77,30 @@ export class PrescriptionListComponent implements OnInit {
   }
   ngOnInit() {
     //this.fetchPrescriptions();
-    this.fetchRegistrations();
+    //this.fetchRegistrations();
+    this.fetchRegistrationsWithPrescriptions();
   }
 
-  onClickPrescription(Prescription: any) {
-    this.selectedPrescription = Prescription;
+  onClickPrescription(prescription: PrescriptionDto) {
+    this.selectedPrescription = prescription;
+    this.selectedRegister = this.registrations.filter(
+      (register) => register.id == prescription.registerId
+    )[0];
+  }
+
+  onClickDeselectPrescription() {
+    this.selectedRegister = undefined;
+    this.selectedPrescription = undefined;
   }
 
   onClickNewPrescription() {
+    // Go to wizard ==>
     this.onClickNewPrescriptionEvent.emit(false);
-    this.onClickPrescription(undefined);
+    // empty this page / reset it
+    this.onClickDeselectPrescription();
   }
 
-  fetchPrescriptions() {
+  /*   fetchPrescriptions() {
     this.isLoading=true;
     this.prescriptionApiService.getPrescriptions().subscribe(
       (response: GetPrescriptionsResponse) => {
@@ -88,10 +121,10 @@ export class PrescriptionListComponent implements OnInit {
         this.isLoading = false;
       }
     );
-  }
+  } */
 
   fetchRegistrations() {
-    this.isLoading=true;
+    this.isLoading = true;
     this.prescriptionApiService.getRegistrations().subscribe(
       (response: GetRegistrationsResponse) => {
         this.registrations = response.registrations.data.map(
@@ -101,7 +134,7 @@ export class PrescriptionListComponent implements OnInit {
             //lastModified: this._formatDate(prescription.)
           })
         );
-/*         debugger; */
+        /*         debugger; */
       },
       (error: any) => {
         console.error('Error fetching registrations:', error);
@@ -113,20 +146,38 @@ export class PrescriptionListComponent implements OnInit {
     );
   }
 
+  async fetchRegistrationsWithPrescriptions() {
+    var response =
+      await PrescriptionApiService.getRegistrationsWithPrescriptions(
+        this.prescriptionApiService
+      );
+    this.registrations = [...response];
+  }
+
   onClickRefresh() {
-    this.fetchPrescriptions();
+    //this.fetchPrescriptions();
+    this.fetchRegistrationsWithPrescriptions();
   }
 
   getStatus(register: RegisterDto): Status {
     return getPatientStatusFromRegister(register);
   }
 
-  getDateString(dateToFormat: Date, dateFormat: string = "dd-mm-yyyy - HH:MM"): string {
-    return getDateString(dateToFormat,dateFormat);
-}
+  getDateString(
+    dateToFormat: Date,
+    dateFormat: string = 'dd-mm-yyyy - HH:MM'
+  ): string {
+    return getDateString(dateToFormat, dateFormat);
+  }
 
-  getTimeString(dateToFormat: Date): string { 
-     return getTimeString(dateToFormat);
+  getTimeString(dateToFormat: Date): string {
+    return getTimeString(dateToFormat);
+  }
+
+  getAge(bd: Date | undefined | null): string {
+    if (!bd) return '';
+    let x = calculateAge(bd).toString();
+    return '| ' + x + ' years';
   }
 
   private _formatDate(dateString: any): Date {

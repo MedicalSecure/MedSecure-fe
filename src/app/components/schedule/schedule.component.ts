@@ -117,18 +117,18 @@ export class ScheduleComponent implements OnInit {
     // if the values is 0 => parse it into EmptyString ""
 
     if (isBeforeFood) {
-      if (newHourObject.beforeMeal?.Quantity != undefined) {
+      if (newHourObject.beforeMeal?.quantity != undefined) {
         try {
-          oldValue = parseInt(newHourObject.beforeMeal?.Quantity || '');
+          oldValue = parseInt(newHourObject.beforeMeal?.quantity || '');
           if (Number.isNaN(oldValue)) oldValue = 0;
         } catch (error) {
           oldValue = 0;
         }
       }
     } else {
-      if (newHourObject.afterMeal?.Quantity != undefined) {
+      if (newHourObject.afterMeal?.quantity != undefined) {
         try {
-          oldValue = parseInt(newHourObject.afterMeal?.Quantity || '');
+          oldValue = parseInt(newHourObject.afterMeal?.quantity || '');
           if (Number.isNaN(oldValue)) oldValue = 0;
         } catch (error) {
           oldValue = 0;
@@ -141,23 +141,23 @@ export class ScheduleComponent implements OnInit {
     if (isBeforeFood) {
       if (newHourObject.beforeMeal == undefined) {
         newHourObject.beforeMeal = {
-          Quantity: finalValue,
+          quantity: finalValue,
           isPostValid: false,
           isValid: false,
         };
       } else {
-        newHourObject.beforeMeal.Quantity = finalValue;
+        newHourObject.beforeMeal.quantity = finalValue;
       }
     }
     if (!isBeforeFood) {
       if (newHourObject.afterMeal == undefined) {
         newHourObject.afterMeal = {
-          Quantity: finalValue,
+          quantity: finalValue,
           isPostValid: false,
           isValid: false,
         };
       } else {
-        newHourObject.afterMeal.Quantity = finalValue;
+        newHourObject.afterMeal.quantity = finalValue;
       }
     }
 
@@ -246,13 +246,13 @@ export class ScheduleComponent implements OnInit {
     this.partsOfDayHours = initialData.map((hourObj) => {
       if (hourObj.afterMeal == undefined)
         hourObj.afterMeal = {
-          Quantity: '',
+          quantity: '',
           isPostValid: false,
           isValid: false,
         };
       if (hourObj.beforeMeal == undefined)
         hourObj.beforeMeal = {
-          Quantity: '',
+          quantity: '',
           isPostValid: false,
           isValid: false,
         };
@@ -265,12 +265,12 @@ export function filterScheduleItems(unFilteredList: Dispense[]): Dispense[] {
   return unFilteredList.filter((item) => {
     let isBeforeFoodEmpty =
       item.beforeMeal == undefined ||
-      item.beforeMeal.Quantity == '' ||
-      item.beforeMeal.Quantity == undefined;
+      item.beforeMeal.quantity == '' ||
+      item.beforeMeal.quantity == undefined;
     let isAfterFoodEmpty =
       item.afterMeal == undefined ||
-      item.afterMeal.Quantity == '' ||
-      item.afterMeal.Quantity == undefined;
+      item.afterMeal.quantity == '' ||
+      item.afterMeal.quantity == undefined;
     if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
     return true;
   });
@@ -376,7 +376,7 @@ export type Dispense = {
 };
 
 export type Dose = {
-  Quantity?: string;
+  quantity: string;
   isValid: boolean;
   isPostValid: boolean;
 };

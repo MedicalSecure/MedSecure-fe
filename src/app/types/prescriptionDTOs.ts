@@ -1,5 +1,4 @@
-import { DietDto } from './DietDTOs';
-import { UnitCareDTO } from './UnitCareDTOs';
+
 import { MedicationDto } from './medicationDTOs';
 
 export type PaginatedResult<TEntity> = {
@@ -31,7 +30,10 @@ export type CreatePrescriptionRequest = {
 export type CreatePrescriptionResponse = {
   id: string;
 };
-
+export type GetPrescriptionsByRegisterIdResponse = {
+  prescriptionsByRegisterId: { [key: string]: PrescriptionDto[] };
+  
+}
 
 export type PrescriptionDto = {
   id: string;
@@ -85,7 +87,7 @@ export type PosologyCreateDto = {
 };
 
 export type CommentsDto = {
-  id: string | null;
+  id?: string;
   posologyId?: string;
   label: string;
   content: string;
@@ -98,7 +100,7 @@ export type DispenseDto = {
 };
 
 export type DoseDto = {
-  Quantity?: string;
+  quantity: string;
   isValid: boolean;
   isPostValid: boolean;
 };

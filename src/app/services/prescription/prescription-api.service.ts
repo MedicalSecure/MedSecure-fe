@@ -5,6 +5,7 @@ import {
   CreatePrescriptionRequest,
   CreatePrescriptionResponse,
   GetDiagnosisResponse,
+  GetPrescriptionsByRegisterIdResponse,
   GetPrescriptionsResponse,
   GetSymptomsResponse,
   PaginatedResult,
@@ -14,7 +15,7 @@ import {
   PrescriptionDto,
   SymptomDto,
 } from '../../types/prescriptionDTOs';
-import { GetRegistrationsResponse } from '../../types/registerDTOs';
+import { GetRegistrationsResponse, RegisterDto } from '../../types/registerDTOs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { Status } from '../../enums/enum';
 import { Entity } from '../../types';
@@ -105,9 +106,13 @@ export class PrescriptionApiService {
       .get<GetRegistrationsResponse>(this.apiUrl + '/Registration', { params })
       .pipe(
         map((response) => {
+          //new test
+          return parseDates(response);
+
+
           // Modify the response data here
           // Assuming the response contains an array of objects with a "dateString" property
-          response.registrations.data = response.registrations.data.map(
+/*           response.registrations.data = response.registrations.data.map(
             (item) => ({
               ...item,
               history: !item.history
@@ -124,9 +129,43 @@ export class PrescriptionApiService {
               ),
             })
           );
-          return response;
+          return response; */
         })
       );
+  }
+
+  getPrescriptionsByRegisterIds(
+    registerIds: string[]
+  ): Observable<GetPrescriptionsByRegisterIdResponse> {
+    let url = this.apiUrl + '/Register';
+    const params = new HttpParams().set('registerIds', registerIds.join(','));
+    return this.http.get<GetPrescriptionsByRegisterIdResponse>(url, {params}).pipe(
+      map((response)=> parseDates(response)));
+  }
+
+  public static async getRegistrationsWithPrescriptions(
+    service: PrescriptionApiService,
+    pageIndex: number = 0,
+    pageSize: number = 10,
+  ): Promise<RegisterDto[]> {
+    let registrations = await service
+      .getRegistrations(pageIndex, pageSize)
+      .toPromise();
+    //debugger;
+    if (!registrations) return [];
+    let registrationsData=registrations.registrations.data;
+    const ids = registrations.registrations.data.map((item) => item.id);
+    let prescriptionsByRegistrationsId = await service
+      .getPrescriptionsByRegisterIds(ids)
+      .toPromise();
+    if (!prescriptionsByRegistrationsId || prescriptionsByRegistrationsId==undefined) return [];
+    registrationsData.forEach((registration)=>{
+      //@ts-ignore
+      let registerId=registration.id as keyof(typeof prescriptionsByRegistrationsId.prescriptionsByRegisterId ) ;
+      //@ts-ignore
+      registration.prescriptions= prescriptionsByRegistrationsId.prescriptionsByRegisterId[registerId]
+    })
+    return registrationsData;
   }
 
   private _mapStatusEnum(value: any): Status {
@@ -136,6 +175,7 @@ export class PrescriptionApiService {
     return Status.Registered;
   }
 
+  //to remove
   DeserializeCreatedAtAnModifiedAt<T extends Entity>(
     list: Array<T> | undefined | null
   ): Array<T> {
@@ -149,3 +189,20 @@ export class PrescriptionApiService {
     });
   }
 }
+
+
+/* function parsePrescriptionDates(prescription:PrescriptionDto):PrescriptionDto{
+
+} */
+
+function parseDates<T>(response:T):T{
+
+  const dateReviver = (key: string, value: any) => {
+    const isDateString = value && typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value);
+    return isDateString ? new Date(value) : value;
+  };
+
+  var parsed=JSON.parse(JSON.stringify(response), dateReviver)
+  return parsed;
+}
+

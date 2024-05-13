@@ -95,7 +95,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   selectedPosologyDateRange = getInitialDateRange();
   newPosologiesList: PosologyDto[] = [];
   selectedMedications: MedicationDto[] = [];
-
+  
   //If no medications is selected, don't modify the posology values, only the search medications will work
   canUpdatePosology: boolean = this.selectedMedications.length > 0;
 
@@ -217,12 +217,11 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       const isLastElementCautionComment = lastElement === this.cautionComment;
       if (lastElement?.content != '' || isLastElementCautionComment === true)
         commentList.push({
-          id: null,
           label: 'Comment',
           content: '',
         });
     } else if (commentList.length == 0)
-      commentList.push({ id: null, label: 'Comment', content: '' });
+      commentList.push({ label: 'Comment', content: '' });
   }
   onCommentChange(event: any, comment: CommentsDto) {
     let commentContent: string = event.value as string;
@@ -255,7 +254,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       (item, i) => index != i
     );
     this.selectedPosology = posology;
-    this.selectedPosologyDateRange=[posology.startDate,posology.endDate];
+    this.selectedPosologyDateRange = [posology.startDate, posology.endDate];
     this.selectedMedications = [posology.medication];
     this.canUpdatePosology = this.selectedMedications.length > 0;
     //Caution comment is always the first one, so we can change the state here!
@@ -269,7 +268,8 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       //if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
       return index != i;
     });
-    console.log('result ' + this.isFilteredForceOrder);
+    this.onPosologiesChange.emit(this.newPosologiesList);
+
   }
 
   onAppendMedication(): boolean {
@@ -352,15 +352,15 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     let numberOfCautions: number = 0;
 
     posology.dispenses.forEach((hourObj) => {
-      if (hourObj.beforeMeal?.Quantity) {
-        const beforeFQ = parseInt(hourObj.beforeMeal?.Quantity);
+      if (hourObj.beforeMeal?.quantity ) {
+        const beforeFQ = parseInt(hourObj.beforeMeal?.quantity );
         beforeFoodCounter += beforeFQ;
         timesADayCounter++;
         if (beforeFQ > maximumDispenseQuantity)
           maximumDispenseQuantity = beforeFQ;
       }
-      if (hourObj.afterMeal?.Quantity) {
-        const afterFQ = parseInt(hourObj.afterMeal?.Quantity);
+      if (hourObj.afterMeal?.quantity ) {
+        const afterFQ = parseInt(hourObj.afterMeal?.quantity );
         afterFoodCounter += afterFQ;
         timesADayCounter++;
         if (afterFQ > maximumDispenseQuantity)
@@ -448,7 +448,6 @@ const _searchTerms: searchTerm[] = [
   { label: 'Form', medicationKey: 'form' },
 ];
 const initialCautionComment: CommentsDto = {
-  id: null,
   label: 'Caution',
   content: '',
 };

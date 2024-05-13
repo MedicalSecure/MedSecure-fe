@@ -28,7 +28,8 @@
       <i class="fa fa-refresh" id="refresh-icon" aria-hidden="true" title="Refresh" (click)="onClickRefresh()"></i>
     </div>
     <!-- Search result : Table of prescriptions -->
-    @if(isLoading == false){<table class="table table-responsive">
+    @if(isLoading == false){
+    <table class="table table-responsive">
       <thead>
         <tr id="table-head-row">
           <th class="col-1">Medical Record ID</th>
@@ -40,24 +41,23 @@
         </tr>
       </thead>
       <tbody>
-        @for(register of registrations;track $index){
-          @if(register.prescriptions){
-            <tr
-            *ngFor="let prescription of register.prescriptions"
-            (click)="onClickPrescription(prescription)"
-            [class]="prescription === selectedPrescription ? 'table-primary' : ''"
-            >
+        <ng-container *ngFor="let register of registrations; let i = index">
+          @if(register.prescriptions && register.prescriptions.length>0){
+          <tr *ngFor="let prescription of register.prescriptions" (click)="onClickPrescription(prescription)">
             <td class="col-1">{{ register.id.slice(-10) + "..." }}</td>
             <td class="col-1">{{ prescription.id.slice(-10) + "..." }}</td>
             <td class="col-3">{{ register.patient.firstName + " " + register.patient.lastName }}</td>
-            <td class="col-2">{{ getStatus(register)}}</td>
-            <td class="col-2">{{ "After AZURE"}}</td>
-            <td class="col-2">{{ getDateString(prescription.createdAt)}}</td>
+            <td class="col-2">{{ getStatus(register) }}</td>
+            <td class="col-2">{{ "After AZURE" }}</td>
+            <td class="col-2">{{ getDateString(prescription.createdAt) }}</td>
           </tr>
-      }}
+          }</ng-container
+        >
       </tbody>
-    </table>}
-    @if(isLoading){<div class="mx-auto pe-5 mt-5" style="width:fit-content"><mat-spinner></mat-spinner></div>}
+    </table>
+    } @if(isLoading){
+    <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
+    }
   </div>
 
   <!-- If one prescription is selected:display result -->
@@ -65,8 +65,8 @@
   <!-- Print a single line displaying Prescription id | Date | Patient name | doctor name And Deselect Button -->
   <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
     <p class="align-self-center m-0">Selected Prescription :</p>
-    <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{ selectedPrescription }} - {{ selectedPrescription }} years</span>
-    <mat-icon class="align-self-center" (click)="onClickPrescription(undefined)">close</mat-icon>
+    <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{selectedRegister?.patient?.firstName}} {{selectedRegister?.patient?.lastName}} {{  getAge(selectedRegister?.patient?.dateOfBirth) }}</span>
+    <mat-icon class="align-self-center" (click)="onClickDeselectPrescription()">close</mat-icon>
   </div>
   <!-- Display Prescription details component -->
   <div>Prescription Details here (TODO)</div>

@@ -30,6 +30,23 @@ export function getDateString(
   dateToFormat: Date,
   dateFormat: string = 'dd-mm-yyyy - HH:MM'
 ): string {
+  // try
+  try {
+    if (!dateToFormat) {
+      return 'not-date';
+    }
+    if (typeof dateToFormat === 'string') {
+      dateToFormat = new Date(dateToFormat);
+    }
+    if (typeof dateToFormat === 'object' && dateToFormat !== null) {
+      dateToFormat = new Date(dateToFormat.toString());
+    }
+  } catch (error) {
+    console.error('Error in getDateString:', error);
+    return 'not-date';
+  }
+
+  // the real conversion
   const day = String(dateToFormat.getDate()).padStart(2, '0');
   const month = String(dateToFormat.getMonth() + 1).padStart(2, '0');
   const year = String(dateToFormat.getFullYear());
