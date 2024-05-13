@@ -36,10 +36,10 @@
               <!-- Partie 1 -->
               <div class="col-md-4" style="max-width: 30rem;">
                 <label class="form-label "> Title</label> <br>
-                <input type="text" formControlName="Title"   class="form-control"/>
+                <input type="text" formControlName="title"   class="form-control"/>
 
                 <label class="form-label"> Type</label>
-                <select class="form-select" formControlName="Type" >
+                <select class="form-select" formControlName="type" >
                   <option selected disabled value="">Choose...</option>
                   <option value="general">General</option>
                   <option value="Intensive">Intensive</option>
@@ -52,7 +52,7 @@
                 <label class="form-label"> Description</label>
                 <textarea
                   class="form-control"
-                  formControlName="Description"
+                  formControlName="description"
                   style="height: 60px; "
                 >
                description
@@ -89,7 +89,10 @@
                         ?.controls?.equipments?.controls; track equipmentIndex; let equipmentIndex =
                         $index ) {
                         <div [formGroupName]="equipmentIndex" class="answer">
-                          <input type="text" placeholder="Answer" formControlName="text" />
+                          <input type="text" placeholder="equipmentName" formControlName="name" />
+                          <input type="text" placeholder="reference" formControlName="reference" />
+                          <input type="number" placeholder="status" formControlName="eqStatus" />
+                          <input type="number" placeholder="type" formControlName="eqType" />
                           <!-- <span
                             (click)="removeEquipment(roomIndex, equipmentIndex)"
                             class="remove"
@@ -131,8 +134,11 @@
 
               <!-- Partie du personnel -->
               <div class="col-md-4" style="max-width: 25rem;">
+                <div style="display: flex; align-items: center">
+                  <h6 class="card-description my-auto">Add Personnels</h6>
+                </div> <br>
                 <ng-multiselect-dropdown
-                [placeholder]="'custom placeholder'"
+                [placeholder]="'Personnels List'"
                 [settings]="dropdownSettings"
                 [data]="dropdownList"
                 (onSelect)="onItemSelect($event)"
@@ -144,7 +150,7 @@
 
 
 
-              <button (click)="saveSelectedItems()">Save Selected Items</button>
+
               </div>
 
               <!-- Fin de la partie du personnel -->
@@ -162,20 +168,8 @@
 
               </div>
               <div class="col-lg-4 d-flex justify-content-end">
-                <button
-                type="button"
-                class="btn btn-outline-primary"
-
-              >
-                Cancel
-              </button>
-                <button
-                  type="submit"
-                  class="btn btn-primary text-white"
-
-                >
-                Submit
-                </button>
+                <button type="button" class="btn btn-outline-primary"> Cancel </button>
+                <button type="submit" class="btn btn-primary text-white"> Submit </button>
               </div>
             </div>
 

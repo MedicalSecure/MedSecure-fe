@@ -10,10 +10,24 @@ import { RouterModule } from '@angular/router';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { UnitCareService } from '../../services/unit-care.service';
+import { UnitCare } from '../../model/UnitCareData';
 
-type FormEquipment = FormGroup<{ text: FormControl<string> }>;
+
+
+// Interface for personnel information (assuming basic structure)
+
+type FormEquipment = FormGroup<{
+
+    name: FormControl<string>;
+    reference: FormControl<string>;
+    eqStatus: FormControl<number>;
+    eqType: FormControl<number>;
+  }>;
+
 
 type FormRoom = FormGroup<{
+
   roomNumber: FormControl<string>;
   equipments: FormArray<FormEquipment>;
 }>;
@@ -21,9 +35,9 @@ type FormRoom = FormGroup<{
 
 
 type Form = FormGroup<{
-  Title:FormControl,
-  Type:FormControl,
-  Description:FormControl,
+  title:FormControl,
+  type:FormControl,
+  description:FormControl,
   rooms: FormArray<FormRoom>;
   personnels:FormArray<any>;
 }>;
@@ -39,10 +53,10 @@ export interface IDropdownSettings {
 }
 
 export interface DropdownItem {
-  item_id: number;
-  item_text: string;
+  name: string;
+  gender: number;
   isSelected: boolean;
-  unitcareId: string;}
+  shift:number}
 
 
 
@@ -57,22 +71,28 @@ export class FormUnitCareComponent  implements OnInit {
   dropdownList: DropdownItem[] = [];
   selectedItems: DropdownItem[] = [];
   dropdownSettings: IDropdownSettings = {};
+
+  constructor(public unitcare : UnitCareService) { }
+
   ngOnInit() {
     this.dropdownList = [
-      { item_id: 1, item_text: 'Mumbai', isSelected: false, unitcareId: "" },
-      { item_id: 2, item_text: 'Bangaluru', isSelected: false, unitcareId: "" },
-      { item_id: 3, item_text: 'Pune', isSelected: false, unitcareId: "" },
-      { item_id: 4, item_text: 'Navsari', isSelected: false, unitcareId: "" },
-      { item_id: 5, item_text: 'New Delhi', isSelected: false, unitcareId: "" },
-    ];
+
+        { name: 'olivia', gender: 2, isSelected: false, shift: 1 },
+        { name: 'emily', gender: 2, isSelected: false, shift: 2 },
+        { name: 'make', gender: 1, isSelected: false, shift: 3 },
+        { name: 'sami', gender: 1, isSelected: false, shift: 1 },
+        { name: 'lucy', gender: 2, isSelected: false, shift: 2 },
+      ];
+
+
     this.selectedItems = [
-      { item_id: 3, item_text: 'Pune', isSelected: true, unitcareId: "" },
-      { item_id: 4, item_text: 'Navsari', isSelected: true, unitcareId: "" },
+      { name: 'olivia', gender: 2, isSelected: true, shift:  1},
+      { name: 'emily', gender: 2, isSelected: true, shift: 2 },
     ];
     this.dropdownSettings = {
       singleSelection: false,
-      idField: 'item_id',
-      textField: 'item_text',
+      idField: 'name',
+      textField: 'name',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 3,
@@ -80,17 +100,17 @@ export class FormUnitCareComponent  implements OnInit {
     };
   }
 
-  unitcareId = "1";
+
 
   onItemSelect(item: any) {
     console.log("our item is", item);
 
   // Find the item in dropdownList with matching item_id
-  const selectedItem = this.dropdownList.find(x => x.item_id === item.item_id);
+  const selectedItem = this.dropdownList.find(x => x.name === item.name)
 
   if (selectedItem) {
     selectedItem.isSelected = true;
-    selectedItem.unitcareId = this.unitcareId;
+
 
     // Update personnels form array
     const personnelArray = this.unitCareForm.get('personnels') as FormArray;
@@ -106,12 +126,12 @@ onItemDeSelect(item: any) {
   console.log("our item is", item);
 
   // Find the item in dropdownList with matching item_id
-  const deselectedItem = this.dropdownList.find(x => x.item_id === item.item_id);
+  const deselectedItem = this.dropdownList.find(x => x.name === item.N);
 
   if (deselectedItem) {
       // Update isSelected and unitcareId properties of the deselected item
       deselectedItem.isSelected = false;
-      deselectedItem.unitcareId = "";
+
 
       // Logging the selected items
       console.log('Selected items:', this.dropdownList.filter(x => x.isSelected));
@@ -126,7 +146,7 @@ onSelectAll(items: any) {
   // Update isSelected property of all items to true
   this.dropdownList.forEach(item => {
       item.isSelected = true;
-      item.unitcareId = this.unitcareId; // Assuming unitcareId needs to be assigned to all selected items
+
   });
 
   // Update selectedItems array with all items
@@ -140,7 +160,7 @@ onDeSelectAll() {
   // Update isSelected property of all items to false
   this.dropdownList.forEach(item => {
       item.isSelected = false;
-      item.unitcareId = ""; // Clear unitcareId for all deselected items
+
   });
 
   // Clear selectedItems array
@@ -150,27 +170,18 @@ onDeSelectAll() {
   console.log('Selected items:', this.selectedItems);
 }
 
-
-saveSelectedItems() {
-  // Create a register object containing the selected items
-  const registerObject = {
-    UnitCare:this.unitcareId,
-    Room: ["Room1", "Room2"],
-    Personels: this.selectedItems
-  };
-  console.log('Saved Selected Items:', registerObject);
-  // You can perform further actions here, such as sending the registerObject to a server or storing it locally
-}
+// the form
 
   fb = inject(NonNullableFormBuilder);
   unitCareForm: Form = this.fb.group({
-    Title:'',
-    Description:'',
-    Type:'',
+    title:'',
+    description:'',
+    type:'',
     rooms: this.fb.array<FormRoom>([this.generateRoom()]),
     personnels: this.fb.array<any>([])
 
   });
+
 
   generateRoom(): FormRoom {
     return this.fb.group({
@@ -188,11 +199,12 @@ saveSelectedItems() {
   }
 
 
-
-
   addEquipment(roomIndex: number): void {
     const newEquipment: FormEquipment = this.fb.group({
-      text: '',
+      name: '',
+      reference: '',
+      eqStatus: 1,
+      eqType: 2
     });
     this.unitCareForm.controls.rooms
       .at(roomIndex)
@@ -204,8 +216,24 @@ saveSelectedItems() {
       .at(roomIndex)
       ?.controls?.equipments?.removeAt(equipmentIndex);
   }
-
+  UnitCare : UnitCare | any;
   onSubmit() {
-    console.log('test',this.unitCareForm.getRawValue());
+    console.log("test",this.unitCareForm.value)
+    console.log("test 2",this.unitCareForm.valid)
+    if (this.unitCareForm.valid) {
+
+       this.UnitCare = this.unitCareForm.value;
+
+      this.unitcare.postUnitCare(this.UnitCare)
+        .subscribe(response => {
+          console.log('Backend response:', response);
+        }, error => {
+          console.error('Error submitting data:', error);
+        });
+    } else {
+      console.error('Form is invalid!');
+
+    }
   }
+
 }
