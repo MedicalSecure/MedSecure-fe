@@ -27,7 +27,7 @@ import {
   Stp5HospitalizationComponent,
   stp5FormsValueEvent,
 } from '../stp5-hospitalization/stp5-hospitalization.component';
-import { filterScheduleItems } from '../../../components/schedule/schedule.component';
+import { filterScheduleDoses, filterScheduleItems } from '../../../components/schedule/schedule.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 
 @Component({
@@ -89,7 +89,7 @@ export class AddPrescriptionComponent {
           endDate:posology.endDate,
           isPermanent:posology.isPermanent,
           comments:posology.comments,
-          dispenses: filterScheduleItems(posology.dispenses),
+          dispenses: filterScheduleDoses(posology.dispenses),
         };
         return x;
       }

@@ -261,7 +261,14 @@ export class ScheduleComponent implements OnInit {
   }
 }
 
+/**
+ * filter empty Hours
+ * remove the full hour if the TWO DOSES ARE EMPTY !!
+ * if the hour has one dose, it wont be filtered, use filterScheduleDoses
+ * @param { Dispense[]} unFilteredList - The unfiltered list
+ */
 export function filterScheduleItems(unFilteredList: Dispense[]): Dispense[] {
+  //
   return unFilteredList.filter((item) => {
     let isBeforeFoodEmpty =
       item.beforeMeal == undefined ||
@@ -274,6 +281,44 @@ export function filterScheduleItems(unFilteredList: Dispense[]): Dispense[] {
     if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
     return true;
   });
+}
+
+/**
+ * filter empty Hours and  Doses too
+ * remove the full hour if the TWO DOSES ARE EMPTY !!
+ * remove the Empty quantity dose if the other dose exist
+ * so if you have beforeMeal filled but afterMeal quantity is empty, the afterMeal dose will be removed entirely
+ * @param { Dispense[]} unFilteredList - The unfiltered list
+ */
+export function filterScheduleDoses(unFilteredList: Dispense[]): Dispense[] {
+  let filteredList: Dispense[] = [];
+  unFilteredList.forEach((item) => {
+    let isBeforeFoodEmpty =
+      item.beforeMeal == undefined ||
+      item.beforeMeal.quantity == '' ||
+      item.beforeMeal.quantity == undefined;
+    let isAfterFoodEmpty =
+      item.afterMeal == undefined ||
+      item.afterMeal.quantity == '' ||
+      item.afterMeal.quantity == undefined;
+    //remove the full hour object (skip it)
+    if (isBeforeFoodEmpty && isAfterFoodEmpty) return;
+
+    //push the full hour object 
+    if(!isBeforeFoodEmpty && !isAfterFoodEmpty){
+      filteredList.push(item);
+      return;
+    }
+
+    //add half filled hour object (afterMeal)
+    if (isBeforeFoodEmpty)
+      filteredList.push({ hour: item.hour, afterMeal: item.afterMeal });
+
+    //add half filled hour object (beforeMeal)
+    if (isAfterFoodEmpty)
+      filteredList.push({ hour: item.hour, beforeMeal: item.beforeMeal });
+  });
+  return filteredList;
 }
 
 const _initialPartsOfDayHours: Dispense[] = [
