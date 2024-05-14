@@ -1,6 +1,5 @@
-import { COMMA, ENTER, V } from '@angular/cdk/keycodes';
+import { COMMA, ENTER} from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   Component,
   ElementRef,
   EventEmitter,
