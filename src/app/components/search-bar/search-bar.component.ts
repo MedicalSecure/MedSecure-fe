@@ -53,9 +53,8 @@ export class SearchBarComponent implements OnInit ,OnChanges {
 
   @Input()
   searchTerms: searchTerm[] = [
-    { label: 'Name', medicationKey: 'Name' },
-    { label: 'Laboratory', medicationKey: 'lab' },
-    { label: 'Indications', medicationKey: 'DCI' },
+    { label: 'Name', medicationKey: 'name' },
+    { label: 'Form', medicationKey: 'form' },
   ];
   selectedSearchTerm: searchTerm =
     this.searchTerms.length > 0
@@ -133,7 +132,7 @@ export class SearchBarComponent implements OnInit ,OnChanges {
     if (searchTerm.length < this.minimumNumberOfCharacters) return [];
 
     return this.Medications.filter((medication) =>
-      medication[this.selectedSearchTerm.medicationKey as keyof MedicationDto]
+      medication[this.selectedSearchTerm.medicationKey]
         ?.toString()
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
@@ -161,15 +160,11 @@ export class SearchBarComponent implements OnInit ,OnChanges {
     ].toString();
   }
 
-  removeMedication(medication: MedicationDto): void {
-/*     const index = this.selectedMedications.indexOf(medication);
-    if (index !== -1) {
-      this.selectedMedications.splice(index, 1);
-      this.emitSelectedMedications();
-    } */
-    this.selectedMedications = this.selectedMedications.filter(med => med != medication) 
+  removeMedication(medication: MedicationDto,index:any): void {
+    //better performance
+    //this.selectedMedications = this.selectedMedications.filter(med => med != medication) 
+    this.selectedMedications.splice(index, 1);
     this.updateFormControlState();
-
   }
 
   private emitSelectedMedications(): void {
@@ -181,5 +176,5 @@ export class SearchBarComponent implements OnInit ,OnChanges {
 
 export type searchTerm = {
   label: string;
-  medicationKey: string;
+  medicationKey: keyof MedicationDto;
 };
