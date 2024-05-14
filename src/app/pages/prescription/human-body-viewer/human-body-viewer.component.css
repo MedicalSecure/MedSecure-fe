@@ -27,3 +27,7 @@ path:hover {
   left: 50%;
   transform: translate(-50%, -40%);
 }
+
+.tools-button:hover {
+  background-color: rgba(255, 0, 0, 0.6);
+}

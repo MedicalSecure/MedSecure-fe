@@ -1,18 +1,35 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import {
   ShipsSelectComponent,
+  handleForcedSuggestionsAction,
   onChipsSelectionEmitType,
 } from '../../../components/chips-select/chips-select.component';
-import { HumanBodyViewerComponent } from '../human-body-viewer/human-body-viewer.component';
+import {
+  HumanBodyViewerComponent,
+  onBodyPartClickEventType,
+} from '../human-body-viewer/human-body-viewer.component';
 import { CommonModule } from '@angular/common';
 
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 import { DiagnosisDto, SymptomDto } from '../../../types/prescriptionDTOs';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-stp3-add-diagnostic',
@@ -49,14 +66,18 @@ export class Stp3AddDiagnosticComponent {
   >();
   @Output()
   onIsAddSymptomsPageValidChange = new EventEmitter<boolean>();
-
-  selectedDiagnosis: DiagnosisDto[] = [];
-  selectedSymptoms: SymptomDto[] = [];
   @Input()
   diagnosesData: DiagnosisDto[] = [];
   @Input()
   symptomsData: SymptomDto[] = [];
 
+  @ViewChild(ShipsSelectComponent<SymptomDto>)
+  SymptomsSelectComponent: ShipsSelectComponent<SymptomDto>;
+
+  symptomsCodeByBodyPart = symptomsCodeByBodyPart;
+  selectedDiagnosis: DiagnosisDto[] = [];
+  selectedSymptoms: SymptomDto[] = [];
+  selectedBodyParts: Set<string> = new Set<string>();
   minimumSymptomsForPrediction: number = 3;
   continuePredicting: boolean = true;
 
@@ -85,13 +106,14 @@ export class Stp3AddDiagnosticComponent {
     this.onIsPageValidChange();
     this.onSelectedSymptomsChange.emit(result);
     const predictCondition =
-      this.minimumSymptomsForPrediction <= this.selectedSymptoms.length && this.continuePredicting;
+      this.minimumSymptomsForPrediction <= this.selectedSymptoms.length &&
+      this.continuePredicting;
     if (predictCondition) this.predictDiagnosis(result.SelectedObjectList);
   }
 
   selectedDiagnosisChipsChange(result: onChipsSelectionEmitType<DiagnosisDto>) {
     this.continuePredicting = false;
-    if (result.SelectedObjectList.length ===0) {
+    if (result.SelectedObjectList.length === 0) {
       //if its empty, continue predicting
       this.continuePredicting = true;
     }
@@ -123,7 +145,9 @@ export class Stp3AddDiagnosticComponent {
   fetchSymptoms() {
     this.isSymptomsLoading = true;
     this.prescriptionService.getSymptoms(0, 200).subscribe(
-      (response) => (this.symptomsData = response.symptom.data),
+      (response) => {
+        this.symptomsData = response.symptom.data;
+      },
       (error) => console.error(error),
       () => (this.isSymptomsLoading = false)
     );
@@ -151,20 +175,21 @@ export class Stp3AddDiagnosticComponent {
         this.selectedDiagnosis = [response.predictedDiagnosis];
 
         //shake the input
-        this.triggerShakeAnimation()
+        this.triggerShakeAnimation();
 
-        console.log("new prediction")
-        console.log(response.predictedDiagnosis)
+        console.log('new prediction');
+        console.log(response.predictedDiagnosis);
       },
       (error) => console.error(error),
       () => (this.isDiagnosisLoading = false)
     );
   }
 
-
   triggerShakeAnimation() {
     if (this.isDiagnosisLoading) {
-      const element = document.getElementById('diagnosis-chips-select-container');
+      const element = document.getElementById(
+        'diagnosis-chips-select-container'
+      );
       if (element) {
         element.classList.add('shake-animation');
         setTimeout(() => {
@@ -173,4 +198,123 @@ export class Stp3AddDiagnosticComponent {
       }
     }
   }
+
+  onSelectedBodyPartsChange(selectedParts: Set<string>) {
+    //here i will handle only the deselect all case only !!
+    if (selectedParts.size != 0) return;
+    this.selectedBodyParts = new Set<string>();
+
+    let params: handleForcedSuggestionsAction<SymptomDto> = {
+      newFilteredData: this.symptomsData,
+      keepFilterAfterSelection: false,
+      forceReset: true,
+    };
+
+    this.SymptomsSelectComponent.handleForcedSuggestions(params);
+  }
+
+  handleIsFilteringEnabledChange(newState: boolean) {
+    let  forceReset=false;
+    let symptoms: SymptomDto[] = [];
+    if (newState == true) {
+      if (this.selectedBodyParts.size === 0) {
+        symptoms = this.symptomsData;
+      } else {
+        symptoms = this.getFilteredSymptomsBySelectedBodyParts();
+      }
+    } else {
+      symptoms = this.symptomsData;
+      forceReset=true;
+    }
+
+    let params: handleForcedSuggestionsAction<SymptomDto> = {
+      newFilteredData: symptoms,
+      keepFilterAfterSelection: true,
+      forceReset: forceReset,
+    };
+    this.SymptomsSelectComponent.handleForcedSuggestions(params);
+  }
+
+  onBodyPartClickEvent(partClickEvent: onBodyPartClickEventType) {
+    debugger;
+    let wasSelected = this.isPartSelected(partClickEvent.partName);
+    let forceReset=false;
+    if (wasSelected) this.selectedBodyParts.delete(partClickEvent.partName);
+    else this.selectedBodyParts.add(partClickEvent.partName);
+    let symptoms: SymptomDto[] = [];
+    if (this.selectedBodyParts.size === 0) {
+      symptoms = this.symptomsData;
+      forceReset=true;
+    } else {
+      symptoms = this.getFilteredSymptomsBySelectedBodyParts();
+    }
+    // debugger;
+
+    let params: handleForcedSuggestionsAction<SymptomDto> = {
+      newFilteredData: symptoms,
+      keepFilterAfterSelection: true,
+      forceReset: forceReset,
+    };
+    this.SymptomsSelectComponent.handleForcedSuggestions(params);
+  }
+
+  getFilteredSymptomsBySelectedBodyParts(): SymptomDto[] {
+    let filteredSymptomsSet = new Set<SymptomDto>();
+
+    this.selectedBodyParts.forEach((bodyPartName) => {
+      let correspondentSymptomsCodes =
+        this.symptomsCodeByBodyPart[bodyPartName];
+
+      //can return duplicates in the result
+      let correspondentSymptoms = this.getSymptomsFromCodes(
+        correspondentSymptomsCodes
+      );
+      correspondentSymptoms.forEach((symptom) =>
+        filteredSymptomsSet.add(symptom)
+      );
+    });
+
+    //the set is to filter duplicates
+    let filteredSymptoms: SymptomDto[] = Array.from(filteredSymptomsSet);
+    return filteredSymptoms;
+  }
+
+  getSymptomsFromCodes(codes: number[]): SymptomDto[] {
+    //can return duplicates in the result
+    let result: SymptomDto[] = [];
+    this.symptomsData.forEach((symptom) => {
+      try {
+        //compare as numbers
+        let code = parseInt(symptom.code);
+        if (codes.includes(code)) result.push(symptom);
+      } catch (error) {
+        console.log(error);
+        //compare as strings
+        let codesString = codes.map((code) => code.toString());
+        if (codesString.includes(symptom.code)) result.push(symptom);
+      }
+    });
+    return result;
+  }
+
+  isPartSelected(source: string): boolean {
+    return this.selectedBodyParts.has(source);
+  }
 }
+
+export const symptomsCodeByBodyPart: { [key: string]: number[] } = {
+  Head: [31, 53, 36, 9, 88],
+  Neck: [71, 81, 63],
+  Chest: [24, 27, 56, 108, 107, 118],
+  'Right Hand': [82, 83, 85, 86, 87, 80],
+  'Left Hand': [82, 83, 85, 86, 87, 80],
+  Abdomen: [38, 39, 44, 114, 117, 113, 100, 92, 103, 115, 7, 73, 119, 106],
+  Pelvis: [38, 39, 46, 47, 60, 59, 61],
+  'Right Leg': [78, 79, 80, 121, 120],
+  'Left Leg': [78, 79, 80, 121, 120],
+  Back: [37],
+  Buttocks: [],
+  Skin: [
+    1, 2, 4, 5, 0, 32, 131, 99, 125, 66, 102, 129, 126, 130, 128, 127, 123,
+  ],
+};
