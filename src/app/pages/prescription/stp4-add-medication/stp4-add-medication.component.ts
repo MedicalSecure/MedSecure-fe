@@ -131,14 +131,6 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     this.selectedMedications = medications;
     this.selectedPosology.medication = medications[0];
     this.canUpdatePosology = this.selectedMedications.length > 0;
-
-    /*     this.selectedPosology = {
-      ..._getFormInitialValues(),
-      id: group.option.value,
-      label: group.option.value,
-      isForceOrder: group.option.group.label === 'out of stock',
-    }; */
-    //this.isSelectedForceOrder = group.option.group.label === 'out of stock';
   }
 
   onIsCautionEnabledChange(caution: boolean) {
@@ -237,7 +229,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       this.onIsCautionEnabledChange(false);
       return;
     }
-    commentList = commentList.filter((item) => {
+    this.selectedPosology.comments = commentList.filter((item) => {
       return item != comment;
     });
   }
