@@ -100,7 +100,7 @@ export class PrescriptionListComponent implements OnInit {
     this.onClickDeselectPrescription();
   }
 
-  /*   fetchPrescriptions() {
+/*   fetchPrescriptions() {
     this.isLoading=true;
     this.prescriptionApiService.getPrescriptions().subscribe(
       (response: GetPrescriptionsResponse) => {
@@ -121,7 +121,7 @@ export class PrescriptionListComponent implements OnInit {
         this.isLoading = false;
       }
     );
-  } */
+  } 
 
   fetchRegistrations() {
     this.isLoading = true;
@@ -134,7 +134,7 @@ export class PrescriptionListComponent implements OnInit {
             //lastModified: this._formatDate(prescription.)
           })
         );
-        /*         debugger; */
+       //debugger; 
       },
       (error: any) => {
         console.error('Error fetching registrations:', error);
@@ -145,7 +145,7 @@ export class PrescriptionListComponent implements OnInit {
       }
     );
   }
-
+ */
   async fetchRegistrationsWithPrescriptions() {
     var response =
       await PrescriptionApiService.getRegistrationsWithPrescriptions(

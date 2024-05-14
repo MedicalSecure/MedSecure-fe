@@ -49,7 +49,7 @@ import { PrescriptionApiService } from '../../../services/prescription/prescript
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent {
-  stepNumber: number = 4;
+  stepNumber: number = 1;
   stepsLimit: number = _steps.length;
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];
