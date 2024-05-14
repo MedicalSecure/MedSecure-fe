@@ -27,7 +27,7 @@ export class HumanBodyViewerComponent {
   isFilterEnabled:boolean=false;
 
   @Output()
-  isFilteringEnabledChange: EventEmitter<boolean>= new EventEmitter<boolean>(this.isFilterEnabled);
+  isFilteringEnabledChange: EventEmitter<onFilterChangeEventType>= new EventEmitter<onFilterChangeEventType>();
 
 
   constructor() {
@@ -42,7 +42,7 @@ export class HumanBodyViewerComponent {
     let newState=!this.isFilterEnabled;
 
     this.isFilterEnabled=newState;
-    this.isFilteringEnabledChange.emit(newState);
+    this.isFilteringEnabledChange.emit({isFilterEnabled:newState,selectedParts:this.selectedParts});
   }
   /**
    * emit event whenever a part of body is click
@@ -94,14 +94,16 @@ export class HumanBodyViewerComponent {
     this.selectedParts.clear(); 
     //emit changes
     this.onSelectedPartsChange.emit(this.selectedParts);
-    console.log(this.selectedParts)
-
   }
 }
 
 export type onBodyPartClickEventType = {
   partName: string;
   wasSelected: boolean;
+  selectedParts: Set<string>;
+};
+export type onFilterChangeEventType = {
+  isFilterEnabled: boolean;
   selectedParts: Set<string>;
 };
 

@@ -70,19 +70,18 @@ export class ShipsSelectComponent<T> {
   >();
 
   /* assure that the input propertyName refers to string prop?
-  
     type StringKeys<T> = {
     [K in keyof T]: T[K] extends string ? K : never;
   }[keyof T];
-
   interface MyComponent<T extends object> {
     @Input() tooltipPropertyName: StringKeys<T>;
   }
   */
 
-  // we gonna cache the input value minimumSearchLength so we can work with the minSearchLength instead
-  minSearchLength: number = 2;
   separatorKeysCodes: number[] = [ENTER, COMMA];
+  // we gonna cache the input value minimumSearchLength so we can work with the minSearchLength instead, so we can set it sometimes to ZERO (incase of forceSuggest)
+  //and be able to reset it to minimumSearchLength(from the parent / default settings)
+  minSearchLength: number = 2;
   ObjectControl = new FormControl<string | any>('');
   filteredDataByInput: Observable<T[]>;
   filteredDataSubscription!: Subscription;
@@ -102,8 +101,6 @@ export class ShipsSelectComponent<T> {
       handleForcedSuggestions?.keepFilterAfterSelection ?? false;
     let newFilteredData = handleForcedSuggestions.newFilteredData;
     let forceReset = handleForcedSuggestions?.forceReset ?? false;
-
-    debugger;
 
     this.keepFilterAfterSelection = keepFilterAfterSelection;
 

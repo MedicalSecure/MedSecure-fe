@@ -11,7 +11,7 @@
             [enableCustomAdditions]="false"
             [enableQuickSelectFromSuggestions]="true"
             [fullData]="symptomsData"
-            [minimumSearchLength]="2"
+            [minimumSearchLength]="1"
             [minimumAddedLabelLength]="5"
             [isStartWithSearch]="false"
             [searchPropertyName]="'name'"
@@ -44,12 +44,10 @@
       <td class="col-md-3">
         <div>
           <form class="container d-flex card py-2 shadow-sm">
-            <app-human-body-viewer [handleClicksByParent]="true" 
-            [selectedParts]="selectedBodyParts" 
-            (onBodyPartClickEvent)="onBodyPartClickEvent($event)"
-             (onSelectedPartsChange)="onSelectedBodyPartsChange($event)"
-             (isFilteringEnabledChange)="handleIsFilteringEnabledChange($event)"
-             ></app-human-body-viewer>
+            <app-human-body-viewer 
+              (onSelectedPartsChange)="onSelectedBodyPartsChange($event)"
+              (isFilteringEnabledChange)="handleIsFilteringEnabledChange($event)"
+            ></app-human-body-viewer>
           </form>
         </div>
       </td>

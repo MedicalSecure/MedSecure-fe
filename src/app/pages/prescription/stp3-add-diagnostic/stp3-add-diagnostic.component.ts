@@ -16,7 +16,7 @@ import {
 } from '../../../components/chips-select/chips-select.component';
 import {
   HumanBodyViewerComponent,
-  onBodyPartClickEventType,
+  onFilterChangeEventType,
 } from '../human-body-viewer/human-body-viewer.component';
 import { CommonModule } from '@angular/common';
 
@@ -77,7 +77,6 @@ export class Stp3AddDiagnosticComponent {
   symptomsCodeByBodyPart = symptomsCodeByBodyPart;
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];
-  selectedBodyParts: Set<string> = new Set<string>();
   minimumSymptomsForPrediction: number = 3;
   continuePredicting: boolean = true;
 
@@ -200,31 +199,47 @@ export class Stp3AddDiagnosticComponent {
   }
 
   onSelectedBodyPartsChange(selectedParts: Set<string>) {
-    //here i will handle only the deselect all case only !!
-    if (selectedParts.size != 0) return;
-    this.selectedBodyParts = new Set<string>();
+    //last selected part of body is unselected
+    //Or deselect all button is clicked
+    if (selectedParts.size == 0) {
+      let params: handleForcedSuggestionsAction<SymptomDto> = {
+        newFilteredData: this.symptomsData,
+        keepFilterAfterSelection: false,
+        forceReset: true,
+      };
+      this.SymptomsSelectComponent.handleForcedSuggestions(params);
+      return;
+    }
+    debugger;
+    //still some parts are selected
+    let forceReset = false;
+    let symptoms: SymptomDto[] =
+      this.getFilteredSymptomsBySelectedBodyParts(selectedParts);
 
     let params: handleForcedSuggestionsAction<SymptomDto> = {
-      newFilteredData: this.symptomsData,
-      keepFilterAfterSelection: false,
-      forceReset: true,
+      newFilteredData: symptoms,
+      keepFilterAfterSelection: true,
+      forceReset: forceReset,
     };
-
     this.SymptomsSelectComponent.handleForcedSuggestions(params);
   }
 
-  handleIsFilteringEnabledChange(newState: boolean) {
-    let  forceReset=false;
+  handleIsFilteringEnabledChange(newValues: onFilterChangeEventType) {
+    let newState = newValues.isFilterEnabled;
+    let selectedBodyParts = newValues.selectedParts;
+
+    let forceReset = false;
     let symptoms: SymptomDto[] = [];
     if (newState == true) {
-      if (this.selectedBodyParts.size === 0) {
+      if (selectedBodyParts.size === 0) {
         symptoms = this.symptomsData;
       } else {
-        symptoms = this.getFilteredSymptomsBySelectedBodyParts();
+        symptoms =
+          this.getFilteredSymptomsBySelectedBodyParts(selectedBodyParts);
       }
     } else {
       symptoms = this.symptomsData;
-      forceReset=true;
+      forceReset = true;
     }
 
     let params: handleForcedSuggestionsAction<SymptomDto> = {
@@ -235,33 +250,12 @@ export class Stp3AddDiagnosticComponent {
     this.SymptomsSelectComponent.handleForcedSuggestions(params);
   }
 
-  onBodyPartClickEvent(partClickEvent: onBodyPartClickEventType) {
-    debugger;
-    let wasSelected = this.isPartSelected(partClickEvent.partName);
-    let forceReset=false;
-    if (wasSelected) this.selectedBodyParts.delete(partClickEvent.partName);
-    else this.selectedBodyParts.add(partClickEvent.partName);
-    let symptoms: SymptomDto[] = [];
-    if (this.selectedBodyParts.size === 0) {
-      symptoms = this.symptomsData;
-      forceReset=true;
-    } else {
-      symptoms = this.getFilteredSymptomsBySelectedBodyParts();
-    }
-    // debugger;
-
-    let params: handleForcedSuggestionsAction<SymptomDto> = {
-      newFilteredData: symptoms,
-      keepFilterAfterSelection: true,
-      forceReset: forceReset,
-    };
-    this.SymptomsSelectComponent.handleForcedSuggestions(params);
-  }
-
-  getFilteredSymptomsBySelectedBodyParts(): SymptomDto[] {
+  getFilteredSymptomsBySelectedBodyParts(
+    selectedBodyParts: Set<string>
+  ): SymptomDto[] {
     let filteredSymptomsSet = new Set<SymptomDto>();
 
-    this.selectedBodyParts.forEach((bodyPartName) => {
+    selectedBodyParts.forEach((bodyPartName) => {
       let correspondentSymptomsCodes =
         this.symptomsCodeByBodyPart[bodyPartName];
 
@@ -295,10 +289,6 @@ export class Stp3AddDiagnosticComponent {
       }
     });
     return result;
-  }
-
-  isPartSelected(source: string): boolean {
-    return this.selectedBodyParts.has(source);
   }
 }
 
