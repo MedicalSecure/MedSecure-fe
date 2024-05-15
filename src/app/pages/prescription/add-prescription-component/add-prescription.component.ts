@@ -51,7 +51,7 @@ import { PrescriptionApiService } from '../../../services/prescription/prescript
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent implements DoCheck {
-  stepNumber: number = 5;
+  stepNumber: number = 3;
   stepsLimit: number = _steps.length;
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];

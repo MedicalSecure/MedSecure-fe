@@ -1,4 +1,5 @@
 <form>
+  @if(isLoading){<mat-progress-bar mode="indeterminate"></mat-progress-bar>}
   <mat-form-field class="example-chip-list" class="{{ class }}">
     @if(customLabel){<mat-label>{{ customLabel }}</mat-label
     >}

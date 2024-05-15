@@ -23,6 +23,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { URL_REGEX } from '../../shared/const';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 /**
  * @title Chips Autocomplete
@@ -41,6 +42,7 @@ import { URL_REGEX } from '../../shared/const';
     ReactiveFormsModule,
     AsyncPipe,
     MatTooltipModule,
+    MatProgressBar
   ],
 })
 export class ShipsSelectComponent<T> {
@@ -60,6 +62,8 @@ export class ShipsSelectComponent<T> {
   @Input() fullData: T[] = [];
   @Input() disabled: boolean = false;
   @Input() selectedChips: T[] = [];
+  @Input() isLoading: boolean = false;
+
 
   keepFilterAfterSelection = false;
   updatedSuggestionList: T[] = [];

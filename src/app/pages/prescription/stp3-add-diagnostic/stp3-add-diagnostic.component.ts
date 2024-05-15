@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -79,6 +78,9 @@ export class Stp3AddDiagnosticComponent {
   selectedSymptoms: SymptomDto[] = [];
   minimumSymptomsForPrediction: number = 3;
   continuePredicting: boolean = true;
+  isFilteringEnabled: boolean = false;
+
+  selectedBodyParts: string[] = [];
 
   isSymptomsLoading = true;
   isDiagnosisLoading = true;
@@ -199,15 +201,17 @@ export class Stp3AddDiagnosticComponent {
   }
 
   onSelectedBodyPartsChange(selectedParts: Set<string>) {
-    //last selected part of body is unselected
-    //Or deselect all button is clicked
+    this.selectedBodyParts = Array.from(selectedParts);
     if (selectedParts.size == 0) {
+      //last selected part of body is unselected
+      //Or deselect all button is clicked
       let params: handleForcedSuggestionsAction<SymptomDto> = {
         newFilteredData: this.symptomsData,
         keepFilterAfterSelection: false,
         forceReset: true,
       };
       this.SymptomsSelectComponent.handleForcedSuggestions(params);
+      this.isFilteringEnabled = false;
       return;
     }
     //still some parts are selected
@@ -221,12 +225,13 @@ export class Stp3AddDiagnosticComponent {
       forceReset: forceReset,
     };
     this.SymptomsSelectComponent.handleForcedSuggestions(params);
+    this.isFilteringEnabled = true;
   }
 
   handleIsFilteringEnabledChange(newValues: onFilterChangeEventType) {
     let newState = newValues.isFilterEnabled;
     let selectedBodyParts = newValues.selectedParts;
-
+    this.isFilteringEnabled = newState;
     let forceReset = false;
     let symptoms: SymptomDto[] = [];
     if (newState == true) {
