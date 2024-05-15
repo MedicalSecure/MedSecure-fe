@@ -148,10 +148,9 @@ export class SearchBarComponent implements OnInit ,OnChanges {
   }
 
   onSearchKeySelectionChange(event: MatChipListboxChange) {
+    if(event==undefined || event.source == undefined || event.source.value == undefined) return;
     this.selectedSearchTerm = event.source.value;
     this.emitSelectedMedications();
-
-
   }
 
   getMedicationProperty(medication: MedicationDto): string {
@@ -164,7 +163,7 @@ export class SearchBarComponent implements OnInit ,OnChanges {
     //better performance
     //this.selectedMedications = this.selectedMedications.filter(med => med != medication) 
     this.selectedMedications.splice(index, 1);
-    this.updateFormControlState();
+    this.emitSelectedMedications();
   }
 
   private emitSelectedMedications(): void {

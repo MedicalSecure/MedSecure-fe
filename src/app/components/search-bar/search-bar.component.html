@@ -1,6 +1,6 @@
-<div [className]="containerClasses">
+<div [className]="containerClasses" style="min-height: 4.5rem;">
   @if(!(hideSearchIfMaximumReached && hasReachedLimit)){
-    <div class="search" style="min-width: 20rem">
+  <div class="search d-flex flex-column justify-content-center" style="min-width: 20rem">
     <div class="position-relative mt-1">
       <input
         type="text"
@@ -9,7 +9,7 @@
         [matAutocomplete]="auto"
         class="form-control shadow-sm"
         style="border-color: rgb(238, 238, 238); height: 2.6rem"
-        
+        [disabled]="selectedSearchTerm == undefined || selectedSearchTerm == null"
       />
       <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
         <ng-container *ngFor="let medication of filteredMedications | async" class="d-flex align-items-center">
@@ -25,16 +25,17 @@
   </div>
 
   <div style="width: fit-content" class="d-flex align-items-center">
-    <mat-chip-listbox [value]="selectedSearchTerm" (change)="onSearchKeySelectionChange($event)">
+    <mat-chip-listbox [value]="selectedSearchTerm" (change)="onSearchKeySelectionChange($event)" >
       @for(searchTerm of searchTerms;track $index){
-      <mat-chip-option [value]="searchTerm">{{ searchTerm.label }}</mat-chip-option>
+        <mat-chip-option [value]="searchTerm">{{ searchTerm.label }}</mat-chip-option>
       }
     </mat-chip-listbox>
-  </div>}
+  </div>  
+  }
 
   @if (displaySelectedMedication && selectedMedications.length > 0) {
-  <div class="mt-3 align-self-start ">
-    <h4>Selected medication{{ selectedMedications.length > 1 ? "s" : "" }}:</h4>
+  <div class="border border-black p-2 mt-1 position-relative align-self-start">
+  <p class="position-absolute px-2 bg-white fit-content" style="z-index: 2; top: -0.8em; left: 1em">Selected medication{{ selectedMedications.length > 1 ? "s" : "" }}:</p>
     <div *ngFor="let medication of selectedMedications; let index = index" class="medication-item">
       <div  class="d-flex gap-3 mt-1 align-middle justify-content-start align-items-center   ">
         <p class="d-flex gap-3 mt-1 align-middle align-items-center">
