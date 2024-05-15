@@ -141,36 +141,17 @@ export class BacPatientComponent implements AfterViewInit {
     return age;
   }
 
-  /* onCheckEmitted(event: { checkedNumber: number, index: number }, element: bacpatient) {    
-     if (!this.checkedItems[event.index]) {
-       this.checkedItems[event.index] = [];
-     }
-     this.checkedItems[event.index].push(event.checkedNumber);
-     this.checkednumber = Object.values(this.checkedItems).flat().length;
-     let allCheckBoxNumber: number = 0;
-     element.medicines.forEach(medicine => {
-       medicine.posology.forEach(pos=>{
-         allCheckBoxNumber = pos.hours.length ;
-       })
-       
-     });
-    
-     if (this.checkedItems[event.index].length !== 0) {
-       const patientToUpdate = this.dataSource.data.find(patient => patient.id == element.id);
-       if (patientToUpdate) {
-         patientToUpdate.status = 1;
-         if (this.checkedItems[event.index].length === allCheckBoxNumber) {
-           patientToUpdate.status = 2;
-           this.checkedItems[event.index] = [];
-           this.checkednumber = Object.values(this.checkedItems).flat().length;
-         }
-       }
-     }
-     console.log("allCheckBoxNumberallCheckBoxNumber"+allCheckBoxNumber === this.checkedItems[event.index] );
+  handleCheckBoxClick(eventData: any) {    
+  console.log('Checkbox clicked:', eventData);
+this.bacPatientService.updateBacPatient(this.dataSource.data[0])
+
+  //console.log(this.dataSource.data );
+  //update bac patient full object already updated
+
    
    }
  
- */
+ 
 
   getRouteImage(route: number): string {
     switch (route) {

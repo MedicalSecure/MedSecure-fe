@@ -42,4 +42,15 @@ export class BacPatientService {
   );
 
    }
+   updateBacPatient(bacPatient : bacpatient){
+    const body = { "bacPatient": bacPatient };
+    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+      console.log('Response:', response); // Log the response
+    },
+    error => {
+      console.error('Error:', error); // Log any error
+    }
+  );
+
+   }
 }
