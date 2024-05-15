@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DoCheck, SimpleChanges } from '@angular/core';
 import { Stp3AddDiagnosticComponent } from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
 import { Stp1PatientSelection } from '../stp1-patient-selection/stp1-patient-selection.component';
 import { Stp4AddMedicationComponent } from '../stp4-add-medication/stp4-add-medication.component';
@@ -20,14 +20,16 @@ import {
   PosologyCreateDto,
   PosologyDto,
   PrescriptionCreateDto,
-  PrescriptionDto,
   SymptomDto,
 } from '../../../types/prescriptionDTOs';
 import {
   Stp5HospitalizationComponent,
   stp5FormsValueEvent,
 } from '../stp5-hospitalization/stp5-hospitalization.component';
-import { filterScheduleDoses, filterScheduleItems } from '../../../components/schedule/schedule.component';
+import {
+  filterScheduleDoses,
+  filterScheduleItems,
+} from '../../../components/schedule/schedule.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 
 @Component({
@@ -48,15 +50,14 @@ import { PrescriptionApiService } from '../../../services/prescription/prescript
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
 })
-export class AddPrescriptionComponent {
-  stepNumber: number = 1;
+export class AddPrescriptionComponent implements DoCheck {
+  stepNumber: number = 5;
   stepsLimit: number = _steps.length;
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];
   newPosologies: PosologyDto[] = [];
   selectedPatient: PatientDto | undefined;
-  isAddDiagnosticPageValid: boolean = false;
-  isAddMedicationPageValid: boolean = true;
+  isAddMedicationPageValid: boolean = false;
   ShowPrescriptionList: boolean = false;
   wizardSteps: wizardStepType[] = _steps;
   Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
@@ -67,8 +68,19 @@ export class AddPrescriptionComponent {
   backButtonContent: { label: string; class: string } = _backButtonContent;
 
   constructor(private prescriptionApiService: PrescriptionApiService) {}
+
   ngOnInit() {
     this._updateButtonsState();
+  }
+
+  prevStepNumber: number;
+  ngDoCheck(): void {
+    //handle wizard changes button checks
+    if (this.stepNumber !== this.prevStepNumber) {
+      this._updateButtonsState();
+      // Update prevStepNumber to the current value
+      this.prevStepNumber = this.stepNumber;
+    }
   }
 
   handleSubmit() {
@@ -83,18 +95,18 @@ export class AddPrescriptionComponent {
     //console.log(summary);
     const filteredPosologies: PosologyCreateDto[] = this.newPosologies.map(
       (posology) => {
-         var x : PosologyCreateDto={
-          medicationId:posology.medication.id,
-          startDate:posology.startDate,
-          endDate:posology.endDate,
-          isPermanent:posology.isPermanent,
-          comments:posology.comments,
+        var x: PosologyCreateDto = {
+          medicationId: posology.medication.id,
+          startDate: posology.startDate,
+          endDate: posology.endDate,
+          isPermanent: posology.isPermanent,
+          comments: posology.comments,
           dispenses: filterScheduleDoses(posology.dispenses),
         };
         return x;
       }
     );
-    let doctorIdd='55555555-5555-5555-5555-555555555554'//TODO
+    let doctorIdd = '55555555-5555-5555-5555-555555555554'; //TODO
 
     const finalPrescription: PrescriptionCreateDto = {
       //@ts-ignore im sure, on submit, patient is selected and not undefined
@@ -111,19 +123,22 @@ export class AddPrescriptionComponent {
     console.log(JSON.stringify(finalPrescription));
     this.prescriptionApiService.postPrescriptions(finalPrescription).subscribe(
       (response) => console.log(response),
-      (error) => {console.error(error)} 
+      (error) => {
+        console.error(error);
+      }
     );
   }
 
+  // arrow function to hold the callback context ?? xD
   validatePageSwitch = (index: number): boolean => {
-    // arrow function to hold they callback context xD
-    if (index > this.stepsLimit + 1) return false;
+    //index is the NEXT DESIRED PAGE TO SWITCH TO!
+
+    // arrow function to hold the callback context ?? xD
+    //if (index > this.stepsLimit + 1) return false;
     if (index < 1) return false;
     if (index >= 1 && index == this.stepNumber) return false;
     if (index > 1 && this.selectedPatient == undefined) return false;
-    if (index > 3 && !this.isAddDiagnosticPageValid) return false;
     if (index > 4 && !this.isAddMedicationPageValid) return false;
-    if (index > 5) return false;
     return true;
   };
 
@@ -135,9 +150,13 @@ export class AddPrescriptionComponent {
     this.newPosologies = posologies;
   }
 
-  validatePageChange(pageIndex: number, isPageValid: boolean) {
-    if (pageIndex == 3) this.isAddDiagnosticPageValid = isPageValid;
-    else if (pageIndex == 4) this.isAddMedicationPageValid = isPageValid;
+  handlePageValidationChange(pageIndex: number, isPageValid: boolean) {
+    //handle the event emitter from child pages, for example, the medication page will check if the required fields are filled
+    //and then it will emit the make its corresponding variable isAddMedicationPageValid = true
+    //this help prevent Next button clicks without valid steps!!
+    if (pageIndex == 4) this.isAddMedicationPageValid = isPageValid;
+
+    this._updateButtonsState();
   }
 
   calculateAge(dateOfB: Date | undefined | null): string {
@@ -156,6 +175,7 @@ export class AddPrescriptionComponent {
   onClickFinish() {
     this.emitFinishEventToChild();
   }
+
   onSelectPatientChange(patient: PatientDto | undefined) {
     if (patient == undefined) {
       this.selectedPatient = undefined;
@@ -193,77 +213,111 @@ export class AddPrescriptionComponent {
     }
     if (this.validatePageSwitch(index) == false) return;
     this.stepNumber = index;
-    this._updateButtonsState();
-  }
-
-  nextStep() {
-    this.SwitchToStep(this.stepNumber + 1);
-  }
-  prevStep() {
-    this.SwitchToStep(this.stepNumber - 1);
+    //this._updateButtonsState();
   }
 
   isStepNumber(step: number): boolean {
     return this.stepNumber === step;
   }
 
-  onPageChangeEvent(event: number, sourcePageNumber: number) {
-    this.SwitchToStep(event + sourcePageNumber);
-  }
-
   onClickNextEvent(): void {
-    this.nextStep();
+    this.SwitchToStep(this.stepNumber + 1);
   }
   onClickBackEvent(): void {
-    this.prevStep();
+    this.SwitchToStep(this.stepNumber - 1);
   }
-  setNextButtonStyle(event: { label: string; class: string }) {
-    this.nextButtonContent = event;
+
+  setNextButtonClass(
+    newClassNames: string,
+    appendClassNames: string = '',
+    resetClass = false
+  ) {
+    // Reset default next button classes
+    if (resetClass) {
+      this.nextButtonContent = { ..._nextButtonContent };
+      return;
+    }
+    // Append to default next button classes (example add disabled)
+    if (appendClassNames !== '') {
+      this.nextButtonContent = {
+        ..._nextButtonContent,
+        class: `${_nextButtonContent.class} ${appendClassNames}`,
+      };
+      return;
+    }
+    // Set manually the whole next button classes
+    this.nextButtonContent = { ..._nextButtonContent, class: newClassNames };
   }
-  setBackButtonStyle(event: { label: string; class: string }) {
-    this.nextButtonContent = event;
+
+  setBackButtonClass(
+    newClassNames: string,
+    appendClassNames: string = '',
+    resetClass = false
+  ) {
+    // Reset default back button classes
+    if (resetClass) {
+      this.backButtonContent = { ..._backButtonContent };
+      return;
+    }
+    // Append to default back button classes (example add disabled)
+    if (appendClassNames !== '') {
+      this.backButtonContent = {
+        ..._backButtonContent,
+        class: `${_backButtonContent.class} ${appendClassNames}`,
+      };
+      return;
+    }
+    // Set manually the whole back button classes
+    this.backButtonContent = { ..._backButtonContent, class: newClassNames };
   }
 
   private _updateButtonsState() {
-    if (this.selectedPatient == undefined) {
-      this.nextButtonContent = {
-        ...this.nextButtonContent,
-        class: this.nextButtonContent.class + 'd btn-outline-warning disabled',
-      };
-    } else {
-      this.nextButtonContent = _nextButtonContent;
+    if(!this.validatePageSwitch(this.stepNumber+1)){
+      this.setNextButtonClass('', 'disabled');
     }
+    else {
+      //reset styles
+      this.setNextButtonClass('', '', true);
+    }
+/*     if (this.selectedPatient == undefined) {
+      //append disabled
+      this.setNextButtonClass('', 'disabled');
+    } else if (this.stepNumber == 4 && !this.isAddMedicationPageValid) {
+      this.setNextButtonClass('', 'disabled');
+    } else {
+      //reset styles
+      this.setNextButtonClass('', '', true);
+    } */
+
     if (this.stepNumber == this.stepsLimit) {
       if (true)
-        this.nextButtonContent = {
-          ...this.nextButtonContent,
-          label: 'Finish',
-        };
-      else
-        this.nextButtonContent = {
-          ...this.nextButtonContent,
-          label: 'Finish',
-        };
+        //add form is valid here before finish
+        this.nextButtonContent.label = 'Finish';
     }
 
-    if (this.stepNumber === 1) {
-      this.backButtonContent = {
-        ...this.backButtonContent,
-        class: this.backButtonContent.class + 'd btn-outline-success disabled',
-      };
-    } else {
-      this.backButtonContent = _backButtonContent;
+    if(!this.validatePageSwitch(this.stepNumber-1)){
+      this.setBackButtonClass('', 'disabled');
     }
+    else {
+      //reset styles
+      this.setBackButtonClass('', '', true);
+    }
+
+    // if (this.stepNumber === 1) {
+    //   this.setBackButtonClass('', 'disabled'); //disabled
+    // } else {
+    //   this.setBackButtonClass('', '', true); //reset
+    // }
   }
 }
 const _nextButtonContent = {
   label: 'next',
-  class: 'btn w-100 m-0 btn-success fs-6 text-white',
+  class: 'btn btn-primary text-white',
 };
 
 const _backButtonContent = {
-  label: 'back',
-  class: 'btn w-100 m-0 btn-warning fs-6 text-white',
+  label: 'Previous',
+  class: 'btn btn-primary text-white',
 };
 
 const _steps: wizardStepType[] = [

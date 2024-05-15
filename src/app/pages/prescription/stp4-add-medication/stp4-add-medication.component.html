@@ -85,8 +85,9 @@
       <div class="card-body pb-0 pt-3">
         <h4 class="card-title fs-6 mb-1">Newly prescribed medications :</h4>
         <ul class="list p-1 m-0 ps-3">
-          @for (posology of newPosologiesList ; track $index) {
-          <li>
+
+          <li *ngFor="let posology of newPosologiesList;let $index = index;">
+
             <div class="mb-0">
               <div class="fw-bold fs-6 text-primary mb-0 d-flex justify-content-start align-middle align-items-center">
                 <span (click)="onClickEditMedication($index, posology)" style="cursor: pointer" class="d-flex justify-content-start align-middle align-items-center">
@@ -126,7 +127,7 @@
                   } -->
             </div>
           </li>
-          }
+          
         </ul>
       </div>
     </div>

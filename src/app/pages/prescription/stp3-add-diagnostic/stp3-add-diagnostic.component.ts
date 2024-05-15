@@ -210,7 +210,6 @@ export class Stp3AddDiagnosticComponent {
       this.SymptomsSelectComponent.handleForcedSuggestions(params);
       return;
     }
-    debugger;
     //still some parts are selected
     let forceReset = false;
     let symptoms: SymptomDto[] =

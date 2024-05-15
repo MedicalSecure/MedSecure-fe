@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  DoCheck,
   EventEmitter,
   Input,
   OnDestroy,
@@ -11,13 +12,7 @@ import {
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { MedicationAutocompleteInputComponent } from '../../../components/medication-autocomplete-input/medication-autocomplete-input.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
@@ -76,7 +71,7 @@ import { MedicationDto } from '../../../types/medicationDTOs';
     SearchBarComponent,
   ],
 })
-export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
+export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
   @Input() events: Observable<void>;
   private finishEventSubscription: Subscription;
   @Output() onPosologiesChange = new EventEmitter<PosologyDto[]>();
@@ -90,15 +85,19 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   isCautionEnabled: boolean = false;
   cautionComment: CommentsDto = initialCautionComment;
   consumptionMinStartDate: Date = new Date();
-  isPageValid: boolean = true;
+  isPageValid: boolean = false;
   selectedPosology: PosologyDto = this._getFormInitialValues();
   selectedPosologyDateRange = getInitialDateRange();
   newPosologiesList: PosologyDto[] = [];
+
+  //in this page case, selectedMedications[].length will at max contains 1 medication
+  //but the searchBar component require the selectedMedications input to be a LIST OF MEDICATIONS..
   selectedMedications: MedicationDto[] = [];
-  
+
   //If no medications is selected, don't modify the posology values, only the search medications will work
   canUpdatePosology: boolean = this.selectedMedications.length > 0;
 
+  private previousPosologiesListLength: number = 0;
   constructor(private changeDetector: ChangeDetectorRef) {}
 
   ngOnInit() {
@@ -117,6 +116,18 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.finishEventSubscription.unsubscribe();
+  }
+
+  ngDoCheck() {
+    //handle changes whenever the new posologies list changes
+    const currentPosologiesListLength = this.newPosologiesList.length;
+    if (currentPosologiesListLength !== this.previousPosologiesListLength) {
+      //emit is  page now valid
+      let isThisPageValid = currentPosologiesListLength > 0;
+      this.onIsMedicationPageValidChange.emit(isThisPageValid);
+      // Update the previous list length
+      this.previousPosologiesListLength = currentPosologiesListLength;
+    }
   }
 
   /* Form inputs change */
@@ -159,7 +170,6 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   }
 
   onIsPermanentChange(newIsPermanentState: boolean) {
-    //debugger;
     this.selectedPosology.isPermanent = newIsPermanentState;
     let startDate = this.selectedPosology.startDate;
     let endDate = this.selectedPosology.endDate;
@@ -255,13 +265,13 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
         ? this.selectedPosology.comments[0].label === 'Caution'
         : false;
   }
+
   onClickRemoveMedication(index: number) {
     this.newPosologiesList = this.newPosologiesList.filter((item, i) => {
       //if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
       return index != i;
     });
     this.onPosologiesChange.emit(this.newPosologiesList);
-
   }
 
   onAppendMedication(): boolean {
@@ -344,15 +354,15 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     let numberOfCautions: number = 0;
 
     posology.dispenses.forEach((hourObj) => {
-      if (hourObj.beforeMeal?.quantity ) {
-        const beforeFQ = parseInt(hourObj.beforeMeal?.quantity );
+      if (hourObj.beforeMeal?.quantity) {
+        const beforeFQ = parseInt(hourObj.beforeMeal?.quantity);
         beforeFoodCounter += beforeFQ;
         timesADayCounter++;
         if (beforeFQ > maximumDispenseQuantity)
           maximumDispenseQuantity = beforeFQ;
       }
-      if (hourObj.afterMeal?.quantity ) {
-        const afterFQ = parseInt(hourObj.afterMeal?.quantity );
+      if (hourObj.afterMeal?.quantity) {
+        const afterFQ = parseInt(hourObj.afterMeal?.quantity);
         afterFoodCounter += afterFQ;
         timesADayCounter++;
         if (afterFQ > maximumDispenseQuantity)

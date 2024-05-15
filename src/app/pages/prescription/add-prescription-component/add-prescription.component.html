@@ -62,7 +62,7 @@
                 <app-stp3-add-diagnostic
                   (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
                   (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"
-                  (onIsAddSymptomsPageValidChange)="validatePageChange(3, $event)"
+                  (onIsAddSymptomsPageValidChange)="handlePageValidationChange(3, $event)"
                 />
               </div>
 
@@ -70,7 +70,7 @@
               <div [className]="stepNumber != 4 && 'd-none'">
                 <app-stp4-add-medication
                   [events]="eventsSubject.asObservable()"
-                  (onIsMedicationPageValidChange)="validatePageChange(4, $event)"
+                  (onIsMedicationPageValidChange)="handlePageValidationChange(4, $event)"
                   (onSubmitChange)="handleSubmit()"
                   (onPosologiesChange)="handlePosologyChange($event)"
                 />
@@ -90,10 +90,10 @@
                 <button type="button" class="btn btn-outline-primary" (click)="onSelectPatientChange(undefined)">Cancel</button>
               </div>
               <div class="col-lg-4 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary text-white mr-3" (click)="onClickBackEvent()">
+                <button type="button" [className]="backButtonContent.class" (click)="onClickBackEvent()">
                   {{ backButtonContent.label }}
                 </button>
-                <button type="button" class="btn btn-primary text-white" (click)="onClickNextEvent()">
+                <button type="button" [className]="nextButtonContent.class" (click)="onClickNextEvent()">
                   {{ nextButtonContent.label }}
                 </button>
               </div>
