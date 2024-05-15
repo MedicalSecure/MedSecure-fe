@@ -29,12 +29,17 @@
       <!-- <app-medication-search></app-medication-search> -->
 
       <!-- part of day -->
-      <app-schedule
-        [partsOfDayHours]="selectedPosology.dispenses"
-        [isDispenseQuantityReadOnly]="true"
-        [showEmptyCases]="true"
-        [isDispenseQuantityReadOnly]="!canUpdatePosology"
-      ></app-schedule>
+
+      <div class="border border-black p-2 pt-3 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center">
+        <p class="position-absolute px-2 bg-white fit-content" style="z-index: 2; top: -0.8em; left: 1em">Dispense*</p>
+
+        <app-schedule
+          [partsOfDayHours]="selectedPosology.dispenses"
+          [isDispenseQuantityReadOnly]="true"
+          [showEmptyCases]="true"
+          [isDispenseQuantityReadOnly]="!canUpdatePosology"
+        ></app-schedule>
+      </div>
       <!-- period -->
       <div class="border border-black p-2 mt-1 d-flex gap-1 gap-lg-3 justify-content-evenly position-relative align-items-center">
         <p class="position-absolute px-2 bg-white fit-content" style="z-index: 2; top: -0.8em; left: 1em">Period*</p>

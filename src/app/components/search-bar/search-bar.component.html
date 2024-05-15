@@ -1,4 +1,4 @@
-<div [className]="containerClasses" style="min-height: 4.5rem;">
+<div [className]="containerClasses" style="min-height: 4.5rem">
   @if(!(hideSearchIfMaximumReached && hasReachedLimit)){
   <div class="search d-flex flex-column justify-content-center" style="min-width: 20rem">
     <div class="position-relative mt-1">
@@ -25,43 +25,34 @@
   </div>
 
   <div style="width: fit-content" class="d-flex align-items-center">
-    <mat-chip-listbox [value]="selectedSearchTerm" (change)="onSearchKeySelectionChange($event)" >
+    <mat-chip-listbox [value]="selectedSearchTerm" (change)="onSearchKeySelectionChange($event)">
       @for(searchTerm of searchTerms;track $index){
-        <mat-chip-option [value]="searchTerm">{{ searchTerm.label }}</mat-chip-option>
+      <mat-chip-option [value]="searchTerm">{{ searchTerm.label }}</mat-chip-option>
       }
     </mat-chip-listbox>
-  </div>  
-  }
-
-  @if (displaySelectedMedication && selectedMedications.length > 0) {
-  <div class="border border-black p-2 mt-1 position-relative align-self-start">
-  <p class="position-absolute px-2 bg-white fit-content" style="z-index: 2; top: -0.8em; left: 1em">Selected medication{{ selectedMedications.length > 1 ? "s" : "" }}:</p>
-    <div *ngFor="let medication of selectedMedications; let index = index" class="medication-item">
-      <div  class="d-flex gap-3 mt-1 align-middle justify-content-start align-items-center   ">
-        <p class="d-flex gap-3 mt-1 align-middle align-items-center">
-          <img
-            width="30"
-            height="30"
-            src="https://img.icons8.com/external-konkapp-flat-konkapp/64/external-syringe-emergency-services-konkapp-flat-konkapp.png"
-            alt="external-syringe-emergency-services-konkapp-flat-konkapp"
-          />
-
-          <strong>{{ medication.name }}</strong>
-          <strong>{{ medication.dosage }}</strong>
-          <strong>{{ medication.unit }}</strong>
-          <strong>{{ medication.code }}</strong>
-          <strong>{{ medication.stock }}</strong>
-          <img
-            src="assets/images/info.svg"
-            alt="info"
-            style="height: 15px; width: 15px; margin-top: 3px"
-            matTooltip="
-                Indications: {{ medication.description }}
-                "
-          />
+  </div>
+  } @if (displaySelectedMedication && selectedMedications.length > 0) {
+  <div class="border border-black pb-2 pt-3 px-2 mt-1 position-relative align-self-start">
+    <p class="position-absolute px-2 bg-white fit-content" style="z-index: 2; top: -0.8em; left: 1em">Selected medication{{ selectedMedications.length > 1 ? "s" : "" }}:</p>
+    <div *ngFor="let medication of selectedMedications; let index = index" class="container">
+      <div class="d-flex justify-content-start align-items-center align-middle align-content-center gap-2">
+        <img
+          width="30"
+          height="30"
+          src="https://img.icons8.com/external-konkapp-flat-konkapp/64/external-syringe-emergency-services-konkapp-flat-konkapp.png"
+          alt="external-syringe-emergency-services-konkapp-flat-konkapp"
+        />
+        <p class="fw-bold my-auto px-0">
+          {{ medication.name }} 
+          {{ medication.dosage }}
+          {{ medication.unit }}
+          {{ medication.code }}
+          {{ medication.stock}}
         </p>
-        <i class="fa fa-times-circle clickable" aria-hidden="true" (click)="removeMedication(medication,index)"></i>
+        <img src="assets/info.svg" alt="info" class="image my-auto" style="height: 15px; width: 15px; margin-right: 5px" matTooltip="{{ medication.description }}" />
 
+        <mat-icon class="clickable my-auto text-danger fw-bold" title="Deselect medication" (click)="removeMedication(medication, index)">close</mat-icon>
+      
       </div>
     </div>
   </div>

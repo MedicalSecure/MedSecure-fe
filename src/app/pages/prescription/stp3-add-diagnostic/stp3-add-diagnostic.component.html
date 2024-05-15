@@ -20,12 +20,12 @@
           [tooltipPropertyName]="'shortDescription'"
         ></chips-select>
         <p style="margin-top: -0.7rem">
-          <strong>NB:</strong> Required at least {{ minimumSymptomsForPrediction }} symptoms for prediction,
+          <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; margin-bottom : 5px "  /> Required at least {{ minimumSymptomsForPrediction }} symptoms for prediction,
           <strong>({{ selectedSymptoms.length >= minimumSymptomsForPrediction ? "Met" : "Not met" }})</strong>
         </p>
         @if(selectedBodyParts.length > 0 && isFilteringEnabled) {
         <p>
-          <strong>NB:</strong> filter is applied : viewing symptoms for @if(selectedBodyParts.length == 1){ this part: {{ selectedBodyParts[0] }}
+          <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; margin-bottom : 5px "  /> filter is applied : viewing symptoms for @if(selectedBodyParts.length == 1){ this part: {{ selectedBodyParts[0] }}
           }@else{ these parts : @for(selectedBodyPart of selectedBodyParts;track $index ){
           <span>{{ selectedBodyPart }}, </span>
           } }
@@ -53,7 +53,7 @@
           ></chips-select>
         </div>
         <p>
-          <strong>Note:</strong> If manual modifications have been made, please remove all diagnostics to get new the predictions, its currently
+          <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; margin-bottom : 5px "  /> If manual modifications have been made, please remove all diagnostics to get new the predictions, its currently
           <strong>{{ continuePredicting ? "enabled" : "disabled" }}</strong>
         </p>
       </div>
