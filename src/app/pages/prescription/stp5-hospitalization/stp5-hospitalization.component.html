@@ -1,33 +1,32 @@
-<form [formGroup]="myForm" class="d-flex p-sm-2 justify-content-evenly gap-5 gap-sm-3 flex-sm-row-reverse mt-3">
+<form [formGroup]="myForm" class="container pt-5">
   <!-- Left -->
-  <div style="width: fit-content">
-    <mat-form-field>
-      <mat-label>Diet</mat-label>
-      <mat-select formControlName="diet" [disabled]="isDietsLoading">
-        <mat-option *ngFor="let diet of DietList" [value]="diet">{{ diet.DietType }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-icon *ngIf="myForm.get('diet')?.value !== null" 
-        class="align-self-center fs-3 fw-bolder ms-2"
-        style="color: red; width: 1.8rem; height: 1.8rem"
-        (click)="onClearSelectedDiet()">
+  <div class="row mx-auto col-12 col-sm-8 col-lg-5">
+    <div class="d-flex justify-content-center align-items-center gap-2">
+      <mat-form-field [className]="'w-100'">
+        <mat-label>Diet</mat-label>
+        <mat-select formControlName="diet" [disabled]="isDietsLoading">
+          <mat-option *ngFor="let diet of DietList" [value]="diet">{{ diet.DietType }}</mat-option>
+        </mat-select>
+      </mat-form-field>s
+      <mat-icon *ngIf="myForm.get('diet')?.value !== null" class="align-self-center fs-3 fw-bolder mb-4" style="color: red; width: 1.8rem; height: 1.8rem" (click)="onClearSelectedDiet()">
         remove_circle_outline
-    </mat-icon>
+      </mat-icon>
+    </div>
   </div>
 
   <!-- Right -->
-  <div style="width: fit-content">
-    <mat-form-field>
-      <mat-label>Unit Care</mat-label>
-      <mat-select formControlName="unitCare" [disabled]="isUnitCaresLoading">
-        <mat-option *ngFor="let unit of UnitCareList" [value]="unit">{{ unit.title }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-icon *ngIf="myForm.get('unitCare')?.value !== null" 
-        class="align-self-center fs-3 fw-bolder ms-2"
-        style="color: red; width: 1.8rem; height: 1.8rem"
-        (click)="onClearSelectedUnitCare()">
+
+  <div class="row mx-auto col-12 col-sm-8 col-lg-5">
+    <div class="d-flex justify-content-center align-items-center gap-2">
+      <mat-form-field [className]="'w-100'">
+        <mat-label>Unit Care</mat-label>
+        <mat-select formControlName="unitCare" [disabled]="isUnitCaresLoading">
+          <mat-option *ngFor="let unit of UnitCareList" [value]="unit">{{ unit.title }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon *ngIf="myForm.get('unitCare')?.value !== null" class="align-self-center fs-3 fw-bolder mb-4" style="color: red; width: 1.8rem; height: 1.8rem" (click)="onClearSelectedUnitCare()">
         remove_circle_outline
-    </mat-icon>
+      </mat-icon>
+    </div>
   </div>
 </form>
