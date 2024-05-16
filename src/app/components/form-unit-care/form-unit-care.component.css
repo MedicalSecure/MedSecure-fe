@@ -5,7 +5,7 @@
 }
 
 .question {
-  border: 1px solid black;
+  border: 1px solid gray;
   padding: 20px;
   margin-bottom: 20px;
 }
@@ -15,7 +15,9 @@
 }
 
 .answer {
-  margin-top: 10px;
+  border: 1px solid rgb(215, 25, 25);
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
 .add-answer {
@@ -28,4 +30,32 @@
 
 .remove {
   margin-left: 10px;
+}
+
+.form-container {
+
+  box-shadow: 0 4px 8px rgba(151, 23, 23, 0.1); /* Box shadow */
+}
+
+.field{
+	width: 100%;
+	border: 2px solid rgba(0, 0, 0, 0);
+	outline: none;
+	background-color: rgba(230, 230, 230, 0.6);
+	padding: 0.5rem 1rem;
+	font-size: 1.1rem;
+	margin-bottom: 22px;
+	transition: .3s;
+}
+
+.multiselect-dropdown .dropdown-btn {
+  margin-right: 5px;
+	width: 100%;
+	border: 2px solid rgba(0, 0, 0, 0);
+	outline: none;
+	background-color: rgba(230, 230, 230, 0.6);
+	padding: 0.5rem 1rem;
+	font-size: 1.1rem;
+	margin-bottom: 22px;
+	transition: .3s;
 }

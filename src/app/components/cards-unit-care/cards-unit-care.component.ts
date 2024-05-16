@@ -38,11 +38,11 @@ export class CardsUnitCareComponent {
   getButtonClass(index: number): string {
     switch(index) {
       case 0:
-        return 'btn btn-primary';
+        return 'btn btn-success';
       case 1:
         return 'btn btn-secondary';
       case 2:
-        return 'btn btn-success';
+        return 'btn btn-primary';
       case 3:
         return 'bouton'
       default:

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -7,39 +7,34 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatIconModule} from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { UnitCareService } from '../../services/unit-care.service';
 import { UnitCare } from '../../model/UnitCareData';
-
-
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 // Interface for personnel information (assuming basic structure)
 
 type FormEquipment = FormGroup<{
-
-    name: FormControl<string>;
-    reference: FormControl<string>;
-    eqStatus: FormControl<number>;
-    eqType: FormControl<number>;
-  }>;
-
+  name: FormControl<string>;
+  reference: FormControl<string>;
+  eqStatus: FormControl<string>;
+  eqType: FormControl<string>;
+}>;
 
 type FormRoom = FormGroup<{
-
   roomNumber: FormControl<string>;
   equipments: FormArray<FormEquipment>;
 }>;
 
-
-
 type Form = FormGroup<{
-  title:FormControl,
-  type:FormControl,
-  description:FormControl,
+  title: FormControl;
+  type: FormControl;
+  description: FormControl;
   rooms: FormArray<FormRoom>;
-  personnels:FormArray<any>;
+  personnels: FormArray<any>;
 }>;
 
 export interface IDropdownSettings {
@@ -56,37 +51,43 @@ export interface DropdownItem {
   name: string;
   gender: number;
   isSelected: boolean;
-  shift:number}
-
-
+  shift: number;
+}
 
 @Component({
   selector: 'app-form-unit-care',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterModule,MatDividerModule,MatIconModule,NgMultiSelectDropDownModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterModule,
+    MatDividerModule,
+    MatIconModule,
+    NgMultiSelectDropDownModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   templateUrl: './form-unit-care.component.html',
-  styleUrl: './form-unit-care.component.css'
+  styleUrl: './form-unit-care.component.css',
+  encapsulation: ViewEncapsulation.None, // Add this line
 })
-export class FormUnitCareComponent  implements OnInit {
+export class FormUnitCareComponent implements OnInit {
   dropdownList: DropdownItem[] = [];
   selectedItems: DropdownItem[] = [];
   dropdownSettings: IDropdownSettings = {};
 
-  constructor(public unitcare : UnitCareService) { }
+  constructor(public unitcare: UnitCareService, private router: Router) {}
 
   ngOnInit() {
     this.dropdownList = [
-
-        { name: 'olivia', gender: 2, isSelected: false, shift: 1 },
-        { name: 'emily', gender: 2, isSelected: false, shift: 2 },
-        { name: 'make', gender: 1, isSelected: false, shift: 3 },
-        { name: 'sami', gender: 1, isSelected: false, shift: 1 },
-        { name: 'lucy', gender: 2, isSelected: false, shift: 2 },
-      ];
-
+      { name: 'olivia', gender: 2, isSelected: false, shift: 1 },
+      { name: 'emily', gender: 2, isSelected: false, shift: 2 },
+      { name: 'make', gender: 1, isSelected: false, shift: 3 },
+      { name: 'sami', gender: 1, isSelected: false, shift: 1 },
+      { name: 'lucy', gender: 2, isSelected: false, shift: 2 },
+    ];
 
     this.selectedItems = [
-      { name: 'olivia', gender: 2, isSelected: true, shift:  1},
+      { name: 'olivia', gender: 2, isSelected: true, shift: 1 },
       { name: 'emily', gender: 2, isSelected: true, shift: 2 },
     ];
     this.dropdownSettings = {
@@ -96,92 +97,86 @@ export class FormUnitCareComponent  implements OnInit {
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 3,
-      allowSearchFilter: true
+      allowSearchFilter: true,
     };
   }
 
-
-
   onItemSelect(item: any) {
-    console.log("our item is", item);
+    console.log('our item is', item);
 
-  // Find the item in dropdownList with matching item_id
-  const selectedItem = this.dropdownList.find(x => x.name === item.name)
+    // Find the item in dropdownList with matching item_id
+    const selectedItem = this.dropdownList.find((x) => x.name === item.name);
 
-  if (selectedItem) {
-    selectedItem.isSelected = true;
+    if (selectedItem) {
+      selectedItem.isSelected = true;
 
+      // Update personnels form array
+      const personnelArray = this.unitCareForm.get('personnels') as FormArray;
+      personnelArray.push(new FormControl(selectedItem));
 
-    // Update personnels form array
-    const personnelArray = this.unitCareForm.get('personnels') as FormArray;
-    personnelArray.push(new FormControl(selectedItem));
-
-    console.log('Selected items:', this.dropdownList.filter(x => x.isSelected));
-  } else {
-    console.log('Item not found in dropdownList');
+      console.log(
+        'Selected items:',
+        this.dropdownList.filter((x) => x.isSelected)
+      );
+    } else {
+      console.log('Item not found in dropdownList');
+    }
   }
-}
 
-onItemDeSelect(item: any) {
-  console.log("our item is", item);
+  onItemDeSelect(item: any) {
+    // Find the item in dropdownList with matching item_id
+    const deselectedItem = this.dropdownList.find((x) => x.name === item.N);
 
-  // Find the item in dropdownList with matching item_id
-  const deselectedItem = this.dropdownList.find(x => x.name === item.N);
-
-  if (deselectedItem) {
+    if (deselectedItem) {
       // Update isSelected and unitcareId properties of the deselected item
       deselectedItem.isSelected = false;
 
-
       // Logging the selected items
-      console.log('Selected items:', this.dropdownList.filter(x => x.isSelected));
-  } else {
+      console.log(
+        'Selected items:',
+        this.dropdownList.filter((x) => x.isSelected)
+      );
+    } else {
       console.log('Item not found in dropdownList');
+    }
   }
-}
 
-
-
-onSelectAll(items: any) {
-  // Update isSelected property of all items to true
-  this.dropdownList.forEach(item => {
+  onSelectAll(items: any) {
+    // Update isSelected property of all items to true
+    this.dropdownList.forEach((item) => {
       item.isSelected = true;
+    });
 
-  });
+    // Update selectedItems array with all items
+    this.selectedItems = [...this.dropdownList];
 
-  // Update selectedItems array with all items
-  this.selectedItems = [...this.dropdownList];
+    // Log selected items
+    console.log('Selected items:', this.selectedItems);
+  }
 
-  // Log selected items
-  console.log('Selected items:', this.selectedItems);
-}
-
-onDeSelectAll() {
-  // Update isSelected property of all items to false
-  this.dropdownList.forEach(item => {
+  onDeSelectAll() {
+    // Update isSelected property of all items to false
+    this.dropdownList.forEach((item) => {
       item.isSelected = false;
+    });
 
-  });
+    // Clear selectedItems array
+    this.selectedItems = [];
 
-  // Clear selectedItems array
-  this.selectedItems = [];
+    // Log selected items
+    console.log('Selected items:', this.selectedItems);
+  }
 
-  // Log selected items
-  console.log('Selected items:', this.selectedItems);
-}
-
-// the form
+  // the form
 
   fb = inject(NonNullableFormBuilder);
   unitCareForm: Form = this.fb.group({
-    title:'',
-    description:'',
-    type:'',
+    title: '',
+    description: '',
+    type: '',
     rooms: this.fb.array<FormRoom>([this.generateRoom()]),
-    personnels: this.fb.array<any>([])
-
+    personnels: this.fb.array<any>([]),
   });
-
 
   generateRoom(): FormRoom {
     return this.fb.group({
@@ -193,18 +188,17 @@ onDeSelectAll() {
   addRoom(): void {
     this.unitCareForm.controls.rooms.push(this.generateRoom());
   }
-
   removeRoom(roomIndex: number): void {
+    console.log('tt', roomIndex);
     this.unitCareForm.controls.rooms.removeAt(roomIndex);
   }
-
 
   addEquipment(roomIndex: number): void {
     const newEquipment: FormEquipment = this.fb.group({
       name: '',
       reference: '',
-      eqStatus: 1,
-      eqType: 2
+      eqStatus: '',
+      eqType: '',
     });
     this.unitCareForm.controls.rooms
       .at(roomIndex)
@@ -216,24 +210,61 @@ onDeSelectAll() {
       .at(roomIndex)
       ?.controls?.equipments?.removeAt(equipmentIndex);
   }
-  UnitCare : UnitCare | any;
+  UnitCare: UnitCare | any;
   onSubmit() {
-    console.log("test",this.unitCareForm.value)
-    console.log("test 2",this.unitCareForm.valid)
+    console.log('test', this.unitCareForm.value);
+    console.log('test 2', this.unitCareForm.valid);
     if (this.unitCareForm.valid) {
+      this.UnitCare = this.unitCareForm.value;
 
-       this.UnitCare = this.unitCareForm.value;
 
-      this.unitcare.postUnitCare(this.UnitCare)
-        .subscribe(response => {
+      let mappedUnitCare = this.UnitCare;
+      mappedUnitCare.rooms = mappedUnitCare.rooms.map((room: any) => {
+        return {
+          ...room,
+          equipments: room.equipments.map((equipment: any) => {
+            return {
+              ...equipment,
+              eqStatus: this.tryParseNumber(equipment.eqStatus),
+              eqType: this.tryParseNumber(equipment.eqType),
+            };
+          }),
+        };
+      });
+
+      console.log(mappedUnitCare);
+
+      this.unitcare.postUnitCare(mappedUnitCare).subscribe(
+        (response) => {
           console.log('Backend response:', response);
-        }, error => {
+          this.router.navigate(['unit-care']);
+        },
+        (error) => {
           console.error('Error submitting data:', error);
-        });
+        }
+      );
     } else {
       console.error('Form is invalid!');
-
     }
   }
 
+  tryParseNumber(input: string): number {
+    try {
+      let result = parseInt(input);
+      if (isNaN(result)) return 0;
+      return result;
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  resetForm() {
+    this.unitCareForm.reset(); // Reset the form to its initial values
+  }
+
+  setTypeValue(event: any) {
+    const selectedValue = event.target.value;
+    console.log(selectedValue);
+    // You can then assign it to any variable or pass it to a function as needed.
+  }
 }
