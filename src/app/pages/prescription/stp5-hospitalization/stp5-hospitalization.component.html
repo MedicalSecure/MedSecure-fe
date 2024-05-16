@@ -7,7 +7,7 @@
         <mat-select formControlName="diet" [disabled]="isDietsLoading">
           <mat-option *ngFor="let diet of DietList" [value]="diet">{{ diet.DietType }}</mat-option>
         </mat-select>
-      </mat-form-field>s
+      </mat-form-field>
       <mat-icon *ngIf="myForm.get('diet')?.value !== null" class="align-self-center fs-3 fw-bolder mb-4" style="color: red; width: 1.8rem; height: 1.8rem" (click)="onClearSelectedDiet()">
         remove_circle_outline
       </mat-icon>
