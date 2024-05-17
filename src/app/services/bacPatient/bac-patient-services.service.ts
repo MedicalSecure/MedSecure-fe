@@ -9,14 +9,16 @@ import { BacPatientResponse, Comment, bacpatient } from '../../model/BacPatient'
   providedIn: 'root'
 })
 export class BacPatientService {
+  data_source : bacpatient[];
   constructor(private http: HttpClient) { }
-  getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) {
+  getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) : bacpatient[] {
     this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
           if (response && response.bacPatients.data) {
            dataSource.data = response.bacPatients.data;
+           this.data_source = response.bacPatients.data
            
            response.bacPatients.data.forEach(element => {
               console.log(element);
@@ -30,6 +32,7 @@ export class BacPatientService {
           console.error('Error fetching data:', error);
         }
       );
+      return this.data_source ; 
   }
   updateComment( id : string ,note:Comment){
     const body = { Id: id, Note: note };
