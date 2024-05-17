@@ -12,7 +12,8 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  templateUrl: './navbar.component.html',providers: [provideNativeDateAdapter()],
+  templateUrl: './navbar.component.html',
+  providers: [provideNativeDateAdapter()],
   imports: [
     RouterModule,
     MatFormFieldModule,
@@ -25,14 +26,13 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatOption,
     FormsModule,
-    NavbarComponent
-]
+    NavbarComponent,
+  ],
 })
 export class NavbarComponent {
-
   constructor(private router: Router) {}
 
-  displayTabs:boolean = true;
+  displayTabs: boolean = true;
   importedData: { [key: string]: any }[] = [];
   //after mapping :
   mappedData: MedicationType[] = [];
@@ -43,21 +43,23 @@ export class NavbarComponent {
   columnMappings: MedicationType = {
     Name: NOT_ASSIGNED,
     Dosage: NOT_ASSIGNED,
-    Forme: NOT_ASSIGNED,
-    DCI: NOT_ASSIGNED,
-    'Expiration Date': NOT_ASSIGNED,
+    Form: NOT_ASSIGNED,
+    Code: NOT_ASSIGNED,
+    ExpiredAt: NOT_ASSIGNED,
     Unit: NOT_ASSIGNED,
-    Price: NOT_ASSIGNED,
     Stock: NOT_ASSIGNED,
-    'Alert Stock': NOT_ASSIGNED,
-    'Average Stock': NOT_ASSIGNED,
-    'Minimum Stock': NOT_ASSIGNED,
-    'Safety Stock': NOT_ASSIGNED,
+    AvailableStock: NOT_ASSIGNED,
+    ReservedStock: NOT_ASSIGNED,
+    AlertStock: NOT_ASSIGNED,
+    AverageStock: NOT_ASSIGNED,
+    MinimumStock: NOT_ASSIGNED,
+    SafetyStock: NOT_ASSIGNED,
+    Price: NOT_ASSIGNED,
+    Description: NOT_ASSIGNED,
   };
   dbHeaders: (keyof MedicationType)[] = Object.keys(
     this.columnMappings
   ) as (keyof MedicationType)[];
-
 
   importExcelData(event: any) {
     const fileList: FileList = event.target.files;
@@ -92,16 +94,19 @@ export class NavbarComponent {
       const newMappedObject: MedicationType = {
         Name: NOT_ASSIGNED,
         Dosage: NOT_ASSIGNED,
-        Forme: NOT_ASSIGNED,
-        DCI: NOT_ASSIGNED,
-        'Expiration Date': NOT_ASSIGNED,
+        Form: NOT_ASSIGNED,
+        Code: NOT_ASSIGNED,
+        ExpiredAt: NOT_ASSIGNED,
         Unit: NOT_ASSIGNED,
-        Price: NOT_ASSIGNED,
         Stock: NOT_ASSIGNED,
-        'Alert Stock': NOT_ASSIGNED,
-        'Average Stock': NOT_ASSIGNED,
-        'Minimum Stock': NOT_ASSIGNED,
-        'Safety Stock': NOT_ASSIGNED,
+        AvailableStock: NOT_ASSIGNED,
+        ReservedStock: NOT_ASSIGNED,
+        AlertStock: NOT_ASSIGNED,
+        AverageStock: NOT_ASSIGNED,
+        MinimumStock: NOT_ASSIGNED,
+        SafetyStock: NOT_ASSIGNED,
+        Price: NOT_ASSIGNED,
+        Description: NOT_ASSIGNED,
       };
       for (const dbHead of this.dbHeaders) {
         const oldHeader = this.columnMappings[dbHead as keyof MedicationType];
@@ -142,14 +147,17 @@ export const NOT_ASSIGNED = '---';
 export type MedicationType = {
   Name: string;
   Dosage: string;
-  Forme: string;
-  DCI: string;
-  'Expiration Date': string;
+  Form: string;
+  Code: string;
+  ExpiredAt: string;
   Unit: string;
-  Price: string;
   Stock: string;
-  'Alert Stock': string;
-  'Average Stock': string;
-  'Minimum Stock': string;
-  'Safety Stock': string;
+  AvailableStock: string;
+  ReservedStock: string;
+  AlertStock: string;
+  AverageStock: string;
+  MinimumStock: string;
+  SafetyStock: string;
+  Price: string;
+  Description: string;
 };

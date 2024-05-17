@@ -45,29 +45,29 @@ export class MedicationsWidgetComponent implements OnChanges {
         {
           name: "Stock Disponible",
           data: this.medicationData.map((med) => ({
-            x: med.Nom,
-            y: med.StockDisponible,
+            x: med.Name,
+            y: med.AvailableStock,
             goals: [
               {
-                name: "Stock Maximum",
-                value: med.StockMax,
+                name: "Max Stock",
+                value: med.MaxStock,
                 strokeWidth: 5,
                 strokeColor: "#EDDF38"
               },{
                 name: "Stock Alerte",
-                value: med.StockAlerte,
+                value: med.AlertStock,
                 strokeWidth: 5,
                 strokeColor: "#707B7C"
               },
               {
-                name: "Stock Minmum",
-                value: med.StockMin,
+                name: "Min Stock",
+                value: med.MinStock,
                 strokeWidth: 5,
                 strokeColor: "#360ABF"
               },
               {
                 name: "Stock Securite",
-                value: med.StockSécurité,
+                value: med.SafetyStock,
                 strokeWidth: 5,
                 strokeColor: "#E74C3C"
               }
@@ -86,7 +86,7 @@ export class MedicationsWidgetComponent implements OnChanges {
         }
       },
       title: {
-        text: "Liste des medicaments"
+        text: "List of medications"
       },
       colors: ["#7DCEA0"],
       // dataLabels: {
@@ -104,7 +104,7 @@ export class MedicationsWidgetComponent implements OnChanges {
       legend: {
         show: true,
         showForSingleSeries: true,
-        customLegendItems: ["Stock Disponible","Stock Securite (Stock Reserve)","Stock Minmum (Stock Delai)","Stock Alerte (Seuil)","stock Maximum"],
+        customLegendItems: ["Available Stock","Reserved Stock","Min Stock","Alert Stock","Max Stock"],
         markers: {
           fillColors:["#7DCEA0","#E74C3C","#360ABF","#707B7C","#EDDF38"]
         }

@@ -1,0 +1,37 @@
+<div class="d-flex gap-2 col-lg mx-auto mt-2 mb-0">
+  <div class="m-4">
+    <p class="fw-bold m-3" style="font-size: x-large">Please select your csv file :</p>
+    <div class="d-sm-flex align-items-center justify-content-between m-3 p-3 d-flex">
+      <div class="btn-group btn-group-sm" role="group" aria-label="File actions">
+        <!-- Upload button -->
+        <a href="#" onclick="document.getElementById('fileInputPharmacyWizzard').click()" class="btn btn-outline-dark"> <i class="icon-upload nav-link"></i> Upload </a>
+      </div>
+      <!-- File input for uploading -->
+      <input type="file" label="Import" id="fileInputPharmacyWizzard" style="display: none" (change)="importExcelData($event)" accept=".xls, .xlsx" />
+    </div>
+
+    <div>
+      <p class="fw-bold p-2 m-2" style="font-size: x-large">Please associate the columns in your file with those expected by MedSecure :</p>
+      <div class="m-3">
+        <div class="d-flex flex-wrap gap-3 form-group ms-3">
+          @for (dbColumn of dbHeaders; track dbColumn){
+          <div style="width: 13rem">
+            <!-- Dropdown select for mapping columns using Angular Material -->
+            <mat-form-field>
+              <mat-label>{{ dbColumn }}</mat-label>
+              <mat-select [(value)]="columnMappings[dbColumn]" (selectionChange)="onSelectchange($event, dbColumn)" required [disabled]="importedDataHeaders.length == 0">
+                <!-- Loop through imported data headers -->
+                @for (impHeader of importedDataHeaders; track impHeader) {
+                <mat-option [value]="impHeader">
+                  {{ impHeader }}
+                </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
