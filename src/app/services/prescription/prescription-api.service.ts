@@ -106,30 +106,8 @@ export class PrescriptionApiService {
       .get<GetRegistrationsResponse>(this.apiUrl + '/Registration', { params })
       .pipe(
         map((response) => {
-          //new test
+          //still testing dates
           return parseDates(response);
-
-
-          // Modify the response data here
-          // Assuming the response contains an array of objects with a "dateString" property
-/*           response.registrations.data = response.registrations.data.map(
-            (item) => ({
-              ...item,
-              history: !item.history
-                ? []
-                : item.history.map((h) => {
-                    return {
-                      ...h,
-                      date: new Date(h.date),
-                      status: this._mapStatusEnum(h.status),
-                    };
-                  }),
-              prescriptions: this.DeserializeCreatedAtAnModifiedAt(
-                item.prescriptions
-              ),
-            })
-          );
-          return response; */
         })
       );
   }
@@ -175,19 +153,7 @@ export class PrescriptionApiService {
     return Status.Registered;
   }
 
-  //to remove
-  DeserializeCreatedAtAnModifiedAt<T extends Entity>(
-    list: Array<T> | undefined | null
-  ): Array<T> {
-    if (!list) return [];
-    return list?.map((obj) => {
-      return {
-        ...obj,
-        createdAt: new Date(obj.createdAt),
-        modifiedAt: obj.modifiedAt ? new Date(obj.modifiedAt) : undefined,
-      };
-    });
-  }
+
 }
 
 
