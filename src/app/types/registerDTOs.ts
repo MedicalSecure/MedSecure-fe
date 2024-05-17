@@ -98,3 +98,43 @@ export type GetRegistrationsResponse = {
 export type GetPatientsResponse = {
   patients: PaginatedResult<PatientDto>;
 };
+
+
+export type RegisterForPrescription = {
+  id: string;
+  mrn?: string;
+  currentStatus: Status;
+  registeredAt?: Date;
+  patient_id: string;
+  patient_firstName: string;
+  patient_lastName?: string | null;
+  patient_fullName?: string | null;
+  patient_dateOfBirth?: Date | null;
+  patient_identity?: number | null;
+  patient_cnam?: number | null;
+  patient_assurance?: string | null;
+  patient_gender?: Gender | null;
+  patient_height?: number | null;
+  patient_weight?: number | null;
+  patient_addressIsRegistrations?: boolean | null;
+  patient_saveForNextTime?: boolean | null;
+  patient_email?: string | null;
+  patient_address1?: string | null;
+  patient_address2?: string | null;
+  patient_country?: Country | null;
+  patient_state?: string | null;
+  patient_familyStatus?: FamilyStatus | null;
+  patient_children?: number | null;
+  familyMedicalHistory?: RiskFactorDto[];
+  personalMedicalHistory?: RiskFactorDto[];
+  diseases?: RiskFactorDto[];
+  allergies?: RiskFactorDto[];
+  history?: History[];
+  test?: Test[];
+  prescriptions?: PrescriptionDto[] | null;
+  createdAt: Date;
+  modifiedAt?: Date;
+  createdBy: string;
+  modifiedBy?: string | null;
+};
+

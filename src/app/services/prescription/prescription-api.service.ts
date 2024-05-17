@@ -195,7 +195,7 @@ export class PrescriptionApiService {
 
 } */
 
-function parseDates<T>(response:T):T{
+export function parseDates<T>(response:T):T{
 
   const dateReviver = (key: string, value: any) => {
     const isDateString = value && typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value);

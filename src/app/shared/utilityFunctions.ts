@@ -1,3 +1,6 @@
+import { Status } from '../enums/enum';
+import { History } from '../types/registerDTOs';
+
 export function calculateAge(dateOfBirth: Date): number {
   const currentDate = new Date();
   const birthDate = new Date(dateOfBirth);
@@ -62,3 +65,63 @@ export function getDateString(
 
   return formattedDate;
 }
+
+export function getRegistrationStatus(
+  historyList: History[] | null | undefined,
+  registerId: string = 'not specified'
+): Status {
+  if (!historyList) {
+    console.error(
+      `cant find register status : in getRegistrationStatus, registerId: ${registerId}, list of history: `,
+      historyList
+    );
+    return Status.Registered;
+  }
+
+  if (historyList.length === 0) {
+    console.error(
+      `cant find register status : in getRegistrationStatus, registerId: ${registerId}, list of history: `,
+      historyList
+    );
+    return Status.Registered;
+  }
+
+  // Sort the history list by date in descending order
+  const sortedHistory = historyList.sort(
+    (a, b) => b.date.getTime() - a.date.getTime()
+  );
+
+  // Return the status of the first history object in the sorted list
+  return sortedHistory[0].status;
+}
+export function getRegistrationDate(
+  historyList: History[] | null | undefined,
+  backUpRegisterDate:string | Date="1999/9/9",
+  registerId: string = 'not specified'
+): Date {
+  if (!historyList) {
+    console.error(
+      `cant find register date : in getRegistrationStatus, registerId: ${registerId}, list of history: `,
+      historyList
+    );
+    return new Date(backUpRegisterDate);
+  }
+
+  if (historyList.length === 0) {
+    console.error(
+      `cant find register status : in getRegistrationStatus, registerId: ${registerId}, list of history: `,
+      historyList
+    );
+    return new Date(backUpRegisterDate);
+  }
+
+  // Sort the history list by date in descending order
+  const sortedHistory = historyList.sort(
+    (a, b) => b.date.getTime() - a.date.getTime()
+  );
+
+  // Return the status of the first history object in the sorted list
+  return sortedHistory[0].date;
+}
+
+

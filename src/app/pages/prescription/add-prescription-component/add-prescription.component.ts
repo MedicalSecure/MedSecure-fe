@@ -13,7 +13,6 @@ import { Subject } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PrescriptionListComponent } from '../prescription-list/prescription-list.component';
-import { PatientDto } from '../../../types/registerDTOs';
 import { calculateAge } from '../../../shared/utilityFunctions';
 import {
   DiagnosisDto,
@@ -31,6 +30,7 @@ import {
   filterScheduleItems,
 } from '../../../components/schedule/schedule.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
+import { RegisterForPrescription } from '../../../types/registerDTOs';
 
 @Component({
   selector: 'app-add-prescription',
@@ -56,7 +56,7 @@ export class AddPrescriptionComponent implements DoCheck {
   selectedDiagnosis: DiagnosisDto[] = [];
   selectedSymptoms: SymptomDto[] = [];
   newPosologies: PosologyDto[] = [];
-  selectedPatient: PatientDto | undefined;
+  selectedRegister: RegisterForPrescription | undefined;
   isAddMedicationPageValid: boolean = false;
   ShowPrescriptionList: boolean = false;
   wizardSteps: wizardStepType[] = _steps;
@@ -84,8 +84,12 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   handleSubmit() {
+    if(!this.selectedRegister){
+      console.error("cant submit without selecting a patient / registration")
+      return;
+    }
     const summary = {
-      patient: this.selectedPatient,
+      patient: this.selectedRegister,
       symptoms: this.selectedSymptoms,
       diagnosis: this.selectedDiagnosis,
       posologies: this.newPosologies,
@@ -109,8 +113,7 @@ export class AddPrescriptionComponent implements DoCheck {
     let doctorIdd = '55555555-5555-5555-5555-555555555554'; //TODO
 
     const finalPrescription: PrescriptionCreateDto = {
-      //@ts-ignore im sure, on submit, patient is selected and not undefined
-      registerId: this.selectedPatient.registerId,
+      registerId: this.selectedRegister.id,
       doctorId: doctorIdd, //TODO
       diagnoses: this.selectedDiagnosis,
       symptoms: this.selectedSymptoms,
@@ -137,7 +140,7 @@ export class AddPrescriptionComponent implements DoCheck {
     //if (index > this.stepsLimit + 1) return false;
     if (index < 1) return false;
     if (index >= 1 && index == this.stepNumber) return false;
-    if (index > 1 && this.selectedPatient == undefined) return false;
+    if (index > 1 && this.selectedRegister == undefined) return false;
     if (index > 4 && !this.isAddMedicationPageValid) return false;
     return true;
   };
@@ -176,9 +179,9 @@ export class AddPrescriptionComponent implements DoCheck {
     this.emitFinishEventToChild();
   }
 
-  onSelectPatientChange(patient: PatientDto | undefined) {
-    if (patient == undefined) {
-      this.selectedPatient = undefined;
+  onSelectPatientChange(register: RegisterForPrescription | undefined) {
+    if (register == undefined) {
+      this.selectedRegister = undefined;
       this.stepNumber = 1;
     } else {
       if (this.stepNumber == 1) {
@@ -279,7 +282,7 @@ export class AddPrescriptionComponent implements DoCheck {
       //reset styles
       this.setNextButtonClass('', '', true);
     }
-/*     if (this.selectedPatient == undefined) {
+/*     if (this.selectedRegister == undefined) {
       //append disabled
       this.setNextButtonClass('', 'disabled');
     } else if (this.stepNumber == 4 && !this.isAddMedicationPageValid) {

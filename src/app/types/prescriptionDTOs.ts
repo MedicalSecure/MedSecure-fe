@@ -1,4 +1,6 @@
 
+import { Country } from '../enums/country';
+import { FamilyStatus, Gender } from '../enums/enum';
 import { MedicationDto } from './medicationDTOs';
 
 export type PaginatedResult<TEntity> = {
@@ -127,4 +129,31 @@ export type DoctorDto = {
   lastName: string;
   specialty: string;
   dateOfBirth: Date;
+};
+
+
+export type PatientForPrescription = {
+  id: string;
+  firstName: string;
+  lastName?: string | null;
+  dateOfBirth?: Date | null;
+  identity?: number | null;
+  cnam?: number | null;
+  assurance?: string | null;
+  gender?: Gender | null;
+  height?: number | null;
+  weight?: number | null;
+  addressIsRegistrations?: boolean | null;
+  saveForNextTime?: boolean | null;
+  email?: string | null;
+  address1?: string | null;
+  address2?: string | null;
+  country?: Country | null;
+  state?: string | null;
+  familyStatus?: FamilyStatus | null;
+  children?: number | null;
+  createdAt: Date;
+  modifiedAt?: Date | null;
+  createdBy: string;
+  modifiedBy?: string | null;
 };
