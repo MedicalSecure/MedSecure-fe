@@ -1,0 +1,9 @@
+<div>
+    <h1>Sensor Data</h1>
+    <ul>
+      <li *ngFor="let item of data">
+        Temperature: {{ item.temperature }}, Humidity: {{ item.humidity }}, Electricity: {{ item.electricity }},
+        Luminosity: {{ item.luminosity }}, Timestamp: {{ item.timestamp }}
+      </li>
+    </ul>
+  </div>

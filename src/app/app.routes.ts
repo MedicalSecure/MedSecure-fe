@@ -14,7 +14,8 @@ import { TasksComponent } from './pages/tasks/tasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
-
+import {GetDataAzureComponent}from './components/get-data-azure/get-data-azure.component'  
+import {SensorDataComponent}from './components/sensor-data/sensor-data.component'
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
@@ -31,4 +32,7 @@ export const routes: Routes = [
   { path: 'register-details', component: MasonryDpiComponent },
   { path: 'register-form', component: RegisterFormComponent },
   { path: 'register', component: RegisterViewComponent },
+  { path: 'GetDataAzureComponent', component:GetDataAzureComponent},
+  { path: 'SensorDataComponent', component:SensorDataComponent}
 ];
+
