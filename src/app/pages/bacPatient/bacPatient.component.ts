@@ -40,10 +40,11 @@ import { BacPatientService } from '../../services/bacPatient/bac-patient-service
   imports: [RouterModule, DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
-  dispenseQuantity: number = 0; 
+  dispenseQuantity: number = 0;
   today: Date = new Date();
   checkednumber: Number = 0;
   checkedItems: any[] = [];
+  servedCount = 0;
   selectedDate: Date = new Date();
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -57,6 +58,7 @@ export class BacPatientComponent implements AfterViewInit {
   tomorrow = new Date();
   yesterday = new Date();
   uniqueRooms: any;
+  boxcheked: Dispense[] = [];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
   changeDate(selectedDate: string) {
@@ -75,12 +77,8 @@ export class BacPatientComponent implements AfterViewInit {
 
 
     this.bacPatientService.getData(this.dataSource);
-    
+
   }
-
-
-
-
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate() - 1));
     this.today.setDate(this.today.getDate() - 1);
@@ -92,7 +90,6 @@ export class BacPatientComponent implements AfterViewInit {
     this.today.setDate(this.today.getDate() + 1)
     this.todayDate = this.today.toLocaleDateString();
   }
-
   toggleExpanded(element: any) {
     this.expandedElement = this.expandedElement === element ? null : element;
   }
@@ -140,18 +137,50 @@ export class BacPatientComponent implements AfterViewInit {
     }
     return age;
   }
-
-  handleCheckBoxClick(eventData: any) {    
-  console.log('Checkbox clicked:', eventData);
-this.bacPatientService.updateBacPatient(this.dataSource.data[0])
-
-  //console.log(this.dataSource.data );
-  //update bac patient full object already updated
-
-   
-   }
- 
- 
+  handleCheckBoxClick(eventData: Dispense[]) {
+    let allBeforeMealChecked = true;
+    let allAfterMealChecked = true;
+    let oneCheckBoxIsClicked = false;
+  
+    this.dataSource.data.forEach(bacPatient => {
+      // Reset servedCount for each bacPatient
+      this.servedCount = 0;
+  
+      bacPatient.prescription.posologies.forEach(posology => {
+        posology.dispenses.forEach(dispense => {
+          if (dispense.beforeMeal && dispense.beforeMeal.isValid) {
+            this.servedCount += parseInt(dispense.beforeMeal.quantity, 10) || 0;
+          } else {
+            allBeforeMealChecked = false;
+            oneCheckBoxIsClicked = true;
+          }
+  
+          if (dispense.afterMeal && dispense.afterMeal.isValid) {
+            this.servedCount += parseInt(dispense.afterMeal.quantity, 10) || 0;
+          } else {
+            allAfterMealChecked = false;
+            oneCheckBoxIsClicked = true;
+          }
+        });
+      });
+  
+      if (allBeforeMealChecked && allAfterMealChecked) {
+        bacPatient.status = 2;
+      } else if (oneCheckBoxIsClicked) {
+        bacPatient.status = 1;
+      } else {
+        bacPatient.status = 0;
+      }
+  
+      bacPatient.served = this.servedCount;
+      this.bacPatientService.updateBacPatient(bacPatient);
+  
+      // Reset flags for the next bacPatient
+      allBeforeMealChecked = true;
+      allAfterMealChecked = true;
+    });
+  }
+  
 
   getRouteImage(route: number): string {
     switch (route) {
@@ -184,9 +213,6 @@ this.bacPatientService.updateBacPatient(this.dataSource.data[0])
     }
   }
 }
-
-
-
 export let ELEMENT_DATA: bacpatient[] = [
   /* {
      id: 1,
@@ -517,7 +543,5 @@ export let ELEMENT_DATA: bacpatient[] = [
      servingDate: new Date()
    }*/
 ];
-
-
 export { bacpatient };
 

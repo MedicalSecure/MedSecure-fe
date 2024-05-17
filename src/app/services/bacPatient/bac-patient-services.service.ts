@@ -34,10 +34,10 @@ export class BacPatientService {
   updateComment( id : string ,note:Comment){
     const body = { Id: id, Note: note };
     return this.http.put('https://localhost:6065/v1/bacPatient/note', body).subscribe(response => {
-      console.log('Response:', response); // Log the response
+    
     },
     error => {
-      console.error('Error:', error); // Log any error
+      console.error('Error:', error); 
     }
   );
 
@@ -45,10 +45,10 @@ export class BacPatientService {
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
     return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
-      console.log('Response:', response); // Log the response
+ 
     },
     error => {
-      console.error('Error:', error); // Log any error
+      console.error('Error:', error); 
     }
   );
 

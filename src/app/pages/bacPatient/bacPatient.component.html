@@ -182,21 +182,20 @@
 
                       <ng-container matColumnDef="posology">
                         <table mat-table [dataSource]="element.prescription.posologies"
-                          class="mat-elevation-z8 extended-table-cell">
-                          <ng-container matColumnDef="posology">
-                            <th mat-header-cell *matHeaderCellDef>Posology</th>
-                            <td class="element posology-cell" mat-cell *matCellDef="let elementt" style="text-align: center;">
-                              @for ( posology of element.prescription.posologies; track posology) {
-                                  <app-schedule [canValid]="true" [canPostValid]="false"
-                                  [partsOfDayHours]="posology.dispenses" 
-                                  (filteredPartsOfDayHoursChange)="handleCheckBoxClick($event)"
-                                  [showEmptyCases]="true"></app-schedule > 
-                                }
-                                 
-                              </td>
-                          </ng-container>
-                          <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
-                        </table>
+                        class="mat-elevation-z8 extended-table-cell">
+                   <ng-container matColumnDef="posology">
+                     <th mat-header-cell *matHeaderCellDef>Posology</th>
+                     <td class="element posology-cell" mat-cell *matCellDef="let posology" style="text-align: center;">
+                       <app-schedule [canValid]="true" [canPostValid]="false"
+                                     [partsOfDayHours]="posology.dispenses" 
+                                     (filteredPartsOfDayHoursChange)="handleCheckBoxClick($event)"
+                                     [showEmptyCases]="true">
+                       </app-schedule>
+                     </td>
+                   </ng-container>
+                   <tr mat-row *matRowDef="let row; columns: ['posology']"></tr>
+                 </table>
+                 
                       </ng-container>
                       
 

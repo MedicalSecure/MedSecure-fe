@@ -8,7 +8,6 @@ export interface BacPatientResponse {
       data: bacpatient[];
     };
   }
-  
   export interface bacpatient {
     id: string;
     prescription: Prescription;
@@ -24,7 +23,6 @@ export interface BacPatientResponse {
     roomNumber: number;
     status: number;
   }
-  
   export interface Prescription {
     id: string;
     register: Register;
@@ -37,12 +35,10 @@ export interface BacPatientResponse {
     title: string;
     description: string;
   }
-  
   export interface Register {
     id: string;
     patient: Patient;
   }
-  
   export interface Patient {
     id: string;
     firstName: string;
@@ -50,7 +46,6 @@ export interface BacPatientResponse {
     dateOfbirth: Date;
     gender: number;
   }
-  
   export interface Posology {
     id: string;
     prescriptionId: string;
@@ -61,7 +56,6 @@ export interface BacPatientResponse {
     comments: Comment[];
     dispenses: Dispense[];
   }
-  
   export interface Medication {
     id: string;
     name: string;
@@ -69,7 +63,6 @@ export interface BacPatientResponse {
     form: number;
     description: string;
   }
-  
   export interface Comment {
     id: string;
     posologyId: string;
