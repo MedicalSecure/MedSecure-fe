@@ -1,26 +1,34 @@
-<div class="col-md-6 col-lg-6 grid-margin stretch-card">
-    <div class="card card-rounded">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h4 class="card-title card-title-dash">Activities</h4>
-         <!--  <p class="mb-0">20 finished, 5 remaining</p> -->
-        </div>
-        <ul class="bullet-line-list">
-          @for(activity of activities;track $index){<li>
-            <div class="d-flex justify-content-between">
-              <div><span class="text-light-green">{{activity.creatorName}} </span>{{activity.content}}</div>
-              <p>{{getActivityTime(activity)}}</p>
-            </div>
-          </li>}
-          
-        </ul>
-        <div class="list align-items-center pt-3">
-          <div class="wrapper w-100">
-            <p class="mb-0">
-              <a href="#" class="fw-bold text-primary">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
-            </p>
+<div class="card card-rounded">
+  <div class="card-body">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="card-title card-title-dash">Activities</h4>
+      <!--  <p class="mb-0">20 finished, 5 remaining</p> -->
+    </div>
+    <ul class="bullet-line-list hide-scroll-bar" style="max-height: 17rem;overflow-y: scroll;">
+      @for(activity of activitiesView;track $index){
+      <li>
+        <div class="d-flex justify-content-between">
+          <div>
+            <!-- creator , if it has more than for example 20 chars, it will be cut and ending with ... -->
+
+            <span class="text-light-green"
+              >{{ activity.creatorName.length > maximumVisibleCreatorNameLength ? activity.creatorName.slice(0, maximumVisibleCreatorNameLength-2) : activity.creatorName }}
+
+              <!-- activity content, if it has more than for example 30 chars, it will be cut and ending with ... --> </span
+            >{{ activity.content.length > maximumVisibleContentLength ? activity.content.slice(0, maximumVisibleContentLength-2) + ".." : activity.content }}
           </div>
+          <p>{{activity.activityTime}}</p>
         </div>
+      </li>
+      }
+      
+    </ul>
+    <div class="list align-items-center pt-3">
+      <div class="wrapper w-100">
+        <p class="mb-0">
+          <a href="#" class="fw-bold text-primary">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
+        </p>
       </div>
     </div>
   </div>
+</div>

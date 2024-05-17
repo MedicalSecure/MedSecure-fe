@@ -12,7 +12,5 @@ import { UnitCareService } from '../../../services/unitCare/unit-care.service';
   styleUrl: './doctors-dashboard.component.css',
 })
 export class DoctorsDashboardComponent {
-  isActivities = true;
-
   constructor(public prescriptionService: PrescriptionApiService) {}
 }

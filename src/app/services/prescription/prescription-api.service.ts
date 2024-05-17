@@ -18,10 +18,11 @@ import { GetRegistrationsResponse, RegisterDto } from '../../types/registerDTOs'
 import { delay, map, switchMap } from 'rxjs/operators';
 import { Status } from '../../enums/enum';
 import { Entity, GetActivitiesResponse } from '../../types';
+import { ActivityService } from '../../components/activities/activities.component';
 @Injectable({
   providedIn: 'root',
 })
-export class PrescriptionApiService {
+export class PrescriptionApiService implements ActivityService {
   private apiVersion: number = 1; // Replace 'v1' with your desired API version
   private apiUrl = `http://localhost:5007/api/v${this.apiVersion}/Prescription`;
   constructor(private http: HttpClient) {}
