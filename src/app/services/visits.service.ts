@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import {TypeVisit} from '../interface/TypeVisit'
 import {LocationVisit} from '../interface/LocationVisit'
@@ -12,11 +13,11 @@ export class VisitService {
 
     constructor(private http: HttpClient) { }
     
-
+//load visits
     getVisits(): Observable<any> {
-        return this.http.get<any>('http://localhost:5004/v1/visits');
+        return this.http.get<any>('assets/data/visits.json');
       }
-
+//create visits
     creatVisits(formData:any) {
         const typeVisitEnumValue: TypeVisit = TypeVisit[formData.typevisits as keyof typeof TypeVisit];
         const locationVisitEnumValue: LocationVisit = LocationVisit[formData.disponibilite as keyof typeof LocationVisit];
@@ -48,6 +49,7 @@ export class VisitService {
         return this.http.post<any>('http://localhost:5004/v1/visits', VisitDtoWrapper);
     }
 
+    //update visits
     updateVisits(formData:any) {
         const typeVisitEnumValue: TypeVisit = TypeVisit[formData.typevisits as keyof typeof TypeVisit];
         const locationVisitEnumValue: LocationVisit = LocationVisit[formData.disponibilite as keyof typeof LocationVisit];
@@ -81,10 +83,32 @@ export class VisitService {
         return this.http.put<any>("http://localhost:5004/v1/visits", VisitDtoWrapper);
     }
 
-
-    
+    //delete visits
     deleteVisits(visitId: string | number | undefined){
         return this.http.delete(`http://localhost:5004/v1/visits/${visitId}?Id=${visitId}`);
     }
+
+     // Obtenir le nombre de visites par jour
+  getVisitsCountByDay(): Observable<{ [key: string]: number }> {
+    return this.getVisits().pipe(
+      map(visits => {
+        const visitCounts: { [key: string]: number } = {};
+        visits.forEach((visit: any) => {
+          const date = new Date(visit.start).toISOString().split('T')[0];
+          if (!visitCounts[date]) {
+            visitCounts[date] = 0;
+          }
+          visitCounts[date]++;
+        });
+        return visitCounts;
+      })
+    );}
+
+   
+      getTotalVisitsCount(): Observable<number> {
+        return this.getVisits().pipe(
+          map(visits => visits.length)
+        );
+      }
 
 }
