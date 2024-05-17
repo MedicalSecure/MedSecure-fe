@@ -1,3 +1,4 @@
+import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
 import {
   FamilyStatus,
@@ -6,7 +7,7 @@ import {
   Status,
   TestType,
 } from '../enums/enum';
-import { PaginatedResult, PrescriptionDto } from './prescriptionDTOs';
+import { PrescriptionDto } from './prescriptionDTOs';
 
 /// done
 export type PatientDto = {

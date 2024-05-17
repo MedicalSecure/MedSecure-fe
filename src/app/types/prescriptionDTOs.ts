@@ -1,14 +1,9 @@
 
+import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
 import { FamilyStatus, Gender } from '../enums/enum';
 import { MedicationDto } from './medicationDTOs';
 
-export type PaginatedResult<TEntity> = {
-  pageIndex: number;
-  pageSize: number;
-  count: number;
-  data: TEntity[];
-};
 
 export type GetPrescriptionsResponse = {
   prescriptions: PaginatedResult<PrescriptionDto>;
@@ -19,6 +14,8 @@ export type GetDiagnosisResponse = {
 export type GetSymptomsResponse = {
   symptom: PaginatedResult<SymptomDto>;
 };
+
+
 
 export type PostPredictDiagnosisResponse = {
   predictedDiagnosis: DiagnosisDto;

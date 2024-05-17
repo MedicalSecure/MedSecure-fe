@@ -8,7 +8,6 @@ import {
   GetPrescriptionsByRegisterIdResponse,
   GetPrescriptionsResponse,
   GetSymptomsResponse,
-  PaginatedResult,
   PostPredictDiagnosisCommand,
   PostPredictDiagnosisResponse,
   PrescriptionCreateDto,
@@ -18,7 +17,7 @@ import {
 import { GetRegistrationsResponse, RegisterDto } from '../../types/registerDTOs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { Status } from '../../enums/enum';
-import { Entity } from '../../types';
+import { Entity, GetActivitiesResponse } from '../../types';
 @Injectable({
   providedIn: 'root',
 })
@@ -73,6 +72,24 @@ export class PrescriptionApiService {
     let x = this.http.get<GetDiagnosisResponse>(this.apiUrl + '/Diagnosis', {
       params,
     });
+    return x;
+  }
+
+  getActivities(
+    pageIndex: number = 0,
+    pageSize: number = 7
+  ): Observable<GetActivitiesResponse> {
+    const params = new HttpParams()
+      .set('PageIndex', pageIndex.toString())
+      .set('PageSize', pageSize.toString());
+    let x = this.http.get<GetActivitiesResponse>(this.apiUrl + '/Activities', {
+      params,
+    }).pipe(
+      map((response) => {
+        //still testing dates
+        return parseDates(response);
+      })
+    );
     return x;
   }
 

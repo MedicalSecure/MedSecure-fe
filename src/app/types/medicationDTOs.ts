@@ -1,4 +1,5 @@
-import { PaginatedResult } from "./prescriptionDTOs";
+import { PaginatedResult } from ".";
+
 
 export type MedicationDto = {
     id: string;
