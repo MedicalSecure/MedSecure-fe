@@ -1,7 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { ELEMENT_DATA, bacpatient } from '../bacPatient/bacPatient.component';
 import { CommonModule } from '@angular/common';
 import { Medication } from '../../model/BacPatient';
+import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { Dispense } from '../../components/schedule/schedule.component';
 
 @Component({
   selector: 'app-timeline-event',
@@ -10,49 +13,45 @@ import { Medication } from '../../model/BacPatient';
   templateUrl: './timeline-event.component.html',
   styleUrl: './timeline-event.component.css'
 })
-export class GanttChartComponent implements OnInit {
+export class GanttChartComponent implements AfterViewInit {
+  constructor(private bacPatientService: BacPatientService) { }
+  ngAfterViewInit(): void {
+    this.dataList = this.bacPatientService.getData(this.dataSource);
 
+    this.getUniqueRooms();
+  }
   isCurrentHour(hour: string): boolean {
     const currentHour = new Date().getHours().toString();
-    // Parse the input hour string to an integer
+   
     const inputHour = hour;
     // Debug output
 
     // Check if the parsed input hour matches the current hour
     return inputHour === currentHour;
   }
-
- calculateQuantity(be: string | undefined, ae: string | undefined): number {
-    // Initialize variables to store the parsed values
+ calculateQuantity(dispense : Dispense[]): string {
     let beParsed: number = 0;
     let aeParsed: number = 0;
-
-    // Parse the strings if they are defined
-    if (be !== undefined) {
-        beParsed = parseInt(be);
-        // Check if parsing failed (resulted in NaN)
+    dispense.forEach(dis=>{
+      if (dis.beforeMeal?.quantity !== undefined) {
+        beParsed += parseInt(dis.beforeMeal?.quantity);
         if (isNaN(beParsed)) {
-            // Handle invalid input, such as non-numeric strings
-            // For example, you could throw an error or return a default value
             throw new Error("Invalid value for 'be'");
         }
     }
-    if (ae !== undefined) {
-        aeParsed = parseInt(ae);
-        // Check if parsing failed (resulted in NaN)
+    if (dis.afterMeal?.quantity !== undefined) {
+        aeParsed += parseInt(dis.afterMeal?.quantity );
         if (isNaN(aeParsed)) {
-            // Handle invalid input, such as non-numeric strings
-            // For example, you could throw an error or return a default value
             throw new Error("Invalid value for 'ae'");
         }
     }
-
-    // Return the sum of the parsed values
-    return beParsed + aeParsed;
+    })
+ 
+    return (beParsed.toString()  + "," + aeParsed.toString())
 }
-
+dataSource = new MatTableDataSource(ELEMENT_DATA);
   @Input() targetHours: string[];
-  data_list: bacpatient[] = ELEMENT_DATA;
+  dataList: bacpatient[] = ELEMENT_DATA ;
   uniqueroom: number[] = [];
   tableElements: bacpatient[] = [];
   medicines: Medication[] = [];
@@ -63,7 +62,7 @@ export class GanttChartComponent implements OnInit {
   uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
   getUniqueRooms(): Map<number, bacpatient[]> {
     const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
-    this.data_list.forEach(item => {
+    this.dataList.forEach(item => {
       if (!uniqueRoomsMap.has(item.room.roomNumber)) {
         uniqueRoomsMap.set(item.room.roomNumber, []);
       }
@@ -85,7 +84,7 @@ export class GanttChartComponent implements OnInit {
   }
   getMedicineByHour(hour: string, name: string): Medication[] {
     const medicines: Medication[] = [];
-    for (const patient of this.data_list) {
+    for (const patient of this.dataList) {
       if (patient.prescription.register.patient.firstName === name) {
         for (const posology of patient.prescription.posologies) {
           for (const dispense of posology.dispenses) {
@@ -97,10 +96,9 @@ export class GanttChartComponent implements OnInit {
         }
       }
     }
+    //debugger;
     return medicines;
   }
 
-  ngOnInit(): void {
-    this.getUniqueRooms();
-  }
+ 
 }

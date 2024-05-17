@@ -1,28 +1,28 @@
 <div class="table-responsive mt-1">
-  <table mat-table class="table extended-table" >
+  <table mat-table class="table extended-table">
     <thead>
       <tr>
         <th scope="col"></th>
         <ng-container *ngFor="let hour of targetHours; let i = index">
-            <th scope="col" style="width: 25% ;" [ngStyle]="{'background-color': isCurrentHour(hour) ? '#fef6d5' : '#f2f2f2'}" >{{ hour }} H</th>
-          </ng-container>
+          <th scope="col" style="width: 25% ;"
+            [ngStyle]="{'background-color': isCurrentHour(hour) ? '#fef6d5' : '#f2f2f2'}">{{ hour }} H</th>
+        </ng-container>
       </tr>
     </thead>
     <tbody>
       @for (room of uniqueroom; track room) {
       <tr>
-        <th >
+        <th>
           <h6 class="my-0" style="font-size: smaller;">Room</h6> {{ room }}
         </th>
         <td [ngStyle]="{'background-color': isCurrentHour(targetHours[0]) ? '#fef6d5' : '#f2f2f2'}">
-          @for (element of data_list; track element) { @if (element.room.roomNumber ===
-          room) { @for (medicine of
+          @for (element of dataList; track element) { @if (element.room.roomNumber ===
+          room)
+           { @for (medicine of
           getMedicineByHour(targetHours[0],element.prescription.register.patient.firstName); track medicine) {
-          @for (posology of element.prescription.posologies; track posology) {
+
           <ul class="list-group mb-3 sticky-top">
-            <li
-              class="list-group-item d-flex justify-content-between lh-condensed"
-            >
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Patient</h6>
                 <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
@@ -33,150 +33,130 @@
               </div>
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Medication</h6>
-                @for (item of element.prescription.posologies ; track item) {
-                  <small class="text-muted">{{item.medication.name}}</small>
-                }              </div>
+
+                <small class="text-muted">{{medicine.name}}</small>
+
+              </div>
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Quantity</h6>
                 <small class="text-muted">
-                  @for (item of posology.dispenses; track item) {
-                    {{
-                      calculateQuantity(
-                       item.beforeMeal?.quantity,
-                         item.afterMeal?.quantity
-                      )
-                    }}
-                  }
+                  @for (posology of element.prescription.posologies; track $index) {
+                    {{calculateQuantity(posology.dispenses)}}
+                    }
                 </small>
               </div>
             </li>
           </ul>
-          }} } }
+          } } }
         </td>
-        
+
         <td [ngStyle]="{'background-color': isCurrentHour(targetHours[1]) ? '#fef6d5' : '#f2f2f2'}">
-            @for (element of data_list; track element) {
-              @if (element.room.roomNumber === room) {
-                @for (medicine of getMedicineByHour(targetHours[1], element.prescription.register.patient.firstName); track medicine) {
-                  @for (posology of element.prescription.posologies; track posology) {
-                    <ul class="list-group mb-3">
-                      <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Name</h6>
-                          <small class="text-muted">{{element.prescription.register.patient.firstName }}</small>
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Bed</h6>
-                          <small class="text-muted">{{ element.bed }}</small>
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Medication</h6>
-                          @for (item of element.prescription.posologies ; track item) {
-                            <small class="text-muted">{{item.medication.name}}</small>
-                          }
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Quantity</h6>
-                          <small class="text-muted">
-                            @for (item of posology.dispenses; track item) {
-                              {{
-                                calculateQuantity(
-                       item.beforeMeal?.quantity,
-                         item.afterMeal?.quantity
-                      )
-                              }}
-                            }
-                        </small>
-                        </div>
-                      </li>
-                    </ul>
-                  }
-                }
-              }
-            }
+          @for (element of dataList; track element) {
+          @if (element.room.roomNumber === room) {
+          @for (medicine of getMedicineByHour(targetHours[1], element.prescription.register.patient.firstName); track
+          medicine) {
+
+          <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Name</h6>
+                <small class="text-muted">{{element.prescription.register.patient.firstName }}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Bed</h6>
+                <small class="text-muted">{{ element.bed }}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Medication</h6>
+            
+                <small class="text-muted">{{medicine.name}}</small> 
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Quantity</h6>
+                <small class="text-muted">
+                  @for (posology of element.prescription.posologies; track $index) {
+                    {{calculateQuantity(posology.dispenses)}}
+                    }
+                </small>
+              </div>
+            </li>
+          </ul>
+          }
+
+          }
+          }
         </td>
-          
+
         <td [ngStyle]="{'background-color': isCurrentHour(targetHours[2]) ? '#fef6d5' : '#f2f2f2'}">
-            @for (element of data_list; track element) {
-              @if (element.room.roomNumber === room) {
-                @for (medicine of getMedicineByHour(targetHours[2], element.prescription.register.patient.firstName); track medicine) {
-                  @for (posology of element.prescription.posologies; track posology) {
-                    <ul class="list-group mb-3">
-                      <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Name</h6>
-                          <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Bed</h6>
-                          <small class="text-muted">{{ element.bed }}</small>
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Medication</h6>
-                          @for (item of element.prescription.posologies ; track item) {
-                            <small class="text-muted">{{item.medication.name}}</small>
-                          }
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Quantity</h6>
-                          <small class="text-muted">
-                            @for (item of posology.dispenses; track item) {
-                              {{
-                               calculateQuantity(
-                       item.beforeMeal?.quantity,
-                         item.afterMeal?.quantity
-                      )
-                              }}
-                            }
-                          </small>
-                        </div>
-                      </li>
-                    </ul>
-                  }
-                }
-              }
-            }
+          @for (element of dataList; track element) {
+          @if (element.room.roomNumber === room) {
+          @for (medicine of getMedicineByHour(targetHours[2], element.prescription.register.patient.firstName); track
+          medicine)
+          {
+          <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Name</h6>
+                <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Bed</h6>
+                <small class="text-muted">{{ element.bed }}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Medication</h6>
+                <small class="text-muted">{{medicine.name}}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Quantity</h6>
+                <small class="text-muted">
+                  @for (posology of element.prescription.posologies; track $index) {
+                    {{calculateQuantity(posology.dispenses)}}
+                    }
+                </small>
+              </div>
+            </li>
+          </ul>
+
+          }
+          }
+          }
         </td>
-          
+
         <td [ngStyle]="{'background-color': isCurrentHour(targetHours[3]) ? '#fef6d5' : '#f2f2f2'}">
-            @for (element of data_list; track element) {
-              @if (element.room.roomNumber === room) {
-                @for (medicine of getMedicineByHour(targetHours[3], element.prescription.register.patient.firstName); track medicine) {
-                  @for (posology of element.prescription.posologies; track posology) {
-                    <ul class="list-group mb-3">
-                      <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Name</h6>
-                          <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Bed</h6>
-                          <small class="text-muted">{{ element.bed}}</small>
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Medication</h6>
-                          @for (item of element.prescription.posologies ; track item) {
-                            <small class="text-muted">{{item.medication.name}}</small>
-                          }
-                        
-                        </div>
-                        <div>
-                          <h6 class="my-0" style="font-size: smaller;">Quantity</h6>
-                          <small class="text-muted">   @for (item of posology.dispenses; track item) {
-                            {{
-                              calculateQuantity(
-                       item.beforeMeal?.quantity,
-                         item.afterMeal?.quantity
-                      )
-                            }}
-                          }</small>
-                        </div>
-                      </li>
-                    </ul>
+          @for (element of dataList; track element) {
+          @if (element.room.roomNumber === room) {
+          <ul class="list-group mb-3">
+            @for (medicine of getMedicineByHour(targetHours[3], element.prescription.register.patient.firstName); track
+            medicine) {
+
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Name</h6>
+                <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Bed</h6>
+                <small class="text-muted">{{ element.bed}}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Medication</h6>
+                <small class="text-muted">{{medicine.name}}</small>
+              </div>
+              <div>
+                <h6 class="my-0" style="font-size: smaller;">Quantity</h6>
+                <small class="text-muted">
+                  @for (posology of element.prescription.posologies; track $index) {
+                  {{calculateQuantity(posology.dispenses)}}
                   }
-                }
-              }
+                </small>
+              </div>
+            </li>
             }
+          </ul>
+
+          }
+          }
         </td>
       </tr>
       }
