@@ -49,12 +49,12 @@ export class SignalRService {
   private hubConnection: signalR.HubConnection;
 
   public sensorDataReceived: (data: any) => void;
-
+ //url :https://medsecure-functions.azurewebsites.net/api
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://medsecure-functions.azurewebsites.net/api', {
+      .withUrl('url', {
         accessTokenFactory: async () => {
-          const response = await fetch('https://medsecure-functions.azurewebsites.net/api/negotiate', {
+          const response = await fetch('url', {
             method: 'POST'
           });
           const negotiateResponse = await response.json();
