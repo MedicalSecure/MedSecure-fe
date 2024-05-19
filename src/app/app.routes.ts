@@ -8,17 +8,15 @@ import { UnitSelectorComponent } from './components/unitselector/unitselector.co
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
-import { ShipsSelectComponent } from './components/chips-select/chips-select.component';
 import { AddPrescriptionComponent } from './pages/prescription/add-prescription-component/add-prescription.component';
 import { TasksComponent } from './pages/tasks/tasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
-import { DoctorsDashboardComponent } from './pages/dashboards/doctors-dashboard/doctors-dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DoctorsDashboardComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'unit-care', component: UnitCareComponent },
   { path: 'visits', component: Visits },
   { path: 'widgets', component: WidgetsComponent },
