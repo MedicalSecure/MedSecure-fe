@@ -1,6 +1,7 @@
-
 import { Dispense } from '../components/schedule/schedule.component';
 import { ConsumptionPeriodType } from '../pages/prescription/stp4-add-medication/stp4-add-medication.component';
+
+export type styleClass = { [klass: string]: any } | null | undefined;
 
 export type PaginatedResult<TEntity> = {
   pageIndex: number;
@@ -26,12 +27,8 @@ export type ActivityView = {
   content: string;
   createdBy: string;
   creatorName: string;
-  activityTime : string;
+  activityTime: string;
 };
-
-
-export type styleClass = { [klass: string]: any } | null | undefined;
-
 
 export type commentType = {
   id?: string;
@@ -49,12 +46,12 @@ export type medicationType = {
   administrationHours: Dispense[];
   Caution?: string;
   comments: Array<commentType>;
-  summary?:object;
+  summary?: object;
 };
 
 export type Entity = {
-  createdAt:Date,
-  modifiedAt?:Date,
-  createdBy:string,
-  modifiedBy?:string,
-}
+  createdAt: Date;
+  modifiedAt?: Date;
+  createdBy: string;
+  modifiedBy?: string;
+};

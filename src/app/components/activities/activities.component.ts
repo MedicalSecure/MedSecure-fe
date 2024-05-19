@@ -166,35 +166,3 @@ export interface ActivityService {
     pageSize: number
   ): Observable<GetActivitiesResponse>;
 }
-
-/* 
-usage : 
-
-parent template:
-            <app-activities [service]='yourServiceName'></app-activities>
-
-parent constructor:  
-            constructor(public yourServiceName: YourServiceName) {}
-
-your YourServiceName must have :
-
-  getActivities(
-    pageIndex: number = 0,
-    pageSize: number = 7
-  ): Observable<GetActivitiesResponse> {
-    const params = new HttpParams()
-      .set('PageIndex', pageIndex.toString())
-      .set('PageSize', pageSize.toString());
-    let x = this.http.get<GetActivitiesResponse>(this.apiUrl + '/Activities', {
-      params,
-    }).pipe(
-      map((response) => {
-        //still testing dates
-        return parseDates(response);
-      })
-    );
-    return x;
-  }
-
-
-*/
