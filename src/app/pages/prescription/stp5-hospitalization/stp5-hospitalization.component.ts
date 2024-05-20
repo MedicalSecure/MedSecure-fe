@@ -56,9 +56,15 @@ export class Stp5HospitalizationComponent {
   }
 
   onClearSelectedDiet(){
+    if(this.myForm.get('diet')?.value == null)
+      return;
+
     this.myForm.patchValue({ diet: null });
   }
   onClearSelectedUnitCare(){
+    if(this.myForm.get('unitCare')?.value == null)
+      return;
+
     this.myForm.patchValue({ unitCare: null });
   }
 

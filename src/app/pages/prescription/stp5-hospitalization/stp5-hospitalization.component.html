@@ -8,7 +8,7 @@
           <mat-option *ngFor="let diet of DietList" [value]="diet">{{ diet.DietType }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon *ngIf="myForm.get('diet')?.value !== null" class="align-self-center fs-3 fw-bolder mb-4" style="color: red; width: 1.8rem; height: 1.8rem" (click)="onClearSelectedDiet()">
+      <mat-icon  class="align-self-center fs-3 fw-bolder mb-4" style=" width: 1.8rem; height: 1.8rem" [style]="myForm.get('diet')?.value == null ? 'color:grey' :'color:red'"  (click)="onClearSelectedDiet()">
         remove_circle_outline
       </mat-icon>
     </div>
@@ -24,7 +24,7 @@
           <mat-option *ngFor="let unit of UnitCareList" [value]="unit">{{ unit.title }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon *ngIf="myForm.get('unitCare')?.value !== null" class="align-self-center fs-3 fw-bolder mb-4" style="color: red; width: 1.8rem; height: 1.8rem" (click)="onClearSelectedUnitCare()">
+      <mat-icon class="align-self-center fs-3 fw-bolder mb-4" style="width: 1.8rem; height: 1.8rem" [style]="myForm.get('unitCare')?.value == null ? 'color:grey' :'color:red'" (click)="onClearSelectedUnitCare()">
         remove_circle_outline
       </mat-icon>
     </div>

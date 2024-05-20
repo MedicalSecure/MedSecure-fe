@@ -142,7 +142,10 @@ export class AddPrescriptionComponent implements DoCheck {
     };
     console.log(JSON.stringify(finalPrescription));
     this.prescriptionApiService.postPrescriptions(finalPrescription).subscribe(
-      (response) => console.log(response),
+      (response) => {
+        this.ShowPrescriptionList = true;
+        console.log(response)
+      },
       (error) => {
         console.error(error.status);
         console.error(error.error);
