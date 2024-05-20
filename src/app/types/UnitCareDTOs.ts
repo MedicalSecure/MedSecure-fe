@@ -1,3 +1,5 @@
+import { EqStatus } from "../enums/enum";
+
 export type GetUnitCareResponse = {
   unitCares: {
     pageIndex: number;
@@ -29,6 +31,7 @@ export type Equipment = {
   roomId: string;
   name: string;
   reference: string;
+  eqStatus: EqStatus
 };
 
 export type Personnel = {

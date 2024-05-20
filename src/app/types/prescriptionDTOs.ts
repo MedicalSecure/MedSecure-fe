@@ -2,6 +2,7 @@
 import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
 import { FamilyStatus, Gender } from '../enums/enum';
+import { UnitCareDTO } from './UnitCareDTOs';
 import { MedicationDto } from './medicationDTOs';
 
 
@@ -55,7 +56,7 @@ export type PrescriptionCreateDto = {
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyCreateDto[];
-  unitCareId?: string | null;//match these types
+  unitCare: UnitCareDTO;//match these types
   dietId?: string | null;
   createdAt: Date;
   createdBy: string;

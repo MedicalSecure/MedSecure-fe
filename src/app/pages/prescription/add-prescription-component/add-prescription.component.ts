@@ -1,4 +1,4 @@
-import { Component, DoCheck, SimpleChanges } from '@angular/core';
+import { Component, DoCheck, SimpleChanges, ViewChild } from '@angular/core';
 import { Stp3AddDiagnosticComponent } from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
 import { Stp1PatientSelection } from '../stp1-patient-selection/stp1-patient-selection.component';
 import { Stp4AddMedicationComponent } from '../stp4-add-medication/stp4-add-medication.component';
@@ -31,6 +31,7 @@ import {
 } from '../../../components/schedule/schedule.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 import { RegisterForPrescription } from '../../../types/registerDTOs';
+import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
 
 @Component({
   selector: 'app-add-prescription',
@@ -46,11 +47,15 @@ import { RegisterForPrescription } from '../../../types/registerDTOs';
     RouterModule,
     CommonModule,
     PrescriptionListComponent,
+    ErrorMessageComponent
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent implements DoCheck {
+  @ViewChild(ErrorMessageComponent) errorMessageComponent!: ErrorMessageComponent;
+
+
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
   selectedDiagnosis: DiagnosisDto[] = [];
@@ -62,6 +67,8 @@ export class AddPrescriptionComponent implements DoCheck {
   wizardSteps: wizardStepType[] = _steps;
   Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
 
+
+
   eventsSubject: Subject<void> = new Subject<void>();
 
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
@@ -71,6 +78,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
   ngOnInit() {
     this._updateButtonsState();
+
   }
 
   prevStepNumber: number;
@@ -112,6 +120,15 @@ export class AddPrescriptionComponent implements DoCheck {
     );
     let doctorIdd = '55555555-5555-5555-5555-555555555554'; //TODO
 
+    let emptyUnitCare= {
+      id: "",
+      type: "",
+      description: "",
+      title: "",
+      rooms: [],
+      personnels: []
+    };
+
     const finalPrescription: PrescriptionCreateDto = {
       registerId: this.selectedRegister.id,
       doctorId: doctorIdd, //TODO
@@ -120,17 +137,24 @@ export class AddPrescriptionComponent implements DoCheck {
       createdAt: new Date(),
       createdBy: doctorIdd, //TODO
       posologies: filteredPosologies,
-      unitCareId: this.Hospitalization.unitCare?.id,
+      unitCare: this.Hospitalization.unitCare ?? emptyUnitCare ,
       dietId: this.Hospitalization.diet?.Id,
     };
     console.log(JSON.stringify(finalPrescription));
     this.prescriptionApiService.postPrescriptions(finalPrescription).subscribe(
       (response) => console.log(response),
       (error) => {
-        console.error(error);
+        console.error(error.status);
+        console.error(error.error);
+        this.displayNewErrorMessage(error.error.message)
       }
     );
   }
+
+  displayNewErrorMessage(title:string,duration= 4,content:string = "Error : ") {
+    this.errorMessageComponent.openSnackBar(title,duration,content);
+  }
+
 
   // arrow function to hold the callback context ?? xD
   validatePageSwitch = (index: number): boolean => {

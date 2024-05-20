@@ -19,7 +19,8 @@
               {
                 "id": "d82ef588-4419-4b8b-8b69-8fde9c53e35f",
                 "roomId": "3c78859b-d22f-4a4e-8537-b51d6ecf11d0",
-                "name": "Equipment 1",
+                "name": "Bed",
+                "eqStatus": 1,
                 "reference": "Ref 1"
               }
             ]
@@ -81,8 +82,10 @@
               {
                 "id": "33d3a631-52e9-45a9-9332-7dd96cb3e35e",
                 "roomId": "36c8e632-69c2-4094-baf5-bf03a033a9ff",
-                "name": "Equipment 3",
+                "name": "Bed",
+                "eqStatus": 1,
                 "reference": "Ref 3"
+                
               }
             ]
           }
@@ -112,8 +115,9 @@
               {
                 "id": "4d196fbf-fb15-46b4-b1d2-b9ff9ef7cb45",
                 "roomId": "aaf9a0f7-bb1a-41c0-bf1b-d1dbb7845ed3",
-                "name": "Equipment 4",
-                "reference": "Ref 4"
+                "reference": "Ref 4",
+                "name": "Bed",
+                "eqStatus": 1
               }
             ]
           }
@@ -143,7 +147,8 @@
               {
                 "id": "ecbc82ff-5745-4ba4-9af8-93f0a9b82fe5",
                 "roomId": "18fd95e3-d48d-4f47-892d-ff94de5f072b",
-                "name": "Equipment 5",
+                "name": "Bed",
+                "eqStatus": 2,
                 "reference": "Ref 5"
               }
             ]
@@ -174,7 +179,8 @@
               {
                 "id": "b36a231e-f205-4d2e-9c97-1f504f8a7585",
                 "roomId": "8ed51781-d238-45f7-9866-fc55cf4b0891",
-                "name": "Equipment 6",
+                "name": "Bed",
+                "eqStatus": 0,
                 "reference": "Ref 6"
               }
             ]
