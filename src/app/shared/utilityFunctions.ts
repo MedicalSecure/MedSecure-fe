@@ -1,5 +1,6 @@
-import { Status } from '../enums/enum';
-import { History } from '../types/registerDTOs';
+import { PrescriptionStatus, Status } from '../enums/enum';
+import { PosologyDto, PrescriptionDto } from '../types/prescriptionDTOs';
+import { History, RegisterForPrescription } from '../types/registerDTOs';
 
 export function calculateAge(dateOfBirth: Date): number {
   const currentDate = new Date();
@@ -94,9 +95,11 @@ export function getRegistrationStatus(
   // Return the status of the first history object in the sorted list
   return sortedHistory[0].status;
 }
+
+//Get the last registration date from registrations history
 export function getRegistrationDate(
   historyList: History[] | null | undefined,
-  backUpRegisterDate:string | Date="1999/9/9",
+  backUpRegisterDate: string | Date = '1999/9/9',
   registerId: string = 'not specified'
 ): Date {
   if (!historyList) {
@@ -124,4 +127,53 @@ export function getRegistrationDate(
   return sortedHistory[0].date;
 }
 
+export function getActivePrescriptions(
+  register: RegisterForPrescription
+): PrescriptionDto[] {
+  let activePrescriptions: PrescriptionDto[] = [];
 
+  register.prescriptions?.forEach(prescription =>{
+    if(!(prescription.status == PrescriptionStatus.Active || prescription.status == PrescriptionStatus.Pending))
+      return; // continue (return from current prescription arrow fn and not from getActivePrescriptions)
+    
+
+    for (const posology of prescription.posologies) {
+      if(posology.isPermanent || posology.endDate == null) {
+        activePrescriptions.push(prescription);
+        return; // go to next prescription
+      }
+
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0); // Set the time to 00:00:00
+      if(posology.endDate < todayMidnight){
+        activePrescriptions.push(prescription);
+        return; // go to next prescription
+      }
+    }
+  })
+  return activePrescriptions;
+}
+
+export function getActiveMedications(register: RegisterForPrescription):PosologyDto[] {
+
+  let activePosologies: PosologyDto[] = [];
+
+  register.prescriptions?.forEach(prescription =>{
+    if(!(prescription.status == PrescriptionStatus.Active || prescription.status == PrescriptionStatus.Pending))
+      return; // continue (return from current prescription arrow fn and not from getActivePrescriptions)
+    
+    for (const posology of prescription.posologies) {
+      if(posology.isPermanent || posology.endDate == null) {
+        activePosologies.push(posology);
+        continue;//go to next posology
+      }
+
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0); // Set the time to 00:00:00
+      if(posology.endDate < todayMidnight){
+        activePosologies.push(posology);
+      }
+    }
+  })
+  return activePosologies;
+}
