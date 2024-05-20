@@ -11,17 +11,22 @@ export interface BacPatientResponse {
   export interface bacpatient {
     id: string;
     prescription: Prescription;
-    bed: number;
+   
     nurseId: string;
     served: number;
     toServe: number;
     status: number;
-    room : Room ; 
+   
   }
   export interface Room {
     id: string;
     roomNumber: number;
     status: number;
+    equipment : Equipment
+  }
+  export interface Equipment {
+    id: string;
+   reference : string;
   }
   export interface Prescription {
     id: string;
@@ -34,6 +39,7 @@ export interface BacPatientResponse {
     id: string;
     title: string;
     description: string;
+    room : Room
   }
   export interface Register {
     id: string;

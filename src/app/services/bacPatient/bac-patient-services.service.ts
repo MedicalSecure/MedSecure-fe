@@ -21,7 +21,7 @@ export class BacPatientService implements ActivityService {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
-    let x = this.http.get<GetActivitiesResponse>("https://localhost:5055/v1/bacPatient"+ '/Activities', {
+    let x = this.http.get<GetActivitiesResponse>("https://localhost:5055/api/v1/Prescription/Activities", {
       params,
     }).pipe(
       map((response) => {
