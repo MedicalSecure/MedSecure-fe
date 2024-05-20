@@ -19,25 +19,26 @@ export class PatientService {
 
     constructor(private http: HttpClient) { }
 
-    // getPatients(): Observable<Patients[]> {
-    //     return this.http.get<any>('assets/data/patients.json');
-    // }
-
     getPatients(): Observable<Patients[]> {
+        return this.http.get<any>('assets/data/patients.json');
+    }
+
+    getPatientsload(): Observable<Patients[]> {
         return this.http.get<PatientResponse>('assets/data/patients.json').pipe(
             map(response => response.patients.data)
         );
     }
 
+    
 
     getCountPatientRegister(): Observable<number> {
-        return this.getPatients().pipe(
+        return this.getPatientsload().pipe(
             map(patients => patients.filter(patient => patient.status === 'Registered').length)
           );
     }
 
     getTopUrgencyPatients(): Observable<Patients[]> {
-        return this.getPatients().pipe(
+        return this.getPatientsload().pipe(
             map(patients => patients.filter(patient => patient.topUrgency === true))
         );
     }

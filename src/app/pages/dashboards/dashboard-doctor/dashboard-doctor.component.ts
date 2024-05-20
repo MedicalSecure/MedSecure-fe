@@ -8,10 +8,11 @@ import {RendementPrescriptionComponent} from '../../../components/widgets/rendem
 import {RecommendedMedicationsComponent} from '../../../components/widgets/recommended-medications/recommended-medications.component';
 import {MedicationsPrescribedComponent} from '../../../components/widgets/medications-prescribed/medications-prescribed.component';
 import { Patients } from '../../../model/patients';
+import { ActivitiesComponent } from '../../../components/activities/activities.component';
 @Component({
   selector: 'app-dashboard-doctor',
   standalone: true,
-  imports: [CommonModule,RendementPrescriptionComponent,RecommendedMedicationsComponent,MedicationsPrescribedComponent],
+  imports: [CommonModule,RendementPrescriptionComponent,RecommendedMedicationsComponent,MedicationsPrescribedComponent,ActivitiesComponent],
   templateUrl: './dashboard-doctor.component.html',
   styleUrl: './dashboard-doctor.component.css'
 })
@@ -28,7 +29,7 @@ export class DashboardDoctorComponent {
   totalPrescriptionCount:number =0;
   PatientPrescribedcount:number=0;
   topUrgencyPatients: Patients[] = [];
-  constructor(private visitService: VisitService,
+  constructor(public visitService: VisitService,
     private patientService: PatientService,
     private unitCareService: UnitCareService,
     private prescriptionService :PrescriptionService) { }
