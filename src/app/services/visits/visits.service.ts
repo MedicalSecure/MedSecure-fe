@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import {TypeVisit} from '../interface/TypeVisit'
-import {LocationVisit} from '../interface/LocationVisit'
-import { VisitDtoType } from '../interface/VisitDtoType';
+import {TypeVisit} from '../../interface/TypeVisit'
+import {LocationVisit} from '../../interface/LocationVisit'
+import { VisitDtoType } from '../../interface/VisitDtoType';
 
 @Injectable({
   providedIn: 'root'
@@ -88,7 +88,7 @@ export class VisitService {
         return this.http.delete(`http://localhost:5004/v1/visits/${visitId}?Id=${visitId}`);
     }
 
-     // Obtenir le nombre de visites par jour
+     // Obtenir liste de nbre vistes par jour
   getVisitsCountByDay(): Observable<{ [key: string]: number }> {
     return this.getVisits().pipe(
       map(visits => {
@@ -103,6 +103,29 @@ export class VisitService {
         return visitCounts;
       })
     );}
+    getVisitsCountByToday(): Observable<number> {
+      return this.getVisits().pipe(
+          map(visits => {
+            //.toLocaleDateString() pour formater la date en utilisant le fuseau horaire local
+            //Le format en-CA produit des dates au format YYYY-MM-DD
+              const today = new Date().toLocaleDateString('en-CA'); 
+              let visitCountToday = 0;
+  
+              visits.forEach((visit: any) => {
+                  const visitDate = new Date(visit.start).toLocaleDateString('en-CA');
+                  if (visitDate === today) {
+                      visitCountToday++;
+                  }
+              });
+  
+              return visitCountToday;
+          })
+      );
+  }
+  
+  
+  
+  
 
    
       getTotalVisitsCount(): Observable<number> {

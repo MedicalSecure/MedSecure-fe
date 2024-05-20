@@ -1,6 +1,132 @@
-[
-    { "id": 1, "name": "Unité de soin 1" },
-    { "id": 2, "name": "Unité de soin 2" },
-    { "id": 3, "name": "Unité de soin 3" }
-  ]
-  
+{
+  "unitCares": {
+    "pageIndex": 0,
+    "pageSize": 10,
+    "count": 2,
+    "data": [
+      {
+        "id": "c762c463-e21b-4077-b5a8-4ae424a112c8",
+        "type": "string",
+        "description": "string",
+        "title": "string",
+        "unitStatus": 2,
+        "rooms": [
+          {
+            "id": "dee87681-80da-4286-ac1f-dedb0e5c6905",
+            "unitCareId": "c762c463-e21b-4077-b5a8-4ae424a112c8",
+            "roomNumber": 0.00,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "22e2ae85-100f-4029-bfa3-19cb74457956",
+                "roomId": "dee87681-80da-4286-ac1f-dedb0e5c6905",
+                "name": "string",
+                "reference": "string",
+                "eqStatus": 1,
+                "eqType": 1
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "9c947715-1fac-49b8-9080-ebb996a0cfff",
+            "unitCareId": "c762c463-e21b-4077-b5a8-4ae424a112c8",
+            "name": "string",
+            "shift": 1,
+            "gender": 1
+          }
+        ]
+      },
+      {
+        "id": "c5f0f9a5-7bf6-4648-b4ca-d2e6dd327a82",
+        "type": "General",
+        "description": "this is the first unit",
+        "title": "Unit1",
+        "unitStatus": 2,
+        "rooms": [
+          {
+            "id": "ee0240ae-e0e3-4e5f-a13b-15412199640c",
+            "unitCareId": "c5f0f9a5-7bf6-4648-b4ca-d2e6dd327a82",
+            "roomNumber": 103.00,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "a03e8579-5ac3-452f-8a4b-1f9f49ae62ea",
+                "roomId": "ee0240ae-e0e3-4e5f-a13b-15412199640c",
+                "name": "Matériel de perfusion ",
+                "reference": "253DMT",
+                "eqStatus": 2,
+                "eqType": 7
+              },
+              {
+                "id": "6735ad47-9147-4c17-a6e3-a47041398280",
+                "roomId": "ee0240ae-e0e3-4e5f-a13b-15412199640c",
+                "name": "Respirateurs",
+                "reference": "21354DMT",
+                "eqStatus": 2,
+                "eqType": 4
+              },
+              {
+                "id": "497713ed-2c75-4950-a83b-f5741cd6e33f",
+                "roomId": "ee0240ae-e0e3-4e5f-a13b-15412199640c",
+                "name": "Défibrillateurs",
+                "reference": "25354DMT",
+                "eqStatus": 2,
+                "eqType": 15
+              }
+            ]
+          },
+          {
+            "id": "5ac4cf67-f476-45e3-a782-2db76ed397e4",
+            "unitCareId": "c5f0f9a5-7bf6-4648-b4ca-d2e6dd327a82",
+            "roomNumber": 102.00,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "7ea388db-4bc2-44cd-a4d3-3930474b0493",
+                "roomId": "5ac4cf67-f476-45e3-a782-2db76ed397e4",
+                "name": "TABLE",
+                "reference": "25354DMT",
+                "eqStatus": 1,
+                "eqType": 9
+              },
+              {
+                "id": "4ae3254f-7f46-4a6d-9710-789559cb2c51",
+                "roomId": "5ac4cf67-f476-45e3-a782-2db76ed397e4",
+                "name": "bed",
+                "reference": "253DMT",
+                "eqStatus": 2,
+                "eqType": 1
+              },
+              {
+                "id": "8eee750e-77f3-4292-b9cc-80c514ea4f7a",
+                "roomId": "5ac4cf67-f476-45e3-a782-2db76ed397e4",
+                "name": "Respirateurs",
+                "reference": "21354DMT",
+                "eqStatus": 2,
+                "eqType": 6
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "ddfa6df1-ea8b-49b3-bae3-2caccce78f80",
+            "unitCareId": "c5f0f9a5-7bf6-4648-b4ca-d2e6dd327a82",
+            "name": "emily",
+            "shift": 2,
+            "gender": 2
+          },
+          {
+            "id": "5abdceb4-e164-4510-9d00-f8287bbe7692",
+            "unitCareId": "c5f0f9a5-7bf6-4648-b4ca-d2e6dd327a82",
+            "name": "olivier",
+            "shift": 1,
+            "gender": 1
+          }
+        ]
+      }
+    ]
+  }
+}

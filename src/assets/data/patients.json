@@ -25,7 +25,10 @@
         "state": "California",
         "zipCode": 12345,
         "familyStatus": 1,
-        "children": 2
+        "children": 2,
+        "status": "Registered",
+        "topUrgency": true
+        
       },
       {
         "id": "e6510a1b-3d59-4903-9a6f-7a27e3b15aef",
@@ -48,7 +51,9 @@
         "state": "New York",
         "zipCode": 54321,
         "familyStatus": 2,
-        "children": 0
+        "children": 0,
+        "status": "Registered",
+        "topUrgency": false
       },
       {
         "id": "f7ff7c44-fa63-4136-b10e-6d51458e5b7a",
@@ -71,7 +76,9 @@
         "state": "Texas",
         "zipCode": 67890,
         "familyStatus": 0,
-        "children": 1
+        "children": 1,
+        "status": "Out",
+        "topUrgency": true
       }
     ]
   }

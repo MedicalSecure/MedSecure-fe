@@ -8,7 +8,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MedicationService } from '../../services/medication.service';
+import { MedicationService } from '../../services/medication/medication.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';

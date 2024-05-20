@@ -5,4 +5,5 @@ export type Presecription= {
   date_prescribed : string
   patient_name :string
   doctor_name :string
+  status:string;
 }
