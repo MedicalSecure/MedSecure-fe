@@ -1,82 +1,100 @@
-<div class="d-flex justify-content-between align-items-start" style="height: auto;" >
-    <div class="flex-1">
-        <div *ngIf="showChoices" class="p-2 mb-2">
-            <div class="d-flex flex-row flex-wrap m-2">
-                <ng-container>
-                    <td>
-                        <div class="d-flex flex-wrap" style="align-self: center;">
-                            <ng-container *ngFor="let currenthours of selectedHours; let hourIndex = index">
-                                <div class="card mr-1 w-3 h-3 mb-4 cursor-pointer bg-primary color-white"
-                                    style="width: 3rem; height: 3rem; "
-                                    *ngFor="let currentitem of currenthours; let itemIndex = index">
-                                    <div class="card-header p-0 text-center">
-                                        <p class="font-weight-normal text-white mb-0">{{ currentitem.hour }} H</p>
-                                    </div>
-                                    <div class="card-body p-0 text-center">
-                                        <input class="form-control text-center" style="padding: 0%; background-color: white;"
-                                            [value]="formatNumber(currentitem.quantityBE)" type="text" readonly />
-                                    </div>
-                                      <div class="card-body p-0 text-center" >
-                                        <input class="form-control text-center" style="padding: 0%; background-color: white;"
-                                            [value]="formatNumber(currentitem.quantityAE)" type="text" readonly />
-                                    </div>
-                                    <div class="card-body p-0 text-center "
-                                    style="margin-top: -10px; transform: scale(1.2);">
-                                    <input type="checkbox" class="form-check-input" [checked]="currentitem.isSelected" (change)="toggleCheckbox(currentitem)" [disabled]="currentitem.isSelected" />
-                                </div>
-                             
-                                 
-                                </div>
-                            </ng-container>
-                        </div>
-                    </td>
-                </ng-container>
+<div class="row d-flex justify-content-between align-items-start">
+  <div style="margin-top: 48px; width: 35px" class="col-md-1">
+    <i style="margin-right: 5px; color: #203bad; font-size: 30px" class="material-icons">dining</i>
+  </div>
+  <div class="col">
+    <div class="d-flex flex-wrap">
+      <div class="d-flex me-2" *ngFor="let partOfDayHours of partsOfDayHoursMapped; let partOfDayIndex = index">
+        <div class="py-1" *ngFor="let hourItem of partOfDayHours; let hourIndex = index">
+          <div
+            *ngIf="showEmptyCases || (!showEmptyCases && (hourItem.afterMeal?.Quantity || hourItem.beforeMeal?.Quantity))"
+            class="mr-1 cursor-pointer {{ hourClasses[hourItem.hour] }} color-white"
+            style="width: 2.2rem; height: fit-content; border-radius: 8px"
+          >
+            <div class="card-header p-0 text-center" [title]="partsOfDayNames[hourItem.hour]">
+              <p class="mb-0 font-weight-normal text-white">{{ hourItem.hour }} H</p>
             </div>
+            <div class="card-body p-0 text-center bg-secondary color-white" style="height: fit-content">
+              <div (contextmenu)="$event.preventDefault(); onClick(-1, hourItem, true)" class="parent" title="Before food dispense quantity">
+                <input
+                  class="form-control text-center"
+                  style="padding: 0%"
+                  [disabled]="isDispenseQuantityReadOnly"
+                  [value]="hourItem.beforeMeal?.Quantity ? hourItem.beforeMeal?.Quantity : ''"
+                  (input)="onInputChange($event)"
+                  pattern="[0-9]*"
+                  (change)="onInputFinalChange($event, partOfDayIndex, hourIndex, hourItem, true)"
+                  type="text"
+                  (click)="onClick(1, hourItem, true)"
+                  (wheel)="$event.preventDefault(); onScroll($event, hourItem, true)"
+                />
+                <div class="child d-flex justify-content-evenly">
+                  <!-- [disabled]="(canUncheckBoxAfterChecking == false) && hourItem.beforeMeal!.isValid" -->
+                  @if (canValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Nurse validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.beforeMeal!.isValid"
+                    [checked]="hourItem.beforeMeal!.isValid"
+                    (change)="onIsValidCheckBoxClick($event, hourItem, true)"
+                    id="nurseInput"
+                  />
+                  } @if (canPostValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Doctor validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.beforeMeal!.isPostValid"
+                    [checked]="hourItem.beforeMeal!.isPostValid"
+                    (change)="onIsPostValidCheckBoxClick($event, hourItem, true)"
+                    id="doctorInput"
+                  />
+                  }
+                </div>
+              </div>
+              <mat-divider class="m-1 mt-2" style="border-top-color: #203bad"></mat-divider>
+              <div (contextmenu)="$event.preventDefault(); onClick(-1, hourItem, false)" class="parent" title="After food dispense quantity">
+                <input
+                  class="form-control text-center"
+                  style="padding: 0%"
+                  [disabled]="isDispenseQuantityReadOnly"
+                  [value]="hourItem.afterMeal?.Quantity ? hourItem.afterMeal?.Quantity : ''"
+                  (input)="onInputChange($event)"
+                  pattern="[0-9]*"
+                  (change)="onInputFinalChange($event, partOfDayIndex, hourIndex, hourItem, false)"
+                  type="text"
+                  (click)="onClick(1, hourItem, false)"
+                  (wheel)="$event.preventDefault(); onScroll($event, hourItem, false)"
+                />
+                <div class="child d-flex justify-content-evenly">
+                  @if (canValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Nurse validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.afterMeal!.isValid"
+                    [checked]="hourItem.afterMeal!.isValid"
+                    (change)="onIsValidCheckBoxClick($event, hourItem, false)"
+                    id="nurseInput"
+                  />
+                  } @if (canPostValid) {
+                  <input
+                    class="form-check-input checkbox"
+                    title="Doctor validation"
+                    type="checkbox"
+                    [disabled]="canUncheckBoxAfterChecking == false && hourItem.afterMeal!.isPostValid"
+                    [checked]="hourItem.afterMeal!.isPostValid"
+                    (change)="onIsPostValidCheckBoxClick($event, hourItem, false)"
+                    id="doctorInput"
+                  />
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div *ngIf="!showChoices" class="p-2 mb-2">
-            <table class="table table-bordered w-auto">
-                <thead>
-                    <tr>
-                        <th>Jours</th>
-                        <th class="text-center font-weight-bold">Horaires</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <div class="d-flex flex-wrap">
-                                    <ng-container *ngFor="let currenthours of selectedHours; let hourIndex = index">
-                                        <div class="card mr-1 w-3 h-3 mb-4 cursor-pointer bg-primary color-white"
-                                            style="width: 3rem; height: 3rem;"
-                                            *ngFor="let currentitem of currenthours; let itemIndex = index"
-                                            (click)="handleClickEvent(currentitem, hourIndex, itemIndex)">
-                                            <div class="card-header p-0 text-center">
-                                                <p class="mb-0" class="font-weight-normal text-white">{{
-                                                    currentitem.hour }} H</p>
-                                            </div>
-                                            <div class="card-body p-0 text-center">
-                                                <input (keydown)="onKeyDown($event, hourIndex, itemIndex)"
-                                                    class="form-control text-center" style="padding: 0%; background-color: white;"
-                                                    [value]="formatNumber(currentitem.quantity)" type="text" readonly/>
-                                            </div>
-                                            <div class="card-body p-0 text-center "
-                                                style="margin-top: -10px; transform: scale(1.2);">
-                                                <input type="checkbox" class="form-check-input"
-                                                    [checked]="currentitem.isSelected"
-                                                    (change)="toggleCheckbox(currentitem )" />
-                                            </div>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-        </div>
+      </div>
     </div>
-  
+  </div>
 </div>
