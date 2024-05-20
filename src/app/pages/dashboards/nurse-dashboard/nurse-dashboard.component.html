@@ -5,34 +5,44 @@
         <div class="col-sm-12">
           <div class="statistics-details d-flex align-items-center justify-content-between">
             <div>
-              <p class="statistics-title">Patient Recovery Rate</p>
-              <h3 class="rate-percentage">32.53%</h3>
-              <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-0.5%</span></p>
+              <p class="statistics-title">Patient's Number</p>
+              <h3 class="rate-percentage">{{patientNumber}}</h3>
+                <h3 class="rate-percentage"><span class="loading-circle"></span></h3>
+              <p class="text-muted d-flex"><span>the full number of patients </span></p>
             </div>
             <div>
-              <p class="statistics-title">Hospital Admissions</p>
-              <h3 class="rate-percentage">7,682</h3>
-              <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.1%</span></p>
+              <p class="statistics-title">Checked In Patients</p>
+              <h3 class="rate-percentage">{{checkedIn}}</h3>
+              <p class="text-muted d-flex"><span>for today</span></p>
             </div>
             <div>
-              <p class="statistics-title">New Cases</p>
-              <h3 class="rate-percentage">68.8</h3>
-              <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>68.8</span></p>
+              <p class="statistics-title">Checked Out Patients </p>
+              <h3 class="rate-percentage">{{checkedOut}}</h3>
+              <h3 class="rate-percentage"><span class="loading-circle"></span></h3>
+              <p class="text-muted d-flex"><span>for today</span></p>
             </div>
             <div class="d-none d-md-block">
-              <p class="statistics-title">Avg. Hospital Stay</p>
-              <h3 class="rate-percentage">2m:35s</h3>
-              <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>+0.8%</span></p>
+              <p class="statistics-title">Pending Tasks</p>
+          
+              <h3 class="rate-percentage"><span class="loading-circle"></span></h3>
+              <h3 class="rate-percentage">{{pending}}</h3>
+              <p class="text-muted d-flex"><span>patients not served </span></p>
             </div>
             <div class="d-none d-md-block">
-              <p class="statistics-title">ICU Occupancy</p>
-              <h3 class="rate-percentage">68.8</h3>
-              <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>68.8</span></p>
+              <p class="statistics-title">On Progress Tasks </p>
+              
+              <h3 class="rate-percentage"><span class="loading-circle"></span></h3>
+              <h3 class="rate-percentage">{{onProgress}}</h3>
+              <p class="text-muted d-flex"><span>patients being served </span></p>
+
             </div>
             <div class="d-none d-md-block">
-              <p class="statistics-title">Ventilator Usage</p>
-              <h3 class="rate-percentage">2m:35s</h3>
-              <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>+0.8%</span></p>
+              <p class="statistics-title">Completed Taks </p>
+             
+              <h3 class="rate-percentage"><span class="loading-circle"></span></h3>
+              <h3 class="rate-percentage">{{completed}}</h3>
+              <p class="text-muted d-flex"><span>patients ready to leave </span></p>
+
             </div>
           </div>
         </div>
