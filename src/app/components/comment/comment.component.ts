@@ -15,24 +15,10 @@ export class CommentComponent {
   @Input()DATA: bacpatient;
   @Input() id : string ; 
   todayDate: string = new Date().getDate().toString();
-  constructor(private http: HttpClient , private bacPatientService :BacPatientService) {
+  constructor(private http: HttpClient , public bacPatientService :BacPatientService) {
 
 
   }
-  onCommentsend(commentInput: HTMLInputElement) {
-    const newCommentContent = commentInput.value.trim();
-    if (newCommentContent !== '') {
-      const newComment: Comment = {
-        id: '', // Generate a unique ID here if needed
-        posologyId: '', // Set the posology ID if applicable
-        label: '', // Set the label if applicable
-        content: newCommentContent
-      };
-      this.note.push(newComment);
-      commentInput.value = '';
-      this.bacPatientService.updateComment(this.id, newComment);
-    }
-  }
- 
+
 
 }

@@ -31,7 +31,6 @@ export class BacPatientService implements ActivityService {
     );
     return x;
   }
-
   getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) : bacpatient[] {
     this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
       .subscribe(
@@ -55,17 +54,7 @@ export class BacPatientService implements ActivityService {
       );
       return this.data_source ; 
   }
-  updateComment( id : string ,note:Comment){
-    const body = { Id: id, Note: note };
-    return this.http.put('https://localhost:6065/v1/bacPatient/note', body).subscribe(response => {
-    
-    },
-    error => {
-      console.error('Error:', error); 
-    }
-  );
-
-   }
+  
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
     return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
@@ -77,7 +66,23 @@ export class BacPatientService implements ActivityService {
   );
 
    }
-   
+   updateBacPatientComment(bacPatient : bacpatient , Comment : string){
+    bacPatient.prescription.posologies.forEach(pos => {
+      pos.comments.forEach(com =>{
+        com.content = Comment ;
+      })
+    })
+    const body = { "bacPatient": bacPatient };
+
+    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+ 
+    },
+    error => {
+      console.error('Error:', error); 
+    }
+  );
+
+   }
 }
 export function parseDates<T>(response:T):T{
 

@@ -63,10 +63,10 @@ dataSource = new MatTableDataSource(ELEMENT_DATA);
   getUniqueRooms(): Map<number, bacpatient[]> {
     const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
     this.dataList.forEach(item => {
-      if (!uniqueRoomsMap.has(item.room.roomNumber)) {
-        uniqueRoomsMap.set(item.room.roomNumber, []);
+      if (!uniqueRoomsMap.has(item.prescription.unitCare.room.roomNumber)) {
+        uniqueRoomsMap.set(item.prescription.unitCare.room.roomNumber, []);
       }
-      const patientsInRoom = uniqueRoomsMap.get(item.room.roomNumber);
+      const patientsInRoom = uniqueRoomsMap.get(item.prescription.unitCare.room.roomNumber);
       if (patientsInRoom) {
         patientsInRoom.push(item);
       }

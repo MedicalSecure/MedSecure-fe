@@ -91,13 +91,13 @@
             <ng-container matColumnDef="room">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Room</th>
               <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)">
-                {{ element.unitCare.room.roomNumber }}
+                {{ element.prescription.unitCare.room.roomNumber }}
               </td>
             </ng-container>
             <ng-container matColumnDef="bed">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Bed</th>
               <td mat-cell *matCellDef="let element" class="element" (click)="toggleExpanded(element)">
-                {{ element.unitCare.room.equipment.reference}}
+                {{ element.prescription.unitCare.room.equipment.reference}}
               </td>
             </ng-container>
             <ng-container matColumnDef="patient">
@@ -161,7 +161,7 @@
                         <td class="element name-cell" mat-cell *matCellDef="let posology"
                           style="position: relative; top: 0%">
                           
-                          <app-comment [note]="posology.comments" [id]="posology.id"></app-comment>
+                          <app-comment  [DATA]="element" ></app-comment>
 
                         </td>
                       </ng-container>
