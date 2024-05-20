@@ -22,7 +22,7 @@ import {
   GetRegistrationsResponse,
   RegisterDto,
 } from '../../../types/registerDTOs';
-import { Status } from '../../../enums/enum';
+import { PrescriptionStatus, Status } from '../../../enums/enum';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   calculateAge,
@@ -56,16 +56,6 @@ export class PrescriptionListComponent implements OnInit {
   prescriptionsGroupedByRegisterIds: { [key: string]: PrescriptionDto[] } = {};
   isLoading: boolean = false;
 
-  get prescriptions(): PrescriptionDto[] {
-    let result: PrescriptionDto[] = [];
-    this.registrations.forEach((register) => {
-      if (register.prescriptions && register.prescriptions.length > 0)
-        result = [...result, ...register.prescriptions];
-    });
-    debugger;
-    return result;
-  }
-
   constructor(private prescriptionApiService: PrescriptionApiService) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -76,8 +66,6 @@ export class PrescriptionListComponent implements OnInit {
     }
   }
   ngOnInit() {
-    //this.fetchPrescriptions();
-    //this.fetchRegistrations();
     this.fetchRegistrationsWithPrescriptions();
   }
 
@@ -100,58 +88,15 @@ export class PrescriptionListComponent implements OnInit {
     this.onClickDeselectPrescription();
   }
 
-/*   fetchPrescriptions() {
-    this.isLoading=true;
-    this.prescriptionApiService.getPrescriptions().subscribe(
-      (response: GetPrescriptionsResponse) => {
-        this.prescriptions = response.prescriptions.data.map(
-          (prescription) => ({
-            ...prescription,
-            createdAt: this._formatDate(prescription.createdAt),
-            //lastModified: this._formatDate(prescription.)
-          })
-        );
-        //debugger;
-      },
-      (error: any) => {
-        console.error('Error fetching prescriptions:', error);
-      },
-      () => {
-        // Completed Fetching
-        this.isLoading = false;
-      }
-    );
-  } 
-
-  fetchRegistrations() {
-    this.isLoading = true;
-    this.prescriptionApiService.getRegistrations().subscribe(
-      (response: GetRegistrationsResponse) => {
-        this.registrations = response.registrations.data.map(
-          (registration) => ({
-            ...registration,
-            createdAt: this._formatDate(registration.createdAt),
-            //lastModified: this._formatDate(prescription.)
-          })
-        );
-       //debugger; 
-      },
-      (error: any) => {
-        console.error('Error fetching registrations:', error);
-      },
-      () => {
-        // Completed Fetching
-        this.isLoading = false;
-      }
-    );
-  }
- */
   async fetchRegistrationsWithPrescriptions() {
+    this.isLoading = true;
     var response =
       await PrescriptionApiService.getRegistrationsWithPrescriptions(
         this.prescriptionApiService
       );
     this.registrations = [...response];
+    this.isLoading = false;
+      
   }
 
   onClickRefresh() {
@@ -159,9 +104,14 @@ export class PrescriptionListComponent implements OnInit {
     this.fetchRegistrationsWithPrescriptions();
   }
 
-  getStatus(register: RegisterDto): Status {
+  getRegisterStatus(register: RegisterDto): Status {
     return getPatientStatusFromRegister(register);
   }
+
+  getPrescriptionStatus(prescription : PrescriptionDto): string {
+    return getPrescriptionStatus(prescription);
+  }
+
 
   getDateString(
     dateToFormat: Date,
@@ -205,4 +155,24 @@ export function getPatientStatusFromRegister(register: RegisterDto): Status {
   // Now `history` is sorted by date
   let lastOne = histories[0];
   return lastOne.status;
+}
+
+export function getPrescriptionStatus(prescription: PrescriptionDto): string {
+  switch (prescription.status) {
+    case PrescriptionStatus.Draft:
+      return "Draft";
+    case PrescriptionStatus.Pending:
+      return "Pending";
+    case PrescriptionStatus.Active:
+      return "Active"; // Done: validée
+    case PrescriptionStatus.Rejected:
+      return "Rejected";
+    case PrescriptionStatus.Discontinued:
+      return "Discontinued";
+    case PrescriptionStatus.Completed:
+      return "Completed";
+    // Add cases for other statuses if they are uncommented in the enum
+    default:
+      return "Unknown Status";
+  }
 }

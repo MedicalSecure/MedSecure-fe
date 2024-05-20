@@ -35,8 +35,13 @@
               [validatePageSwitch]="validatePageSwitch"
             ></app-wizard-header>
 
-            <!-- Wizard content -->
-            <div class="wizard-container" style="height: 490px; overflow-y: auto">
+
+            <!-- Wizard content if loading  -->
+            <div class="wizard-container" style="height: 490px; overflow-y: auto" [className]="isPageLoading==false && 'd-none'" >
+              <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
+            </div>
+            <!-- Wizard content if not loading -->
+            <div class="wizard-container" style="height: 490px; overflow-y: auto" [className]="isPageLoading==true && 'd-none'" >
               <!-- Step 1 : Patient Selection -->
               <div [className]="stepNumber != 1 && 'd-none'">
                 <app-stp1-patient-selection [(selectedRegister)]="selectedRegister" (selectedRegisterChange)="onSelectPatientChange($event)" />
@@ -82,7 +87,11 @@
                   (formValueChange)="HandleHospitalizationChange($event)"
                 />
               </div>
+
+              
             </div>
+
+            
 
             <!-- Wizard buttons -->
             <div class="d-flex">

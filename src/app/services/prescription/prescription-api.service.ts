@@ -117,6 +117,23 @@ export class PrescriptionApiService implements ActivityService {
     pageIndex: number = 0,
     pageSize: number = 10
   ): Observable<GetRegistrationsResponse> {
+    let apiUrl="../../../assets/data"
+    const params = new HttpParams()
+      .set('PageIndex', pageIndex.toString())
+      .set('PageSize', pageSize.toString());
+    return this.http
+      .get<GetRegistrationsResponse>(apiUrl + '/registration.json', { params })
+      .pipe(
+        map((response) => {
+          return parseDates(response);
+        })
+      );
+  }
+
+/*   getRegistrations(
+    pageIndex: number = 0,
+    pageSize: number = 10
+  ): Observable<GetRegistrationsResponse> {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
@@ -128,13 +145,17 @@ export class PrescriptionApiService implements ActivityService {
           return parseDates(response);
         })
       );
-  }
+  } */
 
   getPrescriptionsByRegisterIds(
     registerIds: string[]
   ): Observable<GetPrescriptionsByRegisterIdResponse> {
     let url = this.apiUrl + '/Register';
-    const params = new HttpParams().set('registerIds', registerIds.join(','));
+
+    let params = new HttpParams();
+    registerIds.forEach(id => {
+      params = params.append('registerIds', id);
+    });
     return this.http.get<GetPrescriptionsByRegisterIdResponse>(url, {params}).pipe(
       map((response)=> parseDates(response)));
   }

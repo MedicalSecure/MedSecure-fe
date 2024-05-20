@@ -32,6 +32,7 @@ import {
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 import { RegisterForPrescription } from '../../../types/registerDTOs';
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-add-prescription',
@@ -47,14 +48,15 @@ import { ErrorMessageComponent } from '../../../components/error-message/error-m
     RouterModule,
     CommonModule,
     PrescriptionListComponent,
-    ErrorMessageComponent
+    ErrorMessageComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent implements DoCheck {
-  @ViewChild(ErrorMessageComponent) errorMessageComponent!: ErrorMessageComponent;
-
+  @ViewChild(ErrorMessageComponent)
+  errorMessageComponent!: ErrorMessageComponent;
 
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
@@ -64,10 +66,9 @@ export class AddPrescriptionComponent implements DoCheck {
   selectedRegister: RegisterForPrescription | undefined;
   isAddMedicationPageValid: boolean = false;
   ShowPrescriptionList: boolean = false;
+  isPageLoading = false;
   wizardSteps: wizardStepType[] = _steps;
   Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
-
-
 
   eventsSubject: Subject<void> = new Subject<void>();
 
@@ -78,7 +79,6 @@ export class AddPrescriptionComponent implements DoCheck {
 
   ngOnInit() {
     this._updateButtonsState();
-
   }
 
   prevStepNumber: number;
@@ -92,10 +92,11 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   handleSubmit() {
-    if(!this.selectedRegister){
-      console.error("cant submit without selecting a patient / registration")
+    if (!this.selectedRegister) {
+      console.error('cant submit without selecting a patient / registration');
       return;
     }
+    this.isPageLoading = true;
     const summary = {
       patient: this.selectedRegister,
       symptoms: this.selectedSymptoms,
@@ -120,13 +121,13 @@ export class AddPrescriptionComponent implements DoCheck {
     );
     let doctorIdd = '55555555-5555-5555-5555-555555555554'; //TODO
 
-    let emptyUnitCare= {
-      id: "",
-      type: "",
-      description: "",
-      title: "",
+    let emptyUnitCare = {
+      id: '',
+      type: '',
+      description: '',
+      title: '',
       rooms: [],
-      personnels: []
+      personnels: [],
     };
 
     const finalPrescription: PrescriptionCreateDto = {
@@ -137,27 +138,48 @@ export class AddPrescriptionComponent implements DoCheck {
       createdAt: new Date(),
       createdBy: doctorIdd, //TODO
       posologies: filteredPosologies,
-      unitCare: this.Hospitalization.unitCare ?? emptyUnitCare ,
+      unitCare: this.Hospitalization.unitCare ?? emptyUnitCare,
       dietId: this.Hospitalization.diet?.Id,
     };
     console.log(JSON.stringify(finalPrescription));
     this.prescriptionApiService.postPrescriptions(finalPrescription).subscribe(
       (response) => {
         this.ShowPrescriptionList = true;
-        console.log(response)
+        this.clearWizard();
+
+        console.log(response);
+        this.isPageLoading = false;
       },
       (error) => {
         console.error(error.status);
         console.error(error.error);
-        this.displayNewErrorMessage(error.error.message)
+        this.displayNewErrorMessage(error.error.message);
+        this.isPageLoading = false;
+        this._updateButtonsState()
       }
     );
   }
 
-  displayNewErrorMessage(title:string,duration= 4,content:string = "Error : ") {
-    this.errorMessageComponent.openSnackBar(title,duration,content);
+  displayNewErrorMessage(
+    title: string,
+    duration = 4,
+    content: string = 'Error : '
+  ) {
+    this.errorMessageComponent.openSnackBar(title, duration, content);
   }
 
+  clearWizard() {
+    this.stepNumber = 1;
+    this.selectedDiagnosis = [];
+    this.selectedSymptoms = [];
+    this.newPosologies = [];
+    this.selectedRegister = undefined;
+    this.isAddMedicationPageValid = false;
+    this.ShowPrescriptionList = true;
+    this.Hospitalization = { unitCare: null, diet: null };
+    this.isPageLoading=false;
+    this._updateButtonsState();
+  }
 
   // arrow function to hold the callback context ?? xD
   validatePageSwitch = (index: number): boolean => {
@@ -165,6 +187,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
     // arrow function to hold the callback context ?? xD
     //if (index > this.stepsLimit + 1) return false;
+    if(this.isPageLoading) return false;
     if (index < 1) return false;
     if (index >= 1 && index == this.stepNumber) return false;
     if (index > 1 && this.selectedRegister == undefined) return false;
@@ -232,6 +255,8 @@ export class AddPrescriptionComponent implements DoCheck {
 
   /* wizard buttons */
   SwitchToStep(index: number) {
+    if(this.isPageLoading) return;
+
     if (index === 0) {
       this.onSelectPatientChange(undefined);
       return;
@@ -302,14 +327,16 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   private _updateButtonsState() {
-    if(!this.validatePageSwitch(this.stepNumber+1)){
+    if(this.isPageLoading){
       this.setNextButtonClass('', 'disabled');
     }
-    else {
+    else if (!this.validatePageSwitch(this.stepNumber + 1)) {
+      this.setNextButtonClass('', 'disabled');
+    } else {
       //reset styles
       this.setNextButtonClass('', '', true);
     }
-/*     if (this.selectedRegister == undefined) {
+    /*     if (this.selectedRegister == undefined) {
       //append disabled
       this.setNextButtonClass('', 'disabled');
     } else if (this.stepNumber == 4 && !this.isAddMedicationPageValid) {
@@ -325,10 +352,12 @@ export class AddPrescriptionComponent implements DoCheck {
         this.nextButtonContent.label = 'Finish';
     }
 
-    if(!this.validatePageSwitch(this.stepNumber-1)){
+    if(this.isPageLoading){
       this.setBackButtonClass('', 'disabled');
     }
-    else {
+    else if (!this.validatePageSwitch(this.stepNumber - 1)) {
+      this.setBackButtonClass('', 'disabled');
+    } else {
       //reset styles
       this.setBackButtonClass('', '', true);
     }

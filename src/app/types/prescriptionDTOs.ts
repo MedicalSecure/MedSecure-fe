@@ -1,7 +1,7 @@
 
 import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
-import { FamilyStatus, Gender } from '../enums/enum';
+import { FamilyStatus, Gender, PrescriptionStatus } from '../enums/enum';
 import { UnitCareDTO } from './UnitCareDTOs';
 import { MedicationDto } from './medicationDTOs';
 
@@ -42,7 +42,8 @@ export type PrescriptionDto = {
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyDto[];
-  unitCareId?: string | null;//match these types
+  bedId?: string | null;//match these types
+  status: PrescriptionStatus;
   dietId?: string | null;
   createdAt: Date;
   lastModified?: Date | null;

@@ -35,6 +35,7 @@
           <th class="col-1">Medical Record ID</th>
           <th class="col-1">Prescription ID</th>
           <th class="col-3">Patient Name</th>
+          <th class="col-2">Prescription Status</th>
           <th class="col-2">Patient Status</th>
           <th class="col-2">Doctor Name</th>
           <th class="col-2">Date</th>
@@ -47,7 +48,8 @@
             <td class="col-1">{{ register.id.slice(-10) + "..." }}</td>
             <td class="col-1">{{ prescription.id.slice(-10) + "..." }}</td>
             <td class="col-3">{{ register.patient.firstName + " " + register.patient.lastName }}</td>
-            <td class="col-2">{{ getStatus(register) }}</td>
+            <td class="col-2">{{ getPrescriptionStatus(prescription) }}</td>
+            <td class="col-2">{{ getRegisterStatus(register) }}</td>
             <td class="col-2">{{ "After AZURE" }}</td>
             <td class="col-2">{{ getDateString(prescription.createdAt) }}</td>
           </tr>
