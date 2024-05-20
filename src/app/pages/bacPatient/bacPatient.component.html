@@ -161,7 +161,7 @@
                         <td class="element name-cell" mat-cell *matCellDef="let posology"
                           style="position: relative; top: 0%">
                           
-                          <app-comment  [DATA]="element" ></app-comment>
+                          <app-comment [note]="posology.comments" [DATA]="element" ></app-comment>
 
                         </td>
                       </ng-container>

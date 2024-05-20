@@ -54,7 +54,6 @@ export class BacPatientService implements ActivityService {
       );
       return this.data_source ; 
   }
-  
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
     return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
@@ -66,15 +65,16 @@ export class BacPatientService implements ActivityService {
   );
 
    }
-   updateBacPatientComment(bacPatient : bacpatient , Comment : string){
+   updateBacPatientComment(bacPatient : bacpatient , Content : string){
     bacPatient.prescription.posologies.forEach(pos => {
-      pos.comments.forEach(com =>{
-        com.content = Comment ;
+      pos.comments.forEach(com=>{
+        pos.comments.push({ id : com.id , posologyId : com.posologyId , label : com.label ,content: Content });
       })
-    })
+      
+  });
     const body = { "bacPatient": bacPatient };
-
     return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+ console.log(response);
  
     },
     error => {
