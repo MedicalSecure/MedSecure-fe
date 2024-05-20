@@ -284,7 +284,7 @@
                           <ng-container matColumnDef="posology">
                             <th mat-header-cell *matHeaderCellDef>Posology</th>
                             <td class="element posology-cell" mat-cell *matCellDef="let elementt">
-                              <app-schedule [hoursList]="elementt.posology" (checkEmmiter)="onCheckEmitted($event, element)"></app-schedule>
+                              <app-schedule></app-schedule>
                               <!-- <app-comment [note]="elementt.note"></app-comment> -->
                             </td>
                           </ng-container>

@@ -40,7 +40,7 @@ export class CardMedicationComponent {
   canEdit: boolean = false;
 
   getNewlyPrescribedMedicationSig(
-    medication: medicationType
+    medication: medicationType,
   ): string | undefined {
     let result;
     const size = medication.administrationHours.length;
