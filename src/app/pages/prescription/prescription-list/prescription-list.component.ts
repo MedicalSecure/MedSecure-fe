@@ -15,6 +15,7 @@ import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-n
 import {
   GetPrescriptionsByRegisterIdResponse,
   GetPrescriptionsResponse,
+  PosologyDto,
   PrescriptionDto,
 } from '../../../types/prescriptionDTOs';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
@@ -71,6 +72,7 @@ export class PrescriptionListComponent implements OnInit {
 
   onClickPrescription(prescription: PrescriptionDto) {
     this.selectedPrescription = prescription;
+    console.log(JSON.stringify(prescription))
     this.selectedRegister = this.registrations.filter(
       (register) => register.id == prescription.registerId
     )[0];
@@ -130,14 +132,68 @@ export class PrescriptionListComponent implements OnInit {
     return '| ' + x + ' years';
   }
 
-  private _formatDate(dateString: any): Date {
-    if (dateString) {
-      return new Date(dateString);
-      //const date = new Date(dateString);
-      //return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss');
-    }
-    return new Date();
+  getPosologySummary(posology: PosologyDto): {
+    timesADay: string;
+    beforeFoodCounter: number;
+    afterFoodCounter: number;
+    maximumDispenseQuantity: number;
+    average: number;
+    numberOfCautions: number;
+    numberOfComments: number;
+  } {
+    let timesADay: string = '';
+    let afterFoodCounter: number = 0;
+    let beforeFoodCounter: number = 0;
+    let timesADayCounter: number = 0;
+    let maximumDispenseQuantity: number = 0;
+    let numberOfComments: number = 0;
+    let numberOfCautions: number = 0;
+    posology.dispenses.forEach((hourObj) => {
+      if (hourObj.beforeMeal?.quantity) {
+        const beforeFQ = parseInt(hourObj.beforeMeal?.quantity);
+        beforeFoodCounter += beforeFQ;
+        timesADayCounter++;
+        if (beforeFQ > maximumDispenseQuantity)
+          maximumDispenseQuantity = beforeFQ;
+      }
+      if (hourObj.afterMeal?.quantity) {
+        const afterFQ = parseInt(hourObj.afterMeal?.quantity);
+        afterFoodCounter += afterFQ;
+        timesADayCounter++;
+        if (afterFQ > maximumDispenseQuantity)
+          maximumDispenseQuantity = afterFQ;
+      }
+    });
+    posology.comments.forEach((comment) => {
+      if (comment.label === 'Caution') numberOfCautions++;
+      else numberOfComments++;
+    });
+    if (timesADayCounter > 1) timesADay = timesADayCounter + ' times a day : ';
+    else if (timesADayCounter == 1) timesADay = 'single time a day : ';
+    let average = (beforeFoodCounter + afterFoodCounter) / timesADayCounter;
+    return {
+      timesADay,
+      beforeFoodCounter,
+      afterFoodCounter,
+      maximumDispenseQuantity,
+      average: !Number.isNaN(average) ? Number(average.toFixed(1)) : 0,
+      numberOfCautions,
+      numberOfComments,
+    };
   }
+  getNumberOfDaysInRange(dateRange: [Date, Date | null] | null): number | null {
+    if (dateRange === null || dateRange[1] === null) return null;
+    // Convert both dates to timestamps
+    var timestamp1 = dateRange[0].getTime();
+    var timestamp2 = dateRange[1].getTime();
+    // Calculate the difference in milliseconds
+    var difference = Math.abs(timestamp2 - timestamp1);
+    // Convert milliseconds to days
+    var daysDifference = Math.ceil(difference / (1000 * 60 * 60 * 24));
+    return daysDifference;
+  }
+
+
 }
 
 export function getPatientStatusFromRegister(register: RegisterDto): Status {

@@ -65,7 +65,7 @@ export class AddPrescriptionComponent implements DoCheck {
   newPosologies: PosologyDto[] = [];
   selectedRegister: RegisterForPrescription | undefined;
   isAddMedicationPageValid: boolean = false;
-  ShowPrescriptionList: boolean = false;
+  ShowPrescriptionList: boolean = true;
   isPageLoading = false;
   wizardSteps: wizardStepType[] = _steps;
   Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
