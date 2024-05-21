@@ -413,6 +413,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
       id: '',
       prescriptionId: '',
       medication: initialEmptyMedication,
+      medicationId: initialEmptyMedication.id,
       startDate: getInitialDateRange()[0],
       endDate: getInitialDateRange()[1],
       isPermanent: false,

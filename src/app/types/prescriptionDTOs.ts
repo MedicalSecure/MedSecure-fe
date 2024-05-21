@@ -71,6 +71,7 @@ export type PosologyDto = {
   id: string;
   prescriptionId: string;
   medication: MedicationDto;
+  medicationId: string;
   startDate: Date;
   endDate: Date | null;
   isPermanent: boolean;
