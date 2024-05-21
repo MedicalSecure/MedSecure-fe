@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ViewChild, Input, OnInit, Type } from '@angul
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { JsonPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
