@@ -15,10 +15,12 @@ interface Claim {
 }
 
 interface UserProfile {
+  UserId: string;
+  Name: string;
   isAuthenticated: boolean;
-  nameClaimType: string;
-  roleClaimType: string;
-  claims: Claim[];
+  NameClaimType: string;
+  RoleClaimType: string;
+  Claims: Claim[];
 }
 
 interface Role {
@@ -60,6 +62,7 @@ export class DashboardComponent implements OnInit {
   dataFromAzureProtectedApi$: Observable<string[]>;
   dataGraphApiCalls$: Observable<string[]>;
   userProfileClaims$: Observable<UserProfile>;
+  userProfile$: Observable<Claim>;
   userForm: FormGroup;
   inviteUserForm: FormGroup;
   forecastSubject = new BehaviorSubject<Object>(new Object());
@@ -117,7 +120,7 @@ export class DashboardComponent implements OnInit {
 
   getUserProfile() {
     this.userProfileClaims$ = this.httpClient.get<UserProfile>(
-      `${this.getCurrentHost()}/api/User`
+      `${this.getCurrentHost()}/authentication/userinfo`
     );
   }
 
@@ -177,7 +180,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getWeatherForecast() {
-    this.httpClient.get<any>(`${this.getCurrentHost()}/api/weatherforecast`)
+    this.httpClient.get<any>(`${this.getCurrentHost()}/authentication/weather-forecast`)
       .subscribe(
         (response) => {
           console.log('Weather forecast:', response);

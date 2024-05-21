@@ -1,6 +1,10 @@
 
 <h2>BFF Security architecture with Angular Standalone</h2>
 
+<ng-template #noClaims>
+  <p>No claims available</p>
+</ng-template>
+
 <ng-container
   *ngIf="userProfileClaims$ | async as userProfileClaims; else noAuth"
 >
@@ -8,14 +12,14 @@
     <button (click)="getDirectApiData()">get data from API direct</button>
     <button (click)="getGraphApiDataUsingApi()">get Graph data using API</button>
     <button (click)="getWeatherForecast()">get WeatherForecast</button>
-    <form method="post" action="api/Account/Logout">
+    <form method="post" action="authentication/logout">
       <button class="btn btn-link" type="submit">Sign out</button>
     </form>
   </div>
   <hr />
 
   <h2>User profile:</h2>
-  <pre>{{ userProfileClaims | json }}</pre>
+  <pre>{{ userProfileClaims$ | json }}</pre>
 
   <hr />
 
@@ -165,7 +169,7 @@
 </ng-container>
 
 <ng-template #noAuth>
-  <a class="btn btn-link" href="api/Account/Login">Log in</a>
+  <a class="btn btn-link" href="authentication/login">Log in</a>
 </ng-template>
 
 
