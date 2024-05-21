@@ -111,7 +111,7 @@
         }
         @if (this.ShowPrescriptionList == true) {
           <div id="add-prescription-body">
-            <app-prescription-list (onClickNewPrescriptionEvent)="onClickNewPrescriptionEventHandler($event)"></app-prescription-list>
+            <app-prescription-list (onClickNewPrescriptionEvent)="onClickNewPrescriptionEventHandler($event)" (onClickUpdatePrescriptionEvent)="handleUpdatePrescription($event)"></app-prescription-list>
           </div>
         }
       </div>

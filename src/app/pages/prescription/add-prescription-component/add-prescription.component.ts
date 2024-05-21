@@ -19,6 +19,7 @@ import {
   PosologyCreateDto,
   PosologyDto,
   PrescriptionCreateDto,
+  PrescriptionDto,
   SymptomDto,
 } from '../../../types/prescriptionDTOs';
 import {
@@ -30,9 +31,11 @@ import {
   filterScheduleItems,
 } from '../../../components/schedule/schedule.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
-import { RegisterForPrescription } from '../../../types/registerDTOs';
+import { RegisterDto, RegisterForPrescription } from '../../../types/registerDTOs';
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
+import { UnitCareDTO } from '../../../types/UnitCareDTOs';
 
 @Component({
   selector: 'app-add-prescription',
@@ -158,6 +161,27 @@ export class AddPrescriptionComponent implements DoCheck {
         this._updateButtonsState()
       }
     );
+  }
+
+
+  async handleUpdatePrescription({prescription,register}:{prescription:PrescriptionDto,register:RegisterDto}){
+    console.log(prescription);
+    this.clearWizard();
+    this.ShowPrescriptionList = false;
+    this.isPageLoading=true;
+
+    this.selectedDiagnosis = prescription.diagnoses;
+    this.selectedSymptoms = prescription.symptoms;
+    this.newPosologies = prescription.posologies;
+    this.selectedRegister = mapRegisterDtoToRegisterForPrescription(register);
+
+    this.Hospitalization = { unitCare: await this.fetchUnitCareByBedId(prescription?.bedId), diet: null };
+    this._updateButtonsState();
+    this.isPageLoading=false;
+  }
+
+  async fetchUnitCareByBedId(bedId:string | null | undefined):Promise<UnitCareDTO | null>{
+    return null;
   }
 
   displayNewErrorMessage(

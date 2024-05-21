@@ -47,6 +47,11 @@ import {
 export class PrescriptionListComponent implements OnInit {
   @Input() selectedPrescription: PrescriptionDto | undefined = undefined;
   @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
+  @Output() onClickUpdatePrescriptionEvent = new EventEmitter<{
+    prescription: PrescriptionDto;
+    register: RegisterDto;
+  }>();
+
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   checked: boolean = true;
@@ -72,7 +77,7 @@ export class PrescriptionListComponent implements OnInit {
 
   onClickPrescription(prescription: PrescriptionDto) {
     this.selectedPrescription = prescription;
-    console.log(JSON.stringify(prescription))
+    console.log(JSON.stringify(prescription));
     this.selectedRegister = this.registrations.filter(
       (register) => register.id == prescription.registerId
     )[0];
@@ -98,7 +103,6 @@ export class PrescriptionListComponent implements OnInit {
       );
     this.registrations = [...response];
     this.isLoading = false;
-      
   }
 
   onClickRefresh() {
@@ -110,10 +114,9 @@ export class PrescriptionListComponent implements OnInit {
     return getPatientStatusFromRegister(register);
   }
 
-  getPrescriptionStatus(prescription : PrescriptionDto): string {
+  getPrescriptionStatus(prescription: PrescriptionDto): string {
     return getPrescriptionStatus(prescription);
   }
-
 
   getDateString(
     dateToFormat: Date,
@@ -193,7 +196,16 @@ export class PrescriptionListComponent implements OnInit {
     return daysDifference;
   }
 
-
+  navigateToUpdatePrescription(
+    prescription: PrescriptionDto,
+    register: RegisterDto | undefined
+  ) {
+    if (register == undefined) return;
+    console.log('sent from list');
+    //add checks of status here before submitting
+    //...
+    this.onClickUpdatePrescriptionEvent.emit({ prescription, register });
+  }
 }
 
 export function getPatientStatusFromRegister(register: RegisterDto): Status {
@@ -216,19 +228,19 @@ export function getPatientStatusFromRegister(register: RegisterDto): Status {
 export function getPrescriptionStatus(prescription: PrescriptionDto): string {
   switch (prescription.status) {
     case PrescriptionStatus.Draft:
-      return "Draft";
+      return 'Draft';
     case PrescriptionStatus.Pending:
-      return "Pending";
+      return 'Pending';
     case PrescriptionStatus.Active:
-      return "Active"; // Done: validée
+      return 'Active'; // Done: validée
     case PrescriptionStatus.Rejected:
-      return "Rejected";
+      return 'Rejected';
     case PrescriptionStatus.Discontinued:
-      return "Discontinued";
+      return 'Discontinued';
     case PrescriptionStatus.Completed:
-      return "Completed";
+      return 'Completed';
     // Add cases for other statuses if they are uncommented in the enum
     default:
-      return "Unknown Status";
+      return 'Unknown Status';
   }
 }
