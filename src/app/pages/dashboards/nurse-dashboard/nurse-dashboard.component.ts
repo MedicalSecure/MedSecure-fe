@@ -3,11 +3,13 @@ import { ActivitiesComponent } from '../../../components/activities/activities.c
 import { BacPatientService } from '../../../services/bacPatient/bac-patient-services.service';
 import { ELEMENT_DATA, bacpatient } from '../../bacPatient/bacPatient.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { MultiSenseWidgetComponent } from '../../../components/widgets/multisense-widget/multisense-widget.component';
+
 
 @Component({
   selector: 'app-nurse-dashboard',
   standalone: true,
-  imports: [ActivitiesComponent],
+  imports: [ActivitiesComponent ,  MultiSenseWidgetComponent],
   templateUrl: './nurse-dashboard.component.html',
   styleUrl: './nurse-dashboard.component.css'
 })
@@ -19,6 +21,8 @@ pending: number = 0;
 onProgress: number = 0;
 completed: number = 0;
 data : bacpatient[] = [] ;
+
+
 dataSource = new MatTableDataSource(ELEMENT_DATA);
 constructor(public bacPatientService : BacPatientService){}
   ngOnInit(): void {
