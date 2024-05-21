@@ -1,16 +1,16 @@
-import { Component,OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import {
   ApexChart,
   ApexAxisChartSeries,
   ChartComponent,
   ApexDataLabels,
   ApexPlotOptions,
-  ApexYAxis,
   ApexLegend,
   ApexGrid
 } from "ng-apexcharts";
-import {MedicationService} from '../../../services/medication/medication.service'
+import { MedicationService } from '../../../services/medication/medication.service';
 import { NgApexchartsModule } from "ng-apexcharts";
+
 type ApexXAxis = {
   type?: "category" | "datetime" | "numeric";
   categories?: any;
@@ -20,18 +20,35 @@ type ApexXAxis = {
       fontSize?: string;
     };
   };
+  title?: {
+    text?: string;
+    style?: {
+      color?: string;
+      fontSize?: string;
+    };
+  };
+};
+
+type ApexYAxis = {
+  title?: {
+    text?: string;
+    style?: {
+      color?: string;
+      fontSize?: string;
+    };
+  };
 };
 
 export type ChartOptions = {
-  series: ApexAxisChartSeries|any;
-  chart: ApexChart|any;
-  dataLabels: ApexDataLabels|any;
-  plotOptions: ApexPlotOptions|any;
-  yaxis: ApexYAxis|any;
-  xaxis: ApexXAxis|any;
-  grid: ApexGrid|any;
-  colors: string[]|any;
-  legend: ApexLegend|any;
+  series: ApexAxisChartSeries | any;
+  chart: ApexChart | any;
+  dataLabels: ApexDataLabels | any;
+  plotOptions: ApexPlotOptions | any;
+  yaxis: ApexYAxis | any;
+  xaxis: ApexXAxis | any;
+  grid: ApexGrid | any;
+  colors: string[] | any;
+  legend: ApexLegend | any;
 };
 
 @Component({
@@ -39,7 +56,7 @@ export type ChartOptions = {
   standalone: true,
   imports: [NgApexchartsModule],
   templateUrl: './recommended-medications.component.html',
-  styleUrl: './recommended-medications.component.css'
+  styleUrls: ['./recommended-medications.component.css']
 })
 export class RecommendedMedicationsComponent implements OnInit {
   @ViewChild("chart") chart: ChartComponent;
@@ -49,7 +66,7 @@ export class RecommendedMedicationsComponent implements OnInit {
     this.chartOptions = {
       series: [
         {
-          name: "distibuted",
+          name: "Stock Disponible",
           data: []
         }
       ],
@@ -57,7 +74,7 @@ export class RecommendedMedicationsComponent implements OnInit {
         height: 350,
         type: "bar",
         events: {
-          click: function(chart:any, w:any, e:any) {
+          click: function (chart: any, w: any, e: any) {
           }
         }
       },
@@ -77,20 +94,27 @@ export class RecommendedMedicationsComponent implements OnInit {
         show: false
       },
       xaxis: {
-        categories: [
-          
-        ],
+        categories: [],
         labels: {
           style: {
             fontSize: "10px"
           },
-          rotate: 0, 
-          offsetY: -5
-        }, 
+          rotate: 0,
+          offsetY: -5,
+        },
+        title: {
+          text: "Medicines",
+        }
+      },
+      yaxis: {
+        title: {
+          text: "Available stock",
        
+        }
       }
     };
   }
+
   ngOnInit() {
     this.medicationService.getMedicationsNews().subscribe(data => {
       const medications = data.Medications.medication;
@@ -108,13 +132,19 @@ export class RecommendedMedicationsComponent implements OnInit {
           style: {
             fontSize: "10px"
           },
-          rotate: 0, 
-          offsetY: -5
+          rotate: 0,
+          offsetY: -5,
+        },
+        title: {
+          text: "Medicines",
+        }
+      };
 
-        }, 
-      
+      this.chartOptions.yaxis = {
+        title: {
+          text: "Available stock",
+        }
       };
     });
   }
-  
 }

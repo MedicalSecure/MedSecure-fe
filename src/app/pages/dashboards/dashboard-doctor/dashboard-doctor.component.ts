@@ -9,10 +9,12 @@ import {RecommendedMedicationsComponent} from '../../../components/widgets/recom
 import {MedicationsPrescribedComponent} from '../../../components/widgets/medications-prescribed/medications-prescribed.component';
 import { Patients } from '../../../model/patients';
 import { ActivitiesComponent } from '../../../components/activities/activities.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-dashboard-doctor',
   standalone: true,
-  imports: [CommonModule,RendementPrescriptionComponent,RecommendedMedicationsComponent,MedicationsPrescribedComponent,ActivitiesComponent],
+  imports: [CommonModule,RendementPrescriptionComponent,RecommendedMedicationsComponent,
+    MedicationsPrescribedComponent,ActivitiesComponent,NgxPaginationModule],
   templateUrl: './dashboard-doctor.component.html',
   styleUrl: './dashboard-doctor.component.css'
 })
@@ -28,6 +30,7 @@ export class DashboardDoctorComponent {
   InValidPrescription:number=0;
   totalPrescriptionCount:number =0;
   PatientPrescribedcount:number=0;
+  page: number = 1;
   topUrgencyPatients: Patients[] = [];
   constructor(public visitService: VisitService,
     private patientService: PatientService,
