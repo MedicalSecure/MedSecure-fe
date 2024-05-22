@@ -22,4 +22,5 @@ export interface Patients {
   children?: number;
   status?: string;
   topUrgency?:boolean
+  image?:string
 }

@@ -86,6 +86,15 @@ constructor(private prescriptionService: PrescriptionService) {
         rotate: 0, 
         offsetY: -5
       }, 
+      title: {
+        text: "Medicines",
+      }
+    },
+    yaxis: {
+      title: {
+        text: "% Prescriptions",
+     
+      }
     },
     colors: ['#FF5733'] 
   };
@@ -109,9 +118,15 @@ ngOnInit() {
         },
         rotate: 0, 
         offsetY: -5
-
       }, 
-    
+      title: {
+        text: "Medicines",
+      }
+    };
+    this.chartOptions.yaxis = {
+      title: {
+        text: "% Prescriptions",
+      }
     };
   });
 }

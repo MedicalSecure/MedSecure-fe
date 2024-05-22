@@ -15,6 +15,7 @@ import { MasonryDpiComponent } from './pages/register-details/register-details.c
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
 import { DashboardDoctorComponent } from './pages/dashboards/dashboard-doctor/dashboard-doctor.component';
+import { LeaveReportComponent } from './components/leave-report/leave-report.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -33,4 +34,6 @@ export const routes: Routes = [
   { path: 'register-form', component: RegisterFormComponent },
   { path: 'register', component: RegisterViewComponent },
   { path: 'DashboardDoctor', component: DashboardDoctorComponent },
-];
+  { path: 'LeaveReportComponent', component: LeaveReportComponent },
+
+]; 

@@ -10,10 +10,12 @@ import {MedicationsPrescribedComponent} from '../../../components/widgets/medica
 import { Patients } from '../../../model/patients';
 import { ActivitiesComponent } from '../../../components/activities/activities.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { LeaveReportComponent } from '../../../components/leave-report/leave-report.component';
+import { ToDoComponent } from '../../../components/to-do/to-do.component';
 @Component({
   selector: 'app-dashboard-doctor',
   standalone: true,
-  imports: [CommonModule,RendementPrescriptionComponent,RecommendedMedicationsComponent,
+  imports: [CommonModule,RendementPrescriptionComponent,RecommendedMedicationsComponent,LeaveReportComponent,ToDoComponent,
     MedicationsPrescribedComponent,ActivitiesComponent,NgxPaginationModule],
   templateUrl: './dashboard-doctor.component.html',
   styleUrl: './dashboard-doctor.component.css'

@@ -6,4 +6,5 @@ export type Presecription= {
   patient_name :string
   doctor_name :string
   status:string;
+  image?:string
 }

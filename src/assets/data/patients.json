@@ -27,7 +27,8 @@
         "familyStatus": 1,
         "children": 2,
         "status": "Registered",
-        "topUrgency": true
+        "topUrgency": true,
+        "image": "assets/images/faces/face1.jpg" 
         
       },
       {
@@ -53,7 +54,8 @@
         "familyStatus": 2,
         "children": 0,
         "status": "Registered",
-        "topUrgency": false
+        "topUrgency": false,
+        "image": "assets/images/faces/face2.jpg" 
       },
       {
         "id": "f7ff7c44-fa63-4136-b10e-6d51458e5b7a",
@@ -78,7 +80,8 @@
         "familyStatus": 0,
         "children": 1,
         "status": "Out",
-        "topUrgency": true
+        "topUrgency": true,
+        "image": "assets/images/faces/face3.jpg" 
       }
     ]
   }
