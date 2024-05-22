@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  SimpleChanges,
   ViewChild,
   inject,
 } from '@angular/core';
@@ -163,6 +164,12 @@ export class ShipsSelectComponent<T> {
     //set the original input value (this is needed when the forceOpenAutocompletePanel is called from the parent)
     if (!this.keepFilterAfterSelection)
       this.minSearchLength = this.minimumSearchLength;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['disabled']){
+      this.disabled ? this.ObjectControl.disable() : this.ObjectControl.enable();
+    }
   }
 
   ngOnDestroy() {
