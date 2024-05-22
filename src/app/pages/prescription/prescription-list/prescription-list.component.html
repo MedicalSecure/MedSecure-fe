@@ -68,7 +68,7 @@
   <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
     <p class="align-self-center m-0">Selected Prescription :</p>
     <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{selectedRegister?.patient?.firstName}} {{selectedRegister?.patient?.lastName}} {{  getAge(selectedRegister?.patient?.dateOfBirth) }}</span>
-    <mat-icon class="align-self-center" (click)="onClickDeselectPrescription()">close</mat-icon>
+    <mat-icon class="align-self-center text-danger fw-bold" (click)="onClickDeselectPrescription()">close</mat-icon>
   </div>
   <!-- Display Prescription details component -->
   <div>Prescription Details here (TODO)</div>

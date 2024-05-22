@@ -35,7 +35,11 @@ import {
 import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
 
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
-import { CommentsDto, PosologyDto } from '../../../types/prescriptionDTOs';
+import {
+  CommentsDto,
+  DispenseDto,
+  PosologyDto,
+} from '../../../types/prescriptionDTOs';
 
 import { getDateString } from '../../../shared/utilityFunctions';
 import {
@@ -73,10 +77,14 @@ import { MedicationDto } from '../../../types/medicationDTOs';
 })
 export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
   @Input() events: Observable<void>;
-  private finishEventSubscription: Subscription;
+  @Input() newPosologiesList: PosologyDto[] = [];
+  @Input() updatingOldPrescriptionMode: boolean = false;
+
   @Output() onPosologiesChange = new EventEmitter<PosologyDto[]>();
   @Output() onIsMedicationPageValidChange = new EventEmitter<boolean>();
   @Output() onSubmitChange = new EventEmitter<void>();
+
+  private finishEventSubscription: Subscription;
 
   searchTerms = _searchTerms;
   isSelectedForceOrder: boolean = false;
@@ -88,7 +96,6 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
   isPageValid: boolean = false;
   selectedPosology: PosologyDto = this._getFormInitialValues();
   selectedPosologyDateRange = getInitialDateRange();
-  newPosologiesList: PosologyDto[] = [];
 
   //in this page case, selectedMedications[].length will at max contains 1 medication
   //but the searchBar component require the selectedMedications input to be a LIST OF MEDICATIONS..
@@ -109,6 +116,15 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
     /* if is caution enabled by default => add a caution comment at the beginning of the array  */
     this.isCautionEnabled &&
       this.selectedPosology.comments.unshift(this.cautionComment);
+
+    if (this.updatingOldPrescriptionMode) {
+      this.newPosologiesList = this.newPosologiesList.map((posology) => {
+        return {
+          ...posology,
+          dispenses: this.fillEmptyDispenses(posology.dispenses),
+        };
+      });
+    }
 
     /* emit wether or not we can finish the prescription */
     this.onIsMedicationPageValidChange.emit(this.isPageValid);
@@ -405,6 +421,19 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
       return '';
     }
     return getDateString(date, format);
+  }
+
+  fillEmptyDispenses(dispensesDto: DispenseDto[]): Dispense[] {
+    let dispensesResult = _getACopyOfAdministrationHours();
+
+    for (const dispense of dispensesResult) {
+      let dispenseDto = dispensesDto.find((item) => item.hour == dispense.hour);
+      if (dispenseDto == undefined) continue; // if the DTO to update doesn't have this hour already;
+      dispense.afterMeal = dispenseDto?.afterMeal;
+      dispense.beforeMeal = dispenseDto?.beforeMeal;
+    }
+
+    return dispensesResult;
   }
 
   private _getFormInitialValues(): PosologyDto {

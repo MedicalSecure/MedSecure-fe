@@ -8,7 +8,7 @@
             <div class="d-sm-flex justify-content-between align-items-start">
               <div>
                 <h4 class="card-title card-title-dash">Prescription</h4>
-                <p class="card-subtitle card-subtitle-dash">Add new Prescription</p>
+                <p class="card-subtitle card-subtitle-dash">{{ updatingOldPrescriptionMode ? "Update Prescription":"Add new Prescription"}}</p>
               </div>
 
               <div class="btn-wrapper">
@@ -37,60 +37,68 @@
 
 
             <!-- Wizard content if loading  -->
-            <div class="wizard-container" style="height: 490px; overflow-y: auto" [className]="isPageLoading==false && 'd-none'" >
-              <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
-            </div>
-            <!-- Wizard content if not loading -->
-            <div class="wizard-container" style="height: 490px; overflow-y: auto" [className]="isPageLoading==true && 'd-none'" >
-              <!-- Step 1 : Patient Selection -->
-              <div [className]="stepNumber != 1 && 'd-none'">
-                <app-stp1-patient-selection [(selectedRegister)]="selectedRegister" (selectedRegisterChange)="onSelectPatientChange($event)" />
+            @if(isPageLoading){
+              <div class="wizard-container" style="height: 490px; overflow-y: auto" >
+                <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
               </div>
-
-              <!-- Print a single line displaying Patient id | name - Age And Deselect Button -->
-              <!-- In Each of steps 2,3,4 and 5 -->
-              @if (selectedRegister && stepNumber > 1) {
-                <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
-                  <p class="align-self-center m-0">Selected Patient :</p>
-                  <span class="text-primary fw-bold align-self-center"> MRN : {{ selectedRegister.id.length > 10 ? selectedRegister.id.slice(0,10)+".." : selectedRegister.id }} | {{ selectedRegister.patient_fullName }} - {{ calculateAge(selectedRegister.patient_dateOfBirth) }} years</span>
-                  <mat-icon class="align-self-center text-danger fw-bold" (click)="onSelectPatientChange(undefined)">close</mat-icon>
+            }
+            @else{
+              <!-- Wizard content if not loading -->
+              <div class="wizard-container" style="height: 490px; overflow-y: auto">
+                <!-- Step 1 : Patient Selection -->
+                <div [className]="stepNumber != 1 && 'd-none'">
+                  <app-stp1-patient-selection [(selectedRegister)]="selectedRegister" (selectedRegisterChange)="onSelectPatientChange($event)" />
                 </div>
-              }
 
-              <!-- Step 2 : Patient Details (cards) -->
-              <div *ngIf="stepNumber === 2 && selectedRegister != undefined">
-                <app-stp2-patient-details />
+                <!-- Print a single line displaying Patient id | name - Age And Deselect Button -->
+                <!-- In Each of steps 2,3,4 and 5 -->
+                @if (selectedRegister && stepNumber > 1) {
+                  <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
+                    <p class="align-self-center m-0">Selected Patient :</p>
+                    <span class="text-primary fw-bold align-self-center"> MRN : {{ selectedRegister.id.length > 10 ? selectedRegister.id.slice(0,10)+".." : selectedRegister.id }} | {{ selectedRegister.patient_fullName }} - {{ calculateAge(selectedRegister.patient_dateOfBirth) }} years</span>
+                    <mat-icon class="align-self-center text-danger fw-bold" (click)="onSelectPatientChange(undefined)">close</mat-icon>
+                  </div>
+                }
+
+                <!-- Step 2 : Patient Details (cards) -->
+                <div *ngIf="stepNumber === 2 && selectedRegister != undefined">
+                  <app-stp2-patient-details />
+                </div>
+
+                <!-- Step 3: Add Diagnostic -->
+                <div [className]="stepNumber != 3 && 'd-none'">
+                  <app-stp3-add-diagnostic
+                  [updateInitialData]="{symptoms:selectedSymptoms,diagnosis:selectedDiagnosis}"
+                    [updatingOldPrescriptionMode]="updatingOldPrescriptionMode"
+                    (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
+                    (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"
+                    (onIsAddSymptomsPageValidChange)="handlePageValidationChange(3, $event)"
+                  />
+                </div>
+
+                <!-- Step 4: Add Medication -->
+                <div [className]="stepNumber != 4 && 'd-none'">
+                  <app-stp4-add-medication
+                    [events]="eventsSubject.asObservable()"
+                    (onIsMedicationPageValidChange)="handlePageValidationChange(4, $event)"
+                    (onSubmitChange)="handleSubmit()"
+                    [newPosologiesList]="newPosologies"
+                    [updatingOldPrescriptionMode]="updatingOldPrescriptionMode"
+                    (onPosologiesChange)="handlePosologyChange($event)"
+                  />
+                </div>
+
+                <!-- Step 5: Hospitalization -->
+                <div [className]="stepNumber != 5 && 'd-none'">
+                  <app-stp5-hospitalization
+                    
+                    (formValueChange)="HandleHospitalizationChange($event)"
+                  />
+                </div>
+
+                
               </div>
-
-              <!-- Step 3: Add Diagnostic -->
-              <div [className]="stepNumber != 3 && 'd-none'">
-                <app-stp3-add-diagnostic
-                  (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
-                  (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"
-                  (onIsAddSymptomsPageValidChange)="handlePageValidationChange(3, $event)"
-                />
-              </div>
-
-              <!-- Step 4: Add Medication -->
-              <div [className]="stepNumber != 4 && 'd-none'">
-                <app-stp4-add-medication
-                  [events]="eventsSubject.asObservable()"
-                  (onIsMedicationPageValidChange)="handlePageValidationChange(4, $event)"
-                  (onSubmitChange)="handleSubmit()"
-                  (onPosologiesChange)="handlePosologyChange($event)"
-                />
-              </div>
-
-              <!-- Step 5: Hospitalization -->
-              <div [className]="stepNumber != 5 && 'd-none'">
-                <app-stp5-hospitalization
-                  (formValueChange)="HandleHospitalizationChange($event)"
-                />
-              </div>
-
-              
-            </div>
-
+            }
             
 
             <!-- Wizard buttons -->

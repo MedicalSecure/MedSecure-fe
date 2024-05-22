@@ -50,6 +50,17 @@ export class PrescriptionApiService implements ActivityService {
     return x;
   }
 
+  putPrescriptions(prescriptionDto: PrescriptionCreateDto) {
+    const postPrescriptionRequest: CreatePrescriptionRequest = {
+      prescription: prescriptionDto,
+    };
+    let x = this.http.put<CreatePrescriptionResponse>(
+      this.apiUrl,
+      postPrescriptionRequest
+    );
+    return x;
+  }
+  
   getSymptoms(
     pageIndex: number = 0,
     pageSize: number = 10

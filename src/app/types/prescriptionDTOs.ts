@@ -52,6 +52,7 @@ export type PrescriptionDto = {
 };
 
 export type PrescriptionCreateDto = {
+  id?:string;
   registerId: string;
   doctorId: string;
   symptoms: SymptomDto[];

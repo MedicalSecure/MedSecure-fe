@@ -70,6 +70,11 @@ export class Stp3AddDiagnosticComponent {
   @Input()
   symptomsData: SymptomDto[] = [];
 
+
+  @Input() updatingOldPrescriptionMode=false;
+  @Input()
+  updateInitialData:{symptoms:SymptomDto[],diagnosis:DiagnosisDto[]} = {symptoms:[],diagnosis:[]}
+
   @ViewChild(ShipsSelectComponent<SymptomDto>)
   SymptomsSelectComponent: ShipsSelectComponent<SymptomDto>;
 
@@ -91,6 +96,11 @@ export class Stp3AddDiagnosticComponent {
     this.onIsPageValidChange();
     this.fetchSymptoms();
     this.fetchDiagnosis();
+
+    if(this.updatingOldPrescriptionMode){
+      this.selectedSymptoms=[...this.updateInitialData.symptoms];
+      this.selectedDiagnosis=[...this.updateInitialData.diagnosis];
+    }
   }
 
   selectedSymptomsChipsChange(result: onChipsSelectionEmitType<SymptomDto>) {
@@ -294,6 +304,7 @@ export class Stp3AddDiagnosticComponent {
     });
     return result;
   }
+
 }
 
 export const symptomsCodeByBodyPart: { [key: string]: number[] } = {

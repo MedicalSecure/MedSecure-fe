@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,6 +34,8 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class Stp5HospitalizationComponent {
   @Output() formValueChange = new EventEmitter<stp5FormsValueEvent>();
+  @Input() initialData = new EventEmitter<stp5FormsValueEvent>(); // required when updating
+
 
   isDietsLoading = false;
   isUnitCaresLoading = false;

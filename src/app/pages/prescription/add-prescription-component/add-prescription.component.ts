@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PrescriptionListComponent } from '../prescription-list/prescription-list.component';
-import { calculateAge } from '../../../shared/utilityFunctions';
+import { calculateAge, extractErrorMessage } from '../../../shared/utilityFunctions';
 import {
   DiagnosisDto,
   PosologyCreateDto,
@@ -31,11 +31,15 @@ import {
   filterScheduleItems,
 } from '../../../components/schedule/schedule.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
-import { RegisterDto, RegisterForPrescription } from '../../../types/registerDTOs';
+import {
+  RegisterDto,
+  RegisterForPrescription,
+} from '../../../types/registerDTOs';
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
 import { UnitCareDTO } from '../../../types/UnitCareDTOs';
+import { MedicationService } from '../../../services/medication/medication.service';
 
 @Component({
   selector: 'app-add-prescription',
@@ -52,7 +56,7 @@ import { UnitCareDTO } from '../../../types/UnitCareDTOs';
     CommonModule,
     PrescriptionListComponent,
     ErrorMessageComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
@@ -60,6 +64,9 @@ import { UnitCareDTO } from '../../../types/UnitCareDTOs';
 export class AddPrescriptionComponent implements DoCheck {
   @ViewChild(ErrorMessageComponent)
   errorMessageComponent!: ErrorMessageComponent;
+
+  @ViewChild(Stp3AddDiagnosticComponent)
+  stp3AddDiagnosticComponent!: Stp3AddDiagnosticComponent;
 
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
@@ -70,15 +77,20 @@ export class AddPrescriptionComponent implements DoCheck {
   isAddMedicationPageValid: boolean = false;
   ShowPrescriptionList: boolean = true;
   isPageLoading = false;
+  updatingOldPrescriptionMode = false;
   wizardSteps: wizardStepType[] = _steps;
   Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
+  prescriptionId:string; // used only when updating a prescription
 
   eventsSubject: Subject<void> = new Subject<void>();
 
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
   backButtonContent: { label: string; class: string } = _backButtonContent;
 
-  constructor(private prescriptionApiService: PrescriptionApiService) {}
+  constructor(
+    private prescriptionApiService: PrescriptionApiService,
+    private medicationService: MedicationService
+  ) {}
 
   ngOnInit() {
     this._updateButtonsState();
@@ -144,43 +156,119 @@ export class AddPrescriptionComponent implements DoCheck {
       unitCare: this.Hospitalization.unitCare ?? emptyUnitCare,
       dietId: this.Hospitalization.diet?.Id,
     };
-    console.log(JSON.stringify(finalPrescription));
-    this.prescriptionApiService.postPrescriptions(finalPrescription).subscribe(
-      (response) => {
-        this.ShowPrescriptionList = true;
-        this.clearWizard();
-
-        console.log(response);
-        this.isPageLoading = false;
-      },
-      (error) => {
-        console.error(error.status);
-        console.error(error.error);
-        this.displayNewErrorMessage(error.error.message);
-        this.isPageLoading = false;
-        this._updateButtonsState()
-      }
-    );
+    //console.log(JSON.stringify(finalPrescription));
+    if (this.updatingOldPrescriptionMode) {
+      //UPDATING : PUT
+      finalPrescription.id = this.prescriptionId;
+      this.prescriptionApiService
+      .putPrescriptions(finalPrescription)
+      .subscribe(
+        (response) => {
+          this.ShowPrescriptionList = true;
+          this.clearWizard();
+          console.log(response);
+          this.isPageLoading = false;
+        },
+        (error) => {
+          console.error(extractErrorMessage(error));
+          this.displayNewErrorMessage(extractErrorMessage(error));
+          this.isPageLoading = false;
+          this._updateButtonsState();
+        }
+      );
+    } else {
+      //Creating new one : POST
+      this.prescriptionApiService
+        .postPrescriptions(finalPrescription)
+        .subscribe(
+          (response) => {
+            this.ShowPrescriptionList = true;
+            this.clearWizard();
+            console.log(response);
+            this.isPageLoading = false;
+          },
+          (error) => {
+            console.error(error.error);
+            this.displayNewErrorMessage(error.error.message);
+            this.isPageLoading = false;
+            this._updateButtonsState();
+          }
+        );
+    }
   }
 
 
-  async handleUpdatePrescription({prescription,register}:{prescription:PrescriptionDto,register:RegisterDto}){
-    console.log(prescription);
-    this.clearWizard();
-    this.ShowPrescriptionList = false;
-    this.isPageLoading=true;
 
+  async handleUpdatePrescription({
+    prescription,
+    register,
+  }: {
+    prescription: PrescriptionDto;
+    register: RegisterDto;
+  }) {
+    console.log(prescription);
+    this.prescriptionId = prescription.id;
+    this.clearWizard();
+    this.updatingOldPrescriptionMode = true;
+    this.ShowPrescriptionList = false;
+    this.isPageLoading = true;
+    this.stepNumber = 2;
     this.selectedDiagnosis = prescription.diagnoses;
     this.selectedSymptoms = prescription.symptoms;
-    this.newPosologies = prescription.posologies;
+
+    this.newPosologies = await this.getMedicationDTOsById(
+      prescription.posologies
+    );
+
     this.selectedRegister = mapRegisterDtoToRegisterForPrescription(register);
 
-    this.Hospitalization = { unitCare: await this.fetchUnitCareByBedId(prescription?.bedId), diet: null };
+    this.Hospitalization = {
+      unitCare: await this.fetchUnitCareByBedId(prescription?.bedId),
+      diet: null,
+    };
     this._updateButtonsState();
-    this.isPageLoading=false;
+    this.isPageLoading = false;
   }
 
-  async fetchUnitCareByBedId(bedId:string | null | undefined):Promise<UnitCareDTO | null>{
+  handlePosologyChange(posologies: PosologyDto[]) {
+    this.newPosologies = posologies;
+  }
+
+  async getMedicationDTOsById(
+    posologies: PosologyDto[]
+  ): Promise<PosologyDto[]> {
+    //TODO change to get by list ids
+
+    try {
+      const response = await this.medicationService
+        .getMedications()
+        .toPromise();
+      let medications = response?.medications.data;
+      if (medications == undefined) throw new Error('medications is undefined');
+
+      return posologies.map((posology) => {
+        //@ts-ignore im sure it exists
+        let medication = medications.find(
+          (med) => med.id == posology.medicationId
+        );
+        if (!medication)
+          throw new Error(
+            'cant find medication with the id : ' + posology.medicationId
+          );
+        return {
+          ...posology,
+          medication: medication,
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching medications:', error);
+      throw error;
+    }
+  }
+
+  async fetchUnitCareByBedId(
+    bedId: string | null | undefined
+  ): Promise<UnitCareDTO | null> {
     return null;
   }
 
@@ -193,6 +281,7 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   clearWizard() {
+    this.updatingOldPrescriptionMode = false;
     this.stepNumber = 1;
     this.selectedDiagnosis = [];
     this.selectedSymptoms = [];
@@ -201,7 +290,7 @@ export class AddPrescriptionComponent implements DoCheck {
     this.isAddMedicationPageValid = false;
     this.ShowPrescriptionList = true;
     this.Hospitalization = { unitCare: null, diet: null };
-    this.isPageLoading=false;
+    this.isPageLoading = false;
     this._updateButtonsState();
   }
 
@@ -211,8 +300,10 @@ export class AddPrescriptionComponent implements DoCheck {
 
     // arrow function to hold the callback context ?? xD
     //if (index > this.stepsLimit + 1) return false;
-    if(this.isPageLoading) return false;
+    if (this.isPageLoading) return false;
     if (index < 1) return false;
+    //if we are currently updating an old prescription, we cant go back to patient select, UNTIL we deselect the current patient
+    if (index == 1 && this.updatingOldPrescriptionMode) return false;
     if (index >= 1 && index == this.stepNumber) return false;
     if (index > 1 && this.selectedRegister == undefined) return false;
     if (index > 4 && !this.isAddMedicationPageValid) return false;
@@ -221,10 +312,6 @@ export class AddPrescriptionComponent implements DoCheck {
 
   emitFinishEventToChild() {
     this.eventsSubject.next();
-  }
-
-  handlePosologyChange(posologies: PosologyDto[]) {
-    this.newPosologies = posologies;
   }
 
   handlePageValidationChange(pageIndex: number, isPageValid: boolean) {
@@ -256,6 +343,7 @@ export class AddPrescriptionComponent implements DoCheck {
   onSelectPatientChange(register: RegisterForPrescription | undefined) {
     if (register == undefined) {
       this.selectedRegister = undefined;
+      this.updatingOldPrescriptionMode = false;
       this.stepNumber = 1;
     } else {
       if (this.stepNumber == 1) {
@@ -266,6 +354,7 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   onClickNewPrescriptionEventHandler(viewPrescriptions: boolean) {
+    this.clearWizard();
     this.ShowPrescriptionList = viewPrescriptions;
   }
 
@@ -279,7 +368,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
   /* wizard buttons */
   SwitchToStep(index: number) {
-    if(this.isPageLoading) return;
+    if (this.isPageLoading) return;
 
     if (index === 0) {
       this.onSelectPatientChange(undefined);
@@ -351,10 +440,9 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   private _updateButtonsState() {
-    if(this.isPageLoading){
+    if (this.isPageLoading) {
       this.setNextButtonClass('', 'disabled');
-    }
-    else if (!this.validatePageSwitch(this.stepNumber + 1)) {
+    } else if (!this.validatePageSwitch(this.stepNumber + 1)) {
       this.setNextButtonClass('', 'disabled');
     } else {
       //reset styles
@@ -376,10 +464,9 @@ export class AddPrescriptionComponent implements DoCheck {
         this.nextButtonContent.label = 'Finish';
     }
 
-    if(this.isPageLoading){
+    if (this.isPageLoading) {
       this.setBackButtonClass('', 'disabled');
-    }
-    else if (!this.validatePageSwitch(this.stepNumber - 1)) {
+    } else if (!this.validatePageSwitch(this.stepNumber - 1)) {
       this.setBackButtonClass('', 'disabled');
     } else {
       //reset styles

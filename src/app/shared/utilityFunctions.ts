@@ -177,3 +177,28 @@ export function getActiveMedications(register: RegisterForPrescription):Posology
   })
   return activePosologies;
 }
+
+
+export function extractErrorMessage(error: any): string {
+  let errorMessage = '';
+
+  // Check if the error has a single message property
+  if (error.error && error.error.message) {
+    errorMessage = error.error.message;
+  }
+  // Check if the error has an array of errors
+  else if (error.error && Array.isArray(error.error.errors)) {
+    errorMessage = error.error.errors.map((err:any) => err.message).join(', ');
+  }
+  // Check if the error has an errors object with individual error messages
+  else if (error.error && typeof error.error.errors === 'object') {
+    const errorMessages = Object.values(error.error.errors).map((err:any) => err.message || err);
+    errorMessage = errorMessages.join(', ');
+  }
+  // If none of the above cases match, return the original error object as a string
+  else {
+    errorMessage = error.toString();
+  }
+
+  return errorMessage;
+}
