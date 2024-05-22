@@ -1,0 +1,182 @@
+<div class="container mt-4">
+    <div class="row">
+ 
+      <div class="col-md-8 order-md-1">
+        <form class="needs-validation" novalidate="">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="firstName"
+                placeholder="First name"
+                required=""
+              />
+              <div class="invalid-feedback">
+                Valid first name is required.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="lastName"
+                placeholder="Last name"
+                required="Last name"
+              />
+              <div class="invalid-feedback">
+                Valid last name is required.
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">CIN</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="CIN"
+                placeholder="Enter CIN"
+                required=""
+              />
+              <div class="invalid-feedback" style="width: 100%">
+                Your CIN is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">CNAM</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="CNAM"
+                placeholder="Enter CNAM Code"
+                required=""
+              />
+              <div class="invalid-feedback" style="width: 100%">
+                Your CNAM Code is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Assurance</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="Assurance"
+                placeholder="Enter Assurance Code"
+                required=""
+              />
+              <div class="invalid-feedback" style="width: 100%">
+                Your Assurance is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="Email (Optional)"
+            />
+            <div class="invalid-feedback">
+              Please enter a valid email address for shipping
+              updates.
+            </div>
+          </div>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              placeholder="Address (Optional)"
+              required=""
+            />
+            <div class="invalid-feedback">
+              Please enter your shipping address.
+            </div>
+          </div>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="address2"
+              placeholder="Address 2 (Optional)"
+            />
+          </div>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                style="width: 200px"
+                id="activity"
+                formControlName="activity"
+                placeholder="Activity Status"
+                required
+                list="activityOptions"
+              />
+           
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                style="width: 200px"
+                id="country"
+                formControlName="country"
+                placeholder="Select a Country"
+                required
+                list="countryOptions"
+              />
+         
+              <div class="invalid-feedback">
+                Please select a valid country.
+              </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                style="width: 200px"
+                id="state"
+                formControlName="state"
+                placeholder="Select a State"
+                required
+                list="stateOptions"
+              />
+              
+              <div class="invalid-feedback">
+                Please select a valid state.
+              </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="zipCode"
+                style="width: 110px"
+                placeholder="Zip-Code"
+                required
+              />
+              <div class="invalid-feedback">Zip code required.</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
