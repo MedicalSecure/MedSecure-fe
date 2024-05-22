@@ -28,8 +28,6 @@
       [matAutocomplete]="auto"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)"
-      [disabled]="disabled"
-      
     />
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" (optionActivated)="setIsAdditionEnabled(false)" (closed)="setIsAdditionEnabled(true)">
       @if(ValueInput.value.length >= minSearchLength)

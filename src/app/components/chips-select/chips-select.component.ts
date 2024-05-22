@@ -159,7 +159,7 @@ export class ShipsSelectComponent<T> {
     );
     this._verifySearchPropertyName();
     this._verifyImagePropertyName();
-
+    this.disabled ? this.ObjectControl.disable() : this.ObjectControl.enable();
     //set the original input value (this is needed when the forceOpenAutocompletePanel is called from the parent)
     if (!this.keepFilterAfterSelection)
       this.minSearchLength = this.minimumSearchLength;
@@ -325,7 +325,8 @@ export class ShipsSelectComponent<T> {
     if (!this.fullData || this.fullData.length == 0) return;
     const firstDataItem = this.fullData[0] as Record<string, any>;
     if (!firstDataItem.hasOwnProperty(this.searchPropertyName)) {
-      this.disabled = true;
+      this.ObjectControl.disable();
+      //this.disabled = true;
       throw new TypeError(
         'Chip select component : ' +
           " the provided data doesn't contain the searchPropertyName : " +
@@ -337,7 +338,8 @@ export class ShipsSelectComponent<T> {
     let searchablePropertyType =
       typeof this.fullData[0][this.searchPropertyName as keyof T];
     if (['number', 'string'].includes(searchablePropertyType) == false) {
-      this.disabled = true;
+      //this.disabled = true;
+      this.ObjectControl.disable();
       throw new TypeError(
         'Chip select component : ' +
           'the provided searchPropertyName ( ' +

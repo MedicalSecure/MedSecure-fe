@@ -1,5 +1,13 @@
 import { MatSelectModule } from '@angular/material/select';
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges ,OnChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  OnChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,7 +43,7 @@ import { MedicationDto } from '../../types/medicationDTOs';
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css',
 })
-export class SearchBarComponent implements OnInit ,OnChanges {
+export class SearchBarComponent implements OnInit, OnChanges {
   searchControl = new FormControl();
   @Input()
   displaySelectedMedication = true;
@@ -62,8 +70,9 @@ export class SearchBarComponent implements OnInit ,OnChanges {
       : { label: 'Name', medicationKey: 'name' };
   Medications: MedicationDto[] = [];
   filteredMedications: Observable<MedicationDto[]>;
-  
-  hasReachedLimit= this.selectedMedications.length === this.maxNumberOfSelectedMedications;
+
+  hasReachedLimit =
+    this.selectedMedications.length === this.maxNumberOfSelectedMedications;
 
   ngOnChanges(changes: SimpleChanges) {
     // Check if the inputVariable has changed
@@ -72,11 +81,14 @@ export class SearchBarComponent implements OnInit ,OnChanges {
     }
   }
 
-  updateFormControlState(){
-    this.hasReachedLimit= this.selectedMedications.length === this.maxNumberOfSelectedMedications;
-    this.hasReachedLimit ? this.searchControl.disable(): this.searchControl.enable()
-  }
+  updateFormControlState() {
+    this.hasReachedLimit = this.selectedMedications.length === this.maxNumberOfSelectedMedications;
 
+    let c1 = this.hasReachedLimit;
+    let c2 = this.selectedSearchTerm == undefined || this.selectedSearchTerm == null;
+    if (c1 || c2) this.searchControl.disable();
+    else this.searchControl.enable();
+  }
 
   constructor(private medicationService: MedicationService) {
     this.filteredMedications = this.searchControl.valueChanges.pipe(
@@ -84,7 +96,6 @@ export class SearchBarComponent implements OnInit ,OnChanges {
       map((searchTerm) => this.filterMedications(searchTerm))
     );
   }
-
 
   ngOnInit(): void {
     this.medicationService.getMedications().subscribe(
@@ -94,7 +105,7 @@ export class SearchBarComponent implements OnInit ,OnChanges {
       null,
       () => this.afterLoadingData()
     );
-    this.updateFormControlState()
+    this.updateFormControlState();
   }
 
   afterLoadingData() {
@@ -148,7 +159,12 @@ export class SearchBarComponent implements OnInit ,OnChanges {
   }
 
   onSearchKeySelectionChange(event: MatChipListboxChange) {
-    if(event==undefined || event.source == undefined || event.source.value == undefined) return;
+    if (
+      event == undefined ||
+      event.source == undefined ||
+      event.source.value == undefined
+    )
+      return;
     this.selectedSearchTerm = event.source.value;
     this.emitSelectedMedications();
   }
@@ -159,9 +175,9 @@ export class SearchBarComponent implements OnInit ,OnChanges {
     ].toString();
   }
 
-  removeMedication(medication: MedicationDto,index:any): void {
+  removeMedication(medication: MedicationDto, index: any): void {
     //better performance
-    //this.selectedMedications = this.selectedMedications.filter(med => med != medication) 
+    //this.selectedMedications = this.selectedMedications.filter(med => med != medication)
     this.selectedMedications.splice(index, 1);
     this.emitSelectedMedications();
   }
@@ -169,7 +185,6 @@ export class SearchBarComponent implements OnInit ,OnChanges {
   private emitSelectedMedications(): void {
     this.selectedMedicationsChange.emit(this.selectedMedications);
     this.updateFormControlState();
-
   }
 }
 

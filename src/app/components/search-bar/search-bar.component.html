@@ -9,8 +9,8 @@
         [matAutocomplete]="auto"
         class="form-control shadow-sm"
         style="border-color: rgb(238, 238, 238); height: 2.6rem"
-        [disabled]="selectedSearchTerm == undefined || selectedSearchTerm == null"
       />
+      <!-- test the input without [disabled]="selectedSearchTerm == undefined || selectedSearchTerm == null" -->
       <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
         <ng-container *ngFor="let medication of filteredMedications | async" class="d-flex align-items-center">
           <mat-option (onSelectionChange)="onChangeSelectedMedication(medication)" class="result">
