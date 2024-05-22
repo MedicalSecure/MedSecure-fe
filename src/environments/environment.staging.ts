@@ -1,8 +1,13 @@
-// environment.staging.ts
-
 export const environment = {
-  production: false,
-  environmentName: "staging",
-  apiUrl: 'https://api.example.com/staging',
-  // Add other staging-specific configurations here
+	production: false,
+	msalConfig: {
+		auth: {
+			clientId: 'ENTER_CLIENT_ID',
+			authority: 'ENTER_AUTHORITY'
+		}
+	},
+	apiConfig: {
+		scopes: ['ENTER_SCOPE'],
+		uri: 'ENTER_URI'
+	}
 };

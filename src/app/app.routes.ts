@@ -14,10 +14,14 @@ import { TasksComponent } from './pages/tasks/tasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { FailedComponent } from './pages/failed/failed.component';
+import { MsalGuard } from '@azure/msal-angular';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
+  //{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent ,
+  canActivate: [MsalGuard]},
   { path: 'unit-care', component: UnitCareComponent },
   { path: 'visits', component: Visits },
   { path: 'widgets', component: WidgetsComponent },
@@ -31,4 +35,13 @@ export const routes: Routes = [
   { path: 'register-details', component: MasonryDpiComponent },
   { path: 'register-form', component: RegisterFormComponent },
   { path: 'register', component: RegisterViewComponent },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [MsalGuard]
+},
+{
+    path: 'login-failed',
+    component: FailedComponent
+}
 ];

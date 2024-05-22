@@ -43,7 +43,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "with": "src/environments/environment.dev.ts"
                 }
               ]
             },
@@ -91,6 +91,9 @@
             },
             "production": {
               "buildTarget": "medsecure-fe:build:production"
+            },
+            "e2e": {
+              "buildTarget": "angular17-standalone-sample:build:e2e"
             }
           },
           "defaultConfiguration": "development"

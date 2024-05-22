@@ -4,12 +4,17 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run postinstall:msal-angular && ng build",
+    "postinstall:msal-angular": "node ../sample-scripts/useMsalAngularTarball.js",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "jest"
   },
   "private": true,
   "dependencies": {
+    "@azure/msal-angular": "^3.0.13",
+    "@azure/msal-browser": "^3.10.0",
     "@angular/animations": "^17.1.0",
     "@angular/cdk": "^17.1.2",
     "@angular/common": "^17.1.0",
@@ -92,6 +97,7 @@
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
+    "e2e-test-utils": "file:../../e2eTestUtils",
     "@angular-devkit/build-angular": "^17.1.1",
     "@angular/cli": "^17.1.1",
     "@angular/compiler-cli": "^17.1.0",
