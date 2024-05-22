@@ -29,12 +29,6 @@ export class DietComponent {
     },
     {
       id: 3,
-      title: 'Add Diet',
-      matIconName: '',
-      iconClass: 'fa fa-apple-alt',
-    },
-    {
-      id: 4,
       title: 'Add Meal',
       matIconName: '',
       iconClass: 'fa fa-utensils', 
