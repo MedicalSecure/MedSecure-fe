@@ -1,10 +1,8 @@
-
 import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
 import { FamilyStatus, Gender, PrescriptionStatus } from '../enums/enum';
 import { UnitCareDTO } from './UnitCareDTOs';
 import { MedicationDto } from './medicationDTOs';
-
 
 export type GetPrescriptionsResponse = {
   prescriptions: PaginatedResult<PrescriptionDto>;
@@ -15,8 +13,6 @@ export type GetDiagnosisResponse = {
 export type GetSymptomsResponse = {
   symptom: PaginatedResult<SymptomDto>;
 };
-
-
 
 export type PostPredictDiagnosisResponse = {
   predictedDiagnosis: DiagnosisDto;
@@ -32,8 +28,7 @@ export type CreatePrescriptionResponse = {
 };
 export type GetPrescriptionsByRegisterIdResponse = {
   prescriptionsByRegisterId: { [key: string]: PrescriptionDto[] };
-  
-}
+};
 
 export type PrescriptionDto = {
   id: string;
@@ -42,9 +37,9 @@ export type PrescriptionDto = {
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyDto[];
-  bedId?: string | null;//match these types
+  bedId?: string | null; //match these types
   status: PrescriptionStatus;
-  dietId?: string | null;
+  diet?: DietForPrescriptionDTO | null;
   createdAt: Date;
   lastModified?: Date | null;
   createdBy: string;
@@ -52,16 +47,23 @@ export type PrescriptionDto = {
 };
 
 export type PrescriptionCreateDto = {
-  id?:string;
+  id?: string;
   registerId: string;
   doctorId: string;
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyCreateDto[];
-  unitCare: UnitCareDTO;//match these types
-  dietId?: string | null;
+  unitCare: UnitCareDTO | null; //match these types
+  diet?: DietForPrescriptionDTO | null;
   createdAt: Date;
   createdBy: string;
+};
+
+export type DietForPrescriptionDTO = {
+  id?: string;
+  startDate: Date;
+  endDate: Date;
+  dietsId: string[];
 };
 
 export type GetPrescriptionsResult = {
@@ -131,7 +133,6 @@ export type DoctorDto = {
   specialty: string;
   dateOfBirth: Date;
 };
-
 
 export type PatientForPrescription = {
   id: string;

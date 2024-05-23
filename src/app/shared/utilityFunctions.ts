@@ -202,3 +202,14 @@ export function extractErrorMessage(error: any): string {
 
   return errorMessage;
 }
+
+
+export function getDateOnlyFromDateTime(dateTime:Date):string{
+  const year = dateTime.getFullYear();
+  const month = String(dateTime.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(dateTime.getDate()).padStart(2, '0');
+
+  // Format the date as a string in the desired format (e.g., "yyyy-MM-dd")
+  const dateOnly = `${year}-${month}-${day}`;
+  return dateOnly;
+}

@@ -11,12 +11,12 @@ export type GetDietResponse = {
 
   
 export type DietDto = {
-    Id: string;
-    PatientId: string;
-    DietType: DietType;
-    StartDate: Date;
-    EndDate: Date;
-    Meals: MealDto[];
+    id: string;
+    patientId: string;
+    dietType: DietType;
+    startDate: Date;
+    endDate: Date;
+    meals: MealDto[];
 };
 
 export type FoodDto = {

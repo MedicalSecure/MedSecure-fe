@@ -56,6 +56,8 @@ export class PrescriptionListComponent implements OnInit {
   @Input()
   checked: boolean = true;
 
+  @Input() lastCreatedPrescriptionIdFromResponse:string|undefined;
+
   selectedRegister: RegisterDto | undefined = undefined;
   searchTerm: string = '';
   registrations: RegisterDto[] = [];
@@ -103,6 +105,11 @@ export class PrescriptionListComponent implements OnInit {
       );
     this.registrations = [...response];
     this.isLoading = false;
+    this.highlightLastAddedPrescription()
+  }
+
+  highlightLastAddedPrescription(){
+    
   }
 
   onClickRefresh() {

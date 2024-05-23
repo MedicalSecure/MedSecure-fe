@@ -91,8 +91,9 @@
                 <!-- Step 5: Hospitalization -->
                 <div [className]="stepNumber != 5 && 'd-none'">
                   <app-stp5-hospitalization
-                    
+                    (isHospitalizationPageValid)="handlePageValidationChange(5,$event)"
                     (formValueChange)="HandleHospitalizationChange($event)"
+                    [initialData]="HospitalizationForUpdate"
                   />
                 </div>
 
@@ -119,7 +120,10 @@
         }
         @if (this.ShowPrescriptionList == true) {
           <div id="add-prescription-body">
-            <app-prescription-list (onClickNewPrescriptionEvent)="onClickNewPrescriptionEventHandler($event)" (onClickUpdatePrescriptionEvent)="handleUpdatePrescription($event)"></app-prescription-list>
+            <app-prescription-list (onClickNewPrescriptionEvent)="onClickNewPrescriptionEventHandler($event)"
+             (onClickUpdatePrescriptionEvent)="handleUpdatePrescription($event)"
+             [lastCreatedPrescriptionIdFromResponse]="lastCreatedPrescriptionIdFromResponse"
+             ></app-prescription-list>
           </div>
         }
       </div>

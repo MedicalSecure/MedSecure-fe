@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { GetUnitCareResponse } from '../../types/UnitCareDTOs';
+import { Observable, map } from 'rxjs';
+import { GetUnitCareResponse, UnitCareDTO } from '../../types/UnitCareDTOs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +17,24 @@ export class UnitCareService {
     let x = this.http.get<GetUnitCareResponse>(this.apiUrl);
     //debugger;
     return x;
+  }
+
+  getUnitCareByBedId(bedId: string): Observable<UnitCareDTO | undefined> {
+    this.apiUrl = "../../../assets/data/unitcares.json";
+    return this.http.get<GetUnitCareResponse>(this.apiUrl).pipe(
+      map((unitCares: GetUnitCareResponse) => unitCares.unitCares.data.find(uc => 
+        {
+          let isUnitCareFound=false;
+          uc.rooms.forEach(room=>{
+            room.equipments.forEach(bed=>{
+              isUnitCareFound=bed.id==bedId
+              if(isUnitCareFound==true) return;
+            })
+            if(isUnitCareFound==true) return;
+          })
+          return isUnitCareFound;
+        }
+      ))
+    );
   }
 }

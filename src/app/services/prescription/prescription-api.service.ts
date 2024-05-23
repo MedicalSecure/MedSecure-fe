@@ -68,10 +68,16 @@ export class PrescriptionApiService implements ActivityService {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
-    let x = this.http.get<GetSymptomsResponse>(this.apiUrl + '/Symptoms', {
-      params,
-    });
-    return x;
+
+
+      return timer(5000).pipe(
+        delay(5000), // Delaying the emission by 3 seconds
+        switchMap(() =>
+          this.http.get<GetSymptomsResponse>(this.apiUrl + '/Symptoms', {
+            params,
+          })
+        )
+      );
   }
 
   getDiagnosis(
@@ -132,7 +138,8 @@ export class PrescriptionApiService implements ActivityService {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
-    return this.http
+    
+      return this.http
       .get<GetRegistrationsResponse>(apiUrl + '/registration.json', { params })
       .pipe(
         map((response) => {

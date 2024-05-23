@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { GetDietResponse } from '../../types/DietDTOs';
+import { Observable, filter, map, mergeMap, toArray } from 'rxjs';
+import { DietDto, GetDietResponse } from '../../types/DietDTOs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -16,5 +16,23 @@ export class DietService {
     let x = this.http.get<GetDietResponse>(this.apiUrl);
     //debugger;
     return x;
+  }
+
+  getDietById(dietId: string): Observable<DietDto | undefined> {
+    this.apiUrl = "../../../assets/data/diets.json";
+    return this.http.get<GetDietResponse>(this.apiUrl).pipe(
+      map((DietResponse: GetDietResponse) => DietResponse.diets.data.find(diet => 
+        {
+          return diet.id==dietId;
+        }
+      ))
+    );
+  }
+
+  getDietsByIdList(dietIdList: string[]): Observable<DietDto[]> {
+    this.apiUrl = "../../../assets/data/diets.json";
+    return this.http.get<GetDietResponse>(this.apiUrl).pipe(
+      map((response: GetDietResponse) => response.diets.data.filter((diet: DietDto) => dietIdList.includes(diet.id)))
+    );
   }
 }

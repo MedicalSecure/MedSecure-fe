@@ -9,13 +9,17 @@ import {
   wizardStepType,
 } from '../../../components/wizard-header/wizard-header.component';
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
-import { Subject } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PrescriptionListComponent } from '../prescription-list/prescription-list.component';
-import { calculateAge, extractErrorMessage } from '../../../shared/utilityFunctions';
+import {
+  calculateAge,
+  extractErrorMessage,
+} from '../../../shared/utilityFunctions';
 import {
   DiagnosisDto,
+  DietForPrescriptionDTO,
   PosologyCreateDto,
   PosologyDto,
   PrescriptionCreateDto,
@@ -40,6 +44,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
 import { UnitCareDTO } from '../../../types/UnitCareDTOs';
 import { MedicationService } from '../../../services/medication/medication.service';
+import { UnitCareService } from '../../../services/unitCare/unit-care.service';
+import { DietService } from '../../../services/diet/diet.service';
+import { DietDto } from '../../../types/DietDTOs';
 
 @Component({
   selector: 'app-add-prescription',
@@ -65,8 +72,8 @@ export class AddPrescriptionComponent implements DoCheck {
   @ViewChild(ErrorMessageComponent)
   errorMessageComponent!: ErrorMessageComponent;
 
-  @ViewChild(Stp3AddDiagnosticComponent)
-  stp3AddDiagnosticComponent!: Stp3AddDiagnosticComponent;
+  @ViewChild(Stp5HospitalizationComponent)
+  stp5HospitalizationComponent!: Stp5HospitalizationComponent;
 
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
@@ -75,12 +82,15 @@ export class AddPrescriptionComponent implements DoCheck {
   newPosologies: PosologyDto[] = [];
   selectedRegister: RegisterForPrescription | undefined;
   isAddMedicationPageValid: boolean = false;
+  isHospitalizationValid: boolean = false;
   ShowPrescriptionList: boolean = true;
   isPageLoading = false;
   updatingOldPrescriptionMode = false;
   wizardSteps: wizardStepType[] = _steps;
   Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
-  prescriptionId:string; // used only when updating a prescription
+  HospitalizationForUpdate: stp5FormsValueEvent = { unitCare: null, diet: null };
+  oldPrescriptionToUpdate: PrescriptionDto; // used only when updating a prescription
+  lastCreatedPrescriptionIdFromResponse: string | undefined; // After we do the post, the new result will be saved here
 
   eventsSubject: Subject<void> = new Subject<void>();
 
@@ -89,7 +99,9 @@ export class AddPrescriptionComponent implements DoCheck {
 
   constructor(
     private prescriptionApiService: PrescriptionApiService,
-    private medicationService: MedicationService
+    private medicationService: MedicationService,
+    private unitCareService: UnitCareService,
+    private dietService: DietService
   ) {}
 
   ngOnInit() {
@@ -135,15 +147,20 @@ export class AddPrescriptionComponent implements DoCheck {
       }
     );
     let doctorIdd = '55555555-5555-5555-5555-555555555554'; //TODO
-
-    let emptyUnitCare = {
-      id: '',
-      type: '',
-      description: '',
-      title: '',
-      rooms: [],
-      personnels: [],
-    };
+    let diet: DietForPrescriptionDTO | null = null;
+    if (
+      this.Hospitalization.unitCare != null &&
+      this.Hospitalization.diet != null &&
+      this.Hospitalization.diet.diets.length > 0
+    ) {
+      //if we have a unitCare and diets => create a diet app
+      if (this.Hospitalization.diet.diets)
+        diet = {
+          startDate: this.Hospitalization.diet.dateRange[0],
+          endDate: this.Hospitalization.diet.dateRange[1],
+          dietsId: this.Hospitalization.diet.diets.map((diet) => diet.id),
+        };
+    }
 
     const finalPrescription: PrescriptionCreateDto = {
       registerId: this.selectedRegister.id,
@@ -153,21 +170,25 @@ export class AddPrescriptionComponent implements DoCheck {
       createdAt: new Date(),
       createdBy: doctorIdd, //TODO
       posologies: filteredPosologies,
-      unitCare: this.Hospitalization.unitCare ?? emptyUnitCare,
-      dietId: this.Hospitalization.diet?.Id,
+      unitCare: this.Hospitalization.unitCare ?? null,
+      diet: diet,
     };
-    //console.log(JSON.stringify(finalPrescription));
-    if (this.updatingOldPrescriptionMode) {
+    console.log(JSON.stringify(finalPrescription));
+    if (
+      this.updatingOldPrescriptionMode &&
+      this.oldPrescriptionToUpdate &&
+      this.oldPrescriptionToUpdate.id
+    ) {
       //UPDATING : PUT
-      finalPrescription.id = this.prescriptionId;
-      this.prescriptionApiService
-      .putPrescriptions(finalPrescription)
-      .subscribe(
+      finalPrescription.id = this.oldPrescriptionToUpdate.id;
+      this.prescriptionApiService.putPrescriptions(finalPrescription).subscribe(
         (response) => {
           this.ShowPrescriptionList = true;
           this.clearWizard();
           console.log(response);
           this.isPageLoading = false;
+          this.lastCreatedPrescriptionIdFromResponse = response.id;
+
         },
         (error) => {
           console.error(extractErrorMessage(error));
@@ -182,10 +203,11 @@ export class AddPrescriptionComponent implements DoCheck {
         .postPrescriptions(finalPrescription)
         .subscribe(
           (response) => {
-            this.ShowPrescriptionList = true;
             this.clearWizard();
+            this.ShowPrescriptionList = true;
             console.log(response);
             this.isPageLoading = false;
+            this.lastCreatedPrescriptionIdFromResponse = response.id;
           },
           (error) => {
             console.error(error.error);
@@ -197,8 +219,6 @@ export class AddPrescriptionComponent implements DoCheck {
     }
   }
 
-
-
   async handleUpdatePrescription({
     prescription,
     register,
@@ -207,7 +227,7 @@ export class AddPrescriptionComponent implements DoCheck {
     register: RegisterDto;
   }) {
     console.log(prescription);
-    this.prescriptionId = prescription.id;
+    this.oldPrescriptionToUpdate = prescription;
     this.clearWizard();
     this.updatingOldPrescriptionMode = true;
     this.ShowPrescriptionList = false;
@@ -221,13 +241,28 @@ export class AddPrescriptionComponent implements DoCheck {
     );
 
     this.selectedRegister = mapRegisterDtoToRegisterForPrescription(register);
-
-    this.Hospitalization = {
-      unitCare: await this.fetchUnitCareByBedId(prescription?.bedId),
-      diet: null,
-    };
+    if (
+      prescription?.bedId &&
+      prescription.diet &&
+      prescription.diet?.dietsId.length > 0
+    ) {
+      this.HospitalizationForUpdate = {
+        unitCare: await this.fetchUnitCareByBedId(prescription?.bedId),
+        diet: {
+          diets: await this.fetchDietByIdList(prescription.diet?.dietsId),
+          dateRange: [prescription.diet?.startDate, prescription.diet?.endDate],
+        },
+      };
+    } else {
+      this.HospitalizationForUpdate = {
+        unitCare: null,
+        diet: null,
+      };
+    }
     this._updateButtonsState();
     this.isPageLoading = false;
+    //this.stp5HospitalizationComponent.insertOldHospitalizationData(this.Hospitalization)
+
   }
 
   handlePosologyChange(posologies: PosologyDto[]) {
@@ -269,7 +304,23 @@ export class AddPrescriptionComponent implements DoCheck {
   async fetchUnitCareByBedId(
     bedId: string | null | undefined
   ): Promise<UnitCareDTO | null> {
-    return null;
+    if (bedId == null || bedId == undefined) {
+      return null;
+    }
+    let response = this.unitCareService.getUnitCareByBedId(bedId);
+    let unitCare = await firstValueFrom(response);
+    return unitCare ?? null;
+  }
+
+  async fetchDietByIdList(
+    DietIds: string[] | undefined | null
+  ): Promise<DietDto[]> {
+    if (DietIds == null || DietIds == undefined || DietIds.length == 0) {
+      return [];
+    }
+    let response = this.dietService.getDietsByIdList(DietIds);
+    let diet = await firstValueFrom(response);
+    return diet;
   }
 
   displayNewErrorMessage(
@@ -288,6 +339,7 @@ export class AddPrescriptionComponent implements DoCheck {
     this.newPosologies = [];
     this.selectedRegister = undefined;
     this.isAddMedicationPageValid = false;
+    this.isHospitalizationValid = false;
     this.ShowPrescriptionList = true;
     this.Hospitalization = { unitCare: null, diet: null };
     this.isPageLoading = false;
@@ -304,9 +356,10 @@ export class AddPrescriptionComponent implements DoCheck {
     if (index < 1) return false;
     //if we are currently updating an old prescription, we cant go back to patient select, UNTIL we deselect the current patient
     if (index == 1 && this.updatingOldPrescriptionMode) return false;
-    if (index >= 1 && index == this.stepNumber) return false;
+    if (index >= 1 && index == this.stepNumber) return false; //we don't have to switch to the same page (error)
     if (index > 1 && this.selectedRegister == undefined) return false;
     if (index > 4 && !this.isAddMedicationPageValid) return false;
+    if (index > 5 && !this.isHospitalizationValid) return false;
     return true;
   };
 
@@ -319,6 +372,7 @@ export class AddPrescriptionComponent implements DoCheck {
     //and then it will emit the make its corresponding variable isAddMedicationPageValid = true
     //this help prevent Next button clicks without valid steps!!
     if (pageIndex == 4) this.isAddMedicationPageValid = isPageValid;
+    else if (pageIndex == 5) this.isHospitalizationValid = isPageValid;
 
     this._updateButtonsState();
   }
@@ -345,6 +399,9 @@ export class AddPrescriptionComponent implements DoCheck {
       this.selectedRegister = undefined;
       this.updatingOldPrescriptionMode = false;
       this.stepNumber = 1;
+      let oldShowListState = this.ShowPrescriptionList;
+      this.clearWizard();
+      this.ShowPrescriptionList = oldShowListState;
     } else {
       if (this.stepNumber == 1) {
         this.SwitchToStep(2);
@@ -448,21 +505,6 @@ export class AddPrescriptionComponent implements DoCheck {
       //reset styles
       this.setNextButtonClass('', '', true);
     }
-    /*     if (this.selectedRegister == undefined) {
-      //append disabled
-      this.setNextButtonClass('', 'disabled');
-    } else if (this.stepNumber == 4 && !this.isAddMedicationPageValid) {
-      this.setNextButtonClass('', 'disabled');
-    } else {
-      //reset styles
-      this.setNextButtonClass('', '', true);
-    } */
-
-    if (this.stepNumber == this.stepsLimit) {
-      if (true)
-        //add form is valid here before finish
-        this.nextButtonContent.label = 'Finish';
-    }
 
     if (this.isPageLoading) {
       this.setBackButtonClass('', 'disabled');
@@ -473,11 +515,9 @@ export class AddPrescriptionComponent implements DoCheck {
       this.setBackButtonClass('', '', true);
     }
 
-    // if (this.stepNumber === 1) {
-    //   this.setBackButtonClass('', 'disabled'); //disabled
-    // } else {
-    //   this.setBackButtonClass('', '', true); //reset
-    // }
+    if (this.stepNumber == this.stepsLimit) {
+      this.nextButtonContent.label = 'Finish';
+    }
   }
 }
 const _nextButtonContent = {
