@@ -34,7 +34,7 @@
       </form>
     </div>
     <!-- Card Column -->
-    <div class="col-md-6 order-md-1">
+    <div class="col-md-6 order-md-1" style="margin-left: -4%;">
       <form class="needs-validation" novalidate>
           <div class="container mt-3">
               <div class="row">
@@ -45,8 +45,8 @@
                       </h5>
                       <li class="list-group-item">
                           <div class="form-group mb-0">
-                            <div *ngFor="let card of cards; let i = index">
-                              <app-card [cardId]="card.id" (remove)="removeCard($event)" (add)="addCardFromChild()"></app-card>
+                            <div *ngFor="let card of cards; let i = index" style="margin-top: 1%;">
+                              <app-card [cardId]="card.id" (remove)="removeCard($event)" (add)="addCardFromChild()" ></app-card>
                             </div>
                           </div>
                       </li>

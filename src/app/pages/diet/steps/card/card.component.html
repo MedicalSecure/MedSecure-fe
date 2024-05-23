@@ -19,10 +19,8 @@
   <div class="invalid-feedback">
     Please select an option.
   </div>
-
   <!-- Dropdown Menu -->
   <label for="foodSelect" style="margin-right: 10px;">Choose Food</label>
-
   <div style="display: flex; align-items: center;">
     <select class="form-control" id="foodSelect" name="foodSelect" required style="width: 90%; margin-right: 10px;">
         <option *ngFor="let food of FoodList" [value]="food">{{ food }}</option>
@@ -30,13 +28,12 @@
     <div class="invalid-feedback" style="margin-right: 10px;">
         Please select a food.
     </div>
-    <div (click)="addCard()"  style="background-color: transparent; margin-left: 1%; border-color:transparent; ">
+    <div (click)="addCard()"  style="background-color: transparent; margin-left: 1%; border-color:transparent;cursor: pointer; ">
       <i class="fas fa-plus"></i>
     </div>
-  <div class="icon-button" (click)="removeCard()" style="background-color: transparent; margin-left: 1%; border-color: transparent;">
+  <div class="icon-button" (click)="removeCard()" style="background-color: transparent; margin-left: 1%; border-color: transparent;cursor: pointer;">
     <i class="fas fa-trash"></i>
   </div>
-
 </div>
 
  
