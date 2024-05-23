@@ -14,6 +14,7 @@ import { AuthenticationResult, InteractionStatus, PopupRequest, RedirectRequest,
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Component({
     selector: 'app-root',
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
+    private msalBroadcastService: MsalBroadcastService, private http:HttpClient
   ) {
   }
 
@@ -137,4 +138,45 @@ export class AppComponent implements OnInit, OnDestroy {
     this._destroying$.next(undefined);
     this._destroying$.complete();
   }
+
+
+
+
+
+  onApiCall(): void {
+    console.log('Initiating API call');
+    
+    this.authService
+      .acquireTokenSilent({
+        scopes: ['https://medsecure.onmicrosoft.com/medsecure/api/tasks.read', 'https://medsecure.onmicrosoft.com/medsecure/api/tasks.write'],
+      })
+      .subscribe(
+        (result: AuthenticationResult) => {
+          console.log('Token acquired:', result);
+
+          const headers = new HttpHeaders({
+            'Authorization': 'Bearer ' + result.accessToken,
+          });
+
+          this.http
+            .get(API_ENDPOINT, {
+              responseType: 'text',
+              headers: headers,
+            })
+            .subscribe(
+              (response) => {
+                console.log('API response:', response);
+              },
+              (error) => {
+                console.error('HTTP GET request error:', error);
+              }
+            );
+        },
+        (error) => {
+          console.error('Token acquisition error:', error);
+        }
+      );
+  }
 }
+
+const API_ENDPOINT = 'http://localhost:8080/api/WeatherForecast/usa';

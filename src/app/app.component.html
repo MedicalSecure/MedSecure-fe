@@ -25,6 +25,16 @@
     </mat-menu>
   
   </mat-toolbar>
+
+  <div class="container">
+    <app-navbar></app-navbar>
+    <div class="row">
+        <div class="col text-center">
+          <button class="btn btn-success"  (click)="onApiCall()">Call API</button>
+        </div>
+      </div>
+</div>
+
   <div class="container">
     <!--This is to avoid reload during acquireTokenSilent() because of hidden iframe -->
     @if (!isIframe) {
