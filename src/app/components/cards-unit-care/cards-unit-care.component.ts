@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { UnitCareService } from '../../services/unit-care.service';
+import { UnitCareService } from '../../services/unitCare/unit-care.service';
 import { Router } from '@angular/router';
-import { UnitCare } from '../../model/UnitCareData';
+import { UnitCare } from '../../model/unitCare/UnitCareData';
 
 
 

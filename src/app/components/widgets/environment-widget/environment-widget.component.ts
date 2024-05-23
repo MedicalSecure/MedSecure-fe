@@ -47,19 +47,23 @@ export class EnvironmentWidget implements OnChanges {
   @Input()selectedUniteSoin: any;
   public chartOptions!: Partial<ChartOptions>;
   constructor(private http: HttpClient) {
- 
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
-  
-    if (changes['datatemp'] && changes['datatemp'].currentValue || changes['datahum'] && changes['datahum'].currentValue || changes['dataele'] && changes['dataele'].currentValue 
+
+    if (changes['datatemp'] && changes['datatemp'].currentValue || changes['datahum'] && changes['datahum'].currentValue || changes['dataele'] && changes['dataele'].currentValue
     || changes['datalum'] && changes['datalum'].currentValue  || changes['datacateg'] && changes['datacateg'].currentValue) {
       this.chartOptions = {
         series: [
           {
             name: "Temperature Control Record",
             data: this.datatemp,
-       
+            style: {
+              fontSize: '16px',
+              fontFamily: 'Manrope, sans-serif',
+            }
+
           },
           {
             name: "Humidity Control Record",
@@ -76,7 +80,8 @@ export class EnvironmentWidget implements OnChanges {
         ],
         chart: {
           height: 350,
-          type: "line"
+          type: "line",
+          fontFamily: 'Manrope, sans-serif'
         },
         dataLabels: {
           enabled: false
@@ -107,12 +112,12 @@ export class EnvironmentWidget implements OnChanges {
           }
         },
         xaxis: {
-          type: 'datetime', 
+          type: 'datetime',
           labels: {
             datetimeUTC: false,
             trim: false
           },
-          categories: this.datacateg 
+          categories: this.datacateg
         },
         tooltip: {
           y: [
@@ -151,7 +156,7 @@ export class EnvironmentWidget implements OnChanges {
         }
       };
     }
-    console.log("ddddd",this.chartOptions.series)
+    // console.log("ddddd",this.chartOptions.series)
 
   }
 

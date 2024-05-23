@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
-import { UnitCare, UnitCareData } from '../model/UnitCareData';
+import { UnitCare, UnitCareData } from '../../model/unitCare/UnitCareData';
+
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 
 
-export class UnitCareService {
+export class UnitCareService  {
   constructor(private http: HttpClient) {}
+
 
   getCardData(): Observable<UnitCareData> {
 

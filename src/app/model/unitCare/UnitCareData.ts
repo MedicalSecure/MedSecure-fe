@@ -13,6 +13,7 @@ export  interface UnitCareData {
   type: string;
   description: string;
   title: string;
+  unitStatus: number;
   rooms: Room[];
   personnels: Personnel[];
 }

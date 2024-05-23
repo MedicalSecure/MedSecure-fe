@@ -10,8 +10,8 @@ import { RouterModule } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { UnitCareService } from '../../services/unit-care.service';
-import { UnitCare } from '../../model/UnitCareData';
+import { UnitCareService } from '../../services/unitCare/unit-care.service';
+import { UnitCare } from '../../model/unitCare/UnitCareData';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -26,6 +26,7 @@ type FormEquipment = FormGroup<{
 
 type FormRoom = FormGroup<{
   roomNumber: FormControl<string>;
+  status: FormControl<string>;
   equipments: FormArray<FormEquipment>;
 }>;
 
@@ -33,6 +34,7 @@ type Form = FormGroup<{
   title: FormControl;
   type: FormControl;
   description: FormControl;
+  unitStatus:FormControl;
   rooms: FormArray<FormRoom>;
   personnels: FormArray<any>;
 }>;
@@ -174,6 +176,7 @@ export class FormUnitCareComponent implements OnInit {
     title: '',
     description: '',
     type: '',
+    unitStatus:'',
     rooms: this.fb.array<FormRoom>([this.generateRoom()]),
     personnels: this.fb.array<any>([]),
   });
@@ -181,6 +184,7 @@ export class FormUnitCareComponent implements OnInit {
   generateRoom(): FormRoom {
     return this.fb.group({
       roomNumber: '',
+      status:'',
       equipments: this.fb.array<FormEquipment>([]),
     });
   }
@@ -213,15 +217,17 @@ export class FormUnitCareComponent implements OnInit {
   UnitCare: UnitCare | any;
   onSubmit() {
     console.log('test', this.unitCareForm.value);
-    console.log('test 2', this.unitCareForm.valid);
+
     if (this.unitCareForm.valid) {
       this.UnitCare = this.unitCareForm.value;
 
 
       let mappedUnitCare = this.UnitCare;
+      mappedUnitCare.unitStatus=this.tryParseNumber(this.UnitCare.unitStatus)
       mappedUnitCare.rooms = mappedUnitCare.rooms.map((room: any) => {
         return {
           ...room,
+          status:this.tryParseNumber(room.status),
           equipments: room.equipments.map((equipment: any) => {
             return {
               ...equipment,

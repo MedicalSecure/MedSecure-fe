@@ -65,9 +65,12 @@
                  </textarea
                   >
 
+                  <select class="field" formControlName="unitStatus"    style="margin-left: 5px;" >
+                    <option selected disabled value="">Status...</option>
+                    <option [value]="1">activated </option>
+                    <option [value]="2">deactivated </option>
 
-
-
+                  </select>
 
               </div>
                 <!-- Fin de la partie 1 -->
@@ -91,6 +94,8 @@
                         placeholder="Room number"
                         class="field"
                       />
+
+
                       <button
                       class="float-left"
                       mat-icon-button
@@ -102,6 +107,12 @@
                       <mat-icon>highlight_off</mat-icon>
                     </button>
                   </div>
+                  <select class="field" formControlName="status" style="width: 90%;">
+                    <option selected disabled value="">Status...</option>
+                    <option [value]="1">activated </option>
+                    <option [value]="2">deactivated </option>
+
+                  </select>
                     <div formArrayName="equipments" class="answers">
                       <div>equipments</div>
                       @for ( room of
