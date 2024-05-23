@@ -30,12 +30,12 @@
     <div class="invalid-feedback" style="margin-right: 10px;">
         Please select a food.
     </div>
-    <button  class="icon-button" style="background-color: transparent; margin-left: 1%; border-color:transparent; ">
+    <div (click)="addCard()"  style="background-color: transparent; margin-left: 1%; border-color:transparent; ">
       <i class="fas fa-plus"></i>
-    </button>
-    <button class="icon-button" style="background-color: transparent; margin-left: 1%; border-color:transparent; ">
-      <i class="fas fa-trash"></i>
-    </button>
+    </div>
+  <div class="icon-button" (click)="removeCard()" style="background-color: transparent; margin-left: 1%; border-color: transparent;">
+    <i class="fas fa-trash"></i>
+  </div>
 
 </div>
 

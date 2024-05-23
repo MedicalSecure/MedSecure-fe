@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,13 +10,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './card.component.css'
 })
 export class CardComponent {
-  @Output() addCard: EventEmitter<void> = new EventEmitter<void>();
   FoodOptions: string[] = ['Drink', 'Main Dish', 'Dessert', 'Starter'];
   StarterList = ['Soup', 'Salad', 'Bruschetta', 'Garlic Bread', 'Spring Rolls', 'Stuffed Mushrooms', 'Nachos'];
   MainDishList = ['Pizza', 'Burger', 'Pasta', 'Steak', 'Grilled Chicken', 'Fish and Chips', 'Tacos', 'Sushi', 'BBQ Ribs', 'Lasagna'];
   DessertList = ['Cake', 'Ice Cream', 'Pie', 'Brownies', 'Cheesecake', 'Pudding', 'Mousse', 'Cookies', 'Tiramisu', 'Macarons'];
   DrinkList = ['Soda', 'Juice', 'Water', 'Coffee', 'Tea', 'Milkshake', 'Smoothie', 'Wine', 'Beer', 'Cocktail'];
-
+  @Input() cardId: number;
+  @Output() remove = new EventEmitter<number>();
+  @Output() add = new EventEmitter<void>();
   constructor() {}
   FoodList :string[] = [];
   onOptionChange(selectedOption: string) {
@@ -36,5 +37,14 @@ export class CardComponent {
       default:
         this.FoodList = ["please select food option"];
     }
+  }
+  
+
+  removeCard() {
+    this.remove.emit(this.cardId);
+  }
+
+  addCard() {
+    this.add.emit();
   }
 }

@@ -14,6 +14,7 @@ import { AddDietComponent } from "../steps/add-diet/add-diet.component";
 
 export class DietComponent {
   stepNumber: number = 1;
+
   steps: wizardStepType[] = [
     {
       id: 1,
@@ -35,6 +36,7 @@ export class DietComponent {
     }    
   ];
     SwitchToStep(number: number) {
+      
     this.stepNumber = number;
   }
 }

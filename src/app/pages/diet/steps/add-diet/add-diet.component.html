@@ -45,7 +45,9 @@
                       </h5>
                       <li class="list-group-item">
                           <div class="form-group mb-0">
-                               <app-card></app-card>
+                            <div *ngFor="let card of cards; let i = index">
+                              <app-card [cardId]="card.id" (remove)="removeCard($event)" (add)="addCardFromChild()"></app-card>
+                            </div>
                           </div>
                       </li>
                   </ul>
