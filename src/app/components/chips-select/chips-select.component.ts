@@ -56,6 +56,7 @@ export class ShipsSelectComponent<T> {
   @Input() imagePropertyName: keyof T; // optional : add the property name of the image
   @Input() minimumSearchLength: number = 2;
   @Input() minimumAddedLabelLength: number = 5;
+  @Input() maximumNumberOfAddedItems: number = -1; //-1 is unlimited
   @Input() class: string = '';
   @Input() enableCustomAdditions: boolean = true;
   @Input() enableQuickSelectFromSuggestions: boolean = true;

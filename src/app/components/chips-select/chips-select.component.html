@@ -28,7 +28,7 @@
       [matAutocomplete]="auto"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)"
-      [disabled]="disabled" 
+      [disabled]="disabled || selectedChips.length>=maximumNumberOfAddedItems" 
     />
     <!-- TODO [disabled]="disabled" Remove this and Change to form.disable() -->
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" (optionActivated)="setIsAdditionEnabled(false)" (closed)="setIsAdditionEnabled(true)">
