@@ -103,6 +103,11 @@ export class Stp3AddDiagnosticComponent {
     }
   }
 
+  forceClearPage(){
+    this.selectedDiagnosis = [];
+    this.selectedSymptoms = [];
+  }
+
   selectedSymptomsChipsChange(result: onChipsSelectionEmitType<SymptomDto>) {
     // Access and use the selected indexes here
     if (result.lastAddedItem) {

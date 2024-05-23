@@ -218,6 +218,7 @@ export class PrescriptionListComponent implements OnInit {
 export function getPatientStatusFromRegister(register: RegisterDto): Status {
   if (register.history == undefined || register.history.length == 0)
     return Status.Out;
+
   let histories = register.history?.sort((a, b) => {
     // Convert dates to milliseconds since epoch for comparison
     const dateA = new Date(a.date).getTime();

@@ -69,6 +69,7 @@ export class Stp5HospitalizationComponent {
   selectedDiets: DietDto[] = [];
   minDietStartDiet = new Date();
 
+  private oldHospitalizationState: stp5FormsValueEvent | undefined;
   private _hasDietSuggestionsListOpenedOnce = false; //variable used to force suggest the Diet after first unit care selection
 
   myForm: FormGroup<stp5FormGroupType>;
@@ -87,9 +88,21 @@ export class Stp5HospitalizationComponent {
 
   ngOnInit() {
     this.formSubscription = this.myForm.valueChanges.subscribe((value) => {
+      const formStatus = this.myForm.status;
+
+      if (formStatus === 'DISABLED') return;
       const diet = value.diet ?? null;
       const unitCare = value.unitCare ?? null;
-      debugger;
+
+      if (unitCare != null) {
+        if (this.myForm.get('diet')?.disabled) {
+          this.myForm.get('diet')?.enable();
+          return;
+        }
+      } else {
+        if (this.myForm.get('diet')?.enabled)
+          this.myForm.get('diet')?.disable();
+      }
 
       if (
         this.DietList.length > 0 &&
@@ -108,20 +121,21 @@ export class Stp5HospitalizationComponent {
         this._hasDietSuggestionsListOpenedOnce = true;
       }
 
-      /* if (unitCare != null) {
-        if (this.myForm.get('diet')?.disabled)
-          this.myForm.get('diet')?.enable();
-      } else {
-        if (this.myForm.get('diet')?.enabled)
-          this.myForm.get('diet')?.disable();
-      } */
+      this.oldHospitalizationState = {
+        unitCare,
+        diet,
+      };
+      this.selectedDiets = diet?.diets ?? [];
 
       this.onIsPageValidChange();
-      //don't empty the parent data in case we are updating and the initial data to update is valid
-      /* debugger;
-      if (checkIsHospitalizationDataValid(this.initialData)==false) this.formValueChange.emit({ diet: diet, unitCare }); */
+
+      this.formValueChange.emit({ diet: diet, unitCare }); 
+
     });
     this.fetchUnitCaresThenDiets();
+    if (checkIsHospitalizationDataValid(this.initialData)) 
+      this.formValueChange.emit(this.initialData); 
+
   }
 
   ngOnDestroy() {
@@ -130,9 +144,16 @@ export class Stp5HospitalizationComponent {
     }
   }
 
-  onIsPageValidChange() {
-    debugger;
+  forceClearPage(){
+    this.onClearSelectedUnitCare();
+  }
+  onClearSelectedDiet() {
+    this.selectedDiets = [];
+    this.myForm.patchValue({ diet: null });
+    this.onIsPageValidChange();
+  }
 
+  onIsPageValidChange() {
     let selectedUnitCare = this.myForm.get('unitCare')?.value;
 
     if (!selectedUnitCare && this.allowNonHospitalizedPatients == false) {
@@ -168,19 +189,15 @@ export class Stp5HospitalizationComponent {
     this.isHospitalizationPageValid.emit(true);
   }
 
-  onClearSelectedDiet() {
-    this.selectedDiets = [];
-    this.myForm.patchValue({ diet: null });
-    this.onIsPageValidChange();
-  }
-
   onClearSelectedUnitCare() {
+    //don't clear if its already null
     if (this.myForm.get('unitCare')?.value == null) return;
-    this.onClearSelectedDiet(); //clear selected diets also
+
+    //clear selected diets also
+    this.selectedDiets = [];
     this.myForm.patchValue({ unitCare: null, diet: null });
     this.myForm.get('diet')?.disable();
   }
-
 
   fetchDiets() {
     this.isDietsLoading = true;
@@ -196,11 +213,9 @@ export class Stp5HospitalizationComponent {
   }
 
   mapDietsDataInCaseOfUpdate() {
-    debugger;
-
     //handle the update case (whenever the data is coming from the parent in initialData from an old prescription to update)
 
-    if (checkIsHospitalizationDataValid(this.initialData)==false) return;
+    if (checkIsHospitalizationDataValid(this.initialData) == false) return;
     //to remove ts errors
     if (!this.initialData || !this.initialData.diet) return;
 
@@ -239,13 +254,13 @@ export class Stp5HospitalizationComponent {
         dateRange: [this.initialData.diet.dateRange[0], null],
       };
       //this.selectedDietsDateRange = [this.initialData.diet.dateRange[0], null];
-      
+
       this.myForm.patchValue({ diet: newUpdatedDateDiet });
       this.selectedDietsDateRange = newUpdatedDateDiet.dateRange;
       return;
     }
     //this.selectedDietsDateRange = [...this.initialData.diet.dateRange];
-    this.selectedDiets=this.initialData.diet.diets;
+    this.selectedDiets = this.initialData.diet.diets;
     this.myForm.patchValue({ diet: this.initialData.diet });
   }
 
@@ -286,8 +301,6 @@ export class Stp5HospitalizationComponent {
   }
 
   selectedDietsChipsChange(result: onChipsSelectionEmitType<DietDto>) {
-    debugger;
-
     if (this.myForm.get('diet')?.disabled) {
       //to remove after fixing the disabled part
       this.selectedDiets = [];
@@ -306,7 +319,6 @@ export class Stp5HospitalizationComponent {
       this.onClearSelectedDiet();
       return;
     }
-    this.selectedDiets = result.SelectedObjectList;
     this.selectedDietsDateRange[1] =
       this.selectedDietsDateRange[1] ??
       this.getInitialDateRange(new Date(), 14)[1];
@@ -320,7 +332,6 @@ export class Stp5HospitalizationComponent {
   }
 
   onPeriodChange(newDateRange: DateRangeType) {
-    debugger;
     if (newDateRange === null) {
       //clear button disabling
       newDateRange = this.getInitialDateRange();
@@ -367,15 +378,15 @@ type stp5SelectedDietsType = {
   diets: DietDto[];
 };
 export function checkIsHospitalizationDataValid(
-  initialData: stp5FormsValueEvent | undefined | null
+  Data: stp5FormsValueEvent | undefined | null
 ): boolean {
-  if (!initialData || !initialData.diet) return false;
+  if (!Data || !Data.diet) return false;
 
   let isOldPrescriptionDataValid =
-    !!initialData.unitCare &&
-    !!initialData.diet.dateRange &&
-    initialData.diet.dateRange.length == 2 &&
-    !!initialData.diet.dateRange[0] &&
-    !!initialData.diet.dateRange[1];
+    !!Data.unitCare &&
+    !!Data.diet.dateRange &&
+    Data.diet.dateRange.length == 2 &&
+    !!Data.diet.dateRange[0] &&
+    !!Data.diet.dateRange[1];
   return isOldPrescriptionDataValid;
 }

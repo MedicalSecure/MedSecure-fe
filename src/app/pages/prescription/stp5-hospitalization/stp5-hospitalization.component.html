@@ -48,6 +48,7 @@
         [isLoading]="isDietsLoading"
         [selectedChips]="selectedDiets"
         [tooltipPropertyName]="'dietType'"
+        [maximumNumberOfAddedItems]="1"
       ></chips-select>
       <mat-icon
         title="Clear selection"
@@ -76,7 +77,7 @@
     </div>
     
     @if (selectedDiets.length > 0 && (myForm.get('diet')?.value?.dateRange?.length != 2 || !myForm.get('diet')?.value?.dateRange?.[1])) {
-      <div style="margin-top: -1rem" class="mb-3 text-danger d-flex align-content-center  "><mat-icon class="text-danger" style="font-size: 18px;margin-top: 0.1rem;">error_outline</mat-icon>At least one diet is <strong> required</strong></div>
+      <div style="margin-top: -1rem" class="mb-3 text-danger d-flex align-content-center  "><mat-icon class="text-danger" style="font-size: 18px;margin-top: 0.1rem;">error_outline</mat-icon><p>Diet Period is <strong> required</strong></p></div>
     
     }
   }

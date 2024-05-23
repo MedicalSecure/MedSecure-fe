@@ -47,7 +47,7 @@
               <div class="wizard-container" style="height: 490px; overflow-y: auto">
                 <!-- Step 1 : Patient Selection -->
                 <div [className]="stepNumber != 1 && 'd-none'">
-                  <app-stp1-patient-selection [(selectedRegister)]="selectedRegister" (selectedRegisterChange)="onSelectPatientChange($event)" />
+                  <app-stp1-patient-selection [selectedRegister]="selectedRegister" (selectedRegisterChange)="onSelectPatientChange($event)" />
                 </div>
 
                 <!-- Print a single line displaying Patient id | name - Age And Deselect Button -->
@@ -68,7 +68,7 @@
                 <!-- Step 3: Add Diagnostic -->
                 <div [className]="stepNumber != 3 && 'd-none'">
                   <app-stp3-add-diagnostic
-                  [updateInitialData]="{symptoms:selectedSymptoms,diagnosis:selectedDiagnosis}"
+                    [updateInitialData]="{symptoms:selectedSymptoms,diagnosis:selectedDiagnosis}"
                     [updatingOldPrescriptionMode]="updatingOldPrescriptionMode"
                     (onSelectedDiagnosisChange)="onSelectedDiagnosisChangeHandler($event)"
                     (onSelectedSymptomsChange)="onSelectedSymptomsChangeHandler($event)"

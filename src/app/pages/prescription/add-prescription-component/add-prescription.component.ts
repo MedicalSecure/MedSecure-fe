@@ -74,6 +74,8 @@ export class AddPrescriptionComponent implements DoCheck {
 
   @ViewChild(Stp5HospitalizationComponent)
   stp5HospitalizationComponent!: Stp5HospitalizationComponent;
+  @ViewChild(Stp3AddDiagnosticComponent)
+  stp3AddDiagnosticComponent!: Stp3AddDiagnosticComponent;
 
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
@@ -174,6 +176,7 @@ export class AddPrescriptionComponent implements DoCheck {
       diet: diet,
     };
     console.log(JSON.stringify(finalPrescription));
+    debugger;
     if (
       this.updatingOldPrescriptionMode &&
       this.oldPrescriptionToUpdate &&
@@ -343,6 +346,9 @@ export class AddPrescriptionComponent implements DoCheck {
     this.ShowPrescriptionList = true;
     this.Hospitalization = { unitCare: null, diet: null };
     this.isPageLoading = false;
+    if(this.stp3AddDiagnosticComponent) this.stp3AddDiagnosticComponent.forceClearPage()
+    if(this.stp5HospitalizationComponent) this.stp5HospitalizationComponent.forceClearPage()
+
     this._updateButtonsState();
   }
 
@@ -396,6 +402,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
   onSelectPatientChange(register: RegisterForPrescription | undefined) {
     if (register == undefined) {
+      // Deselect patient => clear old wizard
       this.selectedRegister = undefined;
       this.updatingOldPrescriptionMode = false;
       this.stepNumber = 1;
@@ -403,6 +410,13 @@ export class AddPrescriptionComponent implements DoCheck {
       this.clearWizard();
       this.ShowPrescriptionList = oldShowListState;
     } else {
+      //new patient is selected
+      if(this.selectedRegister != undefined){
+        // doctor switched registers/patient directly (without a deselect first)
+        //handle clear the wizard first (automatic deselect before preceding to select)
+        this.onSelectPatientChange(undefined);
+      }
+      this.selectedRegister = register;
       if (this.stepNumber == 1) {
         this.SwitchToStep(2);
       }
