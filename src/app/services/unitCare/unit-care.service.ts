@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { UnitCare, UnitCareData } from '../../model/unitCare/UnitCareData';
 import { GetUnitCareResponse, UnitCareDTO } from '../../types/UnitCareDTOs';
 
@@ -33,7 +33,6 @@ export class UnitCareService  {
 
   private apiVersion: number = 1; // Replace 'v1' with your desired API version
   private apiUrl = `http://localhost:5007/api/v${this.apiVersion}/UnitCare`;
-  constructor(private http: HttpClient) {}
 
   getUnitCares(): Observable<GetUnitCareResponse> {
     this.apiUrl="../../../assets/data/unitcares.json"
