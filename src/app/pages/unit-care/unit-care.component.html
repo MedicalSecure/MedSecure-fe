@@ -1,0 +1,38 @@
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">UnitCare</h4>
+            <p class="card-subtitle card-subtitle-dash">
+              Create infrastructure as crafts
+            </p>
+          </div>
+
+          <div class="btn-wrapper">
+            <a
+              href="#"
+              class="btn btn-primary text-white align-items-center"
+              [routerLink]="['/', 'unitCare-form']"
+              routerLinkActive="active"
+            >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> Add new unitCare
+            </a>
+            <a
+              href="#"
+              class="btn btn-danger text-white align-items-center"
+              [routerLink]="['/', 'report-issue-csv']"
+              style="border-color: red"
+            >
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
+        </div>
+
+     <app-cards-unit-care></app-cards-unit-care>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+@import '../node_modules/@syncfusion/ej2-base/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-calendars/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-lists/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-layouts/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-richtexteditor/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-grids/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-treegrid/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-gantt/styles/material.css';
+@import '../node_modules/@smart-webcomponents-angular/ganttchart/styles/smart.base.css';
+@import '../node_modules/@smart-webcomponents-angular/ganttchart/styles/smart.ganttchart.css';
+@import '../node_modules/@smart-webcomponents-angular/ganttchart/styles/smart.common.css';
+
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+
+/* Component DatepickerRangePopupComponent inside the prescription */
+/* Adjust the width and height of the calendar popup */
+#add-prescription-body {
+  .p-datepicker {
+    width: fit-content;
+    height: fit-content;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .p-datepicker table td {
+    padding: 0.2em;
+  }
+  .p-datepicker table td > span {
+    width: 2em;
+    height: 2em;
+    padding: 1rem;
+  }
+  .p-datepicker .p-datepicker-header {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .p-datepicker .p-datepicker-buttonbar {
+    padding: 0;
+  }
+}
 
