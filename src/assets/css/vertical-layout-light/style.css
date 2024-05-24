@@ -8674,7 +8674,21 @@
   --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+
+
+  /* change these */
+  --custom-header-height: 70px; /* 97px */
+  --custom-header-padding: 10px; /* 20px */
+  --content-tab-padding-top: 5px; /* 20px */
 }
+
+@media (max-width: 990px) {
+  :root {
+    --custom-header-padding: 0px; /* 20px */
+    --custom-header-height: 60px; /* 97px */
+  }
+}
+
 
 *,
 *::before,
@@ -25324,9 +25338,11 @@ dl li {
 }
 
 .tab-content {
-  border: 1px solid #dee2e6;
+  border: none; 
   border-top: 0;
-  padding: 2rem 1rem;
+  /* change these */
+  padding: 20px 0 0px 0;
+  padding-top: var(--content-tab-padding-top);
   text-align: justify;
 }
 
@@ -25383,7 +25399,6 @@ dl li {
 }
 
 .home-tab .tab-content {
-  padding: 24px 0;
   font-family: "Manrope", sans-serif;
   border: none;
 }
@@ -28346,14 +28361,14 @@ div.tagsinput span.tag a {
 }
 
 .page-body-wrapper {
-  min-height: calc(100vh - 97px);
+  min-height: calc(100vh - var(--custom-header-height));
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: row;
   flex-direction: row;
   padding-left: 0;
   padding-right: 0;
-  padding-top: 97px;
+  padding-top: var(--custom-header-height);
 }
 
 .page-body-wrapper.full-page-wrapper {
@@ -28365,7 +28380,7 @@ div.tagsinput span.tag a {
 .main-panel {
   transition: width 0.25s ease, margin 0.25s ease;
   width: calc(100% - 220px);
-  min-height: calc(100vh - 97px);
+  min-height: calc(100vh - var(--custom-header-height));
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
@@ -28378,10 +28393,11 @@ div.tagsinput span.tag a {
     width: 100%;
   }
 }
-
+/* change these */
 .content-wrapper {
   background: #F4F5F7;
-  padding: 1.5rem 2.187rem 1.5rem 3.5rem;
+  /* padding: 1.5rem 2.187rem 1.5rem 3.5rem; */
+  padding: 0 1rem 1.5rem 1rem;
   width: 100%;
   -webkit-flex-grow: 1;
   flex-grow: 1;
@@ -28389,13 +28405,15 @@ div.tagsinput span.tag a {
 
 @media (max-width: 767px) {
   .content-wrapper {
-    padding: 0 1.5rem 1.5rem 1.5rem;
+    /* change these for mobile phones*/
+    /* padding: 0 1.5rem 1.5rem 1.5rem; */
+    padding: 0 0.1rem 1rem 0.1rem;
   }
 }
 
 /* Sidebar */
 .sidebar {
-  min-height: calc(100vh - 97px);
+  min-height: calc(100vh - var(--custom-header-height));
   background: #F4F5F7;
   font-family: "Manrope", sans-serif;
   font-weight: 500;
@@ -28746,8 +28764,8 @@ div.tagsinput span.tag a {
 @media screen and (max-width: 991px) {
   .sidebar-offcanvas {
     position: fixed;
-    max-height: calc(100vh - 97px);
-    top: 97px;
+    max-height: calc(100vh - var(--custom-header-height));
+    top: var(--custom-header-height);
     bottom: 0;
     overflow: auto;
     right: -220px;
@@ -28783,8 +28801,10 @@ div.tagsinput span.tag a {
   -moz-transition: width 0.25s ease, background 0.25s ease;
   -ms-transition: width 0.25s ease, background 0.25s ease;
   width: 220px;
-  height: 97px;
-  padding: 20px 35px;
+  height: var(--custom-header-height);
+  /* change these */
+  /* padding: 20px 35px; */
+  padding: var(--custom-header-padding) 35px;
 }
 
 .sidebar-dark .navbar .navbar-brand-wrapper {
@@ -28889,10 +28909,13 @@ div.tagsinput span.tag a {
   color: #6C7383;
   padding-left: 3.5rem;
   padding-right: 2.187rem;
-  padding-top: 30px;
-  padding-bottom: 25px;
+  /* change these */
+  /* padding-top: 30px;
+  padding-bottom: 25px; */
+  padding-top: calc(var(--custom-header-padding) * 1.5);
+  padding-bottom: calc(var(--custom-header-padding) * 1.25);
   width: calc(100% - 220px);
-  height: 97px;
+  height: var(--custom-header-height);
 }
 
 @media (max-width: 991px) {
@@ -29153,7 +29176,7 @@ div.tagsinput span.tag a {
   .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown {
     left: 20px;
     right: 20px;
-    top: 97px;
+    top: var(--custom-header-height);
     width: calc(100% - 40px);
   }
 }
@@ -30315,7 +30338,7 @@ div.tagsinput span.tag a {
     max-height: auto;
   }
   .sidebar-fixed .sidebar .nav {
-    max-height: calc(100vh - 97px);
+    max-height: calc(100vh - var(--custom-header-height));
     overflow: auto;
     position: relative;
   }
@@ -30401,7 +30424,7 @@ div.tagsinput span.tag a {
   border-left: 1px solid #dee2e6;
   display: block;
   position: fixed;
-  top: 97px;
+  top: var(--custom-header-height);
   right: -300px;
   bottom: 0;
   width: 300px;

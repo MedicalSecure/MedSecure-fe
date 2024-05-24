@@ -1,0 +1,516 @@
+<div
+  class="modal-content"
+  style="font-family: 'Helvetica Neue', Roboto, sans-serif"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ modalTitle }}</h4>
+    <button type="button" (click)="closeModal()" class="closeModal">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body" style="padding: 3%">
+    <div *ngIf="modalAction === 'get' || modalAction === 'delete'">
+      <div>
+        <p><strong>Start Date:</strong> {{ modalData.event.start }}</p>
+        <p><strong>End Date:</strong> {{ modalData.event.end }}</p>
+        <p><strong> Patient:</strong> {{ modalData.event.patient }}</p>
+        <p><strong>Typevisits:</strong> {{ modalData.event.typevisits }}</p>
+        <p>
+          <strong>Disponibilite:</strong> {{ modalData.event.disponibilite }}
+        </p>
+        <p><strong>Duration:</strong> {{ modalData.event.duration }}</p>
+        <p><strong>Avaibility:</strong> {{ modalData.event.avaibility }}</p>
+        <p><strong>Description:</strong> {{ modalData.event.description }}</p>
+      </div>
+    </div>
+    <div *ngIf="modalAction === 'add'">
+      <div class="mb-3">
+        <label type="label">
+          <img
+            class="img-md rounded-circle"
+            src="../assets/images/faces/face8.jpg"
+            alt="Profile image"
+            width="30"
+            height="30"
+          />
+          <b> Dr.Allen Moreno</b></label
+        >
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row mb-3">
+          <div class="col d-flex">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search for a patient..."
+              (input)="search($event)"
+            />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="searchQuery.length > 0">
+        <ol>
+          <p
+            *ngFor="let patient of filteredPatients"
+            (click)="selectPatient(patient)"
+            [ngStyle]="{
+              'background-color': selectedPatient === patient ? '#EFD4F5' : '',
+              color: selectedPatient === patient ? '#130615' : ''
+            }"
+          >
+            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
+            {{ patient.lastName}} <br />
+            <span *ngIf="selectedPatient === patient">
+              <i class="fas fa-check"></i>
+            </span>
+          </p>
+        </ol>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <label style="margin-right: 6px"><b> Type of appointment</b></label>
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <mat-chip-listbox aria-label="Fish selection" id="typevisits">
+              <mat-chip-option
+                color="primary"
+                selected
+                style="display: inline-block"
+                (click)="updateTypeVisits('Firstconsultation')"
+                [selected]="modalData.event.typevisits === 0"
+                >First consultation
+              </mat-chip-option>
+
+              <mat-chip-option
+                color="accent"
+                style="display: inline-block"
+                [selected]="modalData.event.typevisits === 1"
+                (click)="updateTypeVisits('FollowUp')"
+                >Follow-up
+              </mat-chip-option>
+              <mat-chip-option
+                color="warn"
+                style="display: inline-block"
+                [selected]="modalData.event.typevisits === 2"
+                (click)="updateTypeVisits('Emergency')"
+                >Emergency</mat-chip-option
+              >
+            </mat-chip-listbox>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col" id="disponibilite">
+            <label class="radio-inline form-check-label">
+              <input
+                class="form-check-input ms-2"
+                type="radio"
+                name="option"
+                value="InClinic"
+                (change)="updateDisponibilite($event)"
+              />
+              InClinic
+            </label>
+            <label class="radio-inline form-check-label">
+              <input
+                class="form-check-input ms-2"
+                type="radio"
+                name="option"
+                value="Online"
+                (change)="updateDisponibilite($event)"
+              />
+              Online
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row mb-3">
+          <div class="col d-flex">
+            <select
+              class="form-select form-control me-2"
+              style="
+                width: 100px;
+                padding: 8px;
+                color: black;
+                background-color: rgb(209, 209, 209);
+              "
+              aria-label="Default select example"
+              id="duration"
+              (change)="updateDuration($event)"
+            >
+              <option
+                [value]="'20 min'"
+                [selected]="modalData.event.duration?.toString() === '20 min'"
+              >
+                20 min
+              </option>
+              <option
+                [value]="'30 min'"
+                [selected]="modalData.event.duration?.toString() === '30 min'"
+              >
+                30 min
+              </option>
+              <option
+                [value]="'60 min'"
+                [selected]="modalData.event.duration?.toString() === '60 min'"
+              >
+                60 min
+              </option>
+              <option
+                [value]="'other'"
+                [selected]="modalData.event.duration?.toString() === 'other'"
+              >
+                other
+              </option>
+            </select>
+
+            <input
+              type="text"
+              class="form-control flex-grow-1"
+              style="height: 30px"
+              id="description"
+              (change)="updateDescription($event)"
+              placeholder="Add description..."
+              [attr.value]="modalData.event.description || ''"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <label id="startDate"
+              ><i class="fa-solid fa-calendar-days"></i
+              ><b> Selected Date: {{ selectedDate | date }}</b></label
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <div class="d-table-cell p-0 d-flex">
+              <button
+                mat-raised-button
+                class="btn-patient btn px-3 py-2"
+                style="margin-right: 12px"
+                [style.background-color]="button1Color"
+                [style.color]="button1Text"
+                (click)="changeButtonColors(1)"
+              >
+                Availability
+              </button>
+
+              <button
+                mat-raised-button
+                class="btn-patient btn px-3 py-2 me-2"
+                [style.background-color]="button2Color"
+                [style.color]="button2Text"
+                (click)="changeButtonColors(2)"
+              >
+                Now
+              </button>
+              <div
+                *ngIf="showAvailabilityField"
+                class="availability-field d-flex"
+              >
+                <input
+                  type="time"
+                  id="availability-time"
+                  class="form-control flex-grow-1 align-self-center"
+                  style="height: 30px"
+                  [value]="modalData.event.avaibility"
+                  (input)="updateAvailability($event)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="modalAction === 'edit'">
+      <div class="mb-3">
+        <label type="label">
+          <img
+            class="img-md rounded-circle"
+            src="../assets/images/faces/face8.jpg"
+            alt="Profile image"
+            width="30"
+            height="30"
+          />
+          <b> Dr.Allen Moreno</b></label
+        >
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row mb-3">
+          <div class="col d-flex">
+            <input
+              type="text"
+              class="form-control"
+              [value]="modalData.event.patient"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row mb-3">
+          <div class="col d-flex">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search for a patient..."
+              (input)="search($event)"
+            />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="searchQuery.length > 0">
+        <ol>
+          <p
+            *ngFor="let patient of filteredPatients"
+            (click)="selectPatient(patient)"
+            [ngStyle]="{
+              'background-color': selectedPatient === patient ? '#EFD4F5' : '',
+              color: selectedPatient === patient ? '#130615' : ''
+            }"
+          >
+            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
+            {{ patient.lastName}} <br />
+            <span *ngIf="selectedPatient === patient">
+              <i class="fas fa-check"></i>
+            </span>
+          </p>
+        </ol>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <label style="margin-right: 6px"><b> Type of appointment</b></label>
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <mat-chip-listbox aria-label="Fish selection" id="typevisits">
+              <mat-chip-option
+                color="primary"
+                selected
+                style="display: inline-block"
+                (click)="updateTypeVisits('First consultation')"
+                [selected]="modalData.event.typevisits === 0"
+                [value]="modalData.event.typevisits"
+                >First consultation
+              </mat-chip-option>
+
+              <mat-chip-option
+                color="accent"
+                style="display: inline-block"
+                [selected]="modalData.event.typevisits === 1"
+                (click)="updateTypeVisits('Follow-up')"
+                [value]="modalData.event.typevisits"
+                >Follow-up
+              </mat-chip-option>
+              <mat-chip-option
+                color="warn"
+                style="display: inline-block"
+                [selected]="modalData.event.typevisits === 2"
+                (click)="updateTypeVisits('Emergency')"
+                [value]="modalData.event.typevisits"
+                >Emergency</mat-chip-option
+              >
+            </mat-chip-listbox>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col" id="disponibilite">
+            <label class="radio-inline form-check-label">
+              <input
+                class="form-check-input ms-2"
+                type="radio"
+                name="option"
+                value="clinic"
+                (change)="updateDisponibilite($event)"
+                [checked]="modalData.event.disponibilite === 0"
+              />
+              At the clinic
+            </label>
+            <label class="radio-inline form-check-label">
+              <input
+                class="form-check-input ms-2"
+                type="radio"
+                name="option"
+                value="Online"
+                (change)="updateDisponibilite($event)"
+                [checked]="modalData.event.disponibilite === 1"
+              />
+              Online
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row mb-3">
+          <div class="col d-flex">
+            <select
+              class="form-select form-control me-2"
+              style="
+                width: 100px;
+                padding: 8px;
+                color: black;
+                background-color: rgb(209, 209, 209);
+              "
+              aria-label="Default select example"
+              id="duration"
+              (change)="updateDuration($event)"
+            >
+              <option
+                [value]="'20 min'"
+                [selected]="modalData.event.duration?.toString() === '20 min'"
+              >
+                20 min
+              </option>
+              <option
+                [value]="'30 min'"
+                [selected]="modalData.event.duration?.toString() === '30 min'"
+              >
+                30 min
+              </option>
+              <option
+                [value]="'60 min'"
+                [selected]="modalData.event.duration?.toString() === '60 min'"
+              >
+                60 min
+              </option>
+              <option
+                [value]="'other'"
+                [selected]="modalData.event.duration?.toString() === 'other'"
+              >
+                other
+              </option>
+            </select>
+
+            <input
+              type="text"
+              class="form-control flex-grow-1"
+              style="height: 30px"
+              id="description"
+              (change)="updateDescription($event)"
+              placeholder="Add description..."
+              [value]="modalData.event.description"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <label id="startDate"
+              ><i class="fa-solid fa-calendar-days"></i
+              ><b> Selected Date: {{ selectedDate | date }}</b></label
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mr-1">
+        <div class="row">
+          <div class="col">
+            <input
+              type="text"
+              class="form-control flex-grow-1"
+              style="height: 30px"
+              [value]="modalData.event.avaibility"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group m-0">
+        <div class="row">
+          <div class="col">
+            <div class="d-table-cell p-0 d-flex">
+              <button
+                mat-raised-button
+                class="btn-patient btn px-3 py-2"
+                style="margin-right: 12px"
+                [style.background-color]="button1Color"
+                [style.color]="button1Text"
+                (click)="changeButtonColors(1)"
+              >
+                Availability
+              </button>
+
+              <button
+                mat-raised-button
+                class="btn-patient btn px-3 py-2 me-2"
+                [style.background-color]="button2Color"
+                [style.color]="button2Text"
+                (click)="changeButtonColors(2)"
+              >
+                Now
+              </button>
+              <div
+                *ngIf="showAvailabilityField"
+                class="availability-field d-flex"
+              >
+                <input
+                  type="time"
+                  id="availability-time"
+                  class="form-control flex-grow-1 align-self-center"
+                  style="height: 30px"
+                  [value]="modalData.event.avaibility"
+                  (input)="updateAvailability($event)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="justify-content-start" style="padding: 3%">
+    <button
+      type="button"
+      class="btn btn-light"
+      style="margin-right: 12px"
+      (click)="closeModal()"
+    >
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary me-2"
+      (click)="performAction()" 
+    >
+      {{ modalbutton }}
+    </button>
+  </div>
+</div>
