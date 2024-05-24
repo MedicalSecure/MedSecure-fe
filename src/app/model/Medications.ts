@@ -1,8 +1,7 @@
 export type Medication = {
     Name: string;
     Dosage: string;
-    Form: string;
-    Code: string;
+    Forme: number;
     Unit: string;
     Description: string;
     ExpiredAt: string;

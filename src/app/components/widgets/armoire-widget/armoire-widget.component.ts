@@ -9,6 +9,7 @@ import {
 } from "ng-apexcharts";
 import { NgApexchartsModule } from "ng-apexcharts";
 import { ArmoireStock } from "../../../model/ArmoireStock"
+import { style } from "@angular/animations";
 export type ChartOptions = {
   series: ApexAxisChartSeries | any;
   chart: ApexChart | any;
@@ -38,7 +39,7 @@ export class ArmoireWidgetComponent implements OnChanges {
   ngOnChanges(): void {
     this.updateChartData();
   }
-  
+
   private updateChartData(): void {
     const seriesData = this.medicationArmoireStock.flatMap((armoire) =>
       armoire.medicaments.map((medicament) => ({
@@ -72,11 +73,16 @@ export class ArmoireWidgetComponent implements OnChanges {
         },
       },
       title: {
-        text: `Stock Armoire Medications`,
+        text: `medicine cabinet stock`,
+        style: {
+          fontSize: '16px',
+          fontFamily: 'Manrope, sans-serif',
+        }
       },
       legend: {
         show: true,
         showForSingleSeries: true,
+        fontFamily: 'Manrope, sans-serif',
         customLegendItems: ["Quantité de médicament prescrit (prêt à être administré)", "Stock actuel (arrêté à la date et l'heure actuelles)"],
         markers: {
           fillColors: [, "#FF0000"]
@@ -94,10 +100,11 @@ export class ArmoireWidgetComponent implements OnChanges {
           }
           return val;
         }
-  
+
       },
       xaxis: {
         categories: seriesData.map((dataPoint) => dataPoint.x),
+        style:""
       },
     };
   }

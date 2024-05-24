@@ -1,21 +1,29 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { ELEMENT_DATA, bacpatient } from '../bacPatient/bacPatient.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
 @Component({
   selector: 'app-tasks',
   standalone: true,
   imports: [RouterModule, CommonModule],
-  templateUrl: './tasks.component.html',
-  styleUrl: './tasks.component.css'
+  templateUrl: './nurseTasks.component.html',
+  styleUrl: './nurseTasks.component.css'
 })
-export class TasksComponent {
-  
+export class TasksComponent implements AfterViewInit {
+
+  constructor(private bacPatientService: BacPatientService) { }
+  ngAfterViewInit(): void {
+    this.data_list = this.bacPatientService.getData(this.dataSource);
+  }
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
   data_list: bacpatient[] = ELEMENT_DATA;
   isDropdownOpen: boolean = false;
+
   toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
+    this.isDropdownOpen = !this.isDropdownOpen
+    ;
   }
 
   actions: { value: string, icon: string, label: string }[] = [
@@ -27,13 +35,10 @@ export class TasksComponent {
   onActionClick(actionType: string, item: bacpatient) {
     switch (actionType) {
       case 'Blocked':
-        // Handle blocked action for the item
         break;
       case 'Close':
-        // Handle close action for the item
         break;
       case 'Done':
-        // Handle done action for the item
         break;
     }
   }

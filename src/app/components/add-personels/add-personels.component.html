@@ -1,0 +1,15 @@
+<p>add-personels works!</p>
+<ng-multiselect-dropdown
+  [placeholder]="'custom placeholder'"
+  [settings]="dropdownSettings"
+  [data]="dropdownList"
+  (onSelect)="onItemSelect($event)"
+  (onDeSelect)="onItemDeSelect($event)"
+  (onSelectAll)="onSelectAll($event)"
+  (onDeSelectAll)="onDeSelectAll()"
+>
+</ng-multiselect-dropdown>
+
+
+
+<button (click)="saveSelectedItems()">Save Selected Items</button>

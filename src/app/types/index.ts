@@ -10,6 +10,29 @@ export type PaginatedResult<TEntity> = {
   data: TEntity[];
 };
 
+//Activities
+export type ActivityDto = {
+  id: string;
+  content: string;
+  createdBy: string;
+  creatorName: string;
+  createdAt: Date;
+};
+export type GetActivitiesResponse = {
+  activities: PaginatedResult<ActivityDto>;
+};
+//Activities
+export type ActivityView = {
+  id: string;
+  content: string;
+  createdBy: string;
+  creatorName: string;
+  activityTime : string;
+};
+
+
+
+
 export type medicationHourType = {
   hour: number;
   isBeforeFood: boolean;
