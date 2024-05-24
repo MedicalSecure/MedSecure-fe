@@ -1,8 +1,0 @@
-.form-container {
-  background-color: #eae8e9;/* Background color of the container */
-  padding: 20px; /* Padding to create some space around the component */
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Box shadow for a subtle effect */
-  width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}

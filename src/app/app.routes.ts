@@ -15,6 +15,10 @@ import { MasonryDpiComponent } from './pages/register-details/register-details.c
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
 import { NurseDashboardComponent } from './pages/dashboards/nurse-dashboard/nurse-dashboard.component';
+import {FormUnitCareComponent} from './components/form-unit-care/form-unit-care.component';
+import { AddPersonelsComponent } from './components/add-personels/add-personels.component';
+import{SupervisorDashboardComponent} from './components/supervisor-dashboard/supervisor-dashboard.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -32,4 +36,7 @@ export const routes: Routes = [
   { path: 'register-details', component: MasonryDpiComponent },
   { path: 'register-form', component: RegisterFormComponent },
   { path: 'register', component: RegisterViewComponent },
+  { path: 'unitCare-form', component: FormUnitCareComponent },
+  {path: 'personels', component : AddPersonelsComponent},
+  { path: 'supervisor-dashboard', component: SupervisorDashboardComponent },
 ];
