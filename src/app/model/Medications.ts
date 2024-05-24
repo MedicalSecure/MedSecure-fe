@@ -1,7 +1,7 @@
 export type Medication = {
     Nom: string;
     Dosage: string;
-    Forme: string;
+    Forme: number;
     Unit: string;
     DCI: string;
     Classe: string;

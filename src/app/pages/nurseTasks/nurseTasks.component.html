@@ -24,9 +24,18 @@
         </div>
 
         <div class="row">
-          <div class="col-md-4" *ngFor="let status of ['Pending...', 'On Progress', 'Completed']">
+          <div class="col-md-4" *ngFor="let status of [0,1 ,2 ]">
             <div class="status-columns">
-              <h3 class="mb-3">{{ status }}</h3>
+              <div *ngIf="status === 0">
+                <h3 class="mb-3">Pending...</h3>
+              </div>
+              <div *ngIf="status === 1">
+                <h3 class="mb-3">On Progress</h3>
+              </div>
+              <div *ngIf="status === 2">
+                <h3 class="mb-3">Completed</h3>
+              </div>
+             
               <div class="tasks-list">
                 <div class="task" *ngFor="let item of data_list">
                   <div *ngIf="item.status === status">
@@ -34,15 +43,15 @@
                       <li class="list-group-item d-flex justify-content-between lh-condensed">
                         <div>
                           <h6 class="my-0">Patient</h6>
-                          <small class="text-muted">{{ item.patient }}</small>
+                          <small class="text-muted">{{ item.prescription.register.patient.firstName }} {{ item.prescription.register.patient.lastName }}</small>
                         </div>
                         <div>
                           <h6 class="my-0">Room</h6>
-                          <small class="text-muted">{{ item.room }}</small>
+                        <small class="text-muted">{{ item.prescription.unitCare.room.roomNumber }}</small> 
                         </div>
                         <div>
                           <h6 class="my-0">Bed</h6>
-                          <small class="text-muted">{{ item.bed }}</small>
+                          <small class="text-muted">{{ item.prescription.unitCare.room.equipment.reference }}</small>
                         </div>
                         <div>
                           <input class="form-control form-control-sm btn btn-primary text-white" style="width: 100px;" id="actions" 

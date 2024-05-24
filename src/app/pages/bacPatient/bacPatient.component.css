@@ -21,11 +21,11 @@
 }
 
 .extended-table .mat-column-root{
-  width: 15%;
+  width: max-content;
 
   }
   .extended-table .mat-column-name{
-    width: 15%;
+    width: max-content;
   
     }
 .more-button {

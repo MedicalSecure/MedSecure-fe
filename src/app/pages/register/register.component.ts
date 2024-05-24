@@ -24,7 +24,6 @@ import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommentComponent } from '../../components/comment/comment.component';
-import { ScheduleComponent } from '../../components/schedule/schedule.component';
 
 export interface PeriodicElement {
   name: string;
@@ -72,7 +71,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     FormsModule,
     MatButtonModule,
     JsonPipe,
-    ScheduleComponent,
     CommentComponent,
   ],
   providers: [],
