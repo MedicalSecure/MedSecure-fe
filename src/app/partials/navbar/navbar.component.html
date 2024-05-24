@@ -17,9 +17,7 @@
   <div class="navbar-menu-wrapper d-flex align-items-top">
     <ul class="navbar-nav">
       <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-        <h1 class="welcome-text">
-          Hello, <span class="text-black fw-bold">clinic supervisor</span>
-        </h1>
+        <h1 class="welcome-text">Hello, <span class="text-black fw-bold">clinic supervisor</span></h1>
         <!-- <h3 class="welcome-sub-text">Your performance summary this week</h3> -->
       </li>
     </ul>
@@ -31,34 +29,23 @@
         <div class="d-sm-flex align-items-center justify-content-between">
           <div class="btn-group btn-group-sm" role="group" aria-label="File actions">
             <!-- Download button -->
-            <a href="#" for="fileOutputPharmacy" class="btn btn-outline-dark">
-              <i class="icon-download nav-link"></i> Download
-            </a>
+            <a href="#" for="fileOutputPharmacy" class="btn btn-outline-dark"> <i class="icon-download nav-link"></i> Download </a>
 
             <!-- Upload button -->
-            <a href="#" onclick="document.getElementById('fileInputPharmacy').click()" class="btn btn-outline-dark">
-              <i class="icon-upload nav-link"></i> Upload
-            </a>
+            <a href="#" onclick="document.getElementById('fileInputPharmacy').click()" class="btn btn-outline-dark"> <i class="icon-upload nav-link"></i> Upload </a>
           </div>
           <!-- File input for uploading -->
-          <input type="file" label="Import" id="fileInputPharmacy" style="display: none"
-            (change)="importExcelData($event)" accept=".xls, .xlsx" />
+          <input type="file" label="Import" id="fileInputPharmacy" style="display: none" (change)="importExcelData($event)" accept=".xls, .xlsx" />
           <!-- Import and map data modal -->
-          <div class="modal fade" style="background-color: rgba(0, 0, 0, 0.7)" id="exampleModal" tabindex="8" [style]="
-            isShowImportModal
-              ? 'display:block;opacity:100'
-              : 'display:none;opacity:0'
-          ">
-            <div class="modal-dialog justify-content-center modal-dialog-centered" role="document"
-              (click)="stopPropagation($event)">
+          <div class="modal fade" style="background-color: rgba(0, 0, 0, 0.7)" id="exampleModal" tabindex="8" [style]="isShowImportModal ? 'display:block;opacity:100' : 'display:none;opacity:0'">
+            <div class="modal-dialog justify-content-center modal-dialog-centered" role="document" (click)="stopPropagation($event)">
               <div class="modal-content" style="height: 480px; margin-right: 75px">
                 <!-- Modal header -->
                 <div class="modal-header p-2">
                   <h5 class="modal-title" id="exampleModalLabel">
                     <strong>Import and map data</strong>
                   </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                    (click)="onClickCloseModal()">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClickCloseModal()">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -68,8 +55,7 @@
                   @for(dbColumn of dbHeaders;track $index){
                   <div style="width: 10rem">
                     <!-- Dropdown select for mapping columns -->
-                    <select [value]="columnMappings[dbColumn]" class="form-select"
-                      (change)="onSelectchange($event, dbColumn)" required>
+                    <select [value]="columnMappings[dbColumn]" class="form-select" (change)="onSelectchange($event, dbColumn)" required>
                       <!-- Placeholder option -->
                       <option value="" hidden>{{ dbColumn }}</option>
                       <!-- Loop through imported data headers -->
@@ -84,13 +70,9 @@
                   }
                   <!-- Modal footer with buttons -->
                   <div class="mt-3">
-                    <button type="button" class="btn btn-primary text-white" (click)="onClickFinishModal()">
-                      Save changes
-                    </button>
+                    <button type="button" class="btn btn-primary text-white" (click)="onClickFinishModal()">Save changes</button>
 
-                    <button type="button" class="btn btn-secondary" (click)="onClickCloseModal()">
-                      Cancel
-                    </button>
+                    <button type="button" class="btn btn-secondary" (click)="onClickCloseModal()">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -102,23 +84,21 @@
 
       <!-- Search -->
       <li class="nav-item">
-        <form class="search-form" style="margin-bottom: 4px;" action="#">
+        <form class="search-form" style="margin-bottom: 4px" action="#">
           <i class="icon-search nav-link"></i>
-          <input type="search" class="form-control nav-link" placeholder="Search Here" title="Search here">
+          <input type="search" class="form-control nav-link" placeholder="Search Here" title="Search here" />
         </form>
       </li>
 
       <!-- Notification -->
       <li class="nav-item dropdown">
-        <a class="nav-link count-indicator" style="margin-top: 4px;" id="notificationDropdown" href="#"
-          data-bs-toggle="dropdown">
+        <a class="nav-link count-indicator" style="margin-top: 4px" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
           <i class="icon-bell"></i>
           <span class="count"></span>
         </a>
-        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-          aria-labelledby="notificationDropdown">
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
           <a class="dropdown-item py-3 border-bottom">
-            <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
+            <p class="mb-0 font-weight-medium float-left">You have 4 new notifications</p>
             <span class="badge badge-pill badge-primary float-right">View all</span>
           </a>
           <a class="dropdown-item preview-item py-3">
@@ -127,7 +107,7 @@
             </div>
             <div class="preview-item-content">
               <h6 class="preview-subject fw-normal text-dark mb-1">Application Error</h6>
-              <p class="fw-light small-text mb-0"> Just now </p>
+              <p class="fw-light small-text mb-0">Just now</p>
             </div>
           </a>
           <a class="dropdown-item preview-item py-3">
@@ -136,7 +116,7 @@
             </div>
             <div class="preview-item-content">
               <h6 class="preview-subject fw-normal text-dark mb-1">Settings</h6>
-              <p class="fw-light small-text mb-0"> Private message </p>
+              <p class="fw-light small-text mb-0">Private message</p>
             </div>
           </a>
           <a class="dropdown-item preview-item py-3">
@@ -145,7 +125,7 @@
             </div>
             <div class="preview-item-content">
               <h6 class="preview-subject fw-normal text-dark mb-1">New user registration</h6>
-              <p class="fw-light small-text mb-0"> 2 days ago </p>
+              <p class="fw-light small-text mb-0">2 days ago</p>
             </div>
           </a>
         </div>
@@ -156,38 +136,37 @@
         <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="icon-mail icon-lg"></i>
         </a>
-        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-          aria-labelledby="countDropdown">
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
           <a class="dropdown-item py-3">
-            <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
+            <p class="mb-0 font-weight-medium float-left">You have 7 unread mails</p>
             <span class="badge badge-pill badge-primary float-right">View all</span>
           </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
-              <img src="../assets/images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
+              <img src="../assets/images/faces/face10.jpg" alt="image" class="img-sm profile-pic" />
             </div>
             <div class="preview-item-content flex-grow py-2">
-              <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
-              <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+              <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner</p>
+              <p class="fw-light small-text mb-0">The meeting is cancelled</p>
             </div>
           </a>
           <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
-              <img src="../assets/images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
+              <img src="../assets/images/faces/face12.jpg" alt="image" class="img-sm profile-pic" />
             </div>
             <div class="preview-item-content flex-grow py-2">
-              <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
-              <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+              <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey</p>
+              <p class="fw-light small-text mb-0">The meeting is cancelled</p>
             </div>
           </a>
           <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
-              <img src="../assets/images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
+              <img src="../assets/images/faces/face1.jpg" alt="image" class="img-sm profile-pic" />
             </div>
             <div class="preview-item-content flex-grow py-2">
-              <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
-              <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+              <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins</p>
+              <p class="fw-light small-text mb-0">The meeting is cancelled</p>
             </div>
           </a>
         </div>
@@ -201,27 +180,21 @@
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
           <div class="dropdown-header text-center">
             <img class="img-md rounded-circle" src="../../../assets/images/faces/face8.jpg" alt="Profile image" />
-            <p class="mb-1 mt-3 font-weight-semibold"> {{ profile?.displayName }} </p>
+            <p class="mb-1 mt-3 font-weight-semibold">{{ profile?.displayName }}</p>
             <p class="fw-light text-muted mb-0">{{ profile?.userPrincipalName }}</p>
           </div>
-          <a class="nav-link" [routerLink]="['/', 'profile']" class="dropdown-item">
-            <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile </a>
-
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i>
-            Messages</a>
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i>
-            Activity</a>
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i>
-            FAQ</a>
+          <a class="nav-link" [routerLink]="['/', 'profile']" class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i>My Profile</a>
+          <a class="nav-link" [routerLink]="['/', 'account']" class="dropdown-item"><i class="dropdown-item-icon mdi mdi mdi-account-cog-outline text-primary me-2"></i>Account</a>
+          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>
+          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>
+          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
           @if (!loginDisplay) {
-          <a class="dropdown-item" (click)="logout(false)"><i
-              class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+          <a class="dropdown-item" (click)="logout(false)"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
           }
         </div>
       </li>
     </ul>
-    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-      data-bs-toggle="offcanvas">
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
       <span class="mdi mdi-menu"></span>
     </button>
   </div>

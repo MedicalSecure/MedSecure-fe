@@ -20,6 +20,7 @@ import { MsalGuard } from '@azure/msal-angular';
 import { DietComponent } from './pages/diet/diet.component';
 import { WasteComponent } from './pages/waste/waste.component';
 import { RoleAuthGuard } from './role-auth.guard';
+import { AccountComponent } from './pages/account/account.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -38,6 +39,7 @@ export const routes: Routes = [
   { path: 'register-form', component: RegisterFormComponent , canActivate: [MsalGuard] },
   { path: 'register', component: RegisterViewComponent , canActivate: [MsalGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [MsalGuard] },
+  { path: 'account', component: AccountComponent, canActivate: [MsalGuard] },
   { path: 'login-failed', component: FailedComponent },
   { path: 'diet', component: DietComponent },
   { path: 'waste', component: WasteComponent , canActivate: [RoleAuthGuard] },

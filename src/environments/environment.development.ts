@@ -10,7 +10,7 @@ export const environment = {
         }
     },
     apiConfig: {
-        scopes: ['user.read'],
+        scopes: ['User.ReadBasic.All' ,'user.read' ,'User.ReadWrite.All', 'Directory.ReadWrite.All'],
         uri: 'https://graph.microsoft.com/v1.0/me'
     }
   };
