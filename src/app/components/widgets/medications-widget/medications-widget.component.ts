@@ -78,19 +78,27 @@ export class MedicationsWidgetComponent implements OnChanges {
       chart: {
         height: 350,
         type: "bar",
+
+
       },
-    
+
       plotOptions: {
         bar: {
           horizontal: true
         }
       },
       title: {
-        text: "Liste des medicaments"
+        text: "list of medicines",
+        style: {
+          fontSize: '16px',
+          fontFamily: 'Manrope, sans-serif',
+        }
+
+
       },
       colors: ["#7DCEA0"],
-      // dataLabels: {
-        
+
+
       //   formatter: function (val: any, opts: any) {
       //     const goals =
       //       opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].goals;
@@ -104,6 +112,7 @@ export class MedicationsWidgetComponent implements OnChanges {
       legend: {
         show: true,
         showForSingleSeries: true,
+        fontFamily: 'Manrope, sans-serif',
         customLegendItems: ["Stock Disponible","Stock Securite (Stock Reserve)","Stock Minmum (Stock Delai)","Stock Alerte (Seuil)","stock Maximum"],
         markers: {
           fillColors:["#7DCEA0","#E74C3C","#360ABF","#707B7C","#EDDF38"]

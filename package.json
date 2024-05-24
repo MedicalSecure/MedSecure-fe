@@ -73,6 +73,7 @@
     "mdb-ui-kit": "^7.1.0",
     "ng-apexcharts": "^1.9.0",
     "ng-chat": "^3.1.0",
+    "ng-multiselect-dropdown": "^1.0.0",
     "ngx-daterangepicker-bootstrap": "^17.5.1",
     "ngx-masonry": "^14.0.1",
     "ngx-timeline-albe": "^1.5.0",
