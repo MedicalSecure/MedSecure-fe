@@ -8,8 +8,8 @@ import { BacPatientService } from '../../services/bacPatient/bac-patient-service
   selector: 'app-tasks',
   standalone: true,
   imports: [RouterModule, CommonModule],
-  templateUrl: './tasks.component.html',
-  styleUrl: './tasks.component.css'
+  templateUrl: './nurseTasks.component.html',
+  styleUrl: './nurseTasks.component.css'
 })
 export class TasksComponent implements AfterViewInit {
 

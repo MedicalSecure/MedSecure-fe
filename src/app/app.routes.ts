@@ -10,7 +10,7 @@ import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
 import { ShipsSelectComponent } from './components/chips-select/chips-select.component';
 import { AddPrescriptionComponent } from './pages/prescription/add-prescription-component/add-prescription.component';
-import { TasksComponent } from './pages/tasks/tasks.component';
+import { TasksComponent } from './pages/nurseTasks/nurseTasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';

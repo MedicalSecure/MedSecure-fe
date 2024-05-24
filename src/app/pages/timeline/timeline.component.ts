@@ -2,7 +2,7 @@
 import { Component} from '@angular/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { GanttChartComponent } from "../timeline-event/timeline-event.component";
-import { TasksComponent } from "../tasks/tasks.component";
+import { TasksComponent } from "../nurseTasks/nurseTasks.component";
 import { CommonModule } from '@angular/common';
 
 @Component({
