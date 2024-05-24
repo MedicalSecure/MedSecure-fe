@@ -16,19 +16,19 @@ const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigato
  */
 export const b2cPolicies = {
     names: {
-        signUpSignIn: 'B2C_1_susi_v2',
-        resetPassword: 'B2C_1_reset_v3',
-        editProfile: 'B2C_1_edit_profile_v2',
+        signUpSignIn: 'B2C_1_susi',
+        resetPassword: 'B2C_1_password_reset',
+        editProfile: 'B2C_1_profile_edit',
     },
     authorities: {
         signUpSignIn: {
-            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/b2c_1_susi_v2',
+            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_susi',
         },
         resetPassword: {
-            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_reset_v3',
+            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_password_reset',
         },
         editProfile: {
-            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/b2c_1_edit_profile_v2',
+            authority: 'https://medsecure.b2clogin.com/medsecure.onmicrosoft.com/B2C_1_profile_edit',
         },
     },
     authorityDomain: 'medsecure.b2clogin.com',
@@ -41,7 +41,7 @@ export const b2cPolicies = {
  */
 export const msalConfig: Configuration = {
     auth: {
-        clientId: 'ba8bc284-466c-4627-a83a-9833f26db722', // This is the ONLY mandatory field that you need to supply.
+        clientId: '8a55b2b5-6a5c-4f56-97b6-9fa6623e2eba', // This is the ONLY mandatory field that you need to supply.
         authority: b2cPolicies.authorities.signUpSignIn.authority, // Defaults to "https://login.microsoftonline.com/common"
         knownAuthorities: [b2cPolicies.authorityDomain], // Mark your B2C tenant's domain as trusted.
         redirectUri: '/auth', // Points to window.location.origin by default. You must register this URI on Azure portal/App Registration.
@@ -79,8 +79,8 @@ export const protectedResources = {
         endpoint: 'https://localhost:44318/diet-service/diets?PageIndex=0&PageSize=10'
       },
       scopes: {
-        read: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Diet.Read'],
-        write: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Diet.Write']
+        read: ['https://medsecure.onmicrosoft.com/medsecure/api/Diet.Read'],
+        write: ['https://medsecure.onmicrosoft.com/medsecure/api/Diet.Write']
       }
     },
     waste: {
@@ -88,8 +88,8 @@ export const protectedResources = {
         endpoint: 'https://localhost:44318/waste-service/wastes?PageIndex=0&PageSize=10'
       },
       scopes: {
-        read: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Waste.Read'],
-        write: ['https://medsecure.onmicrosoft.com/ba8bc284-466c-4627-a83a-9833f26db722/Waste.Write']
+        read: ['https://medsecure.onmicrosoft.com/medsecure/api/Waste.Read'],
+        write: ['https://medsecure.onmicrosoft.com/medsecure/api/Waste.Write']
       }
     }
   };

@@ -3,8 +3,10 @@ export const environment = {
     environmentName: "development",
     msalConfig: {
         auth: {
-            clientId: 'ba8bc284-466c-4627-a83a-9833f26db722',
+            clientId: '8a55b2b5-6a5c-4f56-97b6-9fa6623e2eba',
             authority: 'https://login.microsoftonline.com/0d7f968d-56cb-4ebf-b490-ee9e8c8c4566'
+
+            // Directory (tenant) ID => 0d7f968d-56cb-4ebf-b490-ee9e8c8c4566
         }
     },
     apiConfig: {
