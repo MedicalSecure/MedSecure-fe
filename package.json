@@ -76,6 +76,7 @@
     "ng-multiselect-dropdown": "^1.0.0",
     "ngx-daterangepicker-bootstrap": "^17.5.1",
     "ngx-masonry": "^14.0.1",
+    "ngx-socket-io": "^4.6.1",
     "ngx-timeline-albe": "^1.5.0",
     "primeicons": "^6.0.1",
     "primeng": "^17.9.0",
