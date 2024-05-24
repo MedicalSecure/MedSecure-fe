@@ -42,11 +42,11 @@ import {
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
-import { UnitCareDTO } from '../../../types/UnitCareDTOs';
 import { MedicationService } from '../../../services/medication/medication.service';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
+import { UnitCare } from '../../../model/unitCare/UnitCareData';
 
 @Component({
   selector: 'app-add-prescription',
@@ -306,7 +306,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
   async fetchUnitCareByBedId(
     bedId: string | null | undefined
-  ): Promise<UnitCareDTO | null> {
+  ): Promise<UnitCare | null> {
     if (bedId == null || bedId == undefined) {
       return null;
     }

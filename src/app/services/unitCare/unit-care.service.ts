@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { UnitCare, UnitCareData } from '../../model/unitCare/UnitCareData';
-import { GetUnitCareResponse, UnitCareDTO } from '../../types/UnitCareDTOs';
-
 
 
 
@@ -34,18 +32,18 @@ export class UnitCareService  {
   private apiVersion: number = 1; // Replace 'v1' with your desired API version
   private apiUrl = `http://localhost:5007/api/v${this.apiVersion}/UnitCare`;
 
-  getUnitCares(): Observable<GetUnitCareResponse> {
+  getUnitCares(): Observable<UnitCareData> {
     this.apiUrl="../../../assets/data/unitcares.json"
 
-    let x = this.http.get<GetUnitCareResponse>(this.apiUrl);
+    let x = this.http.get<UnitCareData>(this.apiUrl);
     //debugger;
     return x;
   }
 
-  getUnitCareByBedId(bedId: string): Observable<UnitCareDTO | undefined> {
+  getUnitCareByBedId(bedId: string): Observable<UnitCare | undefined> {
     this.apiUrl = "../../../assets/data/unitcares.json";
-    return this.http.get<GetUnitCareResponse>(this.apiUrl).pipe(
-      map((unitCares: GetUnitCareResponse) => unitCares.unitCares.data.find(uc => 
+    return this.http.get<UnitCareData>(this.apiUrl).pipe(
+      map((unitCares: UnitCareData) => unitCares.unitCares.data.find(uc => 
         {
           let isUnitCareFound=false;
           uc.rooms.forEach(room=>{

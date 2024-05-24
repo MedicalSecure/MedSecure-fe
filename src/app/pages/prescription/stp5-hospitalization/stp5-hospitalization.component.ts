@@ -16,7 +16,6 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { DietDto } from '../../../types/DietDTOs';
-import { UnitCareDTO } from '../../../types/UnitCareDTOs';
 import { Subscription } from 'rxjs';
 import { DietService } from '../../../services/diet/diet.service';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
@@ -31,6 +30,7 @@ import {
   DatepickerRangePopupComponent,
 } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { UnitCare } from '../../../model/unitCare/UnitCareData';
 
 @Component({
   selector: 'app-stp5-hospitalization',
@@ -64,7 +64,7 @@ export class Stp5HospitalizationComponent {
   isDietsLoading = false;
   isUnitCaresLoading = false;
   selectedDietsDateRange = this.getInitialDateRange();
-  UnitCareList: UnitCareDTO[] = [];
+  UnitCareList: UnitCare[] = [];
   DietList: DietDto[] = [];
   selectedDiets: DietDto[] = [];
   minDietStartDiet = new Date();
@@ -365,12 +365,12 @@ export class Stp5HospitalizationComponent {
 }
 export type stp5FormsValueEvent = {
   diet: stp5SelectedDietsType | null;
-  unitCare: UnitCareDTO | null;
+  unitCare: UnitCare | null;
 };
 
 type stp5FormGroupType = {
   diet: FormControl<stp5SelectedDietsType | null>;
-  unitCare: FormControl<UnitCareDTO | null>;
+  unitCare: FormControl<UnitCare | null>;
 };
 
 type stp5SelectedDietsType = {

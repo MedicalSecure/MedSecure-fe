@@ -1,9 +1,8 @@
 import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
 import { FamilyStatus, Gender, PrescriptionStatus } from '../enums/enum';
+import { UnitCare } from '../model/unitCare/UnitCareData';
 import { DrugDTO } from './DrugDTOs';
-import { UnitCareDTO } from './UnitCareDTOs';
-
 
 export type GetPrescriptionsResponse = {
   prescriptions: PaginatedResult<PrescriptionDto>;
@@ -54,7 +53,7 @@ export type PrescriptionCreateDto = {
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyCreateDto[];
-  unitCare: UnitCareDTO | null; //match these types
+  unitCare: UnitCare | null; //match these types
   diet?: DietForPrescriptionDTO | null;
   createdAt: Date;
   createdBy: string;
