@@ -1,58 +1,66 @@
-<div class="container mt-4">
-  <div class="row">
-    <!-- Card Column -->
-    <div class="col-md-6 order-md-1">
-      <form class="needs-validation" novalidate="">
-        <div class="container mt-3">
-          <div class="row">
-            <ul style="min-height: 250px; margin-bottom: 0px">
-              <h5>
-                <i class="fa fa-apple-alt"></i>
-                Meal Type
-              </h5>
-              <li class="list-group-item">
-                <div class="form-group mb-0">
-                  <div *ngFor="let type of MealType">
-                    <label>
-                      <input class="form-check-input" type="radio" name="mealType" style="margin-right: 5px"
-                        id="{{ type }}" [value]="type" (change)="onMealTypeChange($event)"
-                        [checked]="type === selectedMealType" required />
-                      {{ type }}
-                    </label>
+<div class="card-body">
+  <form [formGroup]="DietForm" style="margin-top: 5%;" class="form-container">
+    <div class="row">
+      <div class="col-md-6 col-lg-4 mb-3">
+        <h4 class="card-title" style="margin-top: 15px">
+          Add New Meal
+        </h4>
+        <div formArrayName="meals">
+          <div *ngFor="let meal of DietForm.controls.meals.controls; let mealIndex = index">
+            <div class="question" [formGroupName]="mealIndex" style="width: 120%;">
+              <div style="display: flex; align-items: center;">
+                <div *ngFor="let type of MealType" style="margin-right: 5%;">
+                  <label style="display: flex; align-items: center;">
+                    <input class="form-check-input" type="radio"
+                      [name]="'mealType_' + mealIndex" style="margin-right: 2%;"
+                      [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
+                      (change)="onMealTypeChange($event, mealIndex)"
+                      [checked]="DietForm.controls.meals.at(mealIndex).value.type === type" required />
+                    {{ type }}
+                  </label>
+                </div>
+              </div>
+              <div formArrayName="foods" class="answers">
+                <div *ngFor="let food of meal.controls.foods.controls; let FoodIndex = index">
+                  <label>Select Option:</label>
+                  <div class="d-flex flex-wrap">
+                    <div class="form-check form-check-inline" *ngFor="let option of FoodOptions; let i = index">
+                      <input class="form-check-input" type="radio"
+                        [name]="'radioOptions_' + mealIndex + '_' + FoodIndex"
+                        [id]="'radioOption_' + mealIndex + '_' + i" [value]="option"
+                        (change)="onOptionChange(option)" required
+                        style="margin-left: 10%; background-color: transparent;" />
+                      <label class="form-check-label" [for]="'radioOption_' + mealIndex + '_' + i">{{ option }}</label>
+                    </div>
+                  </div>
+                  <div class="invalid-feedback">
+                    Please select a Food.
+                  </div>
+                  <!-- Dropdown Menu -->
+                  <label for="foodSelect" style="margin-right: 10px; margin-bottom: 3%;">Choose Food</label>
+                  <div style="display: flex; align-items: center;">
+                    <select class="form-control" id="foodSelect" formControlName="foodOption" required style="width: 90%; margin-right: 10px;">
+                      <option *ngFor="let food of FoodList" [value]="food">{{ food }}</option>
+                    </select>
+                    <div class="invalid-feedback" style="margin-right: 10px; margin-bottom: 3%;">
+                      Please select a food.
+                    </div>
+                    <div class="icon-button" (click)="removeFood(mealIndex, FoodIndex)" style="background-color: transparent; margin-left: 1%; border-color: transparent; cursor: pointer;">
+                      <i class="fas fa-trash"></i>
+                    </div>
                   </div>
                 </div>
-                <small>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor
-                  consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor
-                </small>
-              </li>
-              <p>
-              </p>
-            </ul>
+                <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)" style="margin-top: 5%; color: white;">
+                  Add Food
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </form>
+        <div class="add-question">
+          <button type="button" style="color: white;" class="btn btn-primary" (click)="addMeal()">Add meal</button>
+        </div>
+      </div>
     </div>
-    <!-- Card Column -->
-    <div class="col-md-6 order-md-1" style="margin-left: -4%;">
-      <form class="needs-validation" novalidate>
-          <div class="container mt-3">
-              <div class="row">
-                  <ul style="min-height: 250px; margin-bottom: 0px">
-                      <h5>
-                          <i class="fa fa-utensils"></i>
-                          Add Food
-                      </h5>
-                      <li class="list-group-item">
-                          <div class="form-group mb-0">
-                            <div *ngFor="let card of cards; let i = index" style="margin-top: 1%;">
-                              <app-card [cardId]="card.id" (remove)="removeCard($event)" (add)="addCardFromChild()" ></app-card>
-                            </div>
-                          </div>
-                      </li>
-                  </ul>
-              </div>
-          </div>
-      </form>
-  </div>
-  </div>
+  </form>
+</div>
