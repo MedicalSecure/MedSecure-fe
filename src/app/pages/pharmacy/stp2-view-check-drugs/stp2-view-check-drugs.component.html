@@ -1,5 +1,8 @@
+<div *ngIf="isLoading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>
 <!-- Table of Medications -->
-<table class="table table-responsive">
+<table *ngIf="!isLoading" class="table table-responsive autoFit">
   <div class="row flex-grow mt-2">
     <div class="col-12 grid-margin stretch-card">
       <div class="card card-rounded">
@@ -31,7 +34,8 @@
               <ng-container matColumnDef="dosage">
                 <th mat-header-cell *matHeaderCellDef class="vertical-line">Dosage</th>
                 <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
-                  {{ element.Dosage }}
+                  <input *ngIf="element.IsDosageValid === false" [ngStyle]="getDosageStyle(element.IsDosageValid)" [value]="element.Dosage" (input)="onDosageChange(element, $event)" />
+                  <span *ngIf="element.IsDosageValid !== false" [ngStyle]="getDosageStyle(element.IsDosageValid)">{{ element.Dosage }}</span>
                 </td>
               </ng-container>
 
@@ -43,7 +47,7 @@
                 </td>
               </ng-container>
 
-              <!-- Forme Column -->
+              <!-- Code Column -->
               <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef class="vertical-line">Code</th>
                 <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
@@ -51,7 +55,7 @@
                 </td>
               </ng-container>
 
-              <!-- Expiration_Date Column -->
+              <!-- Expired At Column -->
               <ng-container matColumnDef="expired At">
                 <th mat-header-cell *matHeaderCellDef class="vertical-line">Expired At</th>
                 <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
@@ -72,22 +76,6 @@
                 <th mat-header-cell *matHeaderCellDef class="vertical-line">Stock</th>
                 <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
                   {{ element.Stock }}
-                </td>
-              </ng-container>
-
-              <!-- Stock Column -->
-              <ng-container matColumnDef="available Stock">
-                <th mat-header-cell *matHeaderCellDef class="vertical-line">Available Stock</th>
-                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
-                  {{ element.AvailableStock }}
-                </td>
-              </ng-container>
-
-              <!-- Stock Column -->
-              <ng-container matColumnDef="reserved Stock">
-                <th mat-header-cell *matHeaderCellDef class="vertical-line">Reserved Stock</th>
-                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
-                  {{ element.ReservedStock }}
                 </td>
               </ng-container>
 
@@ -123,7 +111,6 @@
                 </td>
               </ng-container>
 
-              
               <!-- Price Column -->
               <ng-container matColumnDef="price">
                 <th mat-header-cell *matHeaderCellDef class="vertical-line">Price</th>
@@ -132,8 +119,6 @@
                 </td>
               </ng-container>
 
-              
-              <!-- Price Column -->
               <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef class="vertical-line">Description</th>
                 <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
@@ -142,7 +127,7 @@
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="getRowClassStyle(row.IsDrugExist)"></tr>
             </table>
           </div>
         </div>
@@ -150,3 +135,4 @@
     </div>
   </div>
 </table>
+<app-error-message></app-error-message>

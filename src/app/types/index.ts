@@ -3,6 +3,13 @@ import { ConsumptionPeriodType } from '../pages/prescription/stp4-add-medication
 
 export type styleClass = { [klass: string]: any } | null | undefined;
 
+export type PaginatedResult<TEntity> = {
+  pageIndex: number;
+  pageSize: number;
+  count: number;
+  data: TEntity[];
+};
+
 export type medicationHourType = {
   hour: number;
   isBeforeFood: boolean;
@@ -24,4 +31,19 @@ export type medicationType = {
   Caution?: string;
   comments: Array<commentType>;
   summary?:object;
+};
+
+export type ActivityView = {
+  id: string;
+  content: string;
+  createdBy: string;
+  creatorName: string;
+  activityTime: string;
+};
+
+export type Entity = {
+  createdAt: Date;
+  modifiedAt?: Date;
+  createdBy: string;
+  modifiedBy?: string;
 };

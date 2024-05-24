@@ -48,8 +48,6 @@ export class NavbarComponent {
     ExpiredAt: NOT_ASSIGNED,
     Unit: NOT_ASSIGNED,
     Stock: NOT_ASSIGNED,
-    AvailableStock: NOT_ASSIGNED,
-    ReservedStock: NOT_ASSIGNED,
     AlertStock: NOT_ASSIGNED,
     AverageStock: NOT_ASSIGNED,
     MinimumStock: NOT_ASSIGNED,
@@ -99,8 +97,6 @@ export class NavbarComponent {
         ExpiredAt: NOT_ASSIGNED,
         Unit: NOT_ASSIGNED,
         Stock: NOT_ASSIGNED,
-        AvailableStock: NOT_ASSIGNED,
-        ReservedStock: NOT_ASSIGNED,
         AlertStock: NOT_ASSIGNED,
         AverageStock: NOT_ASSIGNED,
         MinimumStock: NOT_ASSIGNED,
@@ -152,8 +148,6 @@ export type MedicationType = {
   ExpiredAt: string;
   Unit: string;
   Stock: string;
-  AvailableStock: string;
-  ReservedStock: string;
   AlertStock: string;
   AverageStock: string;
   MinimumStock: string;

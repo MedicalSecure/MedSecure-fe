@@ -1,16 +1,4 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-pharmacy-list',
-//   standalone: true,
-//   imports: [],
-//   templateUrl: './pharmacy-list.component.html',
-//   styleUrl: './pharmacy-list.component.css'
-// })
-// export class PharmacyListComponent {
-
-// }
-
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { MedicationType } from '../../../partials/navbar/navbar.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { DrugService } from '../../../services/medication/medication.service';
 @Component({
   selector: 'app-pharmacy-list',
   standalone: true,
@@ -31,12 +20,21 @@ import { MatChipsModule } from '@angular/material/chips';
     CommonModule,
     FormsModule,
     MatTableModule,
-    MatChipsModule
+    MatChipsModule,
+    MatProgressSpinner
   ],
   templateUrl: './pharmacy-list.component.html',
   styleUrl: './pharmacy-list.component.css',
 })
 export class PharmacyListComponent implements OnInit {
+  @Input() mappedMedications: MedicationType[] = [];
+  
+  @Input() selectedPrescription: any | undefined = undefined;
+  @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
+  @Input() clearTextAfterEachSearch: boolean = false;
+  @Input()
+  
+
   displayedColumns: string[] = [
     'name',
     'dosage',
@@ -56,14 +54,30 @@ export class PharmacyListComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<MedicationType>();
 
-  constructor() {}
+  
+  isLoading: boolean = true;
+  searchTerm: string = '';
+
+  constructor(private drugService: DrugService) {}
 
   ngOnInit(): void {
-    const state = history.state;
-    console.log(state);
-    if (state && state.mappedData) {
-      this.dataSource.data = state.mappedData;
+    this.drugService.getData(this.dataSource);
+    this.updateDataSource();
+    console.log(this.mappedMedications);
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['mappedMedications']) {
+      this.updateDataSource();
     }
+  }
+
+  private updateDataSource() {
+    this.dataSource.data = this.mappedMedications;
+    console.log(this.mappedMedications);
   }
 
   applyFilter(event: Event) {
@@ -71,24 +85,8 @@ export class PharmacyListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  @Input() selectedPrescription: any | undefined = undefined;
-  @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
-  @Input() clearTextAfterEachSearch: boolean = false;
-  @Input()
-  
-  checked: boolean = true;
-  searchTerm: string = '';
-
   onClickPrescription(Prescription: any) {
     this.selectedPrescription = Prescription;
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (!this.clearTextAfterEachSearch) return;
-    let newChange = changes['selectedMedication'];
-    if (newChange && !newChange.firstChange) {
-      if (this.selectedPrescription === undefined) this.searchTerm = '';
-    }
   }
 
   onClickNewPrescription() {

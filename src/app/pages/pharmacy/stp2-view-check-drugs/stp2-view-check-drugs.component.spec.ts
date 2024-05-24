@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Stp4SuccessComponent } from './stp4-success.component';
+import { Stp2ViewCheckDrugs } from './stp2-view-check-drugs.component';
 
-describe('Stp4SuccessComponent', () => {
-  let component: Stp4SuccessComponent;
-  let fixture: ComponentFixture<Stp4SuccessComponent>;
+describe('Stp2ViewCheckDrugs', () => {
+  let component: Stp2ViewCheckDrugs;
+  let fixture: ComponentFixture<Stp2ViewCheckDrugs>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Stp4SuccessComponent]
+      imports: [Stp2ViewCheckDrugs]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(Stp4SuccessComponent);
+    fixture = TestBed.createComponent(Stp2ViewCheckDrugs);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

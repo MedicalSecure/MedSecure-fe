@@ -3,7 +3,7 @@
       <div class="card card-rounded">
         <div class="card-body">
           @if (this.ShowMedicationList == false) {
-            <div id="add-prescription-body">
+            <div id="medication-list">
               <!-- Tools bar (report issue, forward ...) -->
               <div class="d-sm-flex justify-content-between align-items-start">
                 <div>
@@ -23,7 +23,7 @@
               <app-wizard-header
                 [steps]="wizardSteps"
                 (currentStepChange)="SwitchToStep($event)"
-                [switchCondition]="selectedFile != undefined"
+                [switchCondition]="isStep1PageValid"
                 [currentStep]="stepNumber"
                 [size]="3"
                 [IconSizeRatio]="0.5"
@@ -33,32 +33,42 @@
               <!-- Wizard content -->
               <div class="wizard-container" style="height: 490px; overflow-y: auto">
 
-                <!-- Step 1 : Upload & map csv file -->
+                <!-- Step 1 : Upload & Map medications file -->
                 <div [className]="stepNumber != 1 && 'd-none'">
-                  <app-stp1-import-medications (mapMedicationsEvent)="handleMapMedications($event)"  [events]="eventsSubject.asObservable()"/>
+                  <app-stp1-import-map-drugs 
+                  (CheckedDrugsEvent)="handleCheckedDrugsEvent($event)
+                  "[events]="eventsSubject.asObservable()"
+                  (onIsStep1PageValidChange)="handlePageValidationChange(1,$event)"
+                  (areAllCheckedDrugsValid)="handleStp1AreAllCheckedDrugsValid($event)"
+                  />
                 </div>
-                
-                <!-- In Each of steps 2 and 3 -->
-                @if (selectedFile && stepNumber > 1) {
-                  
-                }
   
                 <!-- Step 2 : Check Medications -->
                 <div *ngIf="stepNumber === 2">
-                  <app-stp2-map-medications [mappedMedications]="mappedMedications"/>
+                  <app-stp2-view-check-drugs
+                  (ValidDrugsEvent)="handleValidDrugsEvent($event)"
+                  [mappedMedications]="mappedMedications"
+                  (onIsStep2PageValidChange)="handlePageValidationChange(2,$event)"
+                  />
                 </div>
+
+                <!-- Step 3 : Finish Updated Medication Successfully -->
+                <div *ngIf="stepNumber === 3">
+                  <app-stp3-confirm-update-drugs/>
+                </div>
+                  
               </div>
   
               <!-- Wizard buttons -->
               <div class="d-flex">
                 <div class="col-12 col-lg-8">
-                  <button type="button" class="btn btn-outline-primary" (click)="onSelectMedicationChange(undefined)">Cancel</button>
+                  <button type="button" class="btn btn-outline-primary" (click)="clearWizard()">Cancel</button>
                 </div>
                 <div class="col-lg-4 d-flex justify-content-end">
-                  <button type="button" class="btn btn-primary text-white mr-3" (click)="onClickBackEvent()">
+                  <button type="button" [className]="backButtonContent.class" (click)="onClickBackEvent()">
                     {{ backButtonContent.label }}
                   </button>
-                  <button type="button" class="btn btn-primary text-white" (click)="onClickNextEvent()">
+                  <button type="button" [className]="nextButtonContent.class" (click)="onClickNextEvent()">
                     {{ nextButtonContent.label }}
                   </button>
                 </div>
@@ -66,8 +76,8 @@
             </div>
           }
           @if (this.ShowMedicationList == true) {
-            <div id="add-prescription-body">
-              <app-pharmacy-list (onClickNewPrescriptionEvent)="onClickNewPrescriptionEventHandler($event)"></app-pharmacy-list>
+            <div id="medication-list">
+              <app-pharmacy-list (onClickNewPrescriptionEvent)="onClickMedicationListEventHandler($event)"></app-pharmacy-list>
             </div>
           }
         </div>
