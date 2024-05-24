@@ -62,7 +62,7 @@ export class Stp5HospitalizationComponent {
   DietsSelectComponent: ShipsSelectComponent<DietDto>;
 
   isDietsLoading = false;
-  isUnitCaresLoading = false;
+  isUnitCaresLoading = false; 
   selectedDietsDateRange = this.getInitialDateRange();
   UnitCareList: UnitCare[] = [];
   DietList: DietDto[] = [];
