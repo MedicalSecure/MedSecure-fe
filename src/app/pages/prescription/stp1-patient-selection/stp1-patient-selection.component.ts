@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-id/filter-patient-by-name-and-sn.pipe';
-import { FamilyStatus, Gender, Status } from '../../../enums/enum';
+import { FamilyStatus, Gender, HistoryStatus } from '../../../enums/enum';
 import { calculateAge, getDateString } from '../../../shared/utilityFunctions';
 import { RegisterService } from '../../../services/register/register.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -180,7 +180,7 @@ export class Stp1PatientSelection implements OnChanges {
 const registerForPrescriptionMock: RegisterForPrescription = {
   id: '123456789',
   mrn: 'MRN123',
-  currentStatus: Status.Registered,
+  currentStatus: HistoryStatus.Registered,
   registeredAt: new Date(),
   patient_id: '987654321',
   patient_firstName: 'John',

@@ -57,7 +57,7 @@ export enum Shift {
     Swing
 }
 
-export enum Status {
+export enum HistoryStatus {
     Resident = 'Resident',
     Out = 'Out',
     Registered = 'Registered'

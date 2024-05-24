@@ -1,4 +1,4 @@
-import { PrescriptionStatus, Status } from '../enums/enum';
+import { PrescriptionStatus, HistoryStatus } from '../enums/enum';
 import { PosologyDto, PrescriptionDto } from '../types/prescriptionDTOs';
 import { History, RegisterForPrescription } from '../types/registerDTOs';
 
@@ -70,13 +70,13 @@ export function getDateString(
 export function getRegistrationStatus(
   historyList: History[] | null | undefined,
   registerId: string = 'not specified'
-): Status {
+): HistoryStatus {
   if (!historyList) {
     console.error(
       `cant find register status : in getRegistrationStatus, registerId: ${registerId}, list of history: `,
       historyList
     );
-    return Status.Registered;
+    return HistoryStatus.Registered;
   }
 
   if (historyList.length === 0) {
@@ -84,7 +84,7 @@ export function getRegistrationStatus(
       `cant find register status : in getRegistrationStatus, registerId: ${registerId}, list of history: `,
       historyList
     );
-    return Status.Registered;
+    return HistoryStatus.Registered;
   }
 
   // Sort the history list by date in descending order

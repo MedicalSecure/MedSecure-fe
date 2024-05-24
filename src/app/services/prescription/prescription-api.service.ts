@@ -16,7 +16,7 @@ import {
 } from '../../types/prescriptionDTOs';
 import { GetRegistrationsResponse, RegisterDto } from '../../types/registerDTOs';
 import { delay, map, switchMap } from 'rxjs/operators';
-import { Status } from '../../enums/enum';
+import { HistoryStatus } from '../../enums/enum';
 import { Entity, GetActivitiesResponse } from '../../types';
 import { ActivityService } from '../../components/activities/activities.component';
 @Injectable({
@@ -203,11 +203,11 @@ export class PrescriptionApiService implements ActivityService {
     return registrationsData;
   }
 
-  private _mapStatusEnum(value: any): Status {
+  private _mapStatusEnum(value: any): HistoryStatus {
     //the enum value is coming as number => we convert it to status enum here
-    if (value == 0) return Status.Resident;
-    if (value == 1) return Status.Out;
-    return Status.Registered;
+    if (value == 0) return HistoryStatus.Resident;
+    if (value == 1) return HistoryStatus.Out;
+    return HistoryStatus.Registered;
   }
 
 

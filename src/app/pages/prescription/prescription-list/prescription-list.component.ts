@@ -23,7 +23,7 @@ import {
   GetRegistrationsResponse,
   RegisterDto,
 } from '../../../types/registerDTOs';
-import { PrescriptionStatus, Status } from '../../../enums/enum';
+import { PrescriptionStatus, HistoryStatus } from '../../../enums/enum';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   calculateAge,
@@ -117,7 +117,7 @@ export class PrescriptionListComponent implements OnInit {
     this.fetchRegistrationsWithPrescriptions();
   }
 
-  getRegisterStatus(register: RegisterDto): Status {
+  getRegisterStatus(register: RegisterDto): HistoryStatus {
     return getPatientStatusFromRegister(register);
   }
 
@@ -215,9 +215,9 @@ export class PrescriptionListComponent implements OnInit {
   }
 }
 
-export function getPatientStatusFromRegister(register: RegisterDto): Status {
+export function getPatientStatusFromRegister(register: RegisterDto): HistoryStatus {
   if (register.history == undefined || register.history.length == 0)
-    return Status.Out;
+    return HistoryStatus.Out;
 
   let histories = register.history?.sort((a, b) => {
     // Convert dates to milliseconds since epoch for comparison

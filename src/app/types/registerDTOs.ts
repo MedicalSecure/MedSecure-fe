@@ -4,7 +4,7 @@ import {
   FamilyStatus,
   Gender,
   Language,
-  Status,
+  HistoryStatus,
   TestType,
 } from '../enums/enum';
 import { PrescriptionDto } from './prescriptionDTOs';
@@ -39,7 +39,7 @@ export type PatientDto = {
 export type History = {
   id: string;
   date: Date;
-  status: Status;
+  status: HistoryStatus;
   registerId: string;
 };
 
@@ -104,7 +104,7 @@ export type GetPatientsResponse = {
 export type RegisterForPrescription = {
   id: string;
   mrn?: string;
-  currentStatus: Status;
+  currentStatus: HistoryStatus;
   registeredAt?: Date;
   patient_id: string;
   patient_firstName: string;
