@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, ChangeDetectionStrategy, ViewChild, TemplateRef, Input, Output, EventEmitter, OnInit, } from '@angular/core';
-import { startOfDay, isSameDay, isAfter } from 'date-fns';
+import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, Input, Output, EventEmitter, OnInit, } from '@angular/core';
+import { startOfDay, isSameDay, eachDayOfInterval, isBefore, isToday, isAfter, endOfDay } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarView, } from 'angular-calendar';
-import { EventColor } from 'calendar-utils';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlatpickrModule } from 'angularx-flatpickr';
@@ -34,15 +33,20 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { AppointmentComponent } from '../appointment/appointment.component'
 import { CalendarMonthViewDay } from 'angular-calendar';
-
-
+import { Patients } from '../../model/patients';
+import { Socket } from 'ngx-socket-io'
+import { EventColor } from 'calendar-utils';
+import { Router } from '@angular/router';
+import {VisitService} from '../../services/visits.service'
+import { ActionType } from '../../interface/ActionType';
+import {CalendarEventType} from '../../interface/CalendarEventType';
+import {TypeVisit} from '../../interface/TypeVisit'
+import {LocationVisit} from '../../interface/LocationVisit'
 const colors: Record<string, EventColor> = {
   red: { primary: '#ad2121', secondary: '#FAE3E3', },
   blue: { primary: '#1e90ff', secondary: '#D1E8FF', },
   yellow: { primary: '#e3bc08', secondary: '#FDF1BA', },
 };
-
-export enum ActionType { get, add, edit, delete, }
 @Component({
   selector: 'app-calendar-view',
   standalone: true,
@@ -89,17 +93,18 @@ export enum ActionType { get, add, edit, delete, }
 export class CalendarShedulerComponent implements OnInit {
   view: CalendarView = CalendarView.Month;
   viewday: CalendarView = CalendarView.Day;
- // @Input() events: CalendarEventType[] = [];
+  // @Input() events: CalendarEventType[] = [];
   @Input() events: CalendarEvent[] = [];
 
-  CastedEvents=this.events as CalendarEventType[];
+  CastedEvents = this.events as CalendarEventType[];
   @Input() selectedDate: Date = new Date();
   @Input() selectedTime: string = '';
   @Input() formData: any = {
+    id: '',
     duration: '20 min',
     description: '',
-    typevisits: 'First consultation',
-    disponibilite: 'clinic',
+    typeVisit: 0,
+    disponibilite: 0,
     avaibility: ''
   };
   @ViewChild('modalContent', { static: true }) modalContent!: TemplateRef<any>;
@@ -119,7 +124,7 @@ export class CalendarShedulerComponent implements OnInit {
   modalAction: string = '';
   separatorKeysCodes: number[] = [ENTER, COMMA];
   announcer = inject(LiveAnnouncer);
-  patients!: any[];
+  patients: any[];
   filteredPatients!: any[];
   searchQuery: string = '';
   selectedPatient: any;
@@ -147,81 +152,36 @@ export class CalendarShedulerComponent implements OnInit {
   ];
 
 
-  constructor(private modal: NgbModal, private http: HttpClient) {
+  constructor(private modal: NgbModal, private visitService: VisitService, private router: Router) {
     this.modalData = { action: '', event: {} as CalendarEventType<any> };
   }
 
   modalOpen: boolean = true;
 
-  openModal() {
-    this.modalOpen = true;
-  }
-
-  closeModal1() {
-    this.modalOpen = false;
-  }
-
-  triggerTodayClick() {
-    if (this.todayButton) {
-      this.todayButton.nativeElement.click();
-    } else {
-      console.error('Today button not found');
-    }
-  }
 
   ngOnInit(): void {
     this.loadEvents();
-    this.loadPatients();
     this.formData = { ...this.modalData };
 
   }
 
 
 
-  loadPatients() {
-    this.http.get<any[]>('assets/data/patients.json').subscribe(
-      (data) => {
-        this.patients = data;
-        this.filteredPatients = data;
-        this.selectPatient(data);
-        console.log('JSON file dataPatients:', data);
-      },
-      (error) => {
-        console.error('Error loading JSON file:', error);
-      }
-    );
-  }
-
-
-
-
-  search(event: any): void {
-    if (event && event.target && event.target.value) {
-      this.searchQuery = event.target.value;
-      this.filteredPatients = this.patients.filter(
-        (patient) =>
-          patient.nom.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          patient.prenom.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
-  }
-
-
   loadEvents() {
-    this.http.get<any[]>('assets/data/visits.json').subscribe(
+    this.visitService.getVisits().subscribe(
       (data) => {
-        this.CastedEvents = data.map((event) => ({
+          this.CastedEvents = data.visits.data.map((event: any) => ({
           ...event,
-          start: new Date(event.start),
-          end: new Date(event.end),
-          patient: event.patient,
-          typevisits: event.typevisits,
-          disponibilite: event.disponibilite,
+          start: new Date(event.startDate),
+          end: new Date(event.endDate),
+          patient: `${event.patient.firstName} ${event.patient.lastName}`,
+          typevisits: TypeVisit[event.typeVisit],
+          title: 'Appoitement with ' + event.patient.firstName + '' + event.patient.lastName,
+          disponibilite: LocationVisit[event.locationVisit],
           duration: event.duration,
-          avaibility: event.avaibility,
+          avaibility: event.availability,
           description: event.description,
-          actionType: event.actionType.map((type: number) => ActionType[type]),
-          actions: event.actions,
+          actionType: [ActionType.get, ActionType.edit, ActionType.delete],
         }));
         this.generateActions();
         this.addAddEventToDaysWithEvents();
@@ -234,33 +194,36 @@ export class CalendarShedulerComponent implements OnInit {
     );
   }
 
-  selectPatient(patient: any): void {
-    if (this.selectedPatient === patient) {
-      this.selectedPatient = null;
-    } else {
-      this.selectedPatient = patient;
-      this.formData.patient = patient.nom + ' ' + patient.prenom;
-      console.log('Patient selected:', this.formData.patient);
-    }
-  }
-
   addAddEventToDaysWithEvents() {
     const daysWithEvents: Date[] = [];
     const today = startOfDay(new Date());
     this.CastedEvents.forEach((event) => {
-      const eventDate = startOfDay(event.start);
-      if (isAfter(eventDate, today) || isSameDay(eventDate, today)) {
-        if (!daysWithEvents.some((day) => isSameDay(day, eventDate))) {
-          daysWithEvents.push(eventDate);
+      const eventStartDate = startOfDay(event.start);
+      const eventEndDate = startOfDay(event.end);
+      
+      if (isAfter(eventStartDate, today) || isSameDay(eventStartDate, today)) {
+        if (!daysWithEvents.some((day) => isSameDay(day, eventStartDate))) {
+          daysWithEvents.push(eventStartDate);
+        }
+  
+        // Add events for each day between event start date and end date
+        for (let d = new Date(eventStartDate); d <= eventEndDate; d.setDate(d.getDate() + 1)) {
+          const day = startOfDay(d);
+          if (!daysWithEvents.some((existingDay) => isSameDay(existingDay, day))) {
+            daysWithEvents.push(day);
+          }
         }
       }
     });
+  
+    // Add "Create an appointment" event for each day with an event
     daysWithEvents.forEach((day) => {
       const eventExists = this.CastedEvents.some(
         (existingEvent) =>
           isSameDay(startOfDay(existingEvent.start), day) &&
           existingEvent.title === 'Create an appointment'
       );
+  
       if (!eventExists) {
         this.CastedEvents.push({
           start: day,
@@ -272,6 +235,8 @@ export class CalendarShedulerComponent implements OnInit {
       }
     });
   }
+  
+  
 
   generateActions(): void {
     this.CastedEvents.forEach((event) => {
@@ -301,7 +266,7 @@ export class CalendarShedulerComponent implements OnInit {
       if (event.actionType.includes(ActionType.edit)) {
         event.actions.push({
           label: '<i class="fas fa-pencil-alt"></i>',
-          a11yLabel: 'Edit',
+          a11yLabel: 'edit',
           onClick: ({ event }: { event: CalendarEventType<any> }): void => {
             this.handleEvent('Edited', event);
           },
@@ -322,38 +287,15 @@ export class CalendarShedulerComponent implements OnInit {
     console.log('Actions generated successfully');
   }
 
-  getExistingDates(): Date[] {
-    const existingDates: Date[] = [];
-
-    this.CastedEvents.forEach((event) => {
-      if (
-        event.start &&
-        !existingDates.some((day) => isSameDay(day, event.start))
-      ) {
-        existingDates.push(event.start);
-      }
-    });
-
-    return existingDates;
+  triggerTodayClick() {
+    if (this.todayButton) {
+      this.todayButton.nativeElement.click();
+    } else {
+      console.error('Today button not found');
+    }
   }
 
-  getDaysWithEvents(): Date[] {
-    const daysWithEvents: Date[] = [];
-
-    this.CastedEvents.forEach((event) => {
-      //erreur
-      if (
-        event.start &&
-        !daysWithEvents.some((day) => isSameDay(day, event.start))
-      ) {
-        daysWithEvents.push(event.start);
-      }
-    });
-
-    return daysWithEvents;
-  }
-
-  handleEventClick(event: any): void  {
+  handleEventClick(event: any): void {
     console.log(event)
     if (event.title === 'Create an appointment') {
       this.selectedEvent = event;
@@ -363,12 +305,13 @@ export class CalendarShedulerComponent implements OnInit {
     }
   }
 
-  // dayClicked({ date, events }: { date: Date; events: CalendarEventType[] }): void {
+
+
   dayClicked({ day }: { day: CalendarMonthViewDay<any> }): void {
     const today = startOfDay(new Date());
     const date = day.date;
     const events = day.events;
-  
+
     if (date < today) {
       if (events.length === 0) {
         console.log('impossible de trouve événement pour cette date');
@@ -422,10 +365,9 @@ export class CalendarShedulerComponent implements OnInit {
 
   handleEvent(action: string, event: CalendarEventType): void {
     this.modalData = { event, action };
-    console.log('fffffffff',this.modalData )
     switch (action) {
       case 'readed':
-        this.modalTitle = 'Read Data';
+        this.modalTitle = event.title;
         this.modalbutton = 'OK';
         this.modalAction = 'get';
 
@@ -437,19 +379,19 @@ export class CalendarShedulerComponent implements OnInit {
 
         break;
       case 'Edited':
-        this.modalTitle = 'Edited Data';
+        this.modalTitle = event.title;
         this.modalbutton = 'Edit';
         this.modalAction = 'edit';
 
         break;
       case 'Deleted':
-        this.modalTitle = 'Deleted Data';
+        this.modalTitle = event.title;
         this.modalbutton = 'Delete';
         this.modalAction = 'delete';
 
         break;
       default:
-        this.modalTitle = 'Create Data';
+        this.modalTitle = 'Create an appointment';
         this.modalbutton = 'Create';
         this.modalAction = 'add';
         break;
@@ -457,14 +399,6 @@ export class CalendarShedulerComponent implements OnInit {
     this.modal.open(this.modalContent);
     console.log(event, action);
   }
-
-  confirmDelete(): void {
-    if (confirm('Voulez-vous vraiment supprimer cet événement ?')) {
-      this.deleteEvent(this.modalData.event);
-      this.closeModal();
-    }
-  }
-
   addEvent(): void {
     const newEvent: CalendarEventType = {
       title: 'Nouvel événement',
@@ -486,8 +420,9 @@ export class CalendarShedulerComponent implements OnInit {
   deleteEvent(eventToDelete: CalendarEventType) {
     console.log('Événement à supprimer :', eventToDelete);
     this.CastedEvents = this.CastedEvents.filter((event) => event !== eventToDelete);
-    console.log('Événements après suppression :', this.CastedEvents);
   }
+
+  
 
   setView(view: CalendarView) {
     this.view = view;
@@ -497,230 +432,63 @@ export class CalendarShedulerComponent implements OnInit {
     this.activeDayIsOpen = false;
   }
 
-  performAction(): void {
-    switch (this.modalAction) {
-      case 'get':
-        this.closeModal();
-        break;
-      case 'add':
-        this.saveFormData(this.formData);
-        break;
-      case 'edit':
-        this.updateEventData(this.formData);
-
-        break;
-      case 'delete':
-        this.confirmDelete();
-        break;
-      default:
-        this.closeModal();
-        break;
-    }
-  }
-
   closeModal() {
     this.modal.dismissAll();
   }
 
   saveFormData(formData: any): void {
-    this.http.get<any[]>('assets/data/visits.json').subscribe(
-      (existingData: any[]) => {
-        const updatedData = [...existingData, formData];
-        this.http.put('assets/data/visits.json', updatedData).subscribe(
-          (response) => {
-            console.log('Données enregistrées avec succès !', updatedData);
-
-            const newEvent: CalendarEventType = {
-              start: this.selectedDate,
-              patient: this.formData.patient,
-              typevisits: this.formData.typevisits,
-              disponibilite: this.formData.disponibilite,
-              avaibility: this.formData.avaibility,
-              description: this.formData.description,
-              duration: this.formData.duration,
-
-              title: 'Evenement avec' + ' ' + this.formData.patient,
-              color: { ...colors['pink'] },
-
-              actionType: [ActionType.edit, ActionType.delete],
-              resizable: {
-                beforeStart: true,
-                afterEnd: true,
-              },
-              draggable: true,
-            };
-
-            this.modal.dismissAll()
-            this.CastedEvents.push(newEvent);
-          },
-          (error) => {
-            console.error(
-              "Erreur lors de l'enregistrement des données : ",
-              error
-            );
-          }
-        );
+    this.visitService.creatVisits(formData).subscribe(
+      (response) => {
+        console.log('Données enregistrées avec succès !', response);
+        this.modal.dismissAll();
+       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['visits']);
+      });
       },
       (error) => {
-        console.error(
-          'Erreur lors de la récupération des données existantes : ',
-          error
-        );
+        console.error("Erreur lors de l'enregistrement des données : ", error);
       }
     );
   }
 
-  changeButtonColors(buttonClicked: number) {
-    if (buttonClicked === 1) {
-      this.button1Color = '#3B539B';
-      this.button2Color = '#BFC0C3';
-      this.button1Text = '#ffffff';
-      this.button2Text = '#000000';
-      this.showAvailabilityField = true;
-    } else if (buttonClicked === 2) {
-      this.button1Color = '#BFC0C3'; // Réinitialise la couleur du bouton 1
-      this.button2Color = '#4560B3';
-      this.button1Text = '#000000'; // Réinitialise la couleur de texte pour le bouton 1
-      this.button2Text = '#ffffff';
-      this.showAvailabilityField = false;
-      this.saveCurrentTime();
-    }
-  }
-
-  addNewPatient(): void {
-    // Logique pour ajouter un nouveau patient
-    console.log("Ajout d'un nouveau patient en cours...");
-  }
-
-  dayClickedaffiche({ date }: { date: Date }): void {
-    this.selectedDate = date;
-  }
-
-  timeClickedaffiche({ date }: { date: Date }): void {
-
-    const currentTime = new Date();
-
-    const formattedTime = this.formatTime(currentTime);
-
-    this.selectedTime = formattedTime;
-  }
-
-  formatTime(date: Date): string {
-    // Obtenez les composants de l'heure
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-
-    // Formatez-les comme vous le souhaitez, par exemple HH:MM:SS
-    return `${this.padZero(hours)}:${this.padZero(minutes)}:${this.padZero(
-      seconds
-    )}`;
-  }
-
-  padZero(num: number): string {
-    // Ajoute un zéro devant si le nombre est inférieur à 10
-    return (num < 10 ? '0' : '') + num;
-  }
-
-  saveTime(): void {
-    const currentTime = new Date();
-
-    const formattedTime = this.formatTime(currentTime);
-
-    this.selectedTime = formattedTime;
-  }
-
-  saveCurrentTime(): void {
-    const currentTime = new Date();
-    const formattedTime = this.formatTime(currentTime);
-    console.log('Heure actuelle :', formattedTime);
-    this.formData.avaibility = formattedTime;
-  }
 
   updateEventData(formData: any): void {
-    this.modalData.event = { ...this.modalData.event, ...formData };
-    this.CastedEvents = this.CastedEvents.map((event) => {
-      if (event.id === this.modalData.event.id) {
-        return { ...event, ...this.modalData.event };
-      } else {
-        return event;
-      }
-    });
-    this.saveToFile(this.CastedEvents);
-    this.closeModal();
-  }
-
-  private saveToFile(data: any): void {
-    this.http.put('assets/data/visits.json', data).subscribe(
+    this.visitService.updateVisits(formData).subscribe(
       (response) => {
-        console.log('Données mises à jour avec succès !', data);
+        console.log('Données mises à jour avec succès !', response);
+        this.modal.dismissAll();
+        // window.location.reload();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['visits']);
+        });
       },
       (error) => {
-        console.error('Erreur lors de la mise à jour des données : ', error);
+        console.error("Erreur lors de la mise à jour des données : ", error);
       }
     );
   }
 
+  updateView(newEvents: CalendarEvent[]): void {
+    // Supprimer les événements de création de rendez-vous précédents
+    this.events = this.events.filter(event => event.title !== 'Create an appointment');
 
-  updateDuration(event: any) {
-    this.formData.duration = event.target.value;
-    console.log(this.formData.duration)
+    // Ajouter les nouveaux événements
+    this.events.push(...newEvents);
+
+    this.refresh.next();
   }
-
-
-  updateDescription(event: any) {
-    this.formData.description = event.target.value;
-  }
-
-  updateTypeVisits(event: any) {
-    this.formData.typevisits = event.target.value;
-    console.log(this.formData.typevisits)
-  }
-  updateDisponibilite(event: any) {
-    this.formData.disponibilite = event.target.value;
-    console.log(this.formData.disponibilite)
-  }
-
-  updateAvailability(event: any) {
-    this.formData.avaibility = event.target.value;
-    console.log(this.formData.avaibility);
-  }
-
 
 
 }
 
-export interface EventAction {
-  id?: string | number;
-  label: string;
-  cssClass?: string;
-  a11yLabel?: string;
-  onClick({ event, sourceEvent, }: {
-    event: CalendarEventType;
-    sourceEvent: MouseEvent | KeyboardEvent;
-  }): any;
-}
-export interface CalendarEventType <MetaType = any>  {
 
-  typevisits?: any;
-  disponibilite?: any;
-  avaibility?: any;
-  description?: any;
-  duration?: any;
-  actionType: ActionType[];
-  patient?: any;
-  id?: string | number;
-  start: Date;
-  end?: Date;
-  title: string;
-  color?: EventColor;
-  actions?: EventAction[];
-  allDay?: boolean;
-  cssClass?: string;
-  resizable?: {
-    beforeStart?: boolean;
-    afterEnd?: boolean;
-  };
-  draggable?: boolean;
-  meta?: MetaType;
-}
+
+
+
+
+
+
+
+
+
+

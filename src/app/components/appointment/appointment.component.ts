@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, TemplateRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, TemplateRef, EventEmitter, model } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -6,7 +6,12 @@ import { ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarEventType } from '../calendar-scheduler/calendar-scheduler.component';
+import { CalendarEventType } from '../../interface/CalendarEventType';
+import { Patients } from '../../model/patients';
+import { visits } from '../../model/visits';
+import { Router } from '@angular/router';
+import {VisitService} from '../../services/visits.service';
+import {PatientService} from '../../services/patient.service'
 
 
 @Component({
@@ -17,8 +22,9 @@ import { CalendarEventType } from '../calendar-scheduler/calendar-scheduler.comp
   styleUrls: ['./appointment.component.css']
 })
 export class AppointmentComponent implements OnInit {
+  NamePatient: string
   dialogRef!: MatDialogRef<any>;
-  patients!: any[];
+  patients: Patients[] = [];
   filteredPatients!: any[];
   searchQuery: string = '';
   selectedPatient: any;
@@ -44,13 +50,14 @@ export class AppointmentComponent implements OnInit {
   @Input() modalbutton: string = '';
   @Input() modalAction: string = '';
   @Input() formData: any = {
+    id: '0',
     duration: '20 min',
     description: '',
-    typevisits: 'First consultation',
-    disponibilite: 'clinic',
+    typevisits: 0,
+    disponibilite: 0,
     avaibility: ''
   };
-  @Input() selectedDate: Date = new Date();
+  @Input() selectedDate: Date | string = new Date();
 
   @Input() modalData: { event: CalendarEventType<any> } = { event: {} as CalendarEventType<any> };
   @Input() selectedTime: string = '';
@@ -58,12 +65,11 @@ export class AppointmentComponent implements OnInit {
   @Output() eventDeleted: EventEmitter<any> = new EventEmitter<any>();
   @Output() eventCreated: EventEmitter<any> = new EventEmitter<any>();
   @Output() eventUpdated: EventEmitter<any> = new EventEmitter<any>();
-  constructor(private modal: NgbModal, private http: HttpClient) { }
+  constructor(private modal: NgbModal, private visitService: VisitService, private router: Router, private patientService :PatientService) { }
 
 
   ngOnInit(): void {
     this.loadPatients();
-
     if (this.modalData) {
       console.log('Données de l\'événement sélectionné :', this.modalData);
     }
@@ -71,7 +77,8 @@ export class AppointmentComponent implements OnInit {
   }
 
 
-  openModal(action: string) { 
+
+  openModal(action: string) {
     this.modalAction = action;
     this.modal.open(this.modalContent);
 
@@ -83,24 +90,6 @@ export class AppointmentComponent implements OnInit {
   openDeleteModal() {
     this.openModal('delete');
   }
-
-
-
-  loadPatients() {
-    this.http.get<any[]>('assets/data/patients.json').subscribe(
-      (data) => {
-        this.patients = data;
-        this.filteredPatients = data;
-        this.selectPatient(data);
-        console.log('JSON file dataPatients:', data);
-      },
-      (error) => {
-        console.error('Error loading JSON file:', error);
-      }
-    );
-  }
-
-
 
 
 
@@ -139,9 +128,7 @@ export class AppointmentComponent implements OnInit {
       avaibility: this.formData.avaibility,
       description: this.formData.description,
       duration: this.formData.duration,
-
-      title: 'Evenement avec' + ' ' + this.formData.patient,
-
+      title: 'Evenement avec ' + this.formData.NamePatient,
       actionType: [],
       resizable: {
         beforeStart: true,
@@ -153,6 +140,8 @@ export class AppointmentComponent implements OnInit {
     this.eventCreated.emit(newEvent);
 
   }
+
+
 
   changeButtonColors(buttonClicked: number) {
     if (buttonClicked === 1) {
@@ -169,20 +158,6 @@ export class AppointmentComponent implements OnInit {
       this.showAvailabilityField = false;
       this.saveCurrentTime();
     }
-  }
-
-
-  dayClickedaffiche({ date }: { date: Date }): void {
-    this.selectedDate = date;
-  }
-
-  timeClickedaffiche({ date }: { date: Date }): void {
-    // Récupérer l'heure actuelle
-    const currentTime = new Date();
-
-    const formattedTime = this.formatTime(currentTime);
-
-    this.selectedTime = formattedTime;
   }
 
   formatTime(date: Date): string {
@@ -218,14 +193,33 @@ export class AppointmentComponent implements OnInit {
   }
 
 
-
   updateEventData(formData: any): void {
-    const updatedEvent = { ...this.modalData.event, ...formData };
-    this.eventUpdated.emit(updatedEvent);
-    this.closeModal();
+    if (this.formData && this.modalData && this.modalData.event) {
+      this.formData.id = this.modalData.event.id;
+      console.log('ID de l\'événement:', this.formData.id);
+      const updateEvent: CalendarEventType = {
+        id: this.formData.id,
+        start: this.selectedDate,
+        patient: this.formData.patient,
+        typevisits: this.formData.typevisits,
+        disponibilite: this.formData.disponibilite,
+        avaibility: this.formData.avaibility,
+        description: this.formData.description,
+        duration: this.formData.duration,
+        title: 'Evenement avec ' + this.formData.NamePatient,
+        actionType: [],
+        resizable: {
+          beforeStart: true,
+          afterEnd: true,
+        },
+        draggable: true,
+      };
+      this.eventUpdated.emit(updateEvent);
+      this.closeModal();
+    } else {
+      console.error('Les données de formulaire ou les données de l\'événement ne sont pas définies.');
+    }
   }
-
-
 
 
   updateDuration(event: any) {
@@ -256,41 +250,66 @@ export class AppointmentComponent implements OnInit {
 
 
   confirmDelete(): void {
-    if (confirm('Voulez-vous vraiment supprimer cet événement ?')) {
-      this.deleteEvent(this.modalData.event);
+    const confirmation = confirm('Are you sure you want to delete this event?');
+    if (confirmation) {
+      const visitId = this.modalData.event.id; // Assuming the visit ID is stored in the event object
+      this.deleteVisit(visitId);
       this.closeModal();
     }
   }
-  deleteEvent(eventToDelete: any) {
-    this.eventDeleted.emit(eventToDelete);
+
+  deleteVisit(visitId: string | number | undefined): void {
+    this.visitService.deleteVisits(visitId).subscribe(
+      () => {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['visits']);
+        })
+        console.log('Visit deleted successfully');
+      },
+      (error) => {
+        console.error('Error deleting visit:', error);
+      }
+    );
   }
+  
 
 
+  loadPatients() {
+    this.patientService.getPatients().subscribe(
+      (data) => {
+        this.patients = data.patients.data;
+        this.filteredPatients = this.patients;
+        //  this.selectPatient(this.patients);
+        console.log('backends file dataPatients:', data);
+      },
+      (error) => {
+        console.error('Error loading JSON file:', error);
+      }
+    );
+  }
 
   search(event: any): void {
     if (event && event.target && event.target.value) {
       this.searchQuery = event.target.value;
       this.filteredPatients = this.patients.filter(
-        (patient) =>
-          patient.nom.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          patient.prenom.toLowerCase().includes(this.searchQuery.toLowerCase())
+        (patient: any) =>
+          patient.firstName.toLowerCase().includes(this.searchQuery) ||
+          patient.lastName.toLowerCase().includes(this.searchQuery)
       );
     }
   }
 
-
-
-  selectPatient(patient: any): void {
+  selectPatient(patient: Patients): void {
     if (this.selectedPatient === patient) {
       this.selectedPatient = null;
     } else {
       this.selectedPatient = patient;
-      this.formData.patient = patient.nom + ' ' + patient.prenom;
-      console.log('Patient selected:', this.formData.patient);
+      this.NamePatient = patient.firstName + ' ' + patient.lastName;
+      this.formData.patient = this.selectedPatient;
+      console.log('this.selectedPatient:', this.selectedPatient);
+      console.log('this.NamePatient:', this.NamePatient);
+      console.log('this.formData.patient:', this.formData.patient);
     }
   }
-
-
-
 
 }
