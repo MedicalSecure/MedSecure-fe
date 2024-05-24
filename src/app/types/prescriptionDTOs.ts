@@ -1,8 +1,9 @@
 import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
 import { FamilyStatus, Gender, PrescriptionStatus } from '../enums/enum';
+import { DrugDTO } from './DrugDTOs';
 import { UnitCareDTO } from './UnitCareDTOs';
-import { MedicationDto } from './medicationDTOs';
+
 
 export type GetPrescriptionsResponse = {
   prescriptions: PaginatedResult<PrescriptionDto>;
@@ -73,7 +74,7 @@ export type GetPrescriptionsResult = {
 export type PosologyDto = {
   id: string;
   prescriptionId: string;
-  medication: MedicationDto;
+  medication: DrugDTO;
   medicationId: string;
   startDate: Date;
   endDate: Date | null;

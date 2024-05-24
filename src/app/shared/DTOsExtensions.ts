@@ -1,3 +1,4 @@
+import { RegisterStatus } from "../enums/enum";
 import { PatientDto, RegisterDto, RegisterForPrescription } from "../types/registerDTOs";
 import { getRegistrationDate, getRegistrationStatus } from "./utilityFunctions";
 
@@ -80,7 +81,8 @@ export function mapRegisterDtoToRegisterForPrescription(registerDto: RegisterDto
       createdAt,
       modifiedAt,
       createdBy,
-      modifiedBy
+      modifiedBy,
+      status
     } = registerForPrescription;
   
     const patient: PatientDto = {
@@ -119,6 +121,7 @@ export function mapRegisterDtoToRegisterForPrescription(registerDto: RegisterDto
       history: history ?? [],
       test: test ?? [],
       prescriptions: prescriptions ?? null,
+      status:status ?? RegisterStatus.Active,
       createdAt: createdAt ?? new Date(),
       modifiedAt,
       createdBy: createdBy ?? '',

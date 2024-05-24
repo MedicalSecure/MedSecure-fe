@@ -11,7 +11,6 @@ import {
   PostPredictDiagnosisCommand,
   PostPredictDiagnosisResponse,
   PrescriptionCreateDto,
-  PrescriptionDto,
   SymptomDto,
 } from '../../types/prescriptionDTOs';
 import { GetRegistrationsResponse, RegisterDto } from '../../types/registerDTOs';
@@ -70,8 +69,8 @@ export class PrescriptionApiService implements ActivityService {
       .set('PageSize', pageSize.toString());
 
 
-      return timer(5000).pipe(
-        delay(5000), // Delaying the emission by 3 seconds
+      return timer(1000).pipe(
+        delay(1000), // Delaying the emission by 3 seconds
         switchMap(() =>
           this.http.get<GetSymptomsResponse>(this.apiUrl + '/Symptoms', {
             params,

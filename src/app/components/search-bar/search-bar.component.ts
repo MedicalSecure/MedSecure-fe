@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MedicationDto } from '../../types/medicationDTOs';
+import { DrugDTO } from '../../types/DrugDTOs';
 
 @Component({
   selector: 'app-search-bar',
@@ -56,8 +56,8 @@ export class SearchBarComponent implements OnInit, OnChanges {
   @Input()
   containerClasses: string = 'd-flex gap-3 flex-wrap justify-content-center';
   @Input()
-  selectedMedications: MedicationDto[] = [];
-  @Output() selectedMedicationsChange = new EventEmitter<MedicationDto[]>();
+  selectedMedications: DrugDTO[] = [];
+  @Output() selectedMedicationsChange = new EventEmitter<DrugDTO[]>();
 
   @Input()
   searchTerms: searchTerm[] = [
@@ -68,8 +68,8 @@ export class SearchBarComponent implements OnInit, OnChanges {
     this.searchTerms.length > 0
       ? this.searchTerms[0]
       : { label: 'Name', medicationKey: 'name' };
-  Medications: MedicationDto[] = [];
-  filteredMedications: Observable<MedicationDto[]>;
+  Medications: DrugDTO[] = [];
+  filteredMedications: Observable<DrugDTO[]>;
 
   hasReachedLimit =
     this.selectedMedications.length === this.maxNumberOfSelectedMedications;
@@ -100,7 +100,7 @@ export class SearchBarComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.medicationService.getMedications().subscribe(
       (response) => {
-        this.Medications = response.medications.data;
+        this.Medications = response.drugs.data;
       },
       null,
       () => this.afterLoadingData()
@@ -136,7 +136,7 @@ export class SearchBarComponent implements OnInit, OnChanges {
     });
   }
 
-  filterMedications(searchTerm: string): MedicationDto[] {
+  filterMedications(searchTerm: string): DrugDTO[] {
     if (typeof searchTerm !== 'string' || searchTerm.trim() === '') {
       return [];
     }
@@ -150,7 +150,7 @@ export class SearchBarComponent implements OnInit, OnChanges {
     );
   }
 
-  onChangeSelectedMedication(medication: MedicationDto): void {
+  onChangeSelectedMedication(medication: DrugDTO): void {
     if (!this.selectedMedications.includes(medication)) {
       this.selectedMedications.push(medication);
       this.emitSelectedMedications();
@@ -169,13 +169,14 @@ export class SearchBarComponent implements OnInit, OnChanges {
     this.emitSelectedMedications();
   }
 
-  getMedicationProperty(medication: MedicationDto): string {
+  getMedicationProperty(medication: DrugDTO): string {
+    //@ts-ignore
     return medication[
-      this.selectedSearchTerm.medicationKey as keyof MedicationDto
+      this.selectedSearchTerm.medicationKey as keyof DrugDTO
     ].toString();
   }
 
-  removeMedication(medication: MedicationDto, index: any): void {
+  removeMedication(medication: DrugDTO, index: any): void {
     //better performance
     //this.selectedMedications = this.selectedMedications.filter(med => med != medication)
     this.selectedMedications.splice(index, 1);
@@ -190,5 +191,5 @@ export class SearchBarComponent implements OnInit, OnChanges {
 
 export type searchTerm = {
   label: string;
-  medicationKey: keyof MedicationDto;
+  medicationKey: keyof DrugDTO;
 };

@@ -6,6 +6,7 @@ import {
   Language,
   HistoryStatus,
   TestType,
+  RegisterStatus,
 } from '../enums/enum';
 import { PrescriptionDto } from './prescriptionDTOs';
 
@@ -74,6 +75,7 @@ export type RegisterDto = {
   history?: History[];
   test?: Test[];
   prescriptions?: PrescriptionDto[] | null;
+  status:RegisterStatus;
   createdAt: Date;
   modifiedAt?: Date;
   createdBy: string;
@@ -132,6 +134,7 @@ export type RegisterForPrescription = {
   allergies?: RiskFactorDto[];
   history?: History[];
   test?: Test[];
+  status?:RegisterStatus;
   prescriptions?: PrescriptionDto[] | null;
   createdAt: Date;
   modifiedAt?: Date;

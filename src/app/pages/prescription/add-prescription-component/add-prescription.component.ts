@@ -281,7 +281,7 @@ export class AddPrescriptionComponent implements DoCheck {
       const response = await this.medicationService
         .getMedications()
         .toPromise();
-      let medications = response?.medications.data;
+      let medications = response?.drugs.data;
       if (medications == undefined) throw new Error('medications is undefined');
 
       return posologies.map((posology) => {

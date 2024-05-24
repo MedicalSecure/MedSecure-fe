@@ -46,7 +46,7 @@ import {
   SearchBarComponent,
   searchTerm,
 } from '../../../components/search-bar/search-bar.component';
-import { MedicationDto } from '../../../types/medicationDTOs';
+import { DrugDTO } from '../../../types/DrugDTOs';
 
 @Component({
   selector: 'app-stp4-add-medication',
@@ -99,7 +99,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
 
   //in this page case, selectedMedications[].length will at max contains 1 medication
   //but the searchBar component require the selectedMedications input to be a LIST OF MEDICATIONS..
-  selectedMedications: MedicationDto[] = [];
+  selectedMedications: DrugDTO[] = [];
 
   //If no medications is selected, don't modify the posology values, only the search medications will work
   canUpdatePosology: boolean = this.selectedMedications.length > 0;
@@ -147,7 +147,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   /* Form inputs change */
-  onSelectedMedicationChange(medications: MedicationDto[]) {
+  onSelectedMedicationChange(medications: DrugDTO[]) {
     if (medications.length === 0) {
       this.selectedMedications = [];
       this.selectedPosology = this._getFormInitialValues();
@@ -542,7 +542,7 @@ const _initialPartsOfDayHours: Dispense[] = [
   { hour: '23' },
 ];
 
-const initialEmptyMedication: MedicationDto = {
+const initialEmptyMedication: DrugDTO = {
   id: '',
   name: '',
   dosage: '',
