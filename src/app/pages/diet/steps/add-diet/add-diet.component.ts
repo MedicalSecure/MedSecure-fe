@@ -1,17 +1,19 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormArray, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-
+import { CommentComponent } from "../../../../components/comment/comment.component";
 @Component({
-  selector: 'app-add-diet',
-  standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, MatIconModule],
-  templateUrl: './add-diet.component.html',
-  styleUrls: ['./add-diet.component.css']
+    selector: 'app-add-diet',
+    standalone: true,
+    templateUrl: './add-diet.component.html',
+    styleUrls: ['./add-diet.component.css'],
+    imports: [CommonModule, RouterModule, ReactiveFormsModule, MatIconModule, CommentComponent]
 })
 export class AddDietComponent implements OnInit {
+  @Input() note : string[];
+liststring :string[] = ["blablabla"]
   selectedMealType: string;
   MealType: string[] = ["BreakFast", "Lunch", "Dinner", "Snack"];
   FoodOptions: string[] ;
