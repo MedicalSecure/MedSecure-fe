@@ -4,6 +4,7 @@ import { NgxMasonryModule } from 'ngx-masonry';
 import { MatCardModule } from '@angular/material/card';
 import { NgxMasonryOptions } from 'ngx-masonry';
 import { RouterModule } from '@angular/router';
+import { SensorThingspeakService } from '../../services/sensor-thingspeak/sensor-thingspeak.service';
 
 
 interface MasonryItem {
@@ -33,5 +34,27 @@ export class MasonryDpiComponent {
     { title: '', content: 'Donec interdum lectus mauris, nec pharetra sapien imperdiet sed. Phasellus vitae felis sit amet leo placerat imperdiet id quis magna.' },
     { title: '', content: 'Sed quis nisi sed neque tincidunt maximus. Quisque commodo massa vitae ante placerat, quis ultricies ligula lacinia.' },
     { title: '', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec interdum lectus mauris, nec pharetra sapien imperdiet sed.' }
-  ];}
+  ];
+
+
+  feed: any = {
+    created_at: '',
+    field1: '',
+    field2: '',
+    field3: '',
+    field4: '',
+    field5: '',
+    field6: '',
+    field7: ''
+  };
+  constructor(private sensorThingspeakService: SensorThingspeakService) { }
+
+  ngOnInit(): void {
+    this.sensorThingspeakService.getDataStreamHealth().subscribe((data: any) => {
+      this.feed = data; // Mettre à jour avec les nouvelles données
+    });
+  }
+}
+
+
 
