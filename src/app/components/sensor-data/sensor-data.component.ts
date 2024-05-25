@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SignalRService } from '../../services/signalr.service';
+// import { SignalRService } from '../../services/signalr.service';
 
 @Component({
   selector: 'app-sensor-data',
@@ -20,14 +20,13 @@ import { SignalRService } from '../../services/signalr.service';
 export class SensorDataComponent implements OnInit {
   sensorData: any;
 
-  constructor(private signalRService: SignalRService) {}
+  //constructor(private signalRService: SignalRService) {}
 
   ngOnInit() {
-    this.signalRService.sensorDataReceived = (data) => {
-      this.sensorData = data;
+    // this.signalRService.sensorDataReceived = (data) => {
+    //   this.sensorData = data;
     };
 
-    this.signalRService.startConnection();
-    this.signalRService.addSensorDataListener();
+    // this.signalRService.startConnection();
+    // this.signalRService.addSensorDataListener();
   }
-}

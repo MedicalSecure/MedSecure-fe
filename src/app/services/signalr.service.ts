@@ -39,44 +39,43 @@
 //     });
 //   }
 // }
-import { Injectable } from '@angular/core';
-import * as signalR from '@microsoft/signalr';
+// import { Injectable } from '@angular/core';
+// import * as signalR from '@microsoft/signalr';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SignalRService {
-  private hubConnection: signalR.HubConnection;
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class SignalRService {
+//   private hubConnection: signalR.HubConnection;
 
-  public sensorDataReceived: (data: any) => void;
- //url :https://medsecure-functions.azurewebsites.net/api
-  constructor() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('url', {
-        accessTokenFactory: async () => {
-          const response = await fetch('url', {
-            method: 'POST'
-          });
-          const negotiateResponse = await response.json();
-          return negotiateResponse.accessToken;
-        },
-        transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents | signalR.HttpTransportType.LongPolling
-      })
-      .build();
-  }
+//   public sensorDataReceived: (data: any) => void;
+//  //url :https://medsecure-functions.azurewebsites.net/api
+//   constructor() {
+//     this.hubConnection = new signalR.HubConnectionBuilder()
+//       .withUrl('url', {
+//         accessTokenFactory: async () => {
+//           const response = await fetch('url', {
+//             method: 'POST'
+//           });
+//           const negotiateResponse = await response.json();
+//           return negotiateResponse.accessToken;
+//         },
+//         transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents | signalR.HttpTransportType.LongPolling
+//       })
+//       .build();
+//   }
 
-  public startConnection() {
-    this.hubConnection
-      .start()
-      .then(() => console.log('Connection started'))
-      .catch(err => console.log('Error while starting connection: ' + err));
-  }
+  // public startConnection() {
+  //   this.hubConnection
+  //     .start()
+  //     .then(() => console.log('Connection started'))
+  //     .catch(err => console.log('Error while starting connection: ' + err));
+  // }
 
-  public addSensorDataListener() {
-    this.hubConnection.on('ReceiveSensorData', (data) => {
-      if (this.sensorDataReceived) {
-        this.sensorDataReceived(data);
-      }
-    });
-  }
-}
+  // public addSensorDataListener() {
+  //   this.hubConnection.on('ReceiveSensorData', (data) => {
+  //     if (this.sensorDataReceived) {
+  //       this.sensorDataReceived(data);
+  //     }
+  //   });
+  // }

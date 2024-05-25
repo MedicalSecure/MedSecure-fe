@@ -1,0 +1,58 @@
+<div class="container">
+
+  <h1>MedSecure Sensor Data HealthCare</h1>
+  <table class="table">
+      <thead>
+          <tr>
+              <th>Date</th>
+              <th>Température (°C)</th>
+              <th>Humidité (%)</th>
+              <th>Fréquence cardiaque </th>
+              <th>Niveau d'oxygène </th>
+              <th>Pression artérielle diastolique</th>
+              <th>Pression artérielle systolique</th>
+              <th>Niveau de glucose</th>
+
+          </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ feed2.created_at }}</td>
+          <td>{{ feed2.field1 }}</td>
+          <td>{{ feed2.field2 }}</td>
+          <td>{{ feed2.field3 }}</td>
+          <td>{{ feed2.field4 }}</td>
+          <td>{{ feed2.field5 }}</td>
+          <td>{{ feed2.field6 }}</td>
+          <td>{{ feed2.field7 }}</td>
+        </tr>
+      </tbody>
+  </table>
+
+
+
+
+
+
+  <h1>MedSecure Sensor Data Medications</h1>
+  <table class="table">
+      <thead>
+          <tr>
+              <th>Date</th>
+              <th>Temperature (°C)</th>
+              <th>Humidité (%)</th>
+              <th>Electricité (mV)</th>
+              <th>Luminosité (lux)</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ feed1.created_at }}</td>
+          <td>{{ feed1.field1 }}</td>
+          <td>{{ feed1.field2 }}</td>
+          <td>{{ feed1.field3 }}</td>
+          <td>{{ feed1.field4 }}</td>
+        </tr>
+      </tbody>
+  </table>
+</div>
