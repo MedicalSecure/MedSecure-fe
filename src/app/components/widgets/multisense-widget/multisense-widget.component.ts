@@ -4,6 +4,7 @@ import { RadialbarChartsComponent} from '../radialbar-charts/radialbar-charts.co
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { SensorThingspeakService } from '../../../services/sensor-thingspeak/sensor-thingspeak.service';
 
 @Component({
   selector: 'app-multisense-widget',
@@ -13,7 +14,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   styleUrl: './multisense-widget.component.css'
 })
 export class MultiSenseWidgetComponent {
-  private readonly baseUrl = 'https://api.thingspeak.com/channels/2523035/feeds.json?api_key=R8YQ581XJM22XBIA&results=2';
+
   TemperatureOptionsCircle: ChartOptionsCircle = {
    series: [],
    chart: {
@@ -147,22 +148,24 @@ HumidityOptionsCircle: ChartOptionsCircle = {
  };
 
 
- constructor(private http: HttpClient) { }
+ constructor(private sensorThingspeakService: SensorThingspeakService) { }
  ngOnInit(): void {
   this.getData();
  }
 
- getData() {
-  this.http.get<any>(this.baseUrl).subscribe(data => {
-    var currenttemperature = parseFloat(data?.feeds[0]?.field1.replace(',', '.')).toFixed(2);
-    var currenthumidity = parseFloat(data?.feeds[0]?.field2.replace(',', '.')).toFixed(2);
-    var currentluminosity = parseFloat(data?.feeds[0]?.field3.replace(',', '.')).toFixed(2);
-    var currentlelectricity = parseFloat(data?.feeds[0]?.field4.replace(',', '.')).toFixed(2);
-    this.TemperatureOptionsCircle.series = [parseFloat(currenttemperature)];
-    this.HumidityOptionsCircle.series=[parseFloat(currenthumidity)];
-    this.LuminosityOptionsCircle.series=[parseFloat(currentluminosity)];
-    this.ElectricityOptionsCircle.series=[parseFloat(currentlelectricity)];
 
+ getData() {
+  this.sensorThingspeakService.getDataStreamMed().subscribe(data => {
+    if (data) {
+      var currenttemperature = parseFloat(data.field1?.replace(',', '.')).toFixed(2);
+      var currenthumidity = parseFloat(data.field2?.replace(',', '.')).toFixed(2);
+      var currentluminosity = parseFloat(data.field3?.replace(',', '.')).toFixed(2);
+      var currentlelectricity = parseFloat(data.field4?.replace(',', '.')).toFixed(2);
+      this.TemperatureOptionsCircle.series = [parseFloat(currenttemperature)];
+      this.HumidityOptionsCircle.series = [parseFloat(currenthumidity)];
+      this.LuminosityOptionsCircle.series = [parseFloat(currentluminosity)];
+      this.ElectricityOptionsCircle.series = [parseFloat(currentlelectricity)];
+    }
   });
 }
 
