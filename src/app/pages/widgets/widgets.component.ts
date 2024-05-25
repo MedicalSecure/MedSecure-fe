@@ -59,20 +59,20 @@ export class WidgetsComponent implements OnInit {
       this.http.get<any>('assets/data/MedicationData.json').subscribe(
         (data) => {
           this.medicationData = data.Medications.medication.map((med: any) => ({
-            Name: med.Name,
-            AvailableStock: med['Available Stock'],
-            MaxStock:((2*med['Avrg Stock'])-med['Min Stock']),
-            AvrgStock:med['Avrg Stock'],
-            MinStock:med['Min Stock'],
-            AlertStock:med['Alert Stock'],
-            SafetyStock:med['Safety Stock'],
+            Nom: med.Nom,
+            StockDisponible: med['Stock dispo'],
+            StockMax:((2*med['Stock moy'])-med['Stock min']),
+            STockMoy:med['Stock moy'],
+            StockMin:med['Stock min'],
+            StockAlerte:med['Stock alerte'],
+            StockSécurité:med['Stock sécurité'],
 
           }));
-          console.log('Medications Details:', this.medicationData);
+          console.log('Données des médicaments:', this.medicationData);
           this.checkRupture();
         },
         (error) => {
-          console.error('Error to fetch data from JSON : ', error);
+          console.error('Erreur lors de la récupération des données JSON:', error);
         }
       );
     }
@@ -81,18 +81,18 @@ export class WidgetsComponent implements OnInit {
     checkRupture(): void {
       
      this.medicationData.forEach((med) => {
-        if (med.AvailableStock < med['MinStock'] || med.AvailableStock < med['SafetyStock']) {
+        if (med.StockDisponible < med['StockMin'] || med.StockDisponible < med['StockSécurité']) {
           this.medicationsInRupture.push({
-            Nom: med.Name,
-            StockDisponible: med.AvailableStock,
-            StockMin: med.MinStock,
-    StockAlerte: med.AlertStock,
-    StockSécurité: med.SafetyStock
+            Nom: med.Nom,
+            StockDisponible: med.StockDisponible,
+            StockMin: med.StockMin,
+    StockAlerte: med.StockAlerte,
+    StockSécurité:med. StockSécurité
 
           });
         }
       });
-      console.log('Medications out of stock: ', this.medicationsInRupture);
+      console.log('Médicaments en rupture de stock:', this.medicationsInRupture);
     }
 
     //displays the medications of presecription
@@ -104,7 +104,7 @@ export class WidgetsComponent implements OnInit {
          
         },
         (error) => {
-          console.error('Error to fetch data from JSON : ', error);
+          console.error('Erreur lors du chargement des données JSON:', error);
         }
       );
     }
@@ -117,7 +117,7 @@ export class WidgetsComponent implements OnInit {
           this.medicationArmoireStock = data;
         },
         (error) => {
-          console.error('Error to fetch data from JSON : ', error);
+          console.error('Erreur lors du chargement des données JSON:', error);
         }
       );
     }
@@ -145,7 +145,7 @@ export class WidgetsComponent implements OnInit {
           this.Dataprescription = data;
         },
         (error) => {
-          console.error('Error to fetch data from JSON : ', error);
+          console.error('Erreur lors du chargement des données JSON:', error);
         }
       );
     }

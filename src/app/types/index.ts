@@ -56,14 +56,6 @@ export type medicationType = {
   summary?:object;
 };
 
-export type ActivityView = {
-  id: string;
-  content: string;
-  createdBy: string;
-  creatorName: string;
-  activityTime: string;
-};
-
 export type Entity = {
   createdAt: Date;
   modifiedAt?: Date;

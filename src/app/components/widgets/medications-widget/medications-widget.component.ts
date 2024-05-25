@@ -45,29 +45,29 @@ export class MedicationsWidgetComponent implements OnChanges {
         {
           name: "Stock Disponible",
           data: this.medicationData.map((med) => ({
-            x: med.Name,
-            y: med.AvailableStock,
+            x: med.Nom,
+            y: med.StockDisponible,
             goals: [
               {
-                name: "Max Stock",
-                value: med.MaxStock,
+                name: "Stock Maximum",
+                value: med.StockMax,
                 strokeWidth: 5,
                 strokeColor: "#EDDF38"
               },{
                 name: "Stock Alerte",
-                value: med.AlertStock,
+                value: med.StockAlerte,
                 strokeWidth: 5,
                 strokeColor: "#707B7C"
               },
               {
-                name: "Min Stock",
-                value: med.MinStock,
+                name: "Stock Minmum",
+                value: med.StockMin,
                 strokeWidth: 5,
                 strokeColor: "#360ABF"
               },
               {
                 name: "Stock Securite",
-                value: med.SafetyStock,
+                value: med.StockSécurité,
                 strokeWidth: 5,
                 strokeColor: "#E74C3C"
               }
@@ -121,7 +121,3 @@ export class MedicationsWidgetComponent implements OnChanges {
     };
   }
 }
-
-
-
-
