@@ -279,10 +279,10 @@ export type MedicationType = {
 export function tryParseDate(
   input: string | Date,
   excelDateFormat: string = 'dd-mm-yyyy'
-): string {
+): Date {
   try {
     if (input instanceof Date) {
-      return input.toISOString();
+      return input;
     }
     let inputParsed = '';
     if (typeof input == 'string') {
@@ -336,7 +336,7 @@ export function tryParseDate(
     if (isNaN(result2.getTime())) {
       throw new Error('Invalid date: ' + input);
     }
-    return result2.toISOString();
+    return result2;
   } catch (error) {
     throw error;
   }

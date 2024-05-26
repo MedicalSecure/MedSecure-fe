@@ -12,7 +12,7 @@ export type DrugDTO = {
   code: string;
   unit: string;
   description: string;
-  expiredAt: string;
+  expiredAt: Date;
   stock: number;
   availableStock?: number;
   reservedStock?: number;

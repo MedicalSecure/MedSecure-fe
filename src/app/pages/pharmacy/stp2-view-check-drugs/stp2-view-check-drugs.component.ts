@@ -17,7 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MedicationType } from '../stp1-import-map-drugs/stp1-import-map-drugs.component';
+import { MedicationType, tryParseDate } from '../stp1-import-map-drugs/stp1-import-map-drugs.component';
 import { DrugService } from '../../../services/medication/medication.service';
 import { DrugDTO } from '../../../types/DrugDTOs';
 import { firstValueFrom } from 'rxjs';
@@ -118,7 +118,7 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
       code: drug.Code,
       unit: drug.Unit,
       description: drug.Description,
-      expiredAt: drug.ExpiredAt.toString(),
+      expiredAt: tryParseDate(drug.ExpiredAt),
       stock: Number(drug.Stock),
       alertStock: Number(drug.AlertStock),
       avrgStock: Number(drug.AverageStock),

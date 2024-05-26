@@ -26,7 +26,7 @@ export class DrugService {
   apiCreate = 'http://localhost:5008/api/v1/drugs';
 
   getMedications() {
-    return this.http.get<any>('./../../assets/data/medications.json');
+    return this.http.get<GetDrugsResponse>('./../../assets/data/medications.json');
   }
 
   checkDrugs(
@@ -97,7 +97,7 @@ export class DrugService {
       AverageStock: drug.avrgStock.toString(),
       MinimumStock: drug.minStock.toString(),
       SafetyStock: drug.safetyStock.toString(),
-      ExpiredAt: drug.expiredAt,
+      ExpiredAt: drug.expiredAt.toString(),
       Price: drug.price.toString(),
       Description: drug.description,
     };

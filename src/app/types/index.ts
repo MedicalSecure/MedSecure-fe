@@ -56,9 +56,3 @@ export type Entity = {
   modifiedBy?: string;
 };
 
-export type Entity = {
-  createdAt: Date;
-  modifiedAt?: Date;
-  createdBy: string;
-  modifiedBy?: string;
-};

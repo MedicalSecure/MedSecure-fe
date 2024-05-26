@@ -42,7 +42,7 @@ import {
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
-import { MedicationService } from '../../../services/medication/medication.service';
+import { DrugService } from '../../../services/medication/medication.service';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
@@ -101,7 +101,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
   constructor(
     private prescriptionApiService: PrescriptionApiService,
-    private medicationService: MedicationService,
+    private drugService: DrugService,
     private unitCareService: UnitCareService,
     private dietService: DietService
   ) {}
@@ -138,7 +138,7 @@ export class AddPrescriptionComponent implements DoCheck {
     const filteredPosologies: PosologyCreateDto[] = this.newPosologies.map(
       (posology) => {
         var x: PosologyCreateDto = {
-          medicationId: posology.medication.id,
+          medicationId: posology.medication?.id ?? "no id given, impossible",
           startDate: posology.startDate,
           endDate: posology.endDate,
           isPermanent: posology.isPermanent,
@@ -278,7 +278,7 @@ export class AddPrescriptionComponent implements DoCheck {
     //TODO change to get by list ids
 
     try {
-      const response = await this.medicationService
+      const response = await this.drugService
         .getMedications()
         .toPromise();
       let medications = response?.drugs.data;
