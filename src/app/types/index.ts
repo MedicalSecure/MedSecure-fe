@@ -55,3 +55,10 @@ export type Entity = {
   createdBy: string;
   modifiedBy?: string;
 };
+
+export type Entity = {
+  createdAt: Date;
+  modifiedAt?: Date;
+  createdBy: string;
+  modifiedBy?: string;
+};

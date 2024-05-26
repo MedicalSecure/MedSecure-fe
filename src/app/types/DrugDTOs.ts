@@ -5,14 +5,14 @@ export type GetDrugsResponse = {
 };
 
 export type DrugDTO = {
-  id: string;
+  id?: string;
   name: string;
   dosage: string;
   form: string;
   code: string;
   unit: string;
   description: string;
-  expiredAt: Date;
+  expiredAt: string;
   stock: number;
   availableStock?: number;
   reservedStock?: number;
@@ -24,3 +24,20 @@ export type DrugDTO = {
   isDrugExist?: boolean;
   isDosageValid?: boolean;
 };
+
+export type CheckDrugRequest = {
+  drugs: Array<DrugDTO>;
+};
+export type CheckDrugResponse = {
+  drugsChecked: Array<DrugDTO>;
+};
+
+export type CreateDrugRequest = {
+  drugs: Array<DrugDTO>;
+};
+
+export type CreateDrugResponse = {
+  ids: Array<string>;
+};
+
+

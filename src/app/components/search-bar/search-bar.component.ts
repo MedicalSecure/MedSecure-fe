@@ -15,8 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { MedicationService } from '../../services/medication/medication.service';
+import { MatIconModule } from '@angular/material/icon';
+import { DrugService } from '../../services/medication/medication.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
@@ -90,7 +90,7 @@ export class SearchBarComponent implements OnInit, OnChanges {
     else this.searchControl.enable();
   }
 
-  constructor(private medicationService: MedicationService) {
+  constructor(private medicationService: DrugService) {
     this.filteredMedications = this.searchControl.valueChanges.pipe(
       startWith(''),
       map((searchTerm) => this.filterMedications(searchTerm))
