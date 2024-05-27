@@ -151,23 +151,6 @@ export class PrescriptionApiService implements ActivityService {
       );
   }
 
-/*   getRegistrations(
-    pageIndex: number = 0,
-    pageSize: number = 10
-  ): Observable<GetRegistrationsResponse> {
-    const params = new HttpParams()
-      .set('PageIndex', pageIndex.toString())
-      .set('PageSize', pageSize.toString());
-    return this.http
-      .get<GetRegistrationsResponse>(this.apiUrl + '/Registration', { params })
-      .pipe(
-        map((response) => {
-          //still testing dates
-          return parseDates(response);
-        })
-      );
-  } */
-
   getPrescriptionsByRegisterIds(
     registerIds: string[]
   ): Observable<GetPrescriptionsByRegisterIdResponse> {

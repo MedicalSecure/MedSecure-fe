@@ -56,13 +56,14 @@ export class PrescriptionListComponent implements OnInit {
   @Input()
   checked: boolean = true;
 
-  @Input() lastCreatedPrescriptionIdFromResponse:string|undefined;
+  @Input() lastCreatedPrescriptionIdFromResponse: string | undefined;
 
   selectedRegister: RegisterDto | undefined = undefined;
   searchTerm: string = '';
   registrations: RegisterDto[] = [];
   prescriptionsGroupedByRegisterIds: { [key: string]: PrescriptionDto[] } = {};
   isLoading: boolean = false;
+  isFailedToLoad: boolean = false;
 
   constructor(private prescriptionApiService: PrescriptionApiService) {}
 
@@ -98,19 +99,24 @@ export class PrescriptionListComponent implements OnInit {
   }
 
   async fetchRegistrationsWithPrescriptions() {
-    this.isLoading = true;
-    var response =
-      await PrescriptionApiService.getRegistrationsWithPrescriptions(
-        this.prescriptionApiService
-      );
-    this.registrations = [...response];
-    this.isLoading = false;
-    this.highlightLastAddedPrescription()
+    try {
+      this.isFailedToLoad = false;
+      this.isLoading = true;
+      var response =
+        await PrescriptionApiService.getRegistrationsWithPrescriptions(
+          this.prescriptionApiService
+        );
+      this.registrations = [...response];
+      this.isLoading = false;
+      this.isFailedToLoad = false;
+      this.highlightLastAddedPrescription();
+    } catch (error) {
+      console.error(error);
+      this.isFailedToLoad = true;
+    }
   }
 
-  highlightLastAddedPrescription(){
-    
-  }
+  highlightLastAddedPrescription() {}
 
   onClickRefresh() {
     //this.fetchPrescriptions();

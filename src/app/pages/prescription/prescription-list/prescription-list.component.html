@@ -57,8 +57,11 @@
         >
       </tbody>
     </table>
-    } @if(isLoading){
+    } @if(isLoading && isFailedToLoad==false){
     <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
+    }
+    @if(isFailedToLoad==true){
+      <div class="mx-auto pe-5 mt-5" style="width: fit-content">Error in fetching prescriptions after several retries, please click on retry</div>
     }
   </div>
 
