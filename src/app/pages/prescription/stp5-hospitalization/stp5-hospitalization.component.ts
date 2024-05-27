@@ -402,7 +402,7 @@ export function checkIsHospitalizationDataValid(
 }
 
 
-function getDietTypeString(dietType: DietType): string {
+export function getDietTypeString(dietType: DietType): string {
   switch (dietType) {
       case DietType.Normal:
           return "Normal";

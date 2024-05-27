@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { PosologyDto, PrescriptionDto } from '../../../types/prescriptionDTOs';
 import { RegisterDto } from '../../../types/registerDTOs';
 import {
@@ -17,6 +17,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HumanBodyViewerComponent } from '../human-body-viewer/human-body-viewer.component';
 import { getPrescriptionStatus } from '../prescription-list/prescription-list.component';
 import { symptomsCodeByBodyPart } from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
+import { Equipment, Room, UnitCareDTO } from '../../../types/UnitCareDTOs';
+import { UnitCareService } from '../../../services/unitCare/unit-care.service';
+import { DietService } from '../../../services/diet/diet.service';
+import { DietDto } from '../../../types/DietDTOs';
+import { getDietTypeString } from '../stp5-hospitalization/stp5-hospitalization.component';
 
 @Component({
   selector: 'app-old-prescription-view',
@@ -40,19 +45,27 @@ export class OldPrescriptionViewComponent {
   @Output() onClickUpdatePrescription = new EventEmitter<void>();
   @Output() onClickSuspendPrescription = new EventEmitter<void>();
 
+  selectedUnitCare: UnitCareDTO | undefined;
+  selectedDiet: DietDto | undefined;
+  selectedRoom: Room | undefined;
+  selectedBed: Equipment | undefined;
   showDetails = true;
   isDrugsLoading = false;
+  isDietLoading = false;
+  isUnitCareLoading = false;
   fetchedMedications: DrugDTO[] = [];
+  selectedBodyParts: Set<string> = new Set<string>();
+
   public masonryOptions: NgxMasonryOptions = {
     gutter: 10,
     fitWidth: true,
     horizontalOrder: false,
   };
-  selectedBodyParts: Set<string> = new Set<string>();
 
   constructor(
     private drugService: DrugService,
-    private cdr: ChangeDetectorRef
+    private unitCareService: UnitCareService,
+    private dietService: DietService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +75,8 @@ export class OldPrescriptionViewComponent {
 
     this.fetchMedications();
     this.mapSymptomsToBodyParts();
+    this.fetchUnitCareByBedId(this.selectedPrescription?.bedId);
+    this.fetchDietById(this.selectedPrescription?.diet?.dietsId[0]);
   }
 
   fetchMedications() {
@@ -69,13 +84,100 @@ export class OldPrescriptionViewComponent {
     this.drugService.getMedications().subscribe(
       (response) => {
         this.fetchedMedications = response?.drugs?.data;
-        this.isDrugsLoading = false;
       },
       (error) => {
         console.error(error);
       },
-      () => {}
+      () => (this.isDrugsLoading = false)
     );
+  }
+
+  fetchUnitCareByBedId(bedId: string | null | undefined) {
+    if (!bedId) return;
+    this.isUnitCareLoading = true;
+    this.unitCareService.getUnitCareByBedId(bedId).subscribe(
+      (response) => {
+        this.selectedUnitCare = response ;
+        this.getRoomFromUnitCare(response);
+        this.getBedById(this.selectedPrescription?.bedId)
+      },
+      (error) => console.error(error),
+      () => (this.isUnitCareLoading = false)
+    );
+  }
+
+  fetchDietById(dietId: string | null | undefined) {
+    if (!dietId) return;
+    if (this.selectedDiet?.id == dietId) return;
+    this.isDietLoading = true;
+    this.dietService.getDietById(dietId).subscribe(
+      (response) => {
+        if(!response) return;
+        this.selectedDiet = {
+          ...response,
+          dietTypeString:getDietTypeString(response.dietType)
+        };
+        
+      },
+      (error) => console.error(error),
+      () => (this.isDietLoading = false)
+    );
+  }
+
+  getRoomFromUnitCare(unitCare: UnitCareDTO | undefined): Room | null {
+    //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times 
+    if (!unitCare) return null;
+    if (
+      this.selectedPrescription?.bedId &&
+      this.selectedRoom?.equipments
+        .map((item) => item.id)
+        .includes(this.selectedPrescription?.bedId)
+    ) {
+      return this.selectedRoom;
+    }
+    let roomFound: Room | undefined = undefined;
+    unitCare.rooms.forEach((room) => {
+      roomFound = room;
+      let isFound = false;
+      room.equipments.forEach((element) => {
+        if (element.id === this.selectedPrescription?.bedId) {
+          isFound = true;
+          return;
+        }
+      });
+      if (isFound) return;
+    });
+    if (roomFound == undefined) return null;
+    this.selectedRoom=roomFound;
+    return roomFound;
+  }
+
+  getBedById(bedId: string | null | undefined): Equipment | null {
+    //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times 
+    if (!bedId) return null;
+    if (this.selectedBed?.id == bedId) return this.selectedBed;
+    let room = this.getRoomFromUnitCare(this.selectedUnitCare);
+    if (!room) return null;
+
+    let equipmentFound = null;
+    room.equipments.forEach((equipment) => {
+      if (equipment.id === this.selectedPrescription?.bedId) {
+        equipmentFound = equipment;
+        return;
+      }
+    });
+    if (equipmentFound == undefined) return null;
+    this.selectedBed = equipmentFound;
+    return equipmentFound;
+  }
+
+  getDietRange(diet:DietDto | undefined | null):string | null{
+    if(!diet || !diet.startDate || !diet.endDate) return null;
+    let start=getDateString(diet.startDate, "dd/mm/yyyy");
+    let end=getDateString(diet.endDate, "dd/mm/yyyy");
+    let nbDays= this.getNumberOfDaysInRange([diet.startDate, diet.endDate])
+    if(!nbDays || !end || !start ) return null;
+    return `${nbDays}d ${start}-${end}`;
   }
 
   mapSymptomsToBodyParts() {

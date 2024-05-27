@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, filter, map, mergeMap, toArray } from 'rxjs';
 import { DietDto, GetDietResponse } from '../../types/DietDTOs';
 import { HttpClient } from '@angular/common/http';
+import { parseDates } from '../prescription/prescription-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class DietService {
 
   getDiets(): Observable<GetDietResponse> {
     this.apiUrl="../../../assets/data/diets.json"
-    let x = this.http.get<GetDietResponse>(this.apiUrl);
+    let x = this.http.get<GetDietResponse>(this.apiUrl).pipe(map(parseDates));
     //debugger;
     return x;
   }
@@ -25,14 +26,16 @@ export class DietService {
         {
           return diet.id==dietId;
         }
-      ))
+      )),
+      map(parseDates)
     );
   }
 
   getDietsByIdList(dietIdList: string[]): Observable<DietDto[]> {
     this.apiUrl = "../../../assets/data/diets.json";
     return this.http.get<GetDietResponse>(this.apiUrl).pipe(
-      map((response: GetDietResponse) => response.diets.data.filter((diet: DietDto) => dietIdList.includes(diet.id)))
+      map((response: GetDietResponse) => response.diets.data.filter((diet: DietDto) => dietIdList.includes(diet.id))),
+      map(parseDates)
     );
   }
 }

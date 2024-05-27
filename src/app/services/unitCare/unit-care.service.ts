@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { UnitCare, UnitCareData } from '../../model/unitCare/UnitCareData';
+import { parseDates } from '../prescription/prescription-api.service';
 
 
 
@@ -16,7 +17,7 @@ export class UnitCareService  {
 
   getCardData(): Observable<UnitCareData> {
 
-    return this.http.get<UnitCareData>('http://localhost:5102/unitCares');
+    return this.http.get<UnitCareData>('http://localhost:5102/unitCares').pipe(map(parseDates));
   }
 
   deleteCardData(id: number|string|undefined): Observable<any> {
@@ -35,7 +36,7 @@ export class UnitCareService  {
   getUnitCares(): Observable<UnitCareData> {
     this.apiUrl="../../../assets/data/unitcares.json"
 
-    let x = this.http.get<UnitCareData>(this.apiUrl);
+    let x = this.http.get<UnitCareData>(this.apiUrl).pipe(map(parseDates));
     //debugger;
     return x;
   }
@@ -55,7 +56,8 @@ export class UnitCareService  {
           })
           return isUnitCareFound;
         }
-      ))
+      )), 
+      map(parseDates)
     );
   }
 
