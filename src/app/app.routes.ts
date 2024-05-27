@@ -8,7 +8,6 @@ import { UnitSelectorComponent } from './components/unitselector/unitselector.co
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
-import { ShipsSelectComponent } from './components/chips-select/chips-select.component';
 import { AddPrescriptionComponent } from './pages/prescription/add-prescription-component/add-prescription.component';
 import { TasksComponent } from './pages/tasks/tasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
