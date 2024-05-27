@@ -6,58 +6,60 @@
           Add New Meal
         </h4>
         <div formArrayName="meals">
-          @for ( meal of DietForm.controls.meals.controls; track meal ; let  mealIndex = $index ) {
-            <div class="question" [formGroupName]="mealIndex" style="width: 120%;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                @for ( type of MealType; track  type) {
-                  <label style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="radio"
-                      [name]="'mealType_' + mealIndex" style="margin-right: 2%;"
-                      [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
-                      (change)="onMealTypeChange($event, mealIndex)"
-                      [checked]="DietForm.controls.meals.at(mealIndex).value.type === type" required />
-                    {{ type }}
-                  </label>
-                }
-              </div>
-              <app-comment [note]="liststring" style="margin-left: -2%;"></app-comment>
-              <div formArrayName="foods" class="answers">
-                @for ( food of meal.controls.foods.controls; track food ;let FoodIndex = $index) {
-                  <label>Select Option:</label>
-                  <div class="d-flex flex-wrap">
-                    @for ( option of FoodOptions; track  $index) {
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio"
-                          [name]="'radioOptions_' + mealIndex + '_' + FoodIndex"
-                          [id]="'radioOption_' + mealIndex + '_' + $index" [value]="option"
-                          (change)="onOptionChange(option)" required
-                          style="margin-left: 10%; background-color: transparent;" />
-                        <label class="form-check-label" [for]="'radioOption_' + mealIndex + '_' + $index">{{ option }}</label>
-                      </div>
-                    }
-                  </div>
-                  <div class="invalid-feedback">
-                    Please select a Food.
-                  </div>
-                  <label for="foodSelect" style="margin-right: 10px; margin-bottom: 3%;">Choose Food</label>
-                  <div style="display: flex; align-items: center;">
-                    <select class="form-control" id="foodSelect" formControlName="foodOption" required style="width: 90%; margin-right: 10px;">
-                      <option *ngFor="let food of FoodList" [value]="food">{{ food }}</option>
-                    </select>
-                    <div class="invalid-feedback" style="margin-right: 10px; margin-bottom: 3%;">
-                      Please select a food.
-                    </div>
-                    <div class="icon-button" (click)="removeFood(mealIndex, FoodIndex)" style="background-color: transparent; margin-left: 1%; border-color: transparent; cursor: pointer;">
-                      <i class="fas fa-trash"></i>
-                    </div>
-                  </div>
-                }
-                <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)" style="margin-top: 5%; color: white;">
-                  Add Food
-                </button>
-              </div>
+          @for ( meal of DietForm.controls.meals.controls; track meal ; let mealIndex = $index ) {
+          <div class="question" [formGroupName]="mealIndex" style="width: 120%;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              @for ( type of MealType; track type) {
+              <label style="display: flex; align-items: center;">
+                <input class="form-check-input" type="radio" [name]="'mealType_' + mealIndex" style="margin-right: 2%;"
+                  [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
+                  (change)="onMealTypeChange($event, mealIndex)"
+                  [checked]="DietForm.controls.meals.at(mealIndex).value.type === type" required />
+                {{ type }}
+              </label>
+              }
             </div>
-           
+            <app-comment [note]="liststring" style="margin-left: -5%;"></app-comment>
+            <div formArrayName="foods" class="answers" style="margin-top: -2%;">
+              @for ( food of meal.controls.foods.controls; track food ;let FoodIndex = $index) {
+             
+              <div class="d-flex flex-wrap">
+                @for ( option of FoodOptions; track $index) {
+                <div class="form-check form-check-inline">
+                  <mat-chip-set aria-label="Food selection">
+                    <mat-chip-option color="primary" (click)="chipSelected(option, mealIndex, FoodIndex)" [disabled]="isChipDisabled(mealIndex, FoodIndex)">{{option}}</mat-chip-option>
+                  </mat-chip-set>
+                 </div>
+                  }
+               
+              </div>
+             
+              <div class="invalid-feedback">
+                Please select a Food.
+              </div>
+              <div style="display: flex; align-items: center; margin-top: 5%;">
+                <mat-form-field style="margin-left: 1%; width: 170%;">
+                  
+                    <select matNativeControl required style="width: 120%; height: 100%; background-color: transparent;">
+                      @for (food of FoodList; track food) {
+                      <option style="width: 170%; height: max-content;" mat-menu-item  value="food">{{food}}</option>
+                      }
+                    </select>
+                
+                </mat-form-field>
+                <div class="icon-button" (click)="removeFood(mealIndex, FoodIndex)"
+                  style="background-color: transparent; margin-left: 1%; border-color: transparent; cursor: pointer; margin-left: 5%;">
+                  <i class="fas fa-trash" style="height: 50px; width: 50px; "></i>
+                </div>
+                </div>
+              
+              } <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)" [disabled]="!isMealSelexted"
+              style="margin-top: 5%; color: white;">
+              Add Food
+            </button>
+            </div>
+          </div>
+
           }
         </div>
         <div class="add-question">
