@@ -21,7 +21,8 @@ import { MedicationType, tryParseDate } from '../stp1-import-map-drugs/stp1-impo
 import { DrugService } from '../../../services/medication/medication.service';
 import { DrugDTO } from '../../../types/DrugDTOs';
 import { firstValueFrom } from 'rxjs';
-import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
+import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
+import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
 
 @Component({
   selector: 'app-stp2-view-check-drugs',
@@ -35,7 +36,6 @@ import { ErrorMessageComponent } from '../../../components/error-message/error-m
     MatTableModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    ErrorMessageComponent
   ],
   templateUrl: './stp2-view-check-drugs.component.html',
   styleUrls: ['./stp2-view-check-drugs.component.css'],
@@ -45,8 +45,6 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
   @Output() onIsStep2PageValidChange = new EventEmitter<boolean>();
   @Output() ValidDrugsEvent = new EventEmitter<DrugDTO[]>();
 
-  @ViewChild(ErrorMessageComponent)
-  errorMessageComponent!: ErrorMessageComponent;
 
   displayedColumns: string[] = [
     'name',
@@ -68,7 +66,7 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
 
   isLoading: boolean = true;
 
-  constructor(private drugService: DrugService) {}
+  constructor(private drugService: DrugService,private snackBarMessagesService:SnackBarMessagesService) {}
 
   ngOnInit(): void {
     this.updateDataSource();
@@ -91,7 +89,8 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
     duration = 4,
     title: string = 'Error : '
   ) {
-    this.errorMessageComponent.openSnackBar(content, duration, title);
+    this.snackBarMessagesService.displaySnackBarMessage(content,snackbarMessageType.Error,duration,true)
+
   }
 
   private updateDataSource() {

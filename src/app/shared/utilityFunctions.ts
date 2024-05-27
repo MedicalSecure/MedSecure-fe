@@ -132,52 +132,61 @@ export function getActivePrescriptions(
 ): PrescriptionDto[] {
   let activePrescriptions: PrescriptionDto[] = [];
 
-  register.prescriptions?.forEach(prescription =>{
-    if(!(prescription.status == PrescriptionStatus.Active || prescription.status == PrescriptionStatus.Pending))
+  register.prescriptions?.forEach((prescription) => {
+    if (
+      !(
+        prescription.status == PrescriptionStatus.Active ||
+        prescription.status == PrescriptionStatus.Pending
+      )
+    )
       return; // continue (return from current prescription arrow fn and not from getActivePrescriptions)
-    
 
     for (const posology of prescription.posologies) {
-      if(posology.isPermanent || posology.endDate == null) {
+      if (posology.isPermanent || posology.endDate == null) {
         activePrescriptions.push(prescription);
         return; // go to next prescription
       }
 
       const todayMidnight = new Date();
       todayMidnight.setHours(0, 0, 0, 0); // Set the time to 00:00:00
-      if(posology.endDate < todayMidnight){
+      if (posology.endDate < todayMidnight) {
         activePrescriptions.push(prescription);
         return; // go to next prescription
       }
     }
-  })
+  });
   return activePrescriptions;
 }
 
-export function getActiveMedications(register: RegisterForPrescription):PosologyDto[] {
-
+export function getActiveMedications(
+  register: RegisterForPrescription
+): PosologyDto[] {
   let activePosologies: PosologyDto[] = [];
 
-  register.prescriptions?.forEach(prescription =>{
-    if(!(prescription.status == PrescriptionStatus.Active || prescription.status == PrescriptionStatus.Pending))
+  register.prescriptions?.forEach((prescription) => {
+    if (
+      !(
+        prescription.status == PrescriptionStatus.Active ||
+        prescription.status == PrescriptionStatus.Pending
+      )
+    )
       return; // continue (return from current prescription arrow fn and not from getActivePrescriptions)
-    
+
     for (const posology of prescription.posologies) {
-      if(posology.isPermanent || posology.endDate == null) {
+      if (posology.isPermanent || posology.endDate == null) {
         activePosologies.push(posology);
-        continue;//go to next posology
+        continue; //go to next posology
       }
 
       const todayMidnight = new Date();
       todayMidnight.setHours(0, 0, 0, 0); // Set the time to 00:00:00
-      if(posology.endDate < todayMidnight){
+      if (posology.endDate < todayMidnight) {
         activePosologies.push(posology);
       }
     }
-  })
+  });
   return activePosologies;
 }
-
 
 export function extractErrorMessage(error: any): string {
   let errorMessage = '';
@@ -185,14 +194,18 @@ export function extractErrorMessage(error: any): string {
   // Check if the error has a single message property
   if (error.error && error.error.message) {
     errorMessage = error.error.message;
+  } else if (error && error.message) {
+    errorMessage = error.message;
   }
   // Check if the error has an array of errors
   else if (error.error && Array.isArray(error.error.errors)) {
-    errorMessage = error.error.errors.map((err:any) => err.message).join(', ');
+    errorMessage = error.error.errors.map((err: any) => err.message).join(', ');
   }
   // Check if the error has an errors object with individual error messages
   else if (error.error && typeof error.error.errors === 'object') {
-    const errorMessages = Object.values(error.error.errors).map((err:any) => err.message || err);
+    const errorMessages = Object.values(error.error.errors).map(
+      (err: any) => err.message || err
+    );
     errorMessage = errorMessages.join(', ');
   }
   // If none of the above cases match, return the original error object as a string
@@ -200,11 +213,16 @@ export function extractErrorMessage(error: any): string {
     errorMessage = error.toString();
   }
 
+  if (error.status != undefined) {
+    errorMessage= `http status ${error.status} : ${errorMessage}`;
+  } else if (error.error.status) {
+    errorMessage= `http status ${error.error.status} : ${errorMessage}`;
+  }
+  
   return errorMessage;
 }
 
-
-export function getDateOnlyFromDateTime(dateTime:Date):string{
+export function getDateOnlyFromDateTime(dateTime: Date): string {
   const year = dateTime.getFullYear();
   const month = String(dateTime.getMonth() + 1).padStart(2, '0'); // Months are zero-based
   const day = String(dateTime.getDate()).padStart(2, '0');

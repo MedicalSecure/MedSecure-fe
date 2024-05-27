@@ -5,6 +5,7 @@ import { NavbarComponent } from "../../partials/navbar/navbar.component";
 import { SettingsPanelComponent } from "../../partials/settings-panel/settings-panel.component";
 import { SidebarComponent } from "../../partials/sidebar/sidebar.component";
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { SnackBarMessagesComponent } from '../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Component({
     selector: 'app-home',
@@ -17,7 +18,8 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     FooterComponent,
     NavbarComponent,
     SettingsPanelComponent,
-    SidebarComponent
+    SidebarComponent,
+    SnackBarMessagesComponent
   ],
 })
 export class HomeComponent {

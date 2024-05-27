@@ -39,7 +39,6 @@ import {
   RegisterDto,
   RegisterForPrescription,
 } from '../../../types/registerDTOs';
-import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
 import { DrugService } from '../../../services/medication/medication.service';
@@ -47,6 +46,8 @@ import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { UnitCare } from '../../../model/unitCare/UnitCareData';
+import { SnackBarMessagesComponent, snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
+import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
 
 @Component({
   selector: 'app-add-prescription',
@@ -62,16 +63,13 @@ import { UnitCare } from '../../../model/unitCare/UnitCareData';
     RouterModule,
     CommonModule,
     PrescriptionListComponent,
-    ErrorMessageComponent,
-    MatProgressSpinnerModule,
+    SnackBarMessagesComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
 })
 export class AddPrescriptionComponent implements DoCheck {
-  @ViewChild(ErrorMessageComponent)
-  errorMessageComponent!: ErrorMessageComponent;
-
   @ViewChild(Stp5HospitalizationComponent)
   stp5HospitalizationComponent!: Stp5HospitalizationComponent;
   @ViewChild(Stp3AddDiagnosticComponent)
@@ -103,8 +101,10 @@ export class AddPrescriptionComponent implements DoCheck {
     private prescriptionApiService: PrescriptionApiService,
     private drugService: DrugService,
     private unitCareService: UnitCareService,
-    private dietService: DietService
-  ) {}
+    private dietService: DietService,
+    private snackBarMessagesService:SnackBarMessagesService
+  )
+   {}
 
   ngOnInit() {
     this._updateButtonsState();
@@ -331,7 +331,7 @@ export class AddPrescriptionComponent implements DoCheck {
     duration = 4,
     content: string = 'Error : '
   ) {
-    this.errorMessageComponent.openSnackBar(title, duration, content);
+    this.snackBarMessagesService.displaySnackBarMessage(content,snackbarMessageType.Error,duration,true)
   }
 
   clearWizard() {

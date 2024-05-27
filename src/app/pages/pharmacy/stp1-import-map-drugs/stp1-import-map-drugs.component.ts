@@ -15,14 +15,15 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { DrugService } from '../../../services/medication/medication.service';
 import { CheckDrugRequest, CheckDrugResponse } from '../../../types/DrugDTOs';
-import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
+import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
+import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Component({
   selector: 'app-stp1-import-map-drugs',
   standalone: true,
   templateUrl: './stp1-import-map-drugs.component.html',
   styleUrl: './stp1-import-map-drugs.component.css',
-  imports: [CommonModule, FormsModule, NavbarComponent, MatSelectModule,ErrorMessageComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, MatSelectModule],
 })
 @Injectable({
   providedIn: 'root',
@@ -32,8 +33,7 @@ export class Stp1ImportMapDrugs implements OnInit {
   @Output() CheckedDrugsEvent = new EventEmitter<MedicationType[]>();
   @Output() onIsStep1PageValidChange = new EventEmitter<boolean>();
   @Output() areAllCheckedDrugsValid = new EventEmitter<boolean>();
-  @ViewChild(ErrorMessageComponent)
-  errorMessageComponent!: ErrorMessageComponent;
+
 
   importedData: { [key: string]: any }[] = [];
   excelDateFormat = 'dd-mm-yyyy';
@@ -64,7 +64,7 @@ export class Stp1ImportMapDrugs implements OnInit {
     this.columnMappings
   ) as (keyof MedicationType)[];
 
-  constructor(private drugService: DrugService) {}
+  constructor(private drugService: DrugService,private snackBarMessagesService:SnackBarMessagesService) {}
 
   ngOnInit() {
     this.dbHeaders = Object.keys(
@@ -242,9 +242,8 @@ export class Stp1ImportMapDrugs implements OnInit {
   displayNewErrorMessage(
     content: string,
     duration = 4,
-    title: string = 'Error : '
   ) {
-    this.errorMessageComponent.openSnackBar(content, duration, title);
+    this.snackBarMessagesService.displaySnackBarMessage(content,snackbarMessageType.Error,duration,true)
   }
 
   onSelectchange(event: any, dbColumn: keyof MedicationType) {
