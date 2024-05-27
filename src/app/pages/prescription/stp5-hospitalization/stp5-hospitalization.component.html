@@ -31,8 +31,8 @@
 
   <div class="row mx-auto col-12 col-sm-8 col-lg-5">
     <!-- this id is for shake animation :  id= Diets-chips-select-container-->
-    <div class="d-flex justify-content-center align-items-center gap-2">
-      <chips-select
+    <div class="d-flex justify-content-center align-items-center gap-2" *ngIf="DietList.length > 0">
+        <chips-select
         [ObjectName]="'Diets'"
         [customLabel]="'Diets'"
         class="w-100"
@@ -43,13 +43,14 @@
         [minimumSearchLength]="0"
         [minimumAddedLabelLength]="5"
         [isStartWithSearch]="false"
-        [searchPropertyName]="'dietType'"
+        [searchPropertyName]="'dietTypeString'"
         [disabled]="DietList.length === 0 || !myForm.get('unitCare')?.value || isDietsLoading || myForm.get('unitCare')?.enabled === false"
         [isLoading]="isDietsLoading"
         [selectedChips]="selectedDiets"
         [tooltipPropertyName]="'dietType'"
         [maximumNumberOfAddedItems]="1"
       ></chips-select>
+    
       <mat-icon
         title="Clear selection"
         class="align-self-center fs-3 fw-bolder mb-4"

@@ -14,6 +14,7 @@ export type DietDto = {
     id: string;
     patientId: string;
     dietType: DietType;
+    dietTypeString: string;
     startDate: Date;
     endDate: Date;
     meals: MealDto[];

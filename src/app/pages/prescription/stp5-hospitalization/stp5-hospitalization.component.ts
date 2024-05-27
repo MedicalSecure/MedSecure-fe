@@ -31,6 +31,7 @@ import {
 } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { UnitCare } from '../../../model/unitCare/UnitCareData';
+import { DietType } from '../../../enums/DietEnums';
 
 @Component({
   selector: 'app-stp5-hospitalization',
@@ -203,13 +204,22 @@ export class Stp5HospitalizationComponent {
     this.isDietsLoading = true;
     this.dietService.getDiets().subscribe(
       (response) => {
-        this.DietList = response.diets.data;
+        this.DietList = response.diets.data.map(diet=>{
+          return {
+            ...diet,
+            dietTypeString : this.getDietTypeString(diet.dietType)
+          }
+        });
 
         this.mapDietsDataInCaseOfUpdate();
       },
       (error) => console.error(error),
       () => (this.isDietsLoading = false)
     );
+  }
+
+  getDietTypeString(dietType : DietType):string{
+    return getDietTypeString(dietType);
   }
 
   mapDietsDataInCaseOfUpdate() {
@@ -389,4 +399,44 @@ export function checkIsHospitalizationDataValid(
     !!Data.diet.dateRange[0] &&
     !!Data.diet.dateRange[1];
   return isOldPrescriptionDataValid;
+}
+
+
+function getDietTypeString(dietType: DietType): string {
+  switch (dietType) {
+      case DietType.Normal:
+          return "Normal";
+      case DietType.Liquid:
+          return "Liquid";
+      case DietType.SemiLiquid:
+          return "Semi-Liquid";
+      case DietType.Diabetic:
+          return "Diabetic";
+      case DietType.NoSalt:
+          return "No Salt";
+      case DietType.DiabeticNoSalt:
+          return "Diabetic No Salt";
+      case DietType.SemiLiquidDiabetic:
+          return "Semi-Liquid Diabetic";
+      case DietType.SemiLiquidNoSalt:
+          return "Semi-Liquid No Salt";
+      case DietType.SemiLiquidDiabeticNoSalt:
+          return "Semi-Liquid Diabetic No Salt";
+      case DietType.NoResidue:
+          return "No Residue";
+      case DietType.BrothYogurtCompote:
+          return "Broth, Yogurt, Compote";
+      case DietType.Puree:
+          return "Puree";
+      case DietType.HyperProtein:
+          return "Hyper Protein";
+      case DietType.HyperCaloric:
+          return "Hyper Caloric";
+      case DietType.HypoCaloric:
+          return "Hypo Caloric";
+      case DietType.TubeFeeding:
+          return "Tube Feeding";
+      default:
+          return "Unknown Diet Type";
+  }
 }
