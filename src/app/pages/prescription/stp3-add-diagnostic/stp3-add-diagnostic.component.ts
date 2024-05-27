@@ -170,6 +170,7 @@ export class Stp3AddDiagnosticComponent {
     this.isDiagnosisLoading = true;
     this.prescriptionService.getPredictedDiagnosis(symptoms).subscribe(
       (response) => {
+        if(!response.predictedDiagnosis) return;
         //add to existing!
         //this.selectedDiagnosis = [...this.selectedDiagnosis,response.predictedDiagnosis]
 
@@ -181,6 +182,9 @@ export class Stp3AddDiagnosticComponent {
 
         console.log('new prediction');
         console.log(response.predictedDiagnosis);
+        this.onSelectedDiagnosisChange.emit({
+          SelectedObjectList:this.selectedDiagnosis,
+        });
       },
       (error) => console.error(error),
       () => (this.isDiagnosisLoading = false)
