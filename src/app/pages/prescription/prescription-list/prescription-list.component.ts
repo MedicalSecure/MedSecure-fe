@@ -6,6 +6,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -30,6 +31,7 @@ import {
   getDateString,
   getTimeString,
 } from '../../../shared/utilityFunctions';
+import { SnackBarMessagesComponent, snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Component({
   selector: 'app-prescription-list',
@@ -40,11 +42,13 @@ import {
     MatIcon,
     RouterModule,
     MatProgressSpinnerModule,
+    SnackBarMessagesComponent
   ],
   templateUrl: './prescription-list.component.html',
   styleUrl: './prescription-list.component.css',
 })
 export class PrescriptionListComponent implements OnInit {
+  @ViewChild(SnackBarMessagesComponent) snackBarMessagesComponent !: SnackBarMessagesComponent;
   @Input() selectedPrescription: PrescriptionDto | undefined = undefined;
   @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
   @Output() onClickUpdatePrescriptionEvent = new EventEmitter<{
@@ -76,6 +80,18 @@ export class PrescriptionListComponent implements OnInit {
   }
   ngOnInit() {
     this.fetchRegistrationsWithPrescriptions();
+
+    setTimeout(() => {
+      this.displayNewErrorMessage("test", 10, "hahahahahahhahaha");
+    }, 1000);
+  }
+
+  displayNewErrorMessage(
+    title: string,
+    duration = 4,
+    content: string = 'Error : '
+  ) {
+    this.snackBarMessagesComponent.openSnackBar(content,snackbarMessageType.Error, duration );
   }
 
   onClickPrescription(prescription: PrescriptionDto) {
