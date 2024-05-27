@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { bacpatient } from '../../pages/bacPatient/bacPatient.component';
+import { HttpClient } from '@angular/common/http';
+import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
+import { Comment } from '../../model/BacPatient';
 @Component({
   selector: 'app-comment',
   standalone: true,
@@ -8,21 +11,14 @@ import { bacpatient } from '../../pages/bacPatient/bacPatient.component';
   styleUrl: './comment.component.css'
 })
 export class CommentComponent {
-  @Input() note : string[];
+  @Input() note : Comment[];
   @Input()DATA: bacpatient;
+  @Input() id : string ; 
   todayDate: string = new Date().getDate().toString();
+  constructor(private http: HttpClient , public bacPatientService :BacPatientService) {
 
-  onCommentsend(commentInput: HTMLInputElement) {
-    const newComment = commentInput.value;
 
-    
-    if (newComment.trim() !== '') {
-      this.note.push(newComment);
-      this.note = this.note;
-      commentInput.value = '';
-    }
-  
-   
   }
+
 
 }

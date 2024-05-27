@@ -1,6 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ELEMENT_DATA, Medicine, bacpatient } from '../bacPatient/bacPatient.component';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { ELEMENT_DATA, bacpatient } from '../bacPatient/bacPatient.component';
 import { CommonModule } from '@angular/common';
+import { Medication } from '../../model/BacPatient';
+import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { Dispense } from '../../components/schedule/schedule.component';
 
 @Component({
   selector: 'app-timeline-event',
@@ -9,74 +13,92 @@ import { CommonModule } from '@angular/common';
   templateUrl: './timeline-event.component.html',
   styleUrl: './timeline-event.component.css'
 })
-export class GanttChartComponent implements OnInit{
+export class GanttChartComponent implements AfterViewInit {
+  constructor(private bacPatientService: BacPatientService) { }
+  ngAfterViewInit(): void {
+    this.dataList = this.bacPatientService.getData(this.dataSource);
 
+    this.getUniqueRooms();
+  }
   isCurrentHour(hour: string): boolean {
-    const currentHour = new Date().getHours();
-    // Parse the input hour string to an integer
-    const inputHour = parseInt(hour, 10);
+    const currentHour = new Date().getHours().toString();
+   
+    const inputHour = hour;
     // Debug output
-    console.log("Hour:", hour);
-    console.log("Input Hour:", inputHour);
-    console.log("Current Hour:", currentHour);
+
     // Check if the parsed input hour matches the current hour
     return inputHour === currentHour;
   }
-
-calculateQuantity( be:number , ae:number):number {
-  return be+ae ;
+ calculateQuantity(dispense : Dispense[]): string {
+    let beParsed: number = 0;
+    let aeParsed: number = 0;
+    dispense.forEach(dis=>{
+      if (dis.beforeMeal?.quantity !== undefined) {
+        beParsed += parseInt(dis.beforeMeal?.quantity);
+        if (isNaN(beParsed)) {
+            throw new Error("Invalid value for 'be'");
+        }
+    }
+    if (dis.afterMeal?.quantity !== undefined) {
+        aeParsed += parseInt(dis.afterMeal?.quantity );
+        if (isNaN(aeParsed)) {
+            throw new Error("Invalid value for 'ae'");
+        }
+    }
+    })
+ 
+    return (beParsed.toString()  + "," + aeParsed.toString())
 }
-  
-  @Input() targetHours : string[];
-  data_list: bacpatient[] = ELEMENT_DATA;
-  uniqueroom :number[] = [];
-  tableElements : bacpatient[] = [];
-  medicines : Medicine[] = [] ;
-  medicineByHour: Map<string, Medicine[]> = new Map();
- hours:string[]=[];
+dataSource = new MatTableDataSource(ELEMENT_DATA);
+  @Input() targetHours: string[];
+  dataList: bacpatient[] = ELEMENT_DATA ;
+  uniqueroom: number[] = [];
+  tableElements: bacpatient[] = [];
+  medicines: Medication[] = [];
+  medicineByHour: Map<string, Medication[]> = new Map();
+  hours: string[] = [];
 
-  medicinesByHourMap: Map<string, Medicine[]> = new Map();
-uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
-getUniqueRooms(): Map<number, bacpatient[]> {
-  const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
-  this.data_list.forEach(item => {
-      if (!uniqueRoomsMap.has(item.room)) {
-          uniqueRoomsMap.set(item.room, []);
+  medicinesByHourMap: Map<string, Medication[]> = new Map();
+  uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
+  getUniqueRooms(): Map<number, bacpatient[]> {
+    const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
+    this.dataList.forEach(item => {
+      if (!uniqueRoomsMap.has(item.prescription.unitCare.room.roomNumber)) {
+        uniqueRoomsMap.set(item.prescription.unitCare.room.roomNumber, []);
       }
-      const patientsInRoom = uniqueRoomsMap.get(item.room);
+      const patientsInRoom = uniqueRoomsMap.get(item.prescription.unitCare.room.roomNumber);
       if (patientsInRoom) {
-          patientsInRoom.push(item);
+        patientsInRoom.push(item);
       }
-  });
-  this.uniqueroom =Array.from(uniqueRoomsMap.keys());
-  Array.from(uniqueRoomsMap.values()).forEach(element => {
-   for (let index = 0; index < element.length; index++) {
-   this.tableElements.push(element[index]) 
-   }
-  });
-  return uniqueRoomsMap;
-}
-getMedicineByHour(hour: string , name : string): Medicine[] {
-  const medicines = [];
-  for (const patient of this.data_list) {
-    if(patient.patient === name){
-      for (const medicine of patient.medicines) {
-        for (const posology of medicine.posology) {
-          for (const timeSlot of posology) {
-            if (timeSlot.hour === hour) {
-              medicines.push(medicine);
+    });
+    this.uniqueroom = Array.from(uniqueRoomsMap.keys());
+    Array.from(uniqueRoomsMap.values()).forEach(element => {
+      for (let index = 0; index < element.length; index++) {
+        this.tableElements.push(element[index])
+        
+      }
+    });
+
+    
+    return uniqueRoomsMap;
+  }
+  getMedicineByHour(hour: string, name: string): Medication[] {
+    const medicines: Medication[] = [];
+    for (const patient of this.dataList) {
+      if (patient.prescription.register.patient.firstName === name) {
+        for (const posology of patient.prescription.posologies) {
+          for (const dispense of posology.dispenses) {
+            if (dispense.hour === hour) {
+              medicines.push(posology.medication);
+              break;
             }
           }
         }
       }
     }
-   
+    //debugger;
+    return medicines;
   }
+
  
-  
-  return medicines;
-}
-ngOnInit(): void {
-  this.getUniqueRooms();
-}
 }

@@ -1,156 +1,228 @@
-<div class="form-container">
-  <div class="content-wrap p-2">
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"
-          ><i class="fa fa-search text-black"></i
-        ></span>
-      </div>
-      <input
-        class="form-control"
-        type="search"
-        placeholder="Search"
-        aria-label="Search"
-      />
-    </div>
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">UnitCare</h4>
+            <p class="card-subtitle card-subtitle-dash">
+              Create infrastructure as crafts
+            </p>
+          </div>
 
-    <br />
-    <h4 class="card-title">Add Unit Care</h4>
+          <div class="btn-wrapper">
+            <a
+              href="#"
+              class="btn btn-primary text-white align-items-center"
+              [routerLink]="['/', 'unit-care']"
+              routerLinkActive="active"
+            >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> UnitCare List
+            </a>
+            <a
+              href="#"
+              class="btn btn-danger text-white align-items-center"
 
-    <form class="forms-sample">
-      <div class="form-group">
-        <label for="Title">Title</label>
-        <input
-          type="text"
-          class="form-control"
-          id="Title"
-          placeholder="Title"
-          style="height: 40px"
-        />
-      </div>
-      <div class="form-group">
-        <label for="Description">Description</label>
-        <textarea
-          class="form-control"
-          id="Description"
-          placeholder="Description"
-        ></textarea>
-      </div>
-
-      <div class="form-group">
-        Type
-        <mat-select
-          placeholder="Type"
-          class="form-control"
-          style="height: 45px"
-          [(value)]="selected"
-        >
-          <mat-option value="none">None</mat-option>
-          <mat-option value="general">
-            <!-- <img
-              src="\assets\icons\General_medical_department.svg"
-              alt=""
-              class="rounded-circle"
-            /> -->
-            general
-          </mat-option>
-          <mat-option value="Intensive">Intensive</mat-option>
-          <mat-option value="Coronary"> Coronary </mat-option>
-          <mat-option value="Surgical"> Surgical </mat-option>
-          <mat-option value="Pediatric"> Pediatric </mat-option>
-          <mat-option> Obstetrics </mat-option>
-        </mat-select>
-      </div>
-      <hr />
-      <p class="card-description my-auto">Affect Personnel</p>
-      <div class="form-group">
-        <chips-select
-          class="form-control"
-          [ObjectName]="'personnel'"
-          [customLabel]="'personnel'"
-          class="w-100"
-          (selectedChipsChange)="selectedChipsChange($event)"
-          [enableCustomAdditions]="false"
-          [enableQuickSelectFromSuggestions]="true"
-          [fullData]="personnels"
-          [minimumSearchLength]="2"
-          [isStartWithSearch]="true"
-          [searchPropertyName]="'name'"
-        ></chips-select>
-      </div>
-      <hr class="mb-0" />
-
-      <div style="display: flex; align-items: center">
-        <h6 class="card-description my-auto">Add rooms</h6>
-
-        <div style="margin-left: auto">
-          <button
-            class="float-left"
-            mat-icon-button
-            color="primary"
-            aria-label="Add"
-            matTooltip="Add"
-            (click)="addRoom()"
-          >
-            <mat-icon>add_circle_outline</mat-icon>
-          </button>
-        </div>
-      </div>
-      <form [formGroup]="form">
-        <div formArrayName="room">
-          <div
-            *ngFor="let roomGroup of room.controls; let i = index"
-            [formGroupName]="i"
-          >
-            <div style="display: flex; align-items: center">
-              <input
-                type="text"
-                class="form-control"
-                formControlName="roomNumber"
-                placeholder="room-number"
-              />
-              <div style="margin-left: auto">
-                <button
-                  class="float-left"
-                  mat-icon-button
-                  color="warn"
-                  aria-label="Remove/clear"
-                  (click)="removeRoom(i)"
-                  matTooltip="Remove"
-                >
-                  <mat-icon>highlight_off</mat-icon>
-                </button>
-              </div>
-            </div>
-            @if(roomGroup.get('roomNumber')?.value.length > 0){
-
-            <section class="example-section" [formGroup]="equipments">
-              <h4>Select your equipments:</h4>
-              <p>
-                <mat-checkbox formControlName="Equipment1"
-                  >Equipment1</mat-checkbox
-                >
-              </p>
-              <p>
-                <mat-checkbox formControlName="Equipment2"
-                  >Equipment2</mat-checkbox
-                >
-              </p>
-              <p>
-                <mat-checkbox formControlName="Equipment3"
-                  >Equipment3</mat-checkbox
-                >
-              </p>
-            </section>
-
-            }
+              style="border-color: red"
+            >
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
           </div>
         </div>
-      </form>
-      <br />
 
-      <button type="submit" class="btn btn-primary me-2" style="color: white;">Submit</button>
-      <button class="btn btn-light">Cancel</button>
-    </form>
+        <div class="card-body">
+          <form [formGroup]="unitCareForm" (ngSubmit)="onSubmit()" style="margin-top: 5%;" class="form-container">
+            <div class="row">
+
+                <!-- Partie 1 -->
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <h4 class="card-title" style="margin-right: auto; margin-top: 15px; margin-left: 5px;" >
+                    add unitCare informations
+
+                  </h4>
+
+                  <input type="text" formControlName="title"   class="form-control" class="field" placeholder="Title" style="margin-left: 5px;"/>
+
+                <select class="form-select field" formControlName="type"  style="margin-left: 5px;">
+                    <option selected disabled value="">Choose...</option>
+                    <option value="general">General</option>
+                    <option value="Intensive">Intensive</option>
+                    <option value="Coronary">Coronary</option>
+                    <option value="Surgical">Surgical</option>
+                    <option value="Pediatric">Pediatric</option>
+                    <option value="Obstetrics">Obstetrics</option>
+                  </select>
+
+
+                  <textarea
+                    class="field"
+                    formControlName="description"
+                    style="height: 100px; "
+                    placeholder="Description"
+                    style="margin-left: 5px;"
+                  >
+                 description
+                 </textarea
+                  >
+
+                  <select class="field" formControlName="unitStatus"    style="margin-left: 5px;" >
+                    <option selected disabled value="">Status...</option>
+                    <option [value]="1">activated </option>
+                    <option [value]="2">deactivated </option>
+
+                  </select>
+
+              </div>
+                <!-- Fin de la partie 1 -->
+
+                <!-- Partie du room -->
+                <div class="col-md-6 col-lg-4 mb-3">
+
+                  <h4 class="card-title" style=" margin-top: 15px">
+                    add New Room
+
+                  </h4>
+
+                <div formArrayName="rooms">
+                  @for ( room of unitCareForm.controls.rooms.controls; track
+                  roomIndex; let roomIndex = $index ) {
+                  <div class="question" [formGroupName]="roomIndex" >
+                    <div style="display: flex;">
+                    <input
+                        type="number"
+                        formControlName="roomNumber"
+                        placeholder="Room number"
+                        class="field"
+                      />
+
+
+                      <button
+                      class="float-left"
+                      mat-icon-button
+                      color="warn"
+                      aria-label="Remove/clear"
+                      (click)="removeRoom(roomIndex)"
+                      matTooltip="Remove"
+                    >
+                      <mat-icon>highlight_off</mat-icon>
+                    </button>
+                  </div>
+                  <select class="field" formControlName="status" style="width: 90%;">
+                    <option selected disabled value="">Status...</option>
+                    <option [value]="1">activated </option>
+                    <option [value]="2">deactivated </option>
+
+                  </select>
+                    <div formArrayName="equipments" class="answers">
+                      <div>equipments</div>
+                      @for ( room of
+                      unitCareForm.controls.rooms.controls.at(roomIndex)
+                      ?.controls?.equipments?.controls; track equipmentIndex; let equipmentIndex =
+                      $index ) {
+                      <div [formGroupName]="equipmentIndex"  >
+                        <div style="display: flex;">
+                          <input type="text" placeholder="equipmentName" formControlName="name" class="field"/>
+
+                        <button
+                        class="float-left"
+                        mat-icon-button
+                        color="warn"
+                        aria-label="Remove/clear"
+                        (click)="removeEquipment(roomIndex, equipmentIndex)"
+                        matTooltip="Remove"
+                      >
+                        <mat-icon>highlight_off</mat-icon>
+                      </button>
+                        </div>
+
+                        <input type="text" placeholder="reference" formControlName="reference" class="field" style="width: 90%;"/>
+                        <select class="field" formControlName="eqStatus" style="width: 90%;" >
+                          <option selected disabled value="">Status...</option>
+                          <option [value]="1">available </option>
+                          <option [value]="2">nonAvailable</option>
+
+                        </select>
+
+
+                        <select class="field" formControlName="eqType" style="width: 90%;" >
+                          <option selected disabled value="">equipment Type...</option>
+                          <option [value]="1">bed </option>
+                          <option [value]="2">scanner</option>
+                          <option [value]="3">ultrasounds </option>
+                          <option [value]="4">bloodPessureCuffs</option>
+                          <option [value]="5">pulseOximeters </option>
+                          <option [value]="6">vitalSignsMonitors</option>
+                          <option [value]="7">wheelchair </option>
+                          <option [value]="8">stretcher</option>
+                          <option [value]="9">operatingTables </option>
+                          <option [value]="10">syringe</option>
+                          <option [value]="11">catheters </option>
+                          <option [value]="12">bandages</option>
+                          <option [value]="13">microscopes</option>
+                          <option [value]="14">incubators </option>
+                          <option [value]="15">isolationGown</option>
+                          <option [value]="16">handSanitizer</option>
+                          <option [value]="17">disinfectantWipes </option>
+                        </select>
+
+                      </div>
+                      }
+                      <button
+                      type="button" class="btn btn-success"
+                        (click)="addEquipment(roomIndex)"
+                      >
+                        Add Equipment
+                      </button>
+                    </div>
+                  </div>
+                  }
+                </div>
+                <div class="add-question">
+                  <button     type="button" class="btn btn-success" (click)="addRoom()" type="button">Add Room</button>
+                </div>
+
+                </div>
+                <!-- Fin de la partie du room -->
+
+
+                <!-- Partie du personnel -->
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <h4 class="card-title" style=" margin-top: 15px">
+                    add New healthCare Personnel
+
+                  </h4>
+                  <ng-multiselect-dropdown
+                  class=".multiselect-dropdown .dropdown-btn "
+                  [placeholder]="'Personnels List'"
+                  [settings]="dropdownSettings"
+                  [data]="dropdownList"
+                  (onSelect)="onItemSelect($event)"
+                  (onDeSelect)="onItemDeSelect($event)"
+                  (onSelectAll)="onSelectAll($event)"
+                  (onDeSelectAll)="onDeSelectAll()"
+                >
+                </ng-multiselect-dropdown>
+                </div>
+
+                <!-- Fin de la partie du personnel -->
+              </div>
+
+              <div class="d-flex">
+                <div class="col-12 col-lg-8">
+
+                </div>
+                <div class="col-lg-4 d-flex justify-content-end">
+                  <button type="button" class="btn btn-outline-primary" (click)="resetForm()"> Cancel </button>
+                  <button type="submit" class="btn btn-primary text-white"> Submit </button>
+                </div>
+              </div>
+
+          </form>
+
+      </div>
+
+
+      </div>
+    </div>
   </div>
 </div>

@@ -1,0 +1,1 @@
+export enum ActionType { get, add, edit, delete, }

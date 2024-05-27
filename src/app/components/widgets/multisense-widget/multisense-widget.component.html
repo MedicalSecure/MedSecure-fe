@@ -1,18 +1,18 @@
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-6">
 
       <div >
         <!-- Spinner component or loading animation -->
         <!-- <mat-spinner></mat-spinner> -->
       </div>
-      <app-radialbar-charts 
+      <app-radialbar-charts
         [chartOptionsCircle]="TemperatureOptionsCircle"/>
       <br />
       <app-radialbar-charts
       [chartOptionsCircle]="HumidityOptionsCircle"
       ></app-radialbar-charts>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
       <app-radialbar-charts
       [chartOptionsCircle]="LuminosityOptionsCircle"
       ></app-radialbar-charts>
@@ -20,16 +20,5 @@
       <app-radialbar-charts
       [chartOptionsCircle]="ElectricityOptionsCircle"
       ></app-radialbar-charts>
-    </div>
-
-    <div class="col-md-6">
-      <app-environnement-widget
-      [datatemp]="temperatureData"
-      [datahum]="humidityData"
-      [dataele]="electricityData"
-      [datalum]="luminosityData"
-      [datacateg]="categoriesData"
-   ></app-environnement-widget>
-
     </div>
   </div>
