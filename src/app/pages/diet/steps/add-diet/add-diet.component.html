@@ -7,7 +7,7 @@
         </h4>
         <div formArrayName="meals">
           @for ( meal of DietForm.controls.meals.controls; track meal ; let mealIndex = $index ) {
-          <div class="question" [formGroupName]="mealIndex" style="width: 120%;">
+          <div class="question" [formGroupName]="mealIndex" style="width: 150%;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               @for ( type of MealType; track type) {
               <label style="display: flex; align-items: center;">
@@ -53,8 +53,9 @@
                 </div>
                 </div>
               
-              } <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)"  [disabled]="!isMealTypeSelected(mealIndex)"
-              style="margin-top: 5%; color: white;">
+              } 
+              <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)"  [disabled]="!isMealTypeSelected(mealIndex)"
+              style="margin-top: 5%; color: white; margin-left: 75%;">
               Add Food
             </button>
             </div>

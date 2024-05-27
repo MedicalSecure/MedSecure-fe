@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormArray, FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommentComponent } from "../../../../components/comment/comment.component";
+import { Comment } from '../../../../model/BacPatient';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
@@ -19,7 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class AddDietComponent implements OnInit {
   @Input() note: string[];
-  liststring: string[] = ["blablabla"];
+  liststring: Comment[] = [];
   selectedMealType: string;
   isMealSelected: boolean[] = [];
 

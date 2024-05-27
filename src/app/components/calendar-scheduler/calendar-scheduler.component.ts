@@ -34,7 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AppointmentComponent } from '../appointment/appointment.component'
 import { CalendarMonthViewDay } from 'angular-calendar';
 import { Patients } from '../../model/patients';
-import { Socket } from 'ngx-socket-io'
+
 import { EventColor } from 'calendar-utils';
 import { Router } from '@angular/router';
 import {VisitService} from '../../services/visits.service'
