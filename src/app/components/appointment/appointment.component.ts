@@ -12,6 +12,8 @@ import { visits } from '../../model/visits';
 import { Router } from '@angular/router';
 import {VisitService} from '../../services/visits/visits.service';
 import {PatientService} from '../../services/patient/patient.service'
+import {VisitService} from '../../services/visits.service';
+import {PatientService} from '../../services/patient.service'
 
 
 @Component({
@@ -277,6 +279,7 @@ export class AppointmentComponent implements OnInit {
   loadPatients() {
     this.patientService.getPatients().subscribe(
       (data:any) => {
+      (data) => {
         this.patients = data.patients.data;
         this.filteredPatients = this.patients;
         //  this.selectPatient(this.patients);

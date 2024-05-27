@@ -1,24 +1,30 @@
-<div class="container">
-  <div class="row">
+
+  <div class="d-flex flex-wrap gap-3 " style="margin-top: 10px;">
     @for (card of cards; track card.title;) {
-    <div class="col-md-6">
-      <div class="card" (click)="showRooms(card)">
+
+      <div class="card flex-grow"  style="min-width: 22rem; max-width: 45rem;">
         <div class="card-body">
           <div style="display: flex; align-items: center">
-            <h4 class="card-title" style="margin-right: auto; margin-top: 15px">
+            <h4 class="card-title" style="margin-right: auto; margin-top: 15px;">
               {{ card.title }}
+
+              <b [ngStyle]="{'margin-left': '50px', 'background-color': card.unitStatus === 1 ? 'green' : 'red'}">
+                {{ card.unitStatus === 1 ? 'activated' : 'deactivated' }}
+              </b>
+
               <p>
-                <code
-                  ><b>{{ card.type }}</b></code
-                >
+                <code>
+                  {{card.type}}
+                </code>
               </p>
             </h4>
+
 
             <button mat-icon-button aria-label="Edit" color="primary">
               <mat-icon>edit</mat-icon>
             </button>
 
-            <button mat-icon-button aria-label="delete_forever" color="warn">
+            <button mat-icon-button (click)="onDelete(card.id)" aria-label="delete_forever" color="warn">
               <mat-icon>delete_forever</mat-icon>
             </button>
           </div>
@@ -31,14 +37,14 @@
             HealthCare Personnels
           </h3>
 
-          @for (person of card.personnel; track person.name){
+          @for (person of card.personnels; track person.name){
           <div class="image-pers">
-            <div href="#" class="icon-div" >
+            <div href="#" class="icon-div"  style="margin-right:10px ;">
               <img
                 [src]="
-                  person.shift === 'day'
+                  person.shift === 1
                     ? '../../../assets/icons/sun-s.svg'
-                    : person.shift === 'night'
+                    : person.shift === 2
                     ? '../../../assets/icons/moon.svg'
                     : '../../../assets/icons/eclipse-moon-svgrepo-com.svg'
                 "
@@ -54,7 +60,7 @@
 
               <img
                 [src]="
-                  person.gender === 'Male'
+                  person.gender === 1
                     ? '../../../assets/images/men.png'
                     : 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp'
                 "
@@ -62,9 +68,9 @@
                 style="width: 40px"
                 alt="Avatar"
                 [ngClass]="{
-                  'day-shift': person.shift === 'day',
-                  'night-shift': person.shift === 'night',
-                  'half-shift': person.shift === 'half'
+                  'day-shift': person.shift === 1,
+                  'night-shift': person.shift === 2,
+                  'half-shift': person.shift === 3
                 }"
               />
             </div>
@@ -88,8 +94,8 @@
           }
         </div>
       </div>
-    </div>
+
 
     }
   </div>
-</div>
+

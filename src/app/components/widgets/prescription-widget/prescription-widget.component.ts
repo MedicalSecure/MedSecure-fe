@@ -32,7 +32,7 @@ export class PrescriptionWidgetComponent {
   @Input() prescriptions: any;
 
   constructor() {
-  
+
   }
   ngOnChanges(): void {
     if (this.prescriptions) {
@@ -49,13 +49,13 @@ export class PrescriptionWidgetComponent {
       groupedPrescriptions[prescription.medication_name].push(prescription);
     });
     const series = Object.keys(groupedPrescriptions).map((medicationName, index) => {
-     
+
       return {
         name: medicationName,
         data: groupedPrescriptions[medicationName].map((prescription: any) => ({
           x: new Date(prescription.date_prescribed).getTime(),
           y: prescription.quantity,
-      
+
         }))
       };
     });
@@ -71,6 +71,7 @@ export class PrescriptionWidgetComponent {
       dataLabels: {
         enabled: false
       },
+
       grid: {
         xaxis: {
           lines: {
@@ -89,7 +90,7 @@ export class PrescriptionWidgetComponent {
       yaxis: {
         max: Math.max(...prescriptions.map((prescription: any) => prescription.quantity)) + 20
       },
-      
+
     };
   }
 

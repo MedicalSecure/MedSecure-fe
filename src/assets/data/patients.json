@@ -30,6 +30,7 @@
         "topUrgency": true,
         "image": "assets/images/faces/face1.jpg" 
         
+        "children": 2
       },
       {
         "id": "e6510a1b-3d59-4903-9a6f-7a27e3b15aef",
@@ -56,6 +57,7 @@
         "status": "Registered",
         "topUrgency": false,
         "image": "assets/images/faces/face2.jpg" 
+        "children": 0
       },
       {
         "id": "f7ff7c44-fa63-4136-b10e-6d51458e5b7a",
@@ -82,6 +84,7 @@
         "status": "Out",
         "topUrgency": true,
         "image": "assets/images/faces/face3.jpg" 
+        "children": 1
       }
     ]
   }
