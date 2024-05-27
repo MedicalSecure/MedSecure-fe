@@ -38,7 +38,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterViewComponent },
   { path: 'DashboardDoctor', component: DashboardDoctorComponent },
   { path: 'LeaveReportComponent', component: LeaveReportComponent },
-]; 
   { path: 'unitCare-form', component: FormUnitCareComponent },
   {path: 'personels', component : AddPersonelsComponent},
   { path: 'supervisor-dashboard', component: SupervisorDashboardComponent },
