@@ -21,7 +21,8 @@ export class AddDietComponent implements OnInit {
   @Input() note: string[];
   liststring: string[] = ["blablabla"];
   selectedMealType: string;
-  isMealSelexted: boolean = false ;
+  isMealSelected: boolean[] = [];
+
 
   MealType: string[] = ["BreakFast", "Lunch", "Dinner", "Snack"];
   FoodOptions: string[];
@@ -29,7 +30,7 @@ export class AddDietComponent implements OnInit {
   MainDishList = ['Pizza', 'Burger', 'Pasta', 'Steak', 'Grilled Chicken', 'Fish and Chips', 'Tacos', 'Sushi', 'BBQ Ribs', 'Lasagna'];
   DessertList = ['Cake', 'Ice Cream', 'Pie', 'Brownies', 'Cheesecake', 'Pudding', 'Mousse', 'Cookies', 'Tiramisu', 'Macarons'];
   DrinkList = ['Soda', 'Juice', 'Water', 'Coffee', 'Tea', 'Milkshake', 'Smoothie', 'Wine', 'Beer', 'Cocktail'];
-  FoodList: string[] = ["please select food type"];
+  FoodList: { [key: number]: { [key: number]: string[] } } = { 0: { 0: ["Please select a food option"] } };
   fb = inject(NonNullableFormBuilder);
   disableChipState: { [key: number]: { [key: number]: boolean } } = {};
 
@@ -39,10 +40,15 @@ export class AddDietComponent implements OnInit {
 
   constructor() {
     this.selectedMealType = this.MealType[0];
+
   }
 
   ngOnInit(): void {
     this.FoodOptions = ['Drink', 'Main Dish', 'Dessert', 'Starter'];
+    this.DietForm.controls.meals.valueChanges.subscribe(() => {
+      this.isMealSelected = Array(this.DietForm.controls.meals.length).fill(false);
+    });
+ 
   }
 
   chipSelected(food: string, mealIndex: number, foodIndex: number): void {
@@ -50,7 +56,7 @@ export class AddDietComponent implements OnInit {
       this.disableChipState[mealIndex] = {};
     }
     this.disableChipState[mealIndex][foodIndex] = true;
-    this.onOptionChange(food);
+    this.onOptionChange(food , mealIndex , foodIndex);
   }
 
   isChipDisabled(mealIndex: number, foodIndex: number): boolean {
@@ -73,22 +79,29 @@ export class AddDietComponent implements OnInit {
     delete this.disableChipState[mealIndex];
   }
 
-  onOptionChange(selectedOption: string): void {
-    switch (selectedOption) {
+  onOptionChange(food: string, mealIndex: number, foodIndex: number): void {
+    if (!this.FoodList[mealIndex]) {
+      this.FoodList[mealIndex] = {};
+    }
+    if (!this.FoodList[mealIndex][foodIndex]) {
+      this.FoodList[mealIndex][foodIndex] = [];
+    }
+  
+    switch (food) {
       case 'Main Dish':
-        this.FoodList = this.MainDishList;
+        this.FoodList[mealIndex][foodIndex] = this.MainDishList;
         break;
       case 'Dessert':
-        this.FoodList = this.DessertList;
+        this.FoodList[mealIndex][foodIndex] = this.DessertList;
         break;
       case 'Drink':
-        this.FoodList = this.DrinkList;
+        this.FoodList[mealIndex][foodIndex] = this.DrinkList;
         break;
       case 'Starter':
-        this.FoodList = this.StarterList;
+        this.FoodList[mealIndex][foodIndex] = this.StarterList;
         break;
       default:
-        this.FoodList = ["Please select a food option"];
+        this.FoodList[mealIndex][foodIndex] = ["Please select a food option"];
     }
   }
 
@@ -99,11 +112,19 @@ export class AddDietComponent implements OnInit {
     });
     this.DietForm.controls.meals.at(mealIndex)?.controls?.foods?.push(newFood);
     const foodIndex = this.DietForm.controls.meals.at(mealIndex)?.controls?.foods?.length - 1;
+  
+    // Ensure FoodList is initialized up to mealIndex and foodIndex
+    if (!this.FoodList[mealIndex]) {
+      this.FoodList[mealIndex] = {};
+    }
+    this.FoodList[mealIndex][foodIndex] = [];
+  
     if (!this.disableChipState[mealIndex]) {
       this.disableChipState[mealIndex] = {};
     }
     this.disableChipState[mealIndex][foodIndex] = false;
   }
+  
 
   removeFood(mealIndex: number, foodIndex: number): void {
     this.DietForm.controls.meals.at(mealIndex)?.controls?.foods?.removeAt(foodIndex);
@@ -113,7 +134,8 @@ export class AddDietComponent implements OnInit {
   onMealTypeChange(event: Event, mealIndex: number): void {
     const value = (event.target as HTMLInputElement).value;
     this.DietForm.controls.meals.at(mealIndex).patchValue({ type: value });
-    this.isMealSelexted = true ;
+    this.isMealSelected[mealIndex] = true;
+
 
   }
 

@@ -41,7 +41,7 @@
                 <mat-form-field style="margin-left: 1%; width: 170%;">
                   
                     <select matNativeControl required style="width: 120%; height: 100%; background-color: transparent;">
-                      @for (food of FoodList; track food) {
+                      @for (food of FoodList[mealIndex][FoodIndex]; track food) {
                       <option style="width: 170%; height: max-content;" mat-menu-item  value="food">{{food}}</option>
                       }
                     </select>
@@ -53,7 +53,7 @@
                 </div>
                 </div>
               
-              } <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)" [disabled]="!isMealSelexted"
+              } <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)"  [disabled]="!isMealTypeSelected(mealIndex)"
               style="margin-top: 5%; color: white;">
               Add Food
             </button>
