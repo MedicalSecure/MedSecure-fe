@@ -38,7 +38,6 @@ import { Socket } from 'ngx-socket-io'
 import { EventColor } from 'calendar-utils';
 import { Router } from '@angular/router';
 import {VisitService} from '../../services/visits/visits.service'
-import {VisitService} from '../../services/visits.service'
 import { ActionType } from '../../interface/ActionType';
 import {CalendarEventType} from '../../interface/CalendarEventType';
 import {TypeVisit} from '../../interface/TypeVisit'

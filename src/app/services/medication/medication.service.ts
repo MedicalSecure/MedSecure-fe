@@ -9,7 +9,7 @@ import {
   DrugDTO,
   GetDrugsResponse,
 } from '../../types/DrugDTOs';
-import { Observable, map } from 'rxjs';
+import {  map } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MedicationType } from '../../pages/pharmacy/stp1-import-map-drugs/stp1-import-map-drugs.component';
 import { MatPaginator } from '@angular/material/paginator';
@@ -19,24 +19,16 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class DrugService {
   data_source: DrugDTO[] = [];
-
+  private  apiCheck = 'http://localhost:5008/api/v1/drugsChecked';
+  private apiCreate = 'http://localhost:5008/api/v1/drugs';
   private dataUrl = 'assets/data/MedicationData.json'; // Path to your JSON file
-
+  constructor(private http: HttpClient) { }
   getMedicationsNews(): Observable<any> {
     return this.http.get<any>(this.dataUrl);
   }
   getMedications(){
     return this.http.get<any>(this.dataUrl);
-  constructor(private http: HttpClient) {}
-
-  apiCheck = 'http://localhost:5008/api/v1/drugsChecked';
-
-  apiCreate = 'http://localhost:5008/api/v1/drugs';
-
-  getMedications() {
-    return this.http.get<any>('./../../assets/data/medications.json');
   }
-
   checkDrugs(
     checkDrugRequest: CheckDrugRequest
   ): Observable<CheckDrugResponse> {

@@ -8,9 +8,8 @@ import {
   ApexLegend,
   ApexGrid
 } from "ng-apexcharts";
-import { MedicationService } from '../../../services/medication/medication.service';
 import { NgApexchartsModule } from "ng-apexcharts";
-
+import { DrugService } from "../../../services/medication/medication.service"
 type ApexXAxis = {
   type?: "category" | "datetime" | "numeric";
   categories?: any;
@@ -62,7 +61,7 @@ export class RecommendedMedicationsComponent implements OnInit {
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
 
-  constructor(private medicationService: MedicationService) {
+  constructor(private medicationService: DrugService) {
     this.chartOptions = {
       series: [
         {

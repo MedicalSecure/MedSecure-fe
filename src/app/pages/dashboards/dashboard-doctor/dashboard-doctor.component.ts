@@ -5,18 +5,18 @@ import { UnitCareService } from '../../../services/unit-care/unit-care.service'
 import { PrescriptionService } from '../../../services/prescription/prescription.service'
 import { CommonModule } from '@angular/common';
 import {RendementPrescriptionComponent} from '../../../components/widgets/rendement-prescription/rendement-prescription.component';
-import {RecommendedMedicationsComponent} from '../../../components/widgets/recommended-medications/recommended-medications.component';
 import {MedicationsPrescribedComponent} from '../../../components/widgets/medications-prescribed/medications-prescribed.component';
 import { Patients } from '../../../model/patients';
 import { ActivitiesComponent } from '../../../components/activities/activities.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LeaveReportComponent } from '../../../components/leave-report/leave-report.component';
 import { ToDoComponent } from '../../../components/to-do/to-do.component';
+import { RecommendedMedicationsComponent } from '../../../components/widgets/recommended-medications/recommended-medications.component';
 @Component({
   selector: 'app-dashboard-doctor',
   standalone: true,
-  imports: [CommonModule,RendementPrescriptionComponent,RecommendedMedicationsComponent,LeaveReportComponent,ToDoComponent,
-    MedicationsPrescribedComponent,ActivitiesComponent,NgxPaginationModule],
+  imports: [CommonModule,RendementPrescriptionComponent,LeaveReportComponent,ToDoComponent,
+    MedicationsPrescribedComponent,ActivitiesComponent,RecommendedMedicationsComponent ,NgxPaginationModule],
   templateUrl: './dashboard-doctor.component.html',
   styleUrl: './dashboard-doctor.component.css'
 })
