@@ -55,3 +55,10 @@ export type medicationType = {
   comments: Array<commentType>;
   summary?:object;
 };
+
+export type Entity = {
+  createdAt: Date;
+  modifiedAt?: Date;
+  createdBy: string;
+  modifiedBy?: string;
+};

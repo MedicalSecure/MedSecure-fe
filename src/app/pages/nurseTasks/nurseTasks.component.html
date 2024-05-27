@@ -1,0 +1,81 @@
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Tasks</h4>
+            <p class="card-subtitle card-subtitle-dash">Tasks Kanban Board</p>
+          </div>
+          <div class="btn-wrapper">
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="fa fa-paper-plane"></i> Forward
+            </a>
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export CSV
+            </a>
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="icon-printer"></i> Export PDF
+            </a>
+            <a href="#" class="btn btn btn-primary text-white">
+              <i class="icon-plus"></i> Add Task
+            </a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4" *ngFor="let status of [0,1 ,2 ]">
+            <div class="status-columns">
+              <div *ngIf="status === 0">
+                <h3 class="mb-3">Pending...</h3>
+              </div>
+              <div *ngIf="status === 1">
+                <h3 class="mb-3">On Progress</h3>
+              </div>
+              <div *ngIf="status === 2">
+                <h3 class="mb-3">Completed</h3>
+              </div>
+             
+              <div class="tasks-list">
+                <div class="task" *ngFor="let item of data_list">
+                  <div *ngIf="item.status === status">
+                    <ul class="list-group mb-3 sticky-top">
+                      <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                          <h6 class="my-0">Patient</h6>
+                          <small class="text-muted">{{ item.prescription.register.patient.firstName }} {{ item.prescription.register.patient.lastName }}</small>
+                        </div>
+                        <div>
+                          <h6 class="my-0">Room</h6>
+                        <small class="text-muted">{{ item.prescription.unitCare.room.roomNumber }}</small> 
+                        </div>
+                        <div>
+                          <h6 class="my-0">Bed</h6>
+                          <small class="text-muted">{{ item.prescription.unitCare.room.equipment.reference }}</small>
+                        </div>
+                        <div>
+                          <input class="form-control form-control-sm btn btn-primary text-white" style="width: 100px;" id="actions" 
+                            formControlName="selectedAction" placeholder="Actions..." required list="actionsList">
+                          <datalist id="actionsList">
+                            <option *ngFor="let action of actions" [value]="action.value" (click)="onActionClick(action.value, item)">
+                              <a href="#" class="btn btn btn-primary text-white">
+                                <i [ngClass]="'fa fa-' + action.icon" aria-hidden="true"></i>{{ action.label }}
+                              </a>
+                            </option>
+                          </datalist>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="empty-message" *ngIf="data_list.length === 0">
+                  No tasks
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
