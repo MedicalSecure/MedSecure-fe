@@ -42,18 +42,17 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let register of registrations; let i = index">
-          @if(register.prescriptions && register.prescriptions.length>0){
-          <tr *ngFor="let prescription of register.prescriptions" (click)="onClickPrescription(prescription)">
-            <td class="col-1">{{ register.id.slice(-10) + "..." }}</td>
+        <ng-container *ngFor="let prescription of prescriptionsViewList;let i = index">
+          <tr  #prescriptionRows (click)="onClickPrescription(prescription)" style="cursor: pointer;" [id]="(i == 0 && prescription.id == lastCreatedPrescriptionIdFromResponse) ? 'last-selected-prescription' : ''">
+            <td class="col-1">{{ prescription.registerId.slice(-10) + "..." }}</td>
             <td class="col-1">{{ prescription.id.slice(-10) + "..." }}</td>
-            <td class="col-3">{{ register.patient.firstName + " " + register.patient.lastName }}</td>
+            <td class="col-3">{{ getRegister(prescription.registerId).patient.firstName + " " + getRegister(prescription.registerId).patient.lastName }}</td>
             <td class="col-2">{{ getPrescriptionStatus(prescription) }}</td>
-            <td class="col-2">{{ getRegisterStatus(register) }}</td>
+            <td class="col-2">{{ getRegisterStatus(prescription.registerId) }}</td>
             <td class="col-2">{{ "After AZURE" }}</td>
             <td class="col-2">{{ getDateString(prescription.createdAt) }}</td>
           </tr>
-          }</ng-container
+        </ng-container>
         >
       </tbody>
     </table>
@@ -67,58 +66,16 @@
 
   <!-- If one prescription is selected:display result -->
   @if (selectedPrescription) {
-  <!-- Print a single line displaying Prescription id | Date | Patient name | doctor name And Deselect Button -->
-  <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
-    <p class="align-self-center m-0">Selected Prescription :</p>
-    <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{selectedRegister?.patient?.firstName}} {{selectedRegister?.patient?.lastName}} {{  getAge(selectedRegister?.patient?.dateOfBirth) }}</span>
-    <mat-icon class="align-self-center text-danger fw-bold" (click)="onClickDeselectPrescription()">close</mat-icon>
-  </div>
-  <!-- Display Prescription details component -->
-  <div>Prescription Details here (TODO)</div>
-
-  <ul class="list p-1 m-0 ps-3">
-
-    <li *ngFor="let posology of selectedPrescription.posologies;let $index = index;">
-      <div class="mb-0">
-        <div class="fw-bold fs-6 text-primary mb-0 d-flex justify-content-start align-middle align-items-center">
-          <span style="cursor: pointer" class="d-flex justify-content-start align-middle align-items-center">
-            {{ posology.medicationId.length > 20 ? posology.medicationId.slice(0, 20) + "..." : posology.medicationId}}
-          </span>
-        
-        </div>
-        <p class="fw-light fs-6 text-dark mb-0">
-          {{ posology.isPermanent===true ? "Permanent" : getNumberOfDaysInRange([posology.startDate, posology.endDate]) + " Days" }}
-          <span style="font-size: small">{{ getDateString(posology.startDate, "dd/mm/yyyy") }}</span>
-          @if (posology.isPermanent ===false) {
-          <span style="font-size: small">{{ " - " + getDateString(posology.endDate!, "dd/mm/yyyy") }}</span>
-          } @if (getPosologySummary(posology).numberOfCautions > 0) {
-          <span style="position: relative; margin-left: 6px">
-            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-            <span class="icon-counter">{{ getPosologySummary(posology).numberOfCautions }}</span>
-          </span>
-          } @if (getPosologySummary(posology).numberOfComments > 0) {
-          <span style="position: relative; margin-left: 8px">
-            <i class="fa fa-comments-o" aria-hidden="true"></i>
-            <span class="icon-counter">{{ getPosologySummary(posology).numberOfComments }}</span>
-          </span>
-          }
-        </p>
-
-        <p class="text-dark fw-bold" style="font-size: small; margin-top: -0.2rem">
-          <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
-          @if (true) {
-          {{ getPosologySummary(posology).timesADay }}
-          <!--   {{ getPosologySummary(posology).average }} units on avg | -->
-          max dose: {{ getPosologySummary(posology).maximumDispenseQuantity }}
-          }
-        </p>
-        <!--                   @if (medication.isForceOrder) {
-              <p class="fw-bold text-danger" style="margin-top: -0.7rem">External order</p>
-            } -->
-      </div>
-    </li>
-    
-  </ul>
-  <button (click)="navigateToUpdatePrescription(selectedPrescription,selectedRegister)">Update prescription</button>
+    <!-- Print a single line displaying Prescription id | Date | Patient name | doctor name And Deselect Button -->
+    <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
+      <p class="align-self-center m-0">Selected Prescription :</p>
+      <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{selectedRegister?.patient?.firstName}} {{selectedRegister?.patient?.lastName}} {{  getAge(selectedRegister?.patient?.dateOfBirth) }}</span>
+      <mat-icon class="align-self-center text-danger fw-bold" (click)="onClickDeselectPrescription()">close</mat-icon>
+    </div>
+    <!-- Display Prescription details component -->
+    <app-old-prescription-view [selectedPrescription]="selectedPrescription" 
+    [selectedRegister]="selectedRegister"
+    (onClickUpdatePrescription)="navigateToUpdatePrescription(selectedPrescription,selectedRegister)" 
+    (onClickSuspendPrescription)="suspendPrescription(selectedPrescription)"  />
   }
 </div>

@@ -227,10 +227,11 @@
       <p id="bodyViewer-btn-icon" class="fs-6">skin</p>
     </button>
 
-    <button type="button" (click)="toggleFilteringSymptomsSearch()" class="btn btn-outline-primary tools-button" id="bodyViewer-btn" [style]="isFilterEnabled ? 'background-color : rgba(255, 0, 0, 0.6)' : ''">
+    @if(viewFilterButton)
+    {<button type="button" (click)="toggleFilteringSymptomsSearch()" class="btn btn-outline-primary tools-button" id="bodyViewer-btn" [style]="isFilterEnabled ? 'background-color : rgba(255, 0, 0, 0.6)' : ''">
       @if(isFilterEnabled){<i title="Disable symptoms filter"  id="bodyViewer-btn-icon" class="material-icons"  >filter_alt_off</i>}
       @else{<i title="Enable symptoms filter" id="bodyViewer-btn-icon" class="material-icons">filter_alt</i>}
-    </button>
+    </button>}
     <button type="button" title="Deselect all body parts" (click)="onDeselectAllBodyPartsClick()" class="btn btn-outline-primary tools-button" id="bodyViewer-btn" >
       <i id="bodyViewer-btn-icon" class="material-icons">deselect</i>
     </button>

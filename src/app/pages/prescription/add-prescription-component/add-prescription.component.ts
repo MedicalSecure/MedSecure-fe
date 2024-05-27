@@ -176,7 +176,7 @@ export class AddPrescriptionComponent implements DoCheck {
       diet: diet,
     };
     console.log(JSON.stringify(finalPrescription));
-    debugger;
+    //debugger;
     if (
       this.updatingOldPrescriptionMode &&
       this.oldPrescriptionToUpdate &&

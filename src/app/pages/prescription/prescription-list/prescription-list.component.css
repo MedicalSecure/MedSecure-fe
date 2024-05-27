@@ -1,8 +1,28 @@
 #refresh-icon {
-    cursor: pointer;
-    transition: transform 0.3s; /* Add a smooth transition for the transform property */
+  cursor: pointer;
+  transition: transform 0.3s; /* Add a smooth transition for the transform property */
 }
 
 #refresh-icon:active {
-    transform: scale(1.2) rotate(360deg); /* Scale down the icon and rotate it 360 degrees on click */
+  transform: scale(1.2) rotate(360deg); /* Scale down the icon and rotate it 360 degrees on click */
+}
+
+.highlight-animation {
+  animation-name: highlight-background;
+  animation-duration: 2s; /* Adjust this value to match the animation duration */
+}
+
+@keyframes highlight-background {
+  0% {
+    background-color: transparent;
+  }
+  25% {
+    background-color: rgba(0, 97, 241, 0.3);
+  }
+  75% {
+    background-color: rgba(0, 97, 241, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
 }

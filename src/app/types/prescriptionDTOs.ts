@@ -20,10 +20,18 @@ export type PostPredictDiagnosisResponse = {
 export type PostPredictDiagnosisCommand = {
   symptoms: SymptomDto[];
 };
+
 export type CreatePrescriptionRequest = {
   prescription: PrescriptionCreateDto;
 };
+export type PutPrescriptionStatusRequest = {
+  prescription: PrescriptionDto;
+};
 export type CreatePrescriptionResponse = {
+  id: string;
+};
+
+export type PutPrescriptionResponse = {
   id: string;
 };
 export type GetPrescriptionsByRegisterIdResponse = {

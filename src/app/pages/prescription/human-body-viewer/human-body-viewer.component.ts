@@ -17,6 +17,7 @@ export class HumanBodyViewerComponent {
    * @param {boolean} handleClicksByParent - Part of body name, example Neck
    */
   @Input() handleClicksByParent = false;
+  @Input() viewFilterButton = true;
 
   @Output()
   onSelectedPartsChange: EventEmitter<Set<string>>= new EventEmitter<Set<string>>();

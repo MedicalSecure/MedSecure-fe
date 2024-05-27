@@ -11,6 +11,9 @@ import {
   PostPredictDiagnosisCommand,
   PostPredictDiagnosisResponse,
   PrescriptionCreateDto,
+  PrescriptionDto,
+  PutPrescriptionResponse,
+  PutPrescriptionStatusRequest,
   SymptomDto,
 } from '../../types/prescriptionDTOs';
 import {
@@ -67,6 +70,17 @@ export class PrescriptionApiService implements ActivityService {
     };
     let x = this.http.put<CreatePrescriptionResponse>(
       this.apiUrl,
+      postPrescriptionRequest
+    );
+    return x;
+  }
+
+  putPrescriptionsStatus(prescriptionDto: PrescriptionDto) {
+    const postPrescriptionRequest: PutPrescriptionStatusRequest = {
+      prescription: prescriptionDto,
+    };
+    let x = this.http.put<PutPrescriptionResponse>(
+      this.apiUrl+"/Status",
       postPrescriptionRequest
     );
     return x;

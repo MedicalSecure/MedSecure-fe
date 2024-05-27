@@ -22,26 +22,12 @@ import { CommonModule } from '@angular/common';
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
 import { DiagnosisDto, SymptomDto } from '../../../types/prescriptionDTOs';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 
 @Component({
   selector: 'app-stp3-add-diagnostic',
   standalone: true,
   templateUrl: './stp3-add-diagnostic.component.html',
   styleUrl: './stp3-add-diagnostic.component.css',
-  animations: [
-    trigger('loadingAnimation', [
-      state('true', style({ opacity: 1 })),
-      state('false', style({ opacity: 0 })),
-      transition('false <=> true', animate('300ms ease-in-out')),
-    ]),
-  ],
   imports: [
     FormsModule,
     MatFormFieldModule,

@@ -5,7 +5,9 @@ import {
   Input,
   OnInit,
   Output,
+  QueryList,
   SimpleChanges,
+  ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -30,6 +32,7 @@ import {
   getDateString,
   getTimeString,
 } from '../../../shared/utilityFunctions';
+import { OldPrescriptionViewComponent } from '../old-prescription-view/old-prescription-view.component';
 
 @Component({
   selector: 'app-prescription-list',
@@ -40,6 +43,7 @@ import {
     MatIcon,
     RouterModule,
     MatProgressSpinnerModule,
+    OldPrescriptionViewComponent
   ],
   templateUrl: './prescription-list.component.html',
   styleUrl: './prescription-list.component.css',
@@ -51,6 +55,8 @@ export class PrescriptionListComponent implements OnInit {
     prescription: PrescriptionDto;
     register: RegisterDto;
   }>();
+
+  @ViewChildren('prescriptionRows') prescriptionRows: QueryList<any>;
 
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
@@ -64,6 +70,8 @@ export class PrescriptionListComponent implements OnInit {
   prescriptionsGroupedByRegisterIds: { [key: string]: PrescriptionDto[] } = {};
   isLoading: boolean = false;
   isFailedToLoad: boolean = false;
+
+  prescriptionsViewList:PrescriptionDto[]=[];
 
   constructor(private prescriptionApiService: PrescriptionApiService) {}
 
@@ -107,6 +115,14 @@ export class PrescriptionListComponent implements OnInit {
           this.prescriptionApiService
         );
       this.registrations = [...response];
+      let extractedPrescriptions:PrescriptionDto[]=[];
+      response.forEach(register=>{
+        let newPrescriptions:PrescriptionDto[]=register.prescriptions? register.prescriptions.filter(p => !!p ) : []
+        extractedPrescriptions=[...extractedPrescriptions ,...newPrescriptions]
+      }
+      )
+      this.prescriptionsViewList=extractedPrescriptions.sort((a,b)=> a.createdAt < b.createdAt ? 1 : -1);
+
       this.isLoading = false;
       this.isFailedToLoad = false;
       this.highlightLastAddedPrescription();
@@ -116,15 +132,54 @@ export class PrescriptionListComponent implements OnInit {
     }
   }
 
-  highlightLastAddedPrescription() {}
+  highlightLastAddedPrescription() {
+    setTimeout(() => {
+      const element = document.getElementById(
+        'last-selected-prescription'
+      );
+      if (element) {
+        element.classList.add('highlight-animation');
+      }
+      setTimeout(()=>this.lastCreatedPrescriptionIdFromResponse=undefined,3000) // after 3 seconds, disable highlighting again
+    },200)//wait for table to be rendered first
+  }
+
+  suspendPrescription(prescription:PrescriptionDto){  
+    this.isLoading = true;
+
+    prescription.status=PrescriptionStatus.Discontinued;
+    
+    this.prescriptionApiService
+        .putPrescriptionsStatus(prescription)
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            this.lastCreatedPrescriptionIdFromResponse = response.id;
+            this.selectedRegister = undefined;
+            this.selectedPrescription = undefined;
+            this.highlightLastAddedPrescription()
+          },
+          (error) => {
+            this.isLoading = false;
+          }
+        );
+
+  }
+  
 
   onClickRefresh() {
     //this.fetchPrescriptions();
     this.fetchRegistrationsWithPrescriptions();
   }
 
-  getRegisterStatus(register: RegisterDto): HistoryStatus {
-    return getPatientStatusFromRegister(register);
+  getRegister(regId: string):RegisterDto{
+    return this.registrations.filter(
+      (register) => register.id == regId
+    )[0];
+  }
+
+  getRegisterStatus(registerId:string): HistoryStatus {
+    return getPatientStatusFromRegister(this.getRegister(registerId));
   }
 
   getPrescriptionStatus(prescription: PrescriptionDto): string {
@@ -148,66 +203,7 @@ export class PrescriptionListComponent implements OnInit {
     return '| ' + x + ' years';
   }
 
-  getPosologySummary(posology: PosologyDto): {
-    timesADay: string;
-    beforeFoodCounter: number;
-    afterFoodCounter: number;
-    maximumDispenseQuantity: number;
-    average: number;
-    numberOfCautions: number;
-    numberOfComments: number;
-  } {
-    let timesADay: string = '';
-    let afterFoodCounter: number = 0;
-    let beforeFoodCounter: number = 0;
-    let timesADayCounter: number = 0;
-    let maximumDispenseQuantity: number = 0;
-    let numberOfComments: number = 0;
-    let numberOfCautions: number = 0;
-    posology.dispenses.forEach((hourObj) => {
-      if (hourObj.beforeMeal?.quantity) {
-        const beforeFQ = parseInt(hourObj.beforeMeal?.quantity);
-        beforeFoodCounter += beforeFQ;
-        timesADayCounter++;
-        if (beforeFQ > maximumDispenseQuantity)
-          maximumDispenseQuantity = beforeFQ;
-      }
-      if (hourObj.afterMeal?.quantity) {
-        const afterFQ = parseInt(hourObj.afterMeal?.quantity);
-        afterFoodCounter += afterFQ;
-        timesADayCounter++;
-        if (afterFQ > maximumDispenseQuantity)
-          maximumDispenseQuantity = afterFQ;
-      }
-    });
-    posology.comments.forEach((comment) => {
-      if (comment.label === 'Caution') numberOfCautions++;
-      else numberOfComments++;
-    });
-    if (timesADayCounter > 1) timesADay = timesADayCounter + ' times a day : ';
-    else if (timesADayCounter == 1) timesADay = 'single time a day : ';
-    let average = (beforeFoodCounter + afterFoodCounter) / timesADayCounter;
-    return {
-      timesADay,
-      beforeFoodCounter,
-      afterFoodCounter,
-      maximumDispenseQuantity,
-      average: !Number.isNaN(average) ? Number(average.toFixed(1)) : 0,
-      numberOfCautions,
-      numberOfComments,
-    };
-  }
-  getNumberOfDaysInRange(dateRange: [Date, Date | null] | null): number | null {
-    if (dateRange === null || dateRange[1] === null) return null;
-    // Convert both dates to timestamps
-    var timestamp1 = dateRange[0].getTime();
-    var timestamp2 = dateRange[1].getTime();
-    // Calculate the difference in milliseconds
-    var difference = Math.abs(timestamp2 - timestamp1);
-    // Convert milliseconds to days
-    var daysDifference = Math.ceil(difference / (1000 * 60 * 60 * 24));
-    return daysDifference;
-  }
+  
 
   navigateToUpdatePrescription(
     prescription: PrescriptionDto,
