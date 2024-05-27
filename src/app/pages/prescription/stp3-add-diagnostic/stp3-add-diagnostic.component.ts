@@ -86,6 +86,7 @@ export class Stp3AddDiagnosticComponent {
     if(this.updatingOldPrescriptionMode){
       this.selectedSymptoms=[...this.updateInitialData.symptoms];
       this.selectedDiagnosis=[...this.updateInitialData.diagnosis];
+      this.continuePredicting= this.updateInitialData.diagnosis.length > 0;
     }
   }
 
@@ -171,10 +172,11 @@ export class Stp3AddDiagnosticComponent {
     this.prescriptionService.getPredictedDiagnosis(symptoms).subscribe(
       (response) => {
         if(!response.predictedDiagnosis) return;
-        //add to existing!
-        //this.selectedDiagnosis = [...this.selectedDiagnosis,response.predictedDiagnosis]
+        //add to existing! it may continue adding to infinity, also risk adding without doctor notice
+        //let uniqueSelectedDiagnosis=new Set<DiagnosisDto>([...this.selectedDiagnosis,response.predictedDiagnosis]);
+        //this.selectedDiagnosis = Array.from(uniqueSelectedDiagnosis)
 
-        //replace existing !!
+        //replace existing !! safer with the disabling algo
         this.selectedDiagnosis = [response.predictedDiagnosis];
 
         //shake the input

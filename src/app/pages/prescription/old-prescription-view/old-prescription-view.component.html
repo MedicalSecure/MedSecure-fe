@@ -48,7 +48,7 @@
               <ul *ngIf="showDetails && posology.dispenses" style="margin-top: -0.4rem; line-height: 1">
                 <li *ngFor="let dispense of posology.dispenses; let i = index">
                   @if(dispense.beforeMeal){<strong>{{ dispense.hour + ":00 " }}: </strong> <strong class="text-danger">{{ dispense.beforeMeal.quantity }}</strong
-                  >{{ " *" + posology?.medication?.dosage }} } @if(dispense.afterMeal){ <strong>{{ dispense.hour + ":00 " }}:</strong>
+                  >{{ " *" + posology?.medication?.dosage }} } @if(dispense.afterMeal){ <strong>{{ dispense.hour + ":00 " }} </strong>
                   <strong class="text-danger">{{ dispense.afterMeal.quantity }}</strong
                   >{{ " *" + posology?.medication?.dosage }}}
                 </li>
