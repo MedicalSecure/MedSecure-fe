@@ -16,7 +16,6 @@ import { Dispense } from '../../components/schedule/schedule.component';
 export class GanttChartComponent implements AfterViewInit {
   constructor(private bacPatientService: BacPatientService) { }
   ngAfterViewInit(): void {
-    this.dataList = this.bacPatientService.getData(this.dataSource);
 
     this.getUniqueRooms();
   }

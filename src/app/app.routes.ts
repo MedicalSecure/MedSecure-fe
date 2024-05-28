@@ -9,7 +9,7 @@ import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
 import { AddPrescriptionComponent } from './pages/prescription/add-prescription-component/add-prescription.component';
-import { TasksComponent } from './pages/nurseTasks/nurseTasks.component';
+import { NurseTasksComponent } from './pages/nurseTasks/nurseTasks.component';
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
@@ -28,7 +28,7 @@ export const routes: Routes = [
   { path: 'UnitSelector', component: UnitSelectorComponent },
   { path: 'bac-patient', component: BacPatientComponent },
   { path: 'timeline', component: TimelineComponent },
-  { path: 'tasks', component: TasksComponent },
+  { path: 'nursetasks', component: NurseTasksComponent },
   { path: 'search', component: SearchBarComponent },
   { path: 'pharmacy', component: AddPharmacyComponent },
   { path: 'prescribe', component: AddPrescriptionComponent },
