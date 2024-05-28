@@ -118,7 +118,8 @@
                 "input": "node_modules/@progress/kendo-theme-default/dist/all.css"
               },
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/intro.js/minified/introjs.min.css"
             ],
             "scripts": [
       

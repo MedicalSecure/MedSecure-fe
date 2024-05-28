@@ -12,6 +12,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { LeaveReportComponent } from '../../../components/leave-report/leave-report.component';
 import { ToDoComponent } from '../../../components/to-do/to-do.component';
 import { RecommendedMedicationsComponent } from '../../../components/widgets/recommended-medications/recommended-medications.component';
+import introJs from 'intro.js';
+
 @Component({
   selector: 'app-dashboard-doctor',
   standalone: true,
@@ -49,9 +51,12 @@ export class DashboardDoctorComponent {
     this.GetValidPrescription()
     this.GetInValidPrescription()
     this.GetTotalPrescription()
-    this. GetPatientPrescribed()
+    this.GetPatientPrescribed()
     this.GetTopUrgencyPatient()
+    this.startIntro()
   }
+
+
   visitDates(): string[] {
     return Object.keys(this.visitsCountByDay).sort();
   }
@@ -127,4 +132,88 @@ export class DashboardDoctorComponent {
       this.PatientPrescribedcount = data;
     });
    }
+
+   startIntro(): void {
+    const intro = introJs();
+   
+    intro.setOptions({
+      scrollToElement: true,
+      steps: [
+        {
+          intro: "Welcome to your dashboard!"
+        },
+        {
+          element: document.querySelector('.statistics-details') as HTMLElement,
+          intro: "Here are your information details "
+          
+        },
+        {
+          element: document.querySelector('.statistics-title1') as HTMLElement,
+          intro: "Here are your patient number non-prescribed."
+        },
+        {
+          element: document.querySelector('.statistics-title2') as HTMLElement,
+          intro: "Here are your patient number prescribed."
+        },
+        {
+          element: document.querySelector('.statistics-title3') as HTMLElement,
+          intro: "Here are your total Visits."
+        },
+        {
+          element: document.querySelector('.statistics-title4') as HTMLElement,
+          intro: "Here are your unitcare available."
+        },
+        {
+          element: document.querySelector('.statistics-title5') as HTMLElement,
+          intro: "Here are your Invalid prescriptions."
+        },
+        {
+          element: document.querySelector('.statistics-title6') as HTMLElement,
+          intro: "Here are your Valid prescriptions"
+        },
+        {
+          element: document.querySelector('.card1') as HTMLElement,
+          intro: "You can see the Recommended medications here."
+        },
+        {
+          element: document.querySelector('.card2') as HTMLElement,
+          intro: "You can see the Rendement Prescription here."
+        },
+        {
+          element: document.querySelector('.card3') as HTMLElement,
+          intro: "You can see the total visits and Visits per day."
+        },
+        {
+          element: document.querySelector('.card4') as HTMLElement,
+          intro: "You can see the Medications prescribed."
+        },
+        {
+          element: document.querySelector('.card5') as HTMLElement,
+          intro: "You can see the Liste Prescriptions."
+        },
+        {
+          element: document.querySelector('.card6') as HTMLElement,
+          intro: "You can see the Recent Events."
+        },
+        {
+          element: document.querySelector('.card7') as HTMLElement,
+          intro: "You can see the activities."
+        },
+        {
+          element: document.querySelector('.card8') as HTMLElement,
+          intro: "You can see the to do liste."
+        },
+        {
+          element: document.querySelector('.card9') as HTMLElement,
+          intro: "You can see the leave-report."
+        },
+        {
+          element: document.querySelector('.card10') as HTMLElement,
+          intro: "You can see the top urgency."
+        },
+      ]
+    });
+
+    intro.start();
+  }
 }
