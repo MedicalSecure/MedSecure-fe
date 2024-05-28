@@ -10,6 +10,7 @@ import { formatDate } from '@angular/common';
   styleUrl: './widgets-all-data.component.css'
 })
 export class WidgetsAllDataComponent {
+  
   private readonly baseUrlall='https://api.thingspeak.com/channels/2559139/feeds.json?api_key=HEJGWX49WMGLX0YN';
   temperatureData: number[] = [];
   humidityData: number[] = [];
