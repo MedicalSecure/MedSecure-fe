@@ -91,7 +91,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
   isFilteredForceOrder: boolean = false;
   isEditingMode: boolean = false;
   isCautionEnabled: boolean = false;
-  cautionComment: CommentsDto = initialCautionComment;
+  cautionComment: CommentsDto = {...initialCautionComment};
   consumptionMinStartDate: Date = new Date();
   isPageValid: boolean = false;
   selectedPosology: PosologyDto = this._getFormInitialValues();
@@ -181,6 +181,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
       const index = commentList.indexOf(this.cautionComment);
       if (index !== -1) {
         commentList.splice(index, 1);
+        this.cautionComment={...initialCautionComment}
       }
     }
   }
@@ -301,8 +302,8 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
       CurrentPosology.medication.name != ''
     ) {
       this._cleanComments();
-
       this.newPosologiesList.push(CurrentPosology);
+      this.cautionComment={...initialCautionComment}
       this.onSelectedMedicationChange([]);
       this.isEditingMode = false;
       this.isCautionEnabled = false;
