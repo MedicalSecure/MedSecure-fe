@@ -125,21 +125,21 @@
               <th mat-header-cell *matHeaderCellDef>
                 Medical Record Number (MRN)
               </th>
-              <td mat-cell *matCellDef="let element">{{ element.MRN }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.id }}</td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef>Name</th>
-              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.patient.firstName }} {{ element.patient.lastName }}</td>
             </ng-container>
 
             <!-- age Column -->
             <ng-container matColumnDef="age">
               <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
               <td mat-cell *matCellDef="let element">
-                {{ element.dateOfBirth | date : "yyyy-MM-dd" }}
-                <strong> ({{ calculateAge(element.dateOfBirth) }}</strong> years
+                {{ element.patient.dateOfBirth | date : "yyyy-MM-dd" }}
+                <strong> ({{calculateAge(element.patient.dateOfBirth)}}</strong> years
                 old)
               </td>
             </ng-container>
@@ -148,7 +148,7 @@
             <ng-container matColumnDef="registerDate">
               <th mat-header-cell *matHeaderCellDef>Register Date</th>
               <td mat-cell *matCellDef="let element">
-                {{ element.registerDate | date : "yyyy-MM-dd" }}
+                {{ element.createdAt | date : "yyyy-MM-dd" }}
               </td>
             </ng-container>
 
@@ -156,23 +156,23 @@
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
               <td mat-cell *matCellDef="let element">
-                @if ( element.status === "Out") {
+                @if ( element.histories.status === 0) {
                 <mat-chip
                   class="element mat-chip"
                   style="
                     background-color: rgba(255, 0, 0, 0.05);
                     border: 1px solid red;
                   "
-                  >{{ element.status }}</mat-chip
+                  >Out</mat-chip
                 >
-                } @else if (element.status === "Resident") {
+                } @else if (element.histories.status === 1) {
                 <mat-chip
                   class="element mat-chip"
                   style="
                     background-color: rgba(17, 255, 33, 0.05);
                     border: 1px solid green;
                   "
-                  >{{ element.status }}</mat-chip
+                  >Resident</mat-chip
                 >
                 }
               </td>

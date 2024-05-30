@@ -1,3 +1,4 @@
+import { RegistrationService } from './../../services/registration/registration.service';
 import {
   AfterViewInit,
   Component,
@@ -14,7 +15,7 @@ import {
 } from '@angular/material/datepicker';
 import { MatChipsModule } from '@angular/material/chips';
 import { JsonPipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -25,6 +26,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { ScheduleComponent } from '../../components/schedule/schedule.component';
+import { register } from './../../model/Registration';
 
 export interface PeriodicElement {
   name: string;
@@ -34,8 +36,8 @@ export interface PeriodicElement {
   status: string; 
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  { MRN: 'A123456789', name: 'Haide', dateOfBirth: new Date('1987-04-13'), registerDate: new Date(), status: "Out" },
+export let ELEMENT_DATA: register[] = [
+ /*  { MRN: 'A123456789', name: 'Haide', dateOfBirth: new Date('1987-04-13'), registerDate: new Date(), status: "Out" },
   { MRN: 'B234567890', name: 'Helen', dateOfBirth: new Date('1964-03-22'), registerDate: new Date(), status: "Resident" },
   { MRN: 'C345678901', name: 'Liam', dateOfBirth: new Date('2017-08-05'), registerDate: new Date(), status: "Out" },
   { MRN: 'D456789012', name: 'Bery', dateOfBirth: new Date('1965-11-30'), registerDate: new Date(), status: "Out" },
@@ -44,9 +46,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { MRN: 'G789012345', name: 'Nissrine', dateOfBirth: new Date('1994-06-11'), registerDate: new Date(), status: "Out" },
   { MRN: 'H890123456', name: 'Oliver', dateOfBirth: new Date('2004-01-08'), registerDate: new Date(), status: "Resident" },
   { MRN: 'I901234567', name: 'Florence', dateOfBirth: new Date('1977-10-03'), registerDate: new Date(), status: "Out" },
-  { MRN: 'J012345678', name: 'Neon', dateOfBirth: new Date('2003-07-17'), registerDate: new Date(), status: "Resident" }
+  { MRN: 'J012345678', name: 'Neon', dateOfBirth: new Date('2003-07-17'), registerDate: new Date(), status: "Resident" } */
 ];
-
+export {register};
 
 @Component({
   standalone: true,
@@ -84,6 +86,7 @@ export class RegisterViewComponent implements AfterViewInit {
   tomorrow = new Date();
   yesterday = new Date();
   dataSource = new MatTableDataSource(ELEMENT_DATA);
+  //registerDate = new FormControl(new Date());
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
 
@@ -91,13 +94,13 @@ export class RegisterViewComponent implements AfterViewInit {
     this.todayDate = selectedDate;
     this.today.setDate(new Date(selectedDate).getDate());
     this.dataSource.data = ELEMENT_DATA.filter(
-      (item) => new Date(item.registerDate).getDate() === this.today.getDate()
+      (item) => new Date(item.createdAt).getDate() === this.today.getDate()
     );
   }
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(
       (item) =>
-        new Date(item.registerDate).getDate() === this.today.getDate() - 1
+        new Date(item.createdAt).getDate() === this.today.getDate() - 1
     );
     this.today.setDate(this.today.getDate() - 1);
     this.todayDate = this.today.toLocaleDateString();
@@ -106,7 +109,7 @@ export class RegisterViewComponent implements AfterViewInit {
   onRightButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(
       (item) =>
-        new Date(item.registerDate).getDate() === this.today.getDate() + 1
+        new Date(item.createdAt).getDate() === this.today.getDate() + 1
     );
     this.today.setDate(this.today.getDate() + 1);
     this.todayDate = this.today.toLocaleDateString();
@@ -122,9 +125,14 @@ export class RegisterViewComponent implements AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(private router: Router) {}
+  constructor(private router: Router ,private service: RegistrationService) {}
 
-  ngOnInit() {}
+  viewDetails(registerId: string) {
+    this.router.navigate(['/register-details', registerId]);
+  }
+  ngOnInit() {
+    this.service.getData(this.dataSource);
+  }
 
   navigateToAddPatient() {
     this.router.navigate(['/register']);

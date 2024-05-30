@@ -1,12 +1,14 @@
+import { patientType } from './../add-prescription/patient-select/patient-select.component';
+import { RegistrationService } from './../../services/registration/registration.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import {
   WizardHeaderComponent,
   wizardStepType,
 } from '../../components/wizard-header/wizard-header.component';
-
+import { register } from './../../model/Registration';
 // Interfaces
 
 interface Activity {
@@ -47,20 +49,82 @@ export interface Symptom {
   id: string;
   name: string;
 }
+//Form Control
+type FormPatient = FormGroup<{
+  firstName :FormControl;
+  lastName :FormControl;
+  datOfBirth :FormControl;
+  identity :FormControl;
+  cnam :FormControl;
+  assurance :FormControl;
+  gender :FormControl;
+  height :FormControl;
+  weight :FormControl;
+  addressIsRegisterations :FormControl;
+  saveForNextTime : FormControl;
+  email:FormControl;
+  address1:FormControl;
+  address2:FormControl;
+  activityStatus:FormControl;
+  country:FormControl;
+  state:FormControl;
+  zipCode:FormControl;
+  familyStatus:FormControl;
+  children:FormControl;
+}>;
+
+type FormRiskFactor = FormGroup<{
+  key : FormControl;
+  value: FormControl;
+  isSelected: FormControl;
+  subRiskFactor : FormArray<FormSubRiskFactor>;
+}>;
+
+type FormSubRiskFactor = FormGroup<{
+  key : FormControl;
+  value: FormControl;
+  isSelected: FormControl;
+}>
+
+type FormTest = FormGroup<{
+  code : FormControl;
+  description : FormControl;
+  language :  FormControl;
+  typeTest : FormControl;
+}>
+
+type FormHistory = FormGroup<{
+  date  : FormControl;
+  status  : FormControl;
+  registerId : FormControl;
+}>
+
+type Form = FormGroup<{
+    patients :  FormArray<FormPatient>;
+    // patientId :  FormControl;
+    tests:FormArray<FormTest>
+    familyMedicalHistory : FormArray<FormRiskFactor>;
+    personalMedicalHistory: FormArray<FormRiskFactor>;
+    disease: FormArray<FormRiskFactor>;
+    allergy: FormArray<FormRiskFactor>;
+    histories: FormArray<FormHistory>;
+}>
 
 @Component({
   selector: 'app-register-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, WizardHeaderComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule,WizardHeaderComponent],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class RegisterFormComponent implements OnInit {
+  // registerForm!: FormGroup;
   items: Item[] = [];
   activities: Activity[] = [];
   habits: Smoking[] = [];
   cardio: Item[] = [];
-  allergySymptoms: Symptom[] = [];
+  // allergySymptoms: Symptom[] = [];
   stepNumber: number = 1;
 
   steps: wizardStepType[] = [
@@ -90,6 +154,72 @@ export class RegisterFormComponent implements OnInit {
     },
   ];
 
+  // The Form
+ fb = inject(NonNullableFormBuilder);
+ registerForm: Form = this.fb.group({
+    patients : this.fb.array<FormPatient>([this.generatePatient()]),
+    tests : this.fb.array<FormTest>([this.generateTest()]),
+    familyMedicalHistory: this.fb.array<FormRiskFactor>([this.generateRiskFactor()]),
+    personalMedicalHistory: this.fb.array<FormRiskFactor>([this.generateRiskFactor()]),
+    disease: this.fb.array<FormRiskFactor>([this.generateRiskFactor()]),
+    allergy: this.fb.array<FormRiskFactor>([this.generateRiskFactor()]),
+    histories: this.fb.array<FormHistory>([this.generateHistory()]),
+  });
+ fba= inject(NonNullableFormBuilder);
+ 
+  // Generate
+  generatePatient(): FormPatient {
+    return this.fb.group({
+    firstName: '',
+    lastName: '',
+    datOfBirth : new Date(),
+    identity : '',
+    cnam: 0,
+    assurance: '',
+    gender: 0,
+    height : 0,
+    weight :0,
+    addressIsRegisterations : 0,
+    saveForNextTime : 0,
+    email: '',
+    address1:'',
+    address2:'',
+    activityStatus:0,
+    country:0,
+    state:'',
+    zipCode:0,
+    familyStatus:0,
+    children:0
+    });
+  }
+ 
+  generateTest():FormTest{
+    return this.fb.group({
+    code : '',
+    description :'',
+    language : 0,
+    typeTest : 0,
+    })
+  }
+
+  generateRiskFactor():FormRiskFactor{
+    return this.fb.group({
+      key :'',
+      value :'',
+      isSelected:0,
+      subRiskFactor : this.fb.array<FormSubRiskFactor>([])
+      
+    })
+  }
+
+  generateHistory():FormHistory{
+    return this.fb.group({
+      date : new Date(),
+    status : 0,
+    registerId : ''
+    })
+  }
+///
   ngOnInit(): void {
     // Load activities
     this.loadActivities();
@@ -101,6 +231,22 @@ export class RegisterFormComponent implements OnInit {
     this.loadItems();
     // Load typesOfAllergies
     this.loadAllergySymptoms();
+  }
+
+  Register: register | any;
+  onSubmit() {
+    console.log('test',this.registerForm);
+    
+  }
+
+  tryParseNumber(input: string): number {
+    try {
+      let result = parseInt(input);
+      if (isNaN(result)) return 0;
+      return result;
+    } catch (error) {
+      return 0;
+    }
   }
 
   SwitchToStep(number: number) {
@@ -490,7 +636,8 @@ export class RegisterFormComponent implements OnInit {
     console.log('Checkbox changed:', event.target.checked, child.name);
   }
 
-  constructor(private _formBuilder: FormBuilder) {}
+  constructor(private _formBuilder: FormBuilder,public registrationService: RegistrationService,
+    private router: Router) {}
 
   // Region wizard
   currentStep: number = 1; // Initialize current step to 1
