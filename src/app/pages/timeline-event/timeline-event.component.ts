@@ -17,6 +17,9 @@ export class GanttChartComponent implements AfterViewInit {
   constructor(private bacPatientService: BacPatientService) { }
   ngAfterViewInit(): void {
 
+    this.dataList = [];
+    this.dataList = this.bacPatientService.getData(this.dataSource);
+
     this.getUniqueRooms();
   }
   isCurrentHour(hour: string): boolean {

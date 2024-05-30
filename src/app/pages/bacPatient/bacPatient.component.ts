@@ -120,6 +120,7 @@ export class BacPatientComponent implements AfterViewInit {
 
 
   }
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -137,48 +138,52 @@ export class BacPatientComponent implements AfterViewInit {
     }
     return age;
   }
-  handleCheckBoxClick(eventData: Dispense[]) {
+  handleCheckBoxClick( elementindex: number) {
+    console.log('Element Index:', elementindex);
+
     let allBeforeMealChecked = true;
     let allAfterMealChecked = true;
     let oneCheckBoxIsClicked = false;
-  
-    this.dataSource.data.forEach(bacPatient => {
-      // Reset servedCount for each bacPatient
-      this.servedCount = 0;
-  
-      bacPatient.prescription.posologies.forEach(posology => {
-        posology.dispenses.forEach(dispense => {
-          if (dispense.beforeMeal && dispense.beforeMeal.isValid) {
-            this.servedCount += parseInt(dispense.beforeMeal.quantity, 10) || 0;
-          } else {
-            allBeforeMealChecked = false;
-            oneCheckBoxIsClicked = true;
-          }
-  
-          if (dispense.afterMeal && dispense.afterMeal.isValid) {
-            this.servedCount += parseInt(dispense.afterMeal.quantity, 10) || 0;
-          } else {
-            allAfterMealChecked = false;
-            oneCheckBoxIsClicked = true;
-          }
-        });
+
+    // Access the specific bacPatient using the index
+    let bacPatient = this.dataSource.data[elementindex];
+    let servedCount = 0;
+
+    bacPatient.prescription.posologies.forEach(posology => {
+      posology.dispenses.forEach(dispense => {
+        if (dispense.beforeMeal && dispense.beforeMeal.isValid) {
+          servedCount += parseInt(dispense.beforeMeal.quantity, 10) || 0;
+        } else {
+          allBeforeMealChecked = false;
+          oneCheckBoxIsClicked = true;
+        }
+
+        if (dispense.afterMeal && dispense.afterMeal.isValid) {
+          servedCount += parseInt(dispense.afterMeal.quantity, 10) || 0;
+        } else {
+          allAfterMealChecked = false;
+          oneCheckBoxIsClicked = true;
+        }
       });
-  
-      if (allBeforeMealChecked && allAfterMealChecked) {
-        bacPatient.status = 2;
-      } else if (oneCheckBoxIsClicked) {
-        bacPatient.status = 1;
-      } else {
-        bacPatient.status = 0;
-      }
-  
-      bacPatient.served = this.servedCount;
+    });
+
+    if (allBeforeMealChecked && allAfterMealChecked) {
+      bacPatient.status = 2;
+    } else if (oneCheckBoxIsClicked) {
+      bacPatient.status = 1;
+    } else {
+      bacPatient.status = 0;
+    }
+
+    bacPatient.served = servedCount;
+
+   
       this.bacPatientService.updateBacPatient(bacPatient);
   
       // Reset flags for the next bacPatient
       allBeforeMealChecked = true;
       allAfterMealChecked = true;
-    });
+    
   }
   
 
