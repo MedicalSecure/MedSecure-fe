@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import {  Patient, RegistrationResponse, register } from '../../model/Registration';
+import { PatientDto, RegisterDto, RegistrationResponse } from '../../model/Registration';
 import { MatPaginator } from '@angular/material/paginator';
 import { ELEMENT_DATA } from '../../pages/register/register.component';
 import { Observable, catchError, map } from 'rxjs';
@@ -14,7 +14,7 @@ export class RegistrationService {
   // Register component
 
   constructor(private http: HttpClient) { }
-  getData( dataSource :  MatTableDataSource<register, MatPaginator> ) {
+  getData( dataSource :  MatTableDataSource<RegisterDto, MatPaginator> ) {
     this.http.get<RegistrationResponse>('http://localhost:5010/registers')
       .subscribe(
         (response: RegistrationResponse) => {
@@ -46,8 +46,8 @@ export class RegistrationService {
 
    }
 
-   createPatient(patient: Patient): Observable<any> {
-    return this.http.post<Patient>('http://localhost:5010/registers', patient)
+   createPatient(patient: PatientDto): Observable<any> {
+    return this.http.post<PatientDto>('http://localhost:5010/registers', patient)
       .pipe(
         map(response => {
           console.log(patient);
@@ -60,8 +60,8 @@ export class RegistrationService {
         })
       );
   }
-   createRegistration(regsiterr: register): Observable<any> {
-    return this.http.post<register>('http://localhost:5010/registers', regsiterr)
+   createRegistration(regsiterr: RegisterDto): Observable<any> {
+    return this.http.post<RegisterDto>('http://localhost:5010/registers', regsiterr)
       .pipe(
         map(response => {
           console.log('Registration created:', response);
@@ -76,7 +76,7 @@ export class RegistrationService {
 
   // register form
 
-  postRegister(registerr: register): Observable<any> {
+  postRegister(registerr: RegisterDto): Observable<any> {
     const formData = { "register": registerr };
     const url = 'http://localhost:5010/registers';
     return this.http.post<any>(url, formData);

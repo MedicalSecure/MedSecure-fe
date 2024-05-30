@@ -26,7 +26,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { ScheduleComponent } from '../../components/schedule/schedule.component';
-import { register } from './../../model/Registration';
+import { RegisterDto } from './../../model/Registration';
 
 export interface PeriodicElement {
   name: string;
@@ -36,7 +36,7 @@ export interface PeriodicElement {
   status: string; 
 }
 
-export let ELEMENT_DATA: register[] = [
+export let ELEMENT_DATA: RegisterDto[] = [
  /*  { MRN: 'A123456789', name: 'Haide', dateOfBirth: new Date('1987-04-13'), registerDate: new Date(), status: "Out" },
   { MRN: 'B234567890', name: 'Helen', dateOfBirth: new Date('1964-03-22'), registerDate: new Date(), status: "Resident" },
   { MRN: 'C345678901', name: 'Liam', dateOfBirth: new Date('2017-08-05'), registerDate: new Date(), status: "Out" },
@@ -48,7 +48,6 @@ export let ELEMENT_DATA: register[] = [
   { MRN: 'I901234567', name: 'Florence', dateOfBirth: new Date('1977-10-03'), registerDate: new Date(), status: "Out" },
   { MRN: 'J012345678', name: 'Neon', dateOfBirth: new Date('2003-07-17'), registerDate: new Date(), status: "Resident" } */
 ];
-export {register};
 
 @Component({
   standalone: true,
@@ -94,13 +93,13 @@ export class RegisterViewComponent implements AfterViewInit {
     this.todayDate = selectedDate;
     this.today.setDate(new Date(selectedDate).getDate());
     this.dataSource.data = ELEMENT_DATA.filter(
-      (item) => new Date(item.createdAt).getDate() === this.today.getDate()
+      (item) => new Date(item.createdAt  ?? new Date()).getDate() === this.today.getDate()
     );
   }
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(
       (item) =>
-        new Date(item.createdAt).getDate() === this.today.getDate() - 1
+        new Date(item.createdAt ?? new Date()).getDate() === this.today.getDate() - 1
     );
     this.today.setDate(this.today.getDate() - 1);
     this.todayDate = this.today.toLocaleDateString();
@@ -109,7 +108,7 @@ export class RegisterViewComponent implements AfterViewInit {
   onRightButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(
       (item) =>
-        new Date(item.createdAt).getDate() === this.today.getDate() + 1
+        new Date(item.createdAt  ?? new Date()).getDate() === this.today.getDate() + 1
     );
     this.today.setDate(this.today.getDate() + 1);
     this.todayDate = this.today.toLocaleDateString();

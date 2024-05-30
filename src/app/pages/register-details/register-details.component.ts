@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { NgxMasonryOptions } from 'ngx-masonry';
 import { Router, RouterModule } from '@angular/router';
 import { RegistrationService } from '../../services/registration/registration.service';
-import { register } from './../../model/Registration';
+import { RegisterDto } from './../../model/Registration';
 import { MatTableDataSource } from '@angular/material/table';
 
 interface MasonryItem {
@@ -13,10 +13,7 @@ interface MasonryItem {
   content: string;
 }
 
-
-export let ELEMENT_DATA: register[] = [];
- export {register};
-
+export let ELEMENT_DATA: RegisterDto[] = [];
 @Component({
   selector: 'app-register-details',
   standalone: true,
