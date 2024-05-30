@@ -99,13 +99,12 @@ export class RegisterFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.stp1FormGroup.getRawValue());
-    console.log(this.allergyForm.get('selectedSymptoms')?.getRawValue());
-    console.log(this.step3PersonalMedicalHistoryItems);
-    console.log(this.step4FamilyMedHistItems);
-    debugger;
+    //console.log(this.stp1FormGroup.getRawValue());
+    //console.log(this.allergyForm.get('selectedSymptoms')?.getRawValue());
+    //console.log(this.step3PersonalMedicalHistoryItems);
+    //console.log(this.step4FamilyMedHistItems);
     let x =this.getRegisterObject()
-    console.log(x);
+    console.log(JSON.stringify(x));
     
   }
 
@@ -150,8 +149,7 @@ export class RegisterFormComponent implements OnInit {
   getAllergies(): RiskFactorDto[] {
     let data = this.allergyForm.getRawValue().selectedSymptoms;
     let result: RiskFactorDto[] = [];
-    debugger;
-/*  data = 
+/*  the form of data object : 
     [
       [idSym1,null,idSelectedSym2], (g1)
       [idSym1,null,idSelectedSym2], (g2)
@@ -321,8 +319,6 @@ export class RegisterFormComponent implements OnInit {
     }
   }
   onItemChange(event: any, child: Child): void {
-    // Handle checkbox change logic
-    //console.log('Checkbox changed:', event.target.checked, child.name);
     child.checked = event.target.checked;
   }
   //******************* END STEP 3 & STEP4 ***********************************************************************
