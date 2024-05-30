@@ -6,19 +6,19 @@ import { PrescriptionService } from '../../../services/prescription/prescription
 import { CommonModule } from '@angular/common';
 import {RendementPrescriptionComponent} from '../../../components/widgets/rendement-prescription/rendement-prescription.component';
 import {MedicationsPrescribedComponent} from '../../../components/widgets/medications-prescribed/medications-prescribed.component';
-import { Patients } from '../../../model/patients';
 import { ActivitiesComponent } from '../../../components/activities/activities.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LeaveReportComponent } from '../../../components/leave-report/leave-report.component';
 import { ToDoComponent } from '../../../components/to-do/to-do.component';
 import { RecommendedMedicationsComponent } from '../../../components/widgets/recommended-medications/recommended-medications.component';
 import introJs from 'intro.js';
+import { TopUrgencyCasesComponent } from '../../../components/top-urgency-cases/top-urgency-cases.component';
 
 @Component({
   selector: 'app-dashboard-doctor',
   standalone: true,
   imports: [CommonModule,RendementPrescriptionComponent,LeaveReportComponent,ToDoComponent,
-    MedicationsPrescribedComponent,ActivitiesComponent,RecommendedMedicationsComponent ,NgxPaginationModule],
+    MedicationsPrescribedComponent,ActivitiesComponent,RecommendedMedicationsComponent ,NgxPaginationModule,TopUrgencyCasesComponent],
   templateUrl: './dashboard-doctor.component.html',
   styleUrl: './dashboard-doctor.component.css'
 })
@@ -35,7 +35,6 @@ export class DashboardDoctorComponent {
   totalPrescriptionCount:number =0;
   PatientPrescribedcount:number=0;
   page: number = 1;
-  topUrgencyPatients: Patients[] = [];
   constructor(public visitService: VisitService,
     private patientService: PatientService,
     private unitCareService: UnitCareService,
@@ -52,7 +51,6 @@ export class DashboardDoctorComponent {
     this.GetInValidPrescription()
     this.GetTotalPrescription()
     this.GetPatientPrescribed()
-    this.GetTopUrgencyPatient()
     this.startIntro()
   }
 
@@ -114,17 +112,6 @@ export class DashboardDoctorComponent {
       this.prescriptions = data;
     });
    }
-
-   GetTopUrgencyPatient(): void {
-    this.patientService.getTopUrgencyPatients().subscribe(
-      (patients: Patients[]) => {
-        this.topUrgencyPatients = patients;
-      },
-      error => {
-        console.error('Error fetching top urgency patients:', error);
-      }
-    );
-  }
 
 
   GetPatientPrescribed():void{

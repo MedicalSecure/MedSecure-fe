@@ -4,12 +4,15 @@ import { BacPatientService } from '../../../services/bacPatient/bac-patient-serv
 import { ELEMENT_DATA, bacpatient } from '../../bacPatient/bacPatient.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MultiSenseWidgetComponent } from '../../../components/widgets/multisense-widget/multisense-widget.component';
-
+import { WidgetsAllDataComponent } from '../../../components/list-widget/widgets-all-data/widgets-all-data.component';
+import { LeaveReportComponent } from '../../../components/leave-report/leave-report.component';
+import { TaskComponent } from '../../../components/task/task.component';
+import { TopUrgencyCasesComponent } from '../../../components/top-urgency-cases/top-urgency-cases.component';
 
 @Component({
   selector: 'app-nurse-dashboard',
   standalone: true,
-  imports: [ActivitiesComponent ,  MultiSenseWidgetComponent],
+  imports: [ActivitiesComponent ,  MultiSenseWidgetComponent ,WidgetsAllDataComponent,LeaveReportComponent,TaskComponent ,TopUrgencyCasesComponent],
   templateUrl: './nurse-dashboard.component.html',
   styleUrl: './nurse-dashboard.component.css'
 })
