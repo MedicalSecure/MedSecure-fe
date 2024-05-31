@@ -7,8 +7,9 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RegistrationService } from '../../../services/registration/registration.service';
 import { RegisterDto } from '../../../model/Registration';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { calculateAge, getDateString } from '../../../shared/utilityFunctions';
-import { ActivityStatus, Gender, RegisterStatus } from '../../../enums/enum';
+import { calculateAge, getDateString, getRegistrationStatus } from '../../../shared/utilityFunctions';
+import { ActivityStatus, Gender, HistoryStatus, RegisterStatus } from '../../../enums/enum';
+import { MatChip } from '@angular/material/chips';
 
 interface MasonryItem {
   title: string;
@@ -19,7 +20,7 @@ export let ELEMENT_DATA: RegisterDto[] = [];
 @Component({
   selector: 'app-register-details',
   standalone: true,
-  imports: [CommonModule, NgxMasonryModule, MatCardModule, RouterModule,MatProgressSpinnerModule],
+  imports: [CommonModule, NgxMasonryModule, MatCardModule, RouterModule,MatProgressSpinnerModule,MatChip],
   templateUrl: './register-details.component.html',
   styleUrl: './register-details.component.css',
 })
@@ -33,6 +34,7 @@ export class MasonryDpiComponent {
   registrationData:RegisterDto|undefined;
   isPageLoading=true;
   isArchived=true;
+  currentStatus:HistoryStatus=HistoryStatus.Out;
 
   // sample data for cards
   constructor(
@@ -52,11 +54,16 @@ export class MasonryDpiComponent {
         this.isPageLoading=false;
         let isActive= this.registrationData?.status === RegisterStatus.Active;
         this.isArchived = !isActive;
+        this.currentStatus = this.getPatientStatus();
       } catch (error) {
         console.error("cant parse register to view, please check the link, did you come from the right page ?")
         //show error here TODO
       }
     }
+  }
+
+  onClickOutHandler(){
+    //TODO
   }
 
   getRegisterStatus( status: RegisterStatus | undefined | null):string{
@@ -70,6 +77,11 @@ export class MasonryDpiComponent {
   getDateString(date:Date,format:string){
     return getDateString(date,format)
   }
+
+  getPatientStatus():HistoryStatus{
+    let elementStatusFromHistory=getRegistrationStatus(this.registrationData?.history,this.registrationData?.id ?? 'not-provided')
+    return elementStatusFromHistory;
+  } 
 
   get(prop:any):string{
     if(this.isArchived) return "*ARCHIVED*"
