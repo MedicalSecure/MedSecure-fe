@@ -29,13 +29,14 @@
             </a>
           </div>
         </div>
-        @if(isPageLoading){
-          <div class="wizard-container" style="height: 490px; overflow-y: auto" >
-            <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
-          </div>
-        }
+
+        <div class="wizard-container {{!isPageLoading && 'd-none'}}" style="height: 490px; overflow-y: auto" >
+          <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
+        </div>
+        
         <div class="table-responsive mt-1 {{isPageLoading && 'd-none'}}">
           <ngx-masonry [options]="masonryOptions">
+          <!-- START MASONRY ********************************  -->
             
             <!-- Patient info -->
             <div ngxMasonryItem class="card masonry-item">
@@ -57,19 +58,6 @@
                     <p [className]="getRegisterStatus(registrationData?.status) == 'Active' ? 'text-success':'text-danger'"> <strong>{{ getRegisterStatus(registrationData?.status) }}</strong></p>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <!-- Allergy -->
-            <div ngxMasonryItem class="card masonry-item">
-              <div class="card-body">
-                <h5 class="card-title"><strong> Allergies</strong></h5>
-                <div class="card-text">
-                  <ul>
-                    <li>Drug allergy:</li>
-                    <li>Latex allergy:</li>
-                </ul>
-              </div>
               </div>
             </div>
 
@@ -111,6 +99,23 @@
               </div>
             </div>
 
+            <!-- Allergies -->
+            <div ngxMasonryItem class="card masonry-item">
+              <div class="card-body">
+                <h5 class="card-title"><strong> Allergies</strong></h5>
+                <div class="card-text">
+                  <ng-container *ngFor="let allergyGroup of registrationData?.allergies">
+                    <h6><i class="{{ allergyGroup.icon }}"></i>{{" "+ allergyGroup.key }}</h6>
+                    <ul>
+                      <li class="text-primary"  *ngFor="let allergy of allergyGroup.subRiskFactor" >
+                        <p>{{allergy.value}}</p>
+                      </li>                   
+                    </ul>
+                  </ng-container>
+              </div>
+              </div>
+            </div>
+
             <!-- HISTORY -->
             <div ngxMasonryItem class="card masonry-item">
               <div class="card-body">
@@ -127,23 +132,8 @@
               </div>
             </div>
 
-            <!-- Allergy -->
-            <div ngxMasonryItem class="card masonry-item">
-              <div class="card-body">
-                <h5 class="card-title"><strong> History</strong></h5>
-                <div class="card-text">
-                  <ul>
-                    <li class="text-primary" *ngFor="let item of getHistoryMappedByDate()">
-                      <p *ngIf="item.status==0">Resident on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
-                      <p *ngIf="item.status==1">Out on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
-                      <p *ngIf="item.status==2">Registred on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
-                    </li>                   
-                  </ul>
-              </div>
-              </div>
-            </div>
-
-            
+          
+          <!-- END MASONRY ********************************  -->
           </ngx-masonry>
         </div>
       </div>
