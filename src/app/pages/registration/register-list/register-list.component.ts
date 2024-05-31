@@ -71,9 +71,6 @@ export class RegisterViewComponent {
   fetchedData:RegisterDto[]=[]
   dataSource = new MatTableDataSource<RegisterDto>(this.fetchedData);
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('picker') picker: MatDatepicker<Date>;
-
   changeDate(selectedDate: string) {
     this.selectedDate = new Date(selectedDate);
     let newSelectedDate= this.selectedDate.getDate();

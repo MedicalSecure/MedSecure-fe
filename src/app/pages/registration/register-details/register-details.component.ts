@@ -6,7 +6,7 @@ import { NgxMasonryOptions } from 'ngx-masonry';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RegistrationService } from '../../../services/registration/registration.service';
 import { RegisterDto } from '../../../model/Registration';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface MasonryItem {
   title: string;
@@ -17,7 +17,7 @@ export let ELEMENT_DATA: RegisterDto[] = [];
 @Component({
   selector: 'app-register-details',
   standalone: true,
-  imports: [CommonModule, NgxMasonryModule, MatCardModule, RouterModule],
+  imports: [CommonModule, NgxMasonryModule, MatCardModule, RouterModule,MatProgressSpinnerModule],
   templateUrl: './register-details.component.html',
   styleUrl: './register-details.component.css',
 })
@@ -28,6 +28,8 @@ export class MasonryDpiComponent {
     horizontalOrder: true,
   };
   cards=_cards;
+  registrationData:RegisterDto|undefined;
+  isPageLoading=true;
 
   // sample data for cards
   constructor(
@@ -36,7 +38,21 @@ export class MasonryDpiComponent {
     private service: RegistrationService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    //GET DATA FROM ROUTE
+    let dataJson=this.route.snapshot.paramMap.get('registrationDataInRoute');
+    let minimumLogicalJsonLength=40 //characters
+    if(dataJson && dataJson.length > minimumLogicalJsonLength)
+      {
+        try {
+          this.registrationData = JSON.parse(dataJson);
+          this.isPageLoading=false;
+        } catch (error) {
+          console.error("cant parse register to view, please check the link, did you come from the right page ?")
+          //show error here TODO
+        }
+      }
+  }
 
   
 }
