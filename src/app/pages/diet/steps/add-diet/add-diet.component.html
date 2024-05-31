@@ -1,70 +1,60 @@
 <div class="card-body">
-  <form [formGroup]="DietForm" style="margin-top: 5%;" class="form-container">
-    <div class="row" style="display: flex; flex-wrap: wrap;">
-      <div class="col-md-6 col-lg-4 mb-3">
-        <h4 class="card-title" style="margin-top: 15px">
+  <form [formGroup]="DietForm" class="form-container mt-3">
+    <div class="row">
+      <div class="col-12">
+        <h4 class="card-title mt-3">
           Add New Meal
         </h4>
+      </div>
+      <div class="col-12">
         <div formArrayName="meals">
-          @for ( meal of DietForm.controls.meals.controls; track meal ; let mealIndex = $index ) {
-          <div class="question" [formGroupName]="mealIndex" style="width: 150%;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              @for ( type of MealType; track type) {
-              <label style="display: flex; align-items: center;">
-                <input class="form-check-input" type="radio" [name]="'mealType_' + mealIndex" style="margin-right: 2%;"
-                  [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
-                  (change)="onMealTypeChange($event, mealIndex)"
-                  [checked]="DietForm.controls.meals.at(mealIndex).value.type === type" required />
+          @for (meal of DietForm.controls.meals.controls; track meal; let mealIndex = $index) {
+          <div class="question mb-4" [formGroupName]="mealIndex">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              @for (type of MealType; track type) {
+              <label class="d-flex align-items-center me-3">
+                <input class="form-check-input me-2" type="radio" [name]="'mealType_' + mealIndex" [id]="'mealType_' + mealIndex + '_' + type" [value]="type" (change)="onMealTypeChange($event, mealIndex)" [checked]="DietForm.controls.meals.at(mealIndex).value.type === type" required />
                 {{ type }}
               </label>
               }
             </div>
-            <app-comment [note]="liststring" style="margin-left: -5%;"></app-comment>
-            <div formArrayName="foods" class="answers" style="margin-top: -2%;">
-              @for ( food of meal.controls.foods.controls; track food ;let FoodIndex = $index) {
-             
+            <app-comment [note]="liststring" class="ms-3"></app-comment>
+            <div formArrayName="foods" class="answers mt-3">
+              @for (food of meal.controls.foods.controls; track food; let FoodIndex = $index) {
               <div class="d-flex flex-wrap">
-                @for ( option of FoodOptions; track $index) {
+                @for (option of FoodOptions; track $index) {
                 <div class="form-check form-check-inline">
                   <mat-chip-set aria-label="Food selection">
                     <mat-chip-option color="primary" (click)="chipSelected(option, mealIndex, FoodIndex)" [disabled]="isChipDisabled(mealIndex, FoodIndex)">{{option}}</mat-chip-option>
                   </mat-chip-set>
-                 </div>
-                  }
-               
+                </div>
+                }
               </div>
-             
               <div class="invalid-feedback">
                 Please select a Food.
               </div>
-              <div style="display: flex; align-items: center; margin-top: 5%;">
-                <mat-form-field style="margin-left: 1%; width: 170%;">
-                  
-                    <select matNativeControl required style="width: 120%; height: 100%; background-color: transparent;">
-                      @for (food of FoodList[mealIndex][FoodIndex]; track food) {
-                      <option style="width: 170%; height: max-content;" mat-menu-item  value="food">{{food}}</option>
-                      }
-                    </select>
-                
+              <div class="d-flex align-items-center mt-3">
+                <mat-form-field class="me-2 flex-grow-1">
+                  <select matNativeControl required class="w-100">
+                    @for (food of FoodList[mealIndex][FoodIndex]; track food) {
+                    <option mat-menu-item value="food">{{food}}</option>
+                    }
+                  </select>
                 </mat-form-field>
-                <div class="icon-button" (click)="removeFood(mealIndex, FoodIndex)"
-                  style="background-color: transparent; margin-left: 1%; border-color: transparent; cursor: pointer; margin-left: 5%;">
-                  <i class="fas fa-trash" style="height: 50px; width: 50px; "></i>
+                <div class="icon-button" (click)="removeFood(mealIndex, FoodIndex)" style="cursor: pointer;">
+                  <i class="fas fa-trash" style="font-size: 1.5rem;"></i>
                 </div>
-                </div>
-              
-              } 
-              <button type="button" class="btn btn-primary" (click)="addFood(mealIndex)"  [disabled]="!isMealTypeSelected(mealIndex)"
-              style="margin-top: 5%; color: white; margin-left: 75%;">
-              Add Food
-            </button>
+              </div>
+              }
+              <button type="button" class="btn btn-primary mt-3" (click)="addFood(mealIndex)" [disabled]="!isMealTypeSelected(mealIndex)">
+                Add Food
+              </button>
             </div>
           </div>
-
           }
         </div>
         <div class="add-question">
-          <button type="button" style="color: white;" class="btn btn-primary" (click)="addMeal()">Add meal</button>
+          <button type="button" class="btn btn-primary" (click)="addMeal()">Add meal</button>
         </div>
       </div>
     </div>

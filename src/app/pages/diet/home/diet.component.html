@@ -6,7 +6,7 @@
                     <!-- Tools bar (report issue, forward ...) -->
                     <div class="d-sm-flex justify-content-between align-items-start">
                         <div>
-                            <h4 class="card-title card-title-dash">Prescription</h4>
+                            <h4 class="card-title card-title-dash">Diets</h4>
                         </div>
 
                         <div class="btn-wrapper">
@@ -29,12 +29,10 @@
                         [currentStep]="stepNumber" [size]="3" [IconSizeRatio]="0.5"></app-wizard-header>
                     <div class="wizard-container" style="height: 490px; overflow-y: auto">
                         <div [className]="stepNumber != 1 && 'd-none'">
-                           
+                           <app-prescription-list></app-prescription-list>
                         </div>
+                       
                         <div *ngIf="stepNumber === 2 ">
-                            
-                         </div>
-                        <div *ngIf="stepNumber === 3 ">
                            <app-add-diet></app-add-diet>
                            
                         </div>

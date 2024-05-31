@@ -1,0 +1,57 @@
+
+  <!-- content -->
+  <div class="wizard-container" style="height: 490px; overflow-y: auto">
+    <!-- If no prescription is selected: Search + table part -->
+    <div [className]="selectedPrescription != undefined && 'd-none'">
+      <!-- Search prescription -->
+      <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
+        <input type="text" class="form-control form-control-sm" name="" id="" aria-describedby="helpId" [(ngModel)]="searchTerm" placeholder="Enter Id or Patient Name" />
+        <input name="" id="" class="btn btn-outline-primary" type="button" value="Search" />
+      </div>
+      <!-- Search result : Table of prescriptions -->
+      <table class="table table-responsive">
+        <thead>
+          <tr id="table-head-row">
+            <th class="col-3" style="text-align: center;">Patient Name</th>
+            <th class="col-2" style="text-align: center;">Doctor Name</th>
+            <th class="col-2" style="text-align: center;">Prescription Date</th>
+            <th class="col-1" style="text-align: center;">Diet Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of dataList | filterPatientByNameAndSn: searchTerm" (click)="onClickPrescription(data)" [class]="data === selectedPrescription ? 'table-primary' : ''">
+            <td class="col-3" style="text-align: center;">{{ data.sn }}</td>
+            <td class="col-3" style="text-align: center;">{{ data.name }}</td>
+            <td class="col-2" style="text-align: center;">{{ data.name }}</td>
+            <td class="col-2" style="text-align: center;">
+              {{ ("0" + data.registrationDate.getHours()).slice(-2) + ":" + ("0" + data.registrationDate.getMinutes()).slice(-2) }}
+            </td>
+            <td class="col-1" style="text-align: center;">{{ data.type }}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+    </div>
+  
+    <!-- If one prescription is selected:display result -->
+    @if (selectedPrescription) {
+      <!-- Print a single line displaying Prescription id | Date | Patient name | doctor name And Deselect Button -->
+      <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
+        <p class="align-self-center m-0">Selected Prescription :</p>
+        <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.sn }} | {{ selectedPrescription.name }} - {{ selectedPrescription.age }} years</span>
+        <mat-icon class="align-self-center" (click)="onClickPrescription(undefined)">close</mat-icon>
+      </div>
+      
+        
+        <div style="display: table; height: 200px;">
+          <div style="display: table-cell; vertical-align: left;">
+            <app-add-diet></app-add-diet>
+                       </div>
+          <div style="display: table-cell; vertical-align: right;">
+             <app-patient-detail></app-patient-detail>
+          </div>
+        </div>
+  
+    }
+  </div>
+  

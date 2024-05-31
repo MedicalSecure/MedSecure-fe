@@ -1,50 +1,54 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { medicationType } from '../../../../types';
 
 @Component({
-  selector: 'app-card',
+  selector: 'app-card-medication',
   standalone: true,
-  imports: [CommonModule 
-  ],
+  imports: [MatIcon, CommonModule],
   templateUrl: './card.component.html',
-  styleUrl: './card.component.css'
+  styleUrl: './card.component.css',
 })
 export class CardComponent {
-  FoodOptions: string[] = ['Drink', 'Main Dish', 'Dessert', 'Starter'];
-  StarterList = ['Soup', 'Salad', 'Bruschetta', 'Garlic Bread', 'Spring Rolls', 'Stuffed Mushrooms', 'Nachos'];
-  MainDishList = ['Pizza', 'Burger', 'Pasta', 'Steak', 'Grilled Chicken', 'Fish and Chips', 'Tacos', 'Sushi', 'BBQ Ribs', 'Lasagna'];
-  DessertList = ['Cake', 'Ice Cream', 'Pie', 'Brownies', 'Cheesecake', 'Pudding', 'Mousse', 'Cookies', 'Tiramisu', 'Macarons'];
-  DrinkList = ['Soda', 'Juice', 'Water', 'Coffee', 'Tea', 'Milkshake', 'Smoothie', 'Wine', 'Beer', 'Cocktail'];
-  @Input() cardId: number;
-  @Output() remove = new EventEmitter<number>();
-  @Output() add = new EventEmitter<void>();
-  constructor() {}
-  FoodList :string[] = [];
-  onOptionChange(selectedOption: string) {
-    switch (selectedOption) {
-      case 'Main Dish':
-        this.FoodList = this.MainDishList;
-        break;
-      case 'Dessert':
-        this.FoodList = this.DessertList;
-        break;
-      case 'Drink':
-        this.FoodList = this.DrinkList;
-        break;
-        case 'Starter':
-          this.FoodList = this.StarterList;
-          break;
-      default:
-        this.FoodList = ["please select food option"];
-    }
-  }
-  
+  @Input()
+  title: string = 'Current medications';
+  @Input()
+  medicationList: medicationType[] = [];
+  @Input()
+  primaryText: string | undefined;
+  @Input()
+  WarningText: string | undefined;
 
-  removeCard() {
-    this.remove.emit(this.cardId);
+  @Input()
+  containerClass: string = 'card mb-2 py-2';
+  @Input()
+  containerStyle: { [klass: string]: string } = { maxWidth: '25rem' };
+  @Input()
+  CardBodyClass: string = 'card-body pb-0 pt-3';
+  @Input()
+  CardTitleClass: string = 'card-title fs-6 mb-1';
+  @Input()
+  ULClass: string = 'list p-1 m-0 ps-3';
+  @Input()
+  TitleAndIconsClass: string =
+    'fw-bold fs-6 text-primary mb-0 d-flex justify-content-start align-middle align-items-center"';
+
+  @Input()
+  canDelete: boolean = false;
+  @Input()
+  canEdit: boolean = false;
+
+  getNewlyPrescribedMedicationSig(
+    medication: medicationType,
+  ): string | undefined {
+    let result;
+    const size = medication.administrationHours.length;
+    if (size > 1) result = size + ' times a day';
+    else if (size == 1) result = 'single time a day';
+    return result;
   }
 
-  addCard() {
-    this.add.emit();
-  }
+  onClickEditMedication($index: number, medication: medicationType) {}
+  onClickRemoveMedication($index: number, medication: medicationType) {}
 }

@@ -3,12 +3,13 @@ import { WizardHeaderComponent } from "../../../components/wizard-header/wizard-
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AddDietComponent } from "../steps/add-diet/add-diet.component";
+ import {PrescriptionListComponent} from"../steps/prescription-list/prescription-list.component"
 @Component({
     selector: 'app-diet',
     standalone: true,
     templateUrl: './diet.component.html',
     styleUrl: './diet.component.css',
-    imports: [WizardHeaderComponent , CommonModule ,RouterModule , AddDietComponent]
+    imports: [WizardHeaderComponent , CommonModule ,RouterModule , AddDietComponent , PrescriptionListComponent]
     
 })
 
@@ -28,12 +29,7 @@ export class DietComponent {
       matIconName: '',
       iconClass: 'fa fa-user-md',
     },
-    {
-      id: 3,
-      title: 'Add Meal',
-      matIconName: '',
-      iconClass: 'fa fa-utensils', 
-    }    
+       
   ];
     SwitchToStep(number: number) {
       
