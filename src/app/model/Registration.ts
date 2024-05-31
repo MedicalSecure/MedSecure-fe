@@ -53,7 +53,7 @@ export interface RegisterDto {
 
   export interface HistoryDto {
     id?: string | null;
-    date?: Date | null;
+    date: Date;
     status: HistoryStatus;
     registerId: string;
   }

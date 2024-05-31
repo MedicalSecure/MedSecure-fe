@@ -1,4 +1,4 @@
-import { RegistrationService } from './../../services/registration/registration.service';
+import { RegistrationService } from './../../../services/registration/registration.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import {
@@ -15,15 +15,15 @@ import { Router, RouterModule } from '@angular/router';
 import {
   WizardHeaderComponent,
   wizardStepType,
-} from '../../components/wizard-header/wizard-header.component';
+} from '../../../components/wizard-header/wizard-header.component';
 import {
   CreateRegisterRequest,
   PatientDto,
   RegisterDto,
   RiskFactorDto,
-} from '../../model/Registration';
-import { Children, FamilyStatus, Gender } from '../../enums/enum';
-import { Country } from '../../enums/country';
+} from '../../../model/Registration';
+import { Children, FamilyStatus, Gender } from '../../../enums/enum';
+import { Country } from '../../../enums/country';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Interfaces

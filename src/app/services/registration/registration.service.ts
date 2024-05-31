@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
@@ -7,10 +7,11 @@ import {
   GetRegistrationResponse,
   CreateRegisterRequest,
 } from '../../model/Registration';
-import { MatPaginator } from '@angular/material/paginator';
-import { ELEMENT_DATA } from '../../pages/register/register.component';
+
 import { Observable, catchError, map } from 'rxjs';
 import { CreatedResponse } from '../../types';
+import { getRegistrationStatus } from '../../shared/utilityFunctions';
+import { parseDates } from '../bacPatient/bac-patient-services.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,26 +21,32 @@ export class RegistrationService {
   url = 'http://localhost:5010/registers';
   constructor(private http: HttpClient) {}
 
-  
-  getData(dataSource: MatTableDataSource<RegisterDto, MatPaginator>) {
-    this.http
-      .get<GetRegistrationResponse>(this.url)
-      .subscribe(
-        (response: GetRegistrationResponse) => {
-          console.log('Response:', response);
-          if (response && response.registers.data) {
-            dataSource.data = response.registers.data;
-            response.registers.data.forEach((element) => {
-              console.log(element);
-              ELEMENT_DATA.push(element);
-            });
-          } else {
-            console.error('Invalid response format:', response);
-          }
-        },
-        (error) => {
-          console.error('Error fetching data:', error);
-        }
+  getRegistrations(
+    pageIndex: number = 0,
+    pageSize: number = 10,
+    maxRetries: number = 3,
+    retryDelayInMs: number = 1000,
+    displayErrorMessages: boolean = true
+  ): Observable<GetRegistrationResponse> {
+    const params = new HttpParams()
+      .set('PageIndex', pageIndex.toString())
+      .set('PageSize', pageSize.toString());
+
+/*     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
+      maxRetries,
+      retryDelayInMs,
+      displayErrorMessages
+    ); */
+
+    return this.http
+      .get<GetRegistrationResponse>(this.url, {
+        params: params,
+        //headers: interceptorHeaders,
+      })
+      .pipe(
+        map((response) => {
+          return parseDates(response);
+        })
       );
   }
 
