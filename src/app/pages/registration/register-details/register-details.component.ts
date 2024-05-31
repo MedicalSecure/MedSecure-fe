@@ -59,6 +59,11 @@ export class MasonryDpiComponent {
     }
   }
 
+  getRegisterStatus( status: RegisterStatus | undefined | null):string{
+    if(status == undefined || status == undefined) return "Active";
+    if(status==RegisterStatus.Active) return "Active"
+    return "Archived"
+  }
   getHistoryMappedByDate(){
     return this.registrationData?.history?.sort((a, b) => b.date.getTime() - a.date.getTime())
   }
@@ -77,7 +82,9 @@ export class MasonryDpiComponent {
     let x = calculateAge(bd).toString();
     return x + ' years';
   }
-  calculateBMI(weight: number, height: number): number {
+  getCalculatedBMI(weight: number|null|undefined, height: number|null|undefined): number | null {
+    if(weight == undefined || height == undefined) return null;
+    if(weight == null || height == null) return null;
      return calculateBMI(weight, height);
   }
   getActivityStatusString(status:undefined | null | ActivityStatus):null|string{
@@ -126,6 +133,8 @@ export function calculateBMI(weight: number, height: number): number {
     return -1;
   }
   let heightInMeters = height / 100;
-  return weight / (heightInMeters * heightInMeters);
+  let res= weight / (heightInMeters * heightInMeters);
+
+  return parseFloat(res.toFixed(2));
 }
 
