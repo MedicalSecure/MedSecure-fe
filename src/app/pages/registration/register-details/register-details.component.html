@@ -51,8 +51,8 @@
                     <p>Status:</p>
                   </div>
                   <div class="col-7">
-                    <p>{{ get(registrationData?.patient?.firstName) }}</p>
-                    <p>{{ get(registrationData?.patient?.lastName) }}</p>
+                    <p>{{ registrationData?.patient?.firstName }}</p>
+                    <p>{{ registrationData?.patient?.lastName }}</p>
                     <p>{{ get(getGender(registrationData?.patient?.gender)) }}</p>
                     <p>{{ get(getAge(registrationData?.patient?.dateOfBirth)) }}</p>
                     <p [className]="getRegisterStatus(registrationData?.status) == 'Active' ? 'text-success':'text-danger'"> <strong>{{ getRegisterStatus(registrationData?.status) }}</strong></p>
