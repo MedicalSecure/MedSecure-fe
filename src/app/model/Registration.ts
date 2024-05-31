@@ -1,14 +1,17 @@
 import { Country } from "../enums/country";
 import { Children, FamilyStatus, Gender, HistoryStatus, Language, RegisterStatus, TestType } from "../enums/enum";
+import { PaginatedResult } from "../types";
 
-export interface RegistrationResponse{
-    registers: {
-        pageIndex: number;
-        pageSize: number;
-        count: number;
-        data: RegisterDto[]
-    };
+export interface GetRegistrationResponse{
+  registers: PaginatedResult<RegisterDto>;
 }
+
+
+export type CreateRegisterRequest = {
+  register: RegisterDto;
+};
+
+
 
 export interface RegisterDto {
     id?: string | null;

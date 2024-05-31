@@ -16,9 +16,10 @@ import {
   WizardHeaderComponent,
   wizardStepType,
 } from '../../components/wizard-header/wizard-header.component';
-import { PatientDto, RegisterDto, RiskFactorDto } from '../../model/Registration';
+import { CreateRegisterRequest, PatientDto, RegisterDto, RiskFactorDto } from '../../model/Registration';
 import { Children, FamilyStatus, Gender } from '../../enums/enum';
 import { Country } from '../../enums/country';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Interfaces
 
@@ -77,6 +78,7 @@ interface FormPatient {
     RouterModule,
     ReactiveFormsModule,
     WizardHeaderComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css',
@@ -86,6 +88,8 @@ export class RegisterFormComponent implements OnInit {
   isFormValid = true;
   stepNumber: number = 1;
   steps: wizardStepType[] = wizardInitialSteps;
+  isPageLoading=true;
+  lastCreatedRegisterIdFromResponse:string|undefined;
 
   fb = inject(NonNullableFormBuilder);
 
@@ -96,6 +100,7 @@ export class RegisterFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.monitorFormValueChanges();
+    this.isPageLoading=false
   }
 
   onSubmit() {
@@ -103,13 +108,33 @@ export class RegisterFormComponent implements OnInit {
     //console.log(this.allergyForm.get('selectedSymptoms')?.getRawValue());
     //console.log(this.step3PersonalMedicalHistoryItems);
     //console.log(this.step4FamilyMedHistItems);
-    let x =this.getRegisterObject()
+    this.isPageLoading = true;
+    let newRegister =this.getRegisterObject()
 
-    let request={
-      register:x
+    let request:CreateRegisterRequest={
+      register:newRegister
     }
+
     console.log(JSON.stringify(request));
     
+
+    this.registrationService
+        .postRegister(request)
+        .subscribe(
+          (response) => {
+            debugger;
+            this.ResetWizard();
+            console.log(response);
+            this.lastCreatedRegisterIdFromResponse = response.id;
+            this.isPageLoading = false
+          },
+          (error) => {
+            console.error(error.error);
+            //this.displayNewErrorMessage(error.error.message); TODO LATER
+            this.isPageLoading = false
+          }
+        );
+
   }
 
   getPatientObject(): PatientDto {
