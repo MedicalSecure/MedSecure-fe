@@ -7,6 +7,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RegistrationService } from '../../../services/registration/registration.service';
 import { RegisterDto } from '../../../model/Registration';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { calculateAge, getDateString } from '../../../shared/utilityFunctions';
+import { ActivityStatus, Gender, RegisterStatus } from '../../../enums/enum';
 
 interface MasonryItem {
   title: string;
@@ -30,6 +32,7 @@ export class MasonryDpiComponent {
   cards=_cards;
   registrationData:RegisterDto|undefined;
   isPageLoading=true;
+  isArchived=true;
 
   // sample data for cards
   constructor(
@@ -43,17 +46,70 @@ export class MasonryDpiComponent {
     let dataJson=this.route.snapshot.paramMap.get('registrationDataInRoute');
     let minimumLogicalJsonLength=40 //characters
     if(dataJson && dataJson.length > minimumLogicalJsonLength)
-      {
-        try {
-          this.registrationData = JSON.parse(dataJson);
-          this.isPageLoading=false;
-        } catch (error) {
-          console.error("cant parse register to view, please check the link, did you come from the right page ?")
-          //show error here TODO
-        }
+    {
+      try {
+        this.registrationData = JSON.parse(dataJson);
+        this.isPageLoading=false;
+        let isActive= this.registrationData?.status === RegisterStatus.Active;
+        this.isArchived = !isActive;
+      } catch (error) {
+        console.error("cant parse register to view, please check the link, did you come from the right page ?")
+        //show error here TODO
       }
+    }
   }
 
+  getHistoryMappedByDate(){
+    return this.registrationData?.history?.sort((a, b) => b.date.getTime() - a.date.getTime())
+  }
+  getDateString(date:Date,format:string){
+    return getDateString(date,format)
+  }
+
+  get(prop:any):string{
+    if(this.isArchived) return "*ARCHIVED*"
+    if(prop == null || prop ==undefined) return "Not Given"
+    return (prop + "")
+  }
+
+  getAge(bd: Date | undefined | null): string {
+    if (!bd) return '';
+    let x = calculateAge(bd).toString();
+    return x + ' years';
+  }
+  calculateBMI(weight: number, height: number): number {
+     return calculateBMI(weight, height);
+  }
+  getActivityStatusString(status:undefined | null | ActivityStatus):null|string{
+    if(status == null || status==undefined) return null;
+
+    switch (status) {
+      case ActivityStatus.Intense:
+        return "Intense";
+      case ActivityStatus.Light:
+        return "Light";
+      case ActivityStatus.Medium:
+        return "Medium";
+    
+      default:
+        return "Not-given"
+    }
+  }
+  getGender(gender:undefined | null | Gender):null|string{
+    if(gender == null || gender==undefined) return null;
+
+    switch (gender) {
+      case Gender.Male:
+        return "Male";
+      case Gender.Female:
+        return "Female";
+      case Gender.Other:
+        return "Other";
+    
+      default:
+        return "Not-given"
+    }
+  }
   
 }
 const _cards = [
@@ -63,3 +119,13 @@ const _cards = [
   { title: '', content: 'Sed quis nisi sed neque tincidunt maximus. Quisque commodo massa vitae ante placerat, quis ultricies ligula lacinia.' },
   { title: '', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec interdum lectus mauris, nec pharetra sapien imperdiet sed.' }
 ];
+
+
+export function calculateBMI(weight: number, height: number): number {
+  if (isNaN(weight) || isNaN(height) ||  weight <= 0 || height <= 0) {
+    return -1;
+  }
+  let heightInMeters = height / 100;
+  return weight / (heightInMeters * heightInMeters);
+}
+

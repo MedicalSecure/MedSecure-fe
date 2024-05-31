@@ -5,9 +5,9 @@ export enum TestType {
   }
   
   export enum ActivityStatus {
-    Low,
-    Medium,
-    High,
+    Light = 0,
+    Medium = 1,
+    Intense = 2
   }
   
   export enum Children {

@@ -22,14 +22,15 @@ import {
   RegisterDto,
   RiskFactorDto,
 } from '../../../model/Registration';
-import { Children, FamilyStatus, Gender } from '../../../enums/enum';
+import { ActivityStatus, Children, FamilyStatus, Gender } from '../../../enums/enum';
 import { Country } from '../../../enums/country';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { calculateBMI } from '../register-details/register-details.component';
 
 // Interfaces
 
 interface Activity {
-  value: string;
+  value: ActivityStatus;
   viewValue: string;
 }
 interface Child {
@@ -158,8 +159,9 @@ export class RegisterFormComponent implements OnInit {
       country: parseCountryEnum(formValue.country),
       state: formValue.state ?? null,
       zipCode: tryParseIntNullable(formValue.zipCode),
-      familyStatus: parseFamilyStatusEnum(formValue.familyStatus) ?? null,
-      children: parseChildrenEnum(formValue.children) ?? null,
+      activityStatus: parseActivityStatusEnum(formValue.activityStatus),
+      familyStatus: parseFamilyStatusEnum(formValue.familyStatus),
+      children: parseChildrenEnum(formValue.children),
     };
     return patientDto;
   }
@@ -291,9 +293,9 @@ export class RegisterFormComponent implements OnInit {
     { viewValue: '3 or more' },
   ];
   activities: Activity[] = [
-    { value: 'light-0', viewValue: 'light' },
-    { value: 'Medium-1', viewValue: 'Medium' },
-    { value: 'Intense-2', viewValue: 'Intense' },
+    { value: ActivityStatus.Light, viewValue: 'light' },
+    { value: ActivityStatus.Medium, viewValue: 'Medium' },
+    { value: ActivityStatus.Intense, viewValue: 'Intense' },
   ];
 
   monitorFormValueChanges() {
@@ -306,6 +308,10 @@ export class RegisterFormComponent implements OnInit {
       this.isFormValid = c1 && c2 && c3 && c4 && c5;
     });
   }
+
+  calculateBMI(weight: number, height: number): number {
+    return calculateBMI(weight, height);
+ }
 
   //******************* STE2 *****************************************************************************
 
@@ -443,6 +449,30 @@ export function parseCountryEnum(
   if (country.toString().toLowerCase() == 'tunisie') return Country.TN;
   if (country.toString().toLowerCase() == 'tn') return Country.TN;
   //TODO finish ...
+  return null;
+}
+
+export function parseActivityStatusEnum(
+  status: string | number | undefined | null
+): ActivityStatus | null {
+  if (!status) return null;
+  if (status == 'Light' || status == 0 || status == 'light' || status == '0')
+    return ActivityStatus.Light;
+  if (
+    status == 'Medium' ||
+    status == 1 ||
+    status == 'medium' ||
+    status == '1'
+  )
+    return ActivityStatus.Medium;
+  if (
+    status == 'Intense' ||
+    status == 2 ||
+    status == 'intense' ||
+    status == '2'
+  )
+    return ActivityStatus.Intense;
+
   return null;
 }
 

@@ -1,5 +1,5 @@
 import { Country } from "../enums/country";
-import { Children, FamilyStatus, Gender, HistoryStatus, Language, RegisterStatus, TestType } from "../enums/enum";
+import { ActivityStatus, Children, FamilyStatus, Gender, HistoryStatus, Language, RegisterStatus, TestType } from "../enums/enum";
 import { PaginatedResult } from "../types";
 
 export interface GetRegistrationResponse{
@@ -45,6 +45,7 @@ export interface RegisterDto {
     country?: Country | null;
     state?: string | null;
     zipCode?: number | null;
+    activityStatus? : ActivityStatus | null;
     familyStatus?: FamilyStatus | null;
     children?: Children | null;
   }
