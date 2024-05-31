@@ -57,27 +57,18 @@ export interface RegisterDto {
   
   export interface RiskFactorDto {
     id?: string | null;
-    key?: string | null;
-    value?: string | null;
+    RiskFactorParentId?: string | null;
+    key: string;
+    value: string;
     code?: string | null;
     description?: string | null;
-    isSelected: boolean;
+    isSelected?: boolean | null;
     type?: string | null;
     icon?: string | null;
-    subRiskFactors?: SubRiskFactor[] | null;
+    subRiskFactor?: RiskFactorDto[] | null;
   }
 
-  export interface SubRiskFactor {
-    id?: string| null;
-    key?: string | null;
-    value?: string | null;
-    code?: string | null;
-    description?: string | null;
-    isSelected: boolean;
-    type?: string | null;
-    icon?: string | null;
-    subRiskFactors?: SubRiskFactor[] | null;
-  }
+
   
   export interface TestDto {
     id: string;

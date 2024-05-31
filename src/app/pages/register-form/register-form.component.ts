@@ -16,7 +16,7 @@ import {
   WizardHeaderComponent,
   wizardStepType,
 } from '../../components/wizard-header/wizard-header.component';
-import { PatientDto, RegisterDto, RiskFactorDto, SubRiskFactor } from '../../model/Registration';
+import { PatientDto, RegisterDto, RiskFactorDto } from '../../model/Registration';
 import { Children, FamilyStatus, Gender } from '../../enums/enum';
 import { Country } from '../../enums/country';
 
@@ -163,23 +163,24 @@ export class RegisterFormComponent implements OnInit {
       //create new riskFactor
       let newRiskFactor: RiskFactorDto = {
         key: SymptomGroup.name,
-        icon:SymptomGroup.icon,
+        icon: SymptomGroup.icon,
+        value: SymptomGroup.name,
         isSelected: true,
-        subRiskFactors: [],
+        subRiskFactor: [],
       };
       //Fill the subRiskFactor
       SymptomGroup.symptoms.forEach((symptom,symIndex) => {
         if (data[gIndex][symIndex] == null) return;
-        let newSubRiskFactor: SubRiskFactor = {
+        let newSubRiskFactor: RiskFactorDto = {
           value:symptom.name,
           key: symptom.id,
           isSelected: true,
         };
-        newRiskFactor.subRiskFactors?.push(newSubRiskFactor);
+        newRiskFactor.subRiskFactor?.push(newSubRiskFactor);
       });
       if (
-        newRiskFactor.subRiskFactors?.length &&
-        newRiskFactor.subRiskFactors?.length > 0
+        newRiskFactor.subRiskFactor?.length &&
+        newRiskFactor.subRiskFactor?.length > 0
       )
         result.push(newRiskFactor);//add only the selected groups (has selected symptoms)
     });
@@ -194,38 +195,39 @@ export class RegisterFormComponent implements OnInit {
       //create new riskFactor
       let newItemRiskFactor: RiskFactorDto = {
         key: item.name,
+        value:item.name,
         isSelected: true,
-        subRiskFactors: [],
+        subRiskFactor: [],
       };
       //Fill the subRiskFactor
       item.groups.forEach((group) => {
         if (group == null || group.checked == false) return;
         //this group is checked => lets continue to children
-        let newGroupSubRiskFactor: SubRiskFactor = {
+        let newGroupSubRiskFactor: RiskFactorDto = {
           key: group.name,
           value: group.name,
           isSelected: group.checked,
-          subRiskFactors:[]
+          subRiskFactor:[]
         };
         group.children.forEach(child=>{
           if(child.checked == false) return;
           //valid child here
-          let newChildSubRiskFactor: SubRiskFactor = {
+          let newChildSubRiskFactor: RiskFactorDto = {
             key: child.name,
             value: child.name,
             isSelected: child.checked,
           };
           //add child to new parent
-          newGroupSubRiskFactor.subRiskFactors?.push(newChildSubRiskFactor)
+          newGroupSubRiskFactor.subRiskFactor?.push(newChildSubRiskFactor)
         })
         //add the group, doesnt matter if he has children or no, its checked!
-        newItemRiskFactor.subRiskFactors?.push(newGroupSubRiskFactor);
+        newItemRiskFactor.subRiskFactor?.push(newGroupSubRiskFactor);
       });
 
       //Add only the items with checked groups (if the group is checked, it will be added to he subRiskFactors => its length >0)
       if (
-        newItemRiskFactor.subRiskFactors?.length &&
-        newItemRiskFactor.subRiskFactors?.length > 0
+        newItemRiskFactor.subRiskFactor?.length &&
+        newItemRiskFactor.subRiskFactor?.length > 0
       )
         result.push(newItemRiskFactor);
     });
