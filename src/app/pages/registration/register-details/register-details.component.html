@@ -104,6 +104,9 @@
               <div class="card-body">
                 <h5 class="card-title"><strong> Allergies</strong></h5>
                 <div class="card-text">
+                  <p *ngIf="!registrationData?.allergies || registrationData?.allergies?.length == 0">
+                    No Allergies were given OR data is Archived
+                  </p>
                   <ng-container *ngFor="let allergyGroup of registrationData?.allergies">
                     <h6><i class="{{ allergyGroup.icon }}"></i>{{" "+ allergyGroup.key }}</h6>
                     <ul>
@@ -111,6 +114,70 @@
                         <p>{{allergy.value}}</p>
                       </li>                   
                     </ul>
+                  </ng-container>
+              </div>
+              </div>
+            </div>
+
+            <!-- Medical History -->
+            <div ngxMasonryItem class="card masonry-item">
+              <div class="card-body">
+                <h5 class="card-title"><strong>Personal Medical History</strong></h5>
+                <div class="card-text">
+                  <p *ngIf="!registrationData?.personalMedicalHistory || registrationData?.personalMedicalHistory?.length == 0">
+                    No Medical History was given OR data is Archived
+                  </p>
+                  <ng-container *ngFor="let group of registrationData?.personalMedicalHistory">
+                    <h6><i class="{{ group.icon }}"></i>{{" "+ group.key }}</h6>
+                      <ul>
+                        <li class="text-primary"  *ngFor="let subGroup of group.subRiskFactor" >
+                          @if(subGroup.subRiskFactor == null || subGroup.subRiskFactor.length==0 )
+                          {
+                            <!-- subGroup is a value and not a category, like : Familial hypercholesterolemia in Dyslipidemia-->
+                            <p>{{subGroup.value}}</p>
+                          }@else{
+                            <p>{{subGroup.value}}</p>
+                            <ul>
+                              <li class="text-primary"  *ngFor="let subSubGroup of subGroup.subRiskFactor" >
+                                  <p>{{subSubGroup.value}}</p>
+                              </li>                   
+                            </ul>
+                          }
+                        </li>                   
+                      </ul>
+                   
+                  </ng-container>
+              </div>
+              </div>
+            </div>
+
+            <!-- Family Medical History -->
+            <div ngxMasonryItem class="card masonry-item">
+              <div class="card-body">
+                <h5 class="card-title"><strong>Family Medical History</strong></h5>
+                <div class="card-text">
+                  <p *ngIf="!registrationData?.familyMedicalHistory || registrationData?.familyMedicalHistory?.length == 0">
+                    No Family Medical History was given OR data is Archived
+                  </p>
+                  <ng-container *ngFor="let group of registrationData?.familyMedicalHistory">
+                    <h6><i class="{{ group.icon }}"></i>{{" "+ group.key }}</h6>
+                      <ul>
+                        <li class="text-primary"  *ngFor="let subGroup of group.subRiskFactor" >
+                          @if(subGroup.subRiskFactor == null || subGroup.subRiskFactor.length==0 )
+                          {
+                            <!-- subGroup is a value and not a category, like : Familial hypercholesterolemia in Dyslipidemia-->
+                            <p>{{subGroup.value}}</p>
+                          }@else{
+                            <p>{{subGroup.value}}</p>
+                            <ul>
+                              <li class="text-primary"  *ngFor="let subSubGroup of subGroup.subRiskFactor" >
+                                  <p>{{subSubGroup.value}}</p>
+                              </li>                   
+                            </ul>
+                          }
+                        </li>                   
+                      </ul>
+                    
                   </ng-container>
               </div>
               </div>

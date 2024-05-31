@@ -232,6 +232,7 @@ export class RegisterFormComponent implements OnInit {
       let newItemRiskFactor: RiskFactorDto = {
         key: item.name,
         value: item.name,
+        icon:item.icon,
         isSelected: true,
         subRiskFactor: [],
       };
