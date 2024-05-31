@@ -12,17 +12,16 @@
   <div class="modal-body" style="padding: 3%">
     <div *ngIf="modalAction === 'get' || modalAction === 'delete'">
       <div>
-        <h5>{{ modalData.event.title }}</h5>
         <p><strong>Start Date:</strong> {{ modalData.event.start }}</p>
         <p><strong>End Date:</strong> {{ modalData.event.end }}</p>
-        <p><strong>patient:</strong> {{ modalData.event.patient }}</p>
-        <p><strong>typevisits:</strong> {{ modalData.event.typevisits }}</p>
+        <p><strong> Patient:</strong> {{ modalData.event.patient }}</p>
+        <p><strong>Typevisits:</strong> {{ modalData.event.typevisits }}</p>
         <p>
-          <strong>disponibilite:</strong> {{ modalData.event.disponibilite }}
+          <strong>Disponibilite:</strong> {{ modalData.event.disponibilite }}
         </p>
-        <p><strong>duration:</strong> {{ modalData.event.duration }}</p>
-        <p><strong>avaibility:</strong> {{ modalData.event.avaibility }}</p>
-        <p><strong>description:</strong> {{ modalData.event.description }}</p>
+        <p><strong>Duration:</strong> {{ modalData.event.duration }}</p>
+        <p><strong>Avaibility:</strong> {{ modalData.event.avaibility }}</p>
+        <p><strong>Description:</strong> {{ modalData.event.description }}</p>
       </div>
     </div>
     <div *ngIf="modalAction === 'add'">
@@ -61,8 +60,8 @@
               color: selectedPatient === patient ? '#130615' : ''
             }"
           >
-            <i class="fa-solid fa-hospital"></i> {{ patient.nom }}
-            {{ patient.prenom }} <br />
+            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
+            {{ patient.lastName}} <br />
             <span *ngIf="selectedPatient === patient">
               <i class="fas fa-check"></i>
             </span>
@@ -87,22 +86,22 @@
                 color="primary"
                 selected
                 style="display: inline-block"
-                (click)="updateTypeVisits('First consultation')"
-                [selected]="modalData.event.typevisits === 'First consultation'"
+                (click)="updateTypeVisits('Firstconsultation')"
+                [selected]="modalData.event.typevisits === 0"
                 >First consultation
               </mat-chip-option>
 
               <mat-chip-option
                 color="accent"
                 style="display: inline-block"
-                [selected]="modalData.event.typevisits === 'Follow-up'"
-                (click)="updateTypeVisits('Follow-up')"
+                [selected]="modalData.event.typevisits === 1"
+                (click)="updateTypeVisits('FollowUp')"
                 >Follow-up
               </mat-chip-option>
               <mat-chip-option
                 color="warn"
                 style="display: inline-block"
-                [selected]="modalData.event.typevisits === 'Emergency'"
+                [selected]="modalData.event.typevisits === 2"
                 (click)="updateTypeVisits('Emergency')"
                 >Emergency</mat-chip-option
               >
@@ -119,20 +118,20 @@
                 class="form-check-input ms-2"
                 type="radio"
                 name="option"
-                value="clinic"
+                value="InClinic"
                 (change)="updateDisponibilite($event)"
               />
-              At the clinic
+              InClinic
             </label>
             <label class="radio-inline form-check-label">
               <input
                 class="form-check-input ms-2"
                 type="radio"
                 name="option"
-                value="video"
+                value="Online"
                 (change)="updateDisponibilite($event)"
               />
-              In video
+              Online
             </label>
           </div>
         </div>
@@ -294,8 +293,8 @@
               color: selectedPatient === patient ? '#130615' : ''
             }"
           >
-            <i class="fa-solid fa-hospital"></i> {{ patient.nom }}
-            {{ patient.prenom }} <br />
+            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
+            {{ patient.lastName}} <br />
             <span *ngIf="selectedPatient === patient">
               <i class="fas fa-check"></i>
             </span>
@@ -321,7 +320,7 @@
                 selected
                 style="display: inline-block"
                 (click)="updateTypeVisits('First consultation')"
-                [selected]="modalData.event.typevisits === 'First consultation'"
+                [selected]="modalData.event.typevisits === 0"
                 [value]="modalData.event.typevisits"
                 >First consultation
               </mat-chip-option>
@@ -329,7 +328,7 @@
               <mat-chip-option
                 color="accent"
                 style="display: inline-block"
-                [selected]="modalData.event.typevisits === 'Follow-up'"
+                [selected]="modalData.event.typevisits === 1"
                 (click)="updateTypeVisits('Follow-up')"
                 [value]="modalData.event.typevisits"
                 >Follow-up
@@ -337,7 +336,7 @@
               <mat-chip-option
                 color="warn"
                 style="display: inline-block"
-                [selected]="modalData.event.typevisits === 'Emergency'"
+                [selected]="modalData.event.typevisits === 2"
                 (click)="updateTypeVisits('Emergency')"
                 [value]="modalData.event.typevisits"
                 >Emergency</mat-chip-option
@@ -357,7 +356,7 @@
                 name="option"
                 value="clinic"
                 (change)="updateDisponibilite($event)"
-                [checked]="modalData.event.disponibilite === 'At the clinic'"
+                [checked]="modalData.event.disponibilite === 0"
               />
               At the clinic
             </label>
@@ -366,11 +365,11 @@
                 class="form-check-input ms-2"
                 type="radio"
                 name="option"
-                value="video"
+                value="Online"
                 (change)="updateDisponibilite($event)"
-                [checked]="modalData.event.disponibilite === 'In video'"
+                [checked]="modalData.event.disponibilite === 1"
               />
-              In video
+              Online
             </label>
           </div>
         </div>
@@ -509,7 +508,7 @@
     <button
       type="submit"
       class="btn btn-primary me-2"
-      (click)="performAction()"
+      (click)="performAction()" 
     >
       {{ modalbutton }}
     </button>

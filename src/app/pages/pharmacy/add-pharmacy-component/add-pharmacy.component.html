@@ -1,0 +1,87 @@
+<div class="row flex-grow mt-2">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card card-rounded">
+        <div class="card-body">
+          @if (this.ShowMedicationList == false) {
+            <div id="medication-list">
+              <!-- Tools bar (report issue, forward ...) -->
+              <div class="d-sm-flex justify-content-between align-items-start">
+                <div>
+                  <h4 class="card-title card-title-dash">Pharmacy</h4>
+                  <p class="card-subtitle card-subtitle-dash">Import & Map & Check & Insert Medication List</p>
+                </div>
+  
+                <div class="btn-wrapper">
+                  <a href="#" class="btn btn-outline-primary align-items-center"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Export CSV</a>
+                  <span class="btn btn-primary text-white align-items-center" (click)="onClickViewMedications()"> <i class="fa fa-qrcode" aria-hidden="true"></i>  List Medications </span>
+                  <a href="#" class="btn btn-danger text-white align-items-center" [routerLink]="['/', 'report-issue-csv']" style="border-color: red">
+                    <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+                  </a>
+                </div>
+              </div>
+              <!-- Wizard header -->
+              <app-wizard-header
+                [steps]="wizardSteps"
+                (currentStepChange)="SwitchToStep($event)"
+                [switchCondition]="isStep1PageValid"
+                [currentStep]="stepNumber"
+                [size]="3"
+                [IconSizeRatio]="0.5"
+                [validatePageSwitch]="validatePageSwitch"
+              ></app-wizard-header>
+  
+              <!-- Wizard content -->
+              <div class="wizard-container" style="height: 490px; overflow-y: auto">
+
+                <!-- Step 1 : Upload & Map medications file -->
+                <div [className]="stepNumber != 1 && 'd-none'">
+                  <app-stp1-import-map-drugs 
+                  (CheckedDrugsEvent)="handleCheckedDrugsEvent($event)
+                  "[events]="eventsSubject.asObservable()"
+                  (onIsStep1PageValidChange)="handlePageValidationChange(1,$event)"
+                  (areAllCheckedDrugsValid)="handleStp1AreAllCheckedDrugsValid($event)"
+                  />
+                </div>
+  
+                <!-- Step 2 : Check Medications -->
+                <div *ngIf="stepNumber === 2">
+                  <app-stp2-view-check-drugs
+                  (ValidDrugsEvent)="handleValidDrugsEvent($event)"
+                  [mappedMedications]="mappedMedications"
+                  (onIsStep2PageValidChange)="handlePageValidationChange(2,$event)"
+                  />
+                </div>
+
+                <!-- Step 3 : Finish Updated Medication Successfully -->
+                <div *ngIf="stepNumber === 3">
+                  <app-stp3-confirm-update-drugs/>
+                </div>
+                  
+              </div>
+  
+              <!-- Wizard buttons -->
+              <div class="d-flex">
+                <div class="col-12 col-lg-8">
+                  <button type="button" class="btn btn-outline-primary" (click)="clearWizard()">Cancel</button>
+                </div>
+                <div class="col-lg-4 d-flex justify-content-end">
+                  <button type="button" [className]="backButtonContent.class" (click)="onClickBackEvent()">
+                    {{ backButtonContent.label }}
+                  </button>
+                  <button type="button" [className]="nextButtonContent.class" (click)="onClickNextEvent()">
+                    {{ nextButtonContent.label }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+          @if (this.ShowMedicationList == true) {
+            <div id="medication-list">
+              <app-pharmacy-list (onClickNewPrescriptionEvent)="onClickMedicationListEventHandler($event)"></app-pharmacy-list>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  

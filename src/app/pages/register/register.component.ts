@@ -73,7 +73,6 @@ export let ELEMENT_DATA: RegisterDto[] = [
     FormsModule,
     MatButtonModule,
     JsonPipe,
-    ScheduleComponent,
     CommentComponent,
   ],
   providers: [],
