@@ -1,7 +1,7 @@
 export enum TestType {
-    ClinicTest,
-    LabTest,
-    Other,
+    ClinicTest = 0,
+    LabTest = 1,
+    Other = 2,
   }
   
   export enum ActivityStatus {
@@ -30,9 +30,9 @@ export enum TestType {
   }
   
   export enum Gender {
-    Male = 'Male',
-    Female = 'Female',
-    Other = 'Other',
+    Male = 0,
+    Female = 1,
+    Other = 2,
   }
   
   export enum Language {
@@ -55,9 +55,9 @@ export enum TestType {
   }
   
   export enum HistoryStatus {
-    Resident = 'Resident',
-    Out = 'Out',
-    Registered = 'Registered',
+    Resident = 0,
+    Out = 1,
+    Registered = 2,
   }
   
   export enum PrescriptionStatus {

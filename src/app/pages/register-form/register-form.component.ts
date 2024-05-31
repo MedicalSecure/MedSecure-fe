@@ -104,7 +104,11 @@ export class RegisterFormComponent implements OnInit {
     //console.log(this.step3PersonalMedicalHistoryItems);
     //console.log(this.step4FamilyMedHistItems);
     let x =this.getRegisterObject()
-    console.log(JSON.stringify(x));
+
+    let request={
+      register:x
+    }
+    console.log(JSON.stringify(request));
     
   }
 
@@ -115,21 +119,21 @@ export class RegisterFormComponent implements OnInit {
       lastName: formValue.lastName ?? '',
       dateOfBirth: new Date(formValue.dateOfBirth ?? ''),
       identity: formValue.identity ?? '',
-      cnam: Number(formValue.cnam) || null,
-      assurance: formValue.assurance || null,
+      cnam: Number(formValue.cnam) ?? null,
+      assurance: formValue.assurance ?? null,
       gender: parseGenderEnum(formValue.gender),
-      height: formValue.height || null,
-      weight: formValue.weight || null,
+      height: formValue.height ?? null,
+      weight: formValue.weight ?? null,
       addressIsRegistrations: formValue.addressIsRegisterations ?? true,
       saveForNextTime: formValue.saveForNextTime ?? true,
-      email: formValue.email || null,
-      address1: formValue.address1 || null,
-      address2: formValue.address2 || null,
+      email: formValue.email ?? null,
+      address1: formValue.address1 ?? null,
+      address2: formValue.address2 ?? null,
       country: parseCountryEnum(formValue.country),
-      state: formValue.state || null,
+      state: formValue.state ?? null,
       zipCode: tryParseIntNullable(formValue.zipCode),
-      familyStatus: parseFamilyStatusEnum(formValue.familyStatus) || null,
-      children: parseChildrenEnum(formValue.children) || null,
+      familyStatus: parseFamilyStatusEnum(formValue.familyStatus) ?? null,
+      children: parseChildrenEnum(formValue.children) ?? null,
     };
     return patientDto;
   }
@@ -149,7 +153,7 @@ export class RegisterFormComponent implements OnInit {
   getAllergies(): RiskFactorDto[] {
     let data = this.allergyForm.getRawValue().selectedSymptoms;
     let result: RiskFactorDto[] = [];
-/*  the form of data object : 
+    /*  the form of data object : 
     [
       [idSym1,null,idSelectedSym2], (g1)
       [idSym1,null,idSelectedSym2], (g2)
@@ -395,9 +399,9 @@ export function parseCountryEnum(country:string | number | undefined | null):Cou
 export function parseFamilyStatusEnum(status:string | number | undefined | null):FamilyStatus | null{
   if(!status) return null;
   if(status == 'Single' || status == 0 || status == "single" || status =="0") return FamilyStatus.Single
-  if(status == 'Married' || status == 1 || status == "married" || status =="1") return FamilyStatus.Single
-  if(status == 'Divorced' || status == 2 || status == "divorced" || status =="2") return FamilyStatus.Single
-  if(status == 'Widowed' || status == 3 || status == "widowed" || status =="3") return FamilyStatus.Single
+  if(status == 'Married' || status == 1 || status == "married" || status =="1") return FamilyStatus.Married
+  if(status == 'Divorced' || status == 2 || status == "divorced" || status =="2") return FamilyStatus.Divorced
+  if(status == 'Widowed' || status == 3 || status == "widowed" || status =="3") return FamilyStatus.Widowed
   return null;
 }
 
