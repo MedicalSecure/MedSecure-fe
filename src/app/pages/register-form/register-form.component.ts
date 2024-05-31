@@ -16,7 +16,12 @@ import {
   WizardHeaderComponent,
   wizardStepType,
 } from '../../components/wizard-header/wizard-header.component';
-import { CreateRegisterRequest, PatientDto, RegisterDto, RiskFactorDto } from '../../model/Registration';
+import {
+  CreateRegisterRequest,
+  PatientDto,
+  RegisterDto,
+  RiskFactorDto,
+} from '../../model/Registration';
 import { Children, FamilyStatus, Gender } from '../../enums/enum';
 import { Country } from '../../enums/country';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -78,7 +83,7 @@ interface FormPatient {
     RouterModule,
     ReactiveFormsModule,
     WizardHeaderComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css',
@@ -88,8 +93,8 @@ export class RegisterFormComponent implements OnInit {
   isFormValid = true;
   stepNumber: number = 1;
   steps: wizardStepType[] = wizardInitialSteps;
-  isPageLoading=true;
-  lastCreatedRegisterIdFromResponse:string|undefined;
+  isPageLoading = true;
+  lastCreatedRegisterIdFromResponse: string | undefined;
 
   fb = inject(NonNullableFormBuilder);
 
@@ -100,7 +105,7 @@ export class RegisterFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.monitorFormValueChanges();
-    this.isPageLoading=false
+    this.isPageLoading = false;
   }
 
   onSubmit() {
@@ -109,32 +114,28 @@ export class RegisterFormComponent implements OnInit {
     //console.log(this.step3PersonalMedicalHistoryItems);
     //console.log(this.step4FamilyMedHistItems);
     this.isPageLoading = true;
-    let newRegister =this.getRegisterObject()
+    let newRegister = this.getRegisterObject();
 
-    let request:CreateRegisterRequest={
-      register:newRegister
-    }
+    let request: CreateRegisterRequest = {
+      register: newRegister,
+    };
 
     console.log(JSON.stringify(request));
-    
 
-    this.registrationService
-        .postRegister(request)
-        .subscribe(
-          (response) => {
-            debugger;
-            this.ResetWizard();
-            console.log(response);
-            this.lastCreatedRegisterIdFromResponse = response.id;
-            this.isPageLoading = false
-          },
-          (error) => {
-            console.error(error.error);
-            //this.displayNewErrorMessage(error.error.message); TODO LATER
-            this.isPageLoading = false
-          }
-        );
-
+    this.registrationService.postRegister(request).subscribe(
+      (response) => {
+        debugger;
+        this.ResetWizard();
+        console.log(response);
+        this.lastCreatedRegisterIdFromResponse = response.id;
+        this.isPageLoading = false;
+      },
+      (error) => {
+        console.error(error.error);
+        //this.displayNewErrorMessage(error.error.message); TODO LATER
+        this.isPageLoading = false;
+      }
+    );
   }
 
   getPatientObject(): PatientDto {
@@ -167,8 +168,12 @@ export class RegisterFormComponent implements OnInit {
       patient: this.getPatientObject(),
       allergies: this.getAllergies(),
       diseases: null,
-      familyMedicalHistory: this.getMedicalHistory(this.step4FamilyMedHistItems),
-      personalMedicalHistory: this.getMedicalHistory(this.step3PersonalMedicalHistoryItems),
+      familyMedicalHistory: this.getMedicalHistory(
+        this.step4FamilyMedHistItems
+      ),
+      personalMedicalHistory: this.getMedicalHistory(
+        this.step3PersonalMedicalHistoryItems
+      ),
       test: null,
       history: null,
     };
@@ -184,35 +189,39 @@ export class RegisterFormComponent implements OnInit {
       [idSym1,null,idSelectedSym2], (g2)
     ] */
 
-    allergyCategoriesInitialValues.forEach((SymptomGroup:step2SymptomType,gIndex:number) => {
-      //create new riskFactor
-      let newRiskFactor: RiskFactorDto = {
-        key: SymptomGroup.name,
-        icon: SymptomGroup.icon,
-        value: SymptomGroup.name,
-        isSelected: true,
-        subRiskFactor: [],
-      };
-      //Fill the subRiskFactor
-      SymptomGroup.symptoms.forEach((symptom,symIndex) => {
-        if (data[gIndex][symIndex] == null) return;
-        let newSubRiskFactor: RiskFactorDto = {
-          value:symptom.name,
-          key: symptom.id,
+    allergyCategoriesInitialValues.forEach(
+      (SymptomGroup: step2SymptomType, gIndex: number) => {
+        //create new riskFactor
+        let newRiskFactor: RiskFactorDto = {
+          key: SymptomGroup.name,
+          icon: SymptomGroup.icon,
+          value: SymptomGroup.name,
           isSelected: true,
+          subRiskFactor: [],
         };
-        newRiskFactor.subRiskFactor?.push(newSubRiskFactor);
-      });
-      if (
-        newRiskFactor.subRiskFactor?.length &&
-        newRiskFactor.subRiskFactor?.length > 0
-      )
-        result.push(newRiskFactor);//add only the selected groups (has selected symptoms)
-    });
+        //Fill the subRiskFactor
+        SymptomGroup.symptoms.forEach((symptom, symIndex) => {
+          if (data[gIndex][symIndex] == null) return;
+          let newSubRiskFactor: RiskFactorDto = {
+            value: symptom.name,
+            key: symptom.id,
+            isSelected: true,
+          };
+          newRiskFactor.subRiskFactor?.push(newSubRiskFactor);
+        });
+        if (
+          newRiskFactor.subRiskFactor?.length &&
+          newRiskFactor.subRiskFactor?.length > 0
+        )
+          result.push(newRiskFactor); //add only the selected groups (has selected symptoms)
+      }
+    );
     return result;
   }
 
-  getMedicalHistory(data:Item[] = this.step3PersonalMedicalHistoryItems): RiskFactorDto[] {
+  getMedicalHistory(
+    data: Item[] = this.step3PersonalMedicalHistoryItems
+  ): RiskFactorDto[] {
     let result: RiskFactorDto[] = [];
 
     data.forEach((item) => {
@@ -220,7 +229,7 @@ export class RegisterFormComponent implements OnInit {
       //create new riskFactor
       let newItemRiskFactor: RiskFactorDto = {
         key: item.name,
-        value:item.name,
+        value: item.name,
         isSelected: true,
         subRiskFactor: [],
       };
@@ -232,10 +241,10 @@ export class RegisterFormComponent implements OnInit {
           key: group.name,
           value: group.name,
           isSelected: group.checked,
-          subRiskFactor:[]
+          subRiskFactor: [],
         };
-        group.children.forEach(child=>{
-          if(child.checked == false) return;
+        group.children.forEach((child) => {
+          if (child.checked == false) return;
           //valid child here
           let newChildSubRiskFactor: RiskFactorDto = {
             key: child.name,
@@ -243,8 +252,8 @@ export class RegisterFormComponent implements OnInit {
             isSelected: child.checked,
           };
           //add child to new parent
-          newGroupSubRiskFactor.subRiskFactor?.push(newChildSubRiskFactor)
-        })
+          newGroupSubRiskFactor.subRiskFactor?.push(newChildSubRiskFactor);
+        });
         //add the group, doesnt matter if he has children or no, its checked!
         newItemRiskFactor.subRiskFactor?.push(newGroupSubRiskFactor);
       });
@@ -403,61 +412,109 @@ export class RegisterFormComponent implements OnInit {
   }
 }
 
-export function parseGenderEnum(gender:string | number | undefined | null):Gender | null{
-  if(!gender) return null;
-  if(gender == 'Male' || gender == 0 || gender == "male" || gender =="0")
-    return Gender.Male
-  else if(gender == 'Female' || gender == 1 || gender == "female" || gender =="1")
-    return Gender.Female
-  else if(gender == 'Other' || gender == 2 || gender == "other" || gender =="2")
-    return Gender.Other
+export function parseGenderEnum(
+  gender: string | number | undefined | null
+): Gender | null {
+  if (!gender) return null;
+  if (gender == 'Male' || gender == 0 || gender == 'male' || gender == '0')
+    return Gender.Male;
+  else if (
+    gender == 'Female' ||
+    gender == 1 ||
+    gender == 'female' ||
+    gender == '1'
+  )
+    return Gender.Female;
+  else if (
+    gender == 'Other' ||
+    gender == 2 ||
+    gender == 'other' ||
+    gender == '2'
+  )
+    return Gender.Other;
   return null;
 }
 
-export function parseCountryEnum(country:string | number | undefined | null):Country | null{
-  if(!country) return null;
-  if(country.toString().toLowerCase() == "tunisia") return Country.TN
-  if(country.toString().toLowerCase() == "tunisie") return Country.TN
-  if(country.toString().toLowerCase() == "tn") return Country.TN
- //TODO finish ...
+export function parseCountryEnum(
+  country: string | number | undefined | null
+): Country | null {
+  if (!country) return null;
+  if (country.toString().toLowerCase() == 'tunisia') return Country.TN;
+  if (country.toString().toLowerCase() == 'tunisie') return Country.TN;
+  if (country.toString().toLowerCase() == 'tn') return Country.TN;
+  //TODO finish ...
   return null;
 }
 
-export function parseFamilyStatusEnum(status:string | number | undefined | null):FamilyStatus | null{
-  if(!status) return null;
-  if(status == 'Single' || status == 0 || status == "single" || status =="0") return FamilyStatus.Single
-  if(status == 'Married' || status == 1 || status == "married" || status =="1") return FamilyStatus.Married
-  if(status == 'Divorced' || status == 2 || status == "divorced" || status =="2") return FamilyStatus.Divorced
-  if(status == 'Widowed' || status == 3 || status == "widowed" || status =="3") return FamilyStatus.Widowed
+export function parseFamilyStatusEnum(
+  status: string | number | undefined | null
+): FamilyStatus | null {
+  if (!status) return null;
+  if (status == 'Single' || status == 0 || status == 'single' || status == '0')
+    return FamilyStatus.Single;
+  if (
+    status == 'Married' ||
+    status == 1 ||
+    status == 'married' ||
+    status == '1'
+  )
+    return FamilyStatus.Married;
+  if (
+    status == 'Divorced' ||
+    status == 2 ||
+    status == 'divorced' ||
+    status == '2'
+  )
+    return FamilyStatus.Divorced;
+  if (
+    status == 'Widowed' ||
+    status == 3 ||
+    status == 'widowed' ||
+    status == '3'
+  )
+    return FamilyStatus.Widowed;
   return null;
 }
 
-export function parseChildrenEnum(child:string | number | undefined | null):Children | null{
-  if(!child) return null;
-  if(child == 'None' || child == 0 || child == "none" || child =="0")
-    return Children.None
-  else if(child == 'One' || child == 1 || child == "one" || child =="1")
-    return Children.One
-  else if(child == 'Two' || child == 2 || child == "two" || child =="2")
-    return Children.Two
-  else if(child == '3 or more' || child == 3 || child == "3 Or More" || child == "3" || child =="ThreeOrMore")
-    return Children.ThreeOrMore
+export function parseChildrenEnum(
+  child: string | number | undefined | null
+): Children | null {
+  if (!child) return null;
+  if (child == 'None' || child == 0 || child == 'none' || child == '0')
+    return Children.None;
+  else if (child == 'One' || child == 1 || child == 'one' || child == '1')
+    return Children.One;
+  else if (child == 'Two' || child == 2 || child == 'two' || child == '2')
+    return Children.Two;
+  else if (
+    child == '3 or more' ||
+    child == 3 ||
+    child == '3 Or More' ||
+    child == '3' ||
+    child == 'ThreeOrMore'
+  )
+    return Children.ThreeOrMore;
   return null;
 }
 
-export function tryParseIntNullable(input: string | number | null): number | null {
-  if(input == null || input == undefined) return null;
+export function tryParseIntNullable(
+  input: string | number | null
+): number | null {
+  if (input == null || input == undefined) return null;
   let result = 0;
   try {
     result = parseInt(input.toString());
   } catch (error) {
     return null;
   }
-  if (isNaN(result) || result == undefined || result == null)  return null;
+  if (isNaN(result) || result == undefined || result == null) return null;
   return result;
 }
 
-export function createFormControl(minLength: number,initValue:string=''): FormControl {
+export function createFormControl(
+  minLength: number,
+  initValue: string = ''
+): FormControl {
   return new FormControl(initValue, [
     Validators.required,
     Validators.minLength(minLength),
@@ -469,7 +526,7 @@ function getInitialStp1FormGroup() {
   return new FormGroup<FormPatient>({
     firstName: createFormControl(2),
     lastName: createFormControl(2),
-    dateOfBirth: new FormControl('',[validDateOfBirth]),
+    dateOfBirth: new FormControl('', [validDateOfBirth]),
     identity: createFormControl(7),
     cnam: new FormControl(''),
     assurance: new FormControl(''),
@@ -478,7 +535,7 @@ function getInitialStp1FormGroup() {
     weight: new FormControl(null),
     addressIsRegisterations: new FormControl(true),
     saveForNextTime: new FormControl(true),
-    email: new FormControl('',[Validators.email]),
+    email: new FormControl('', [Validators.email]),
     address1: new FormControl(''),
     address2: new FormControl(''),
     activityStatus: new FormControl(''),
@@ -489,21 +546,27 @@ function getInitialStp1FormGroup() {
     children: new FormControl(''),
   });
 }
-export function validDateOfBirth(control: AbstractControl): ValidationErrors | null {
+export function validDateOfBirth(
+  control: AbstractControl
+): ValidationErrors | null {
   const maxDate = new Date(); // January 1, 1900
-  const minDate = new Date(maxDate.getFullYear() - 150,maxDate.getMonth(), maxDate.getDate());
+  const minDate = new Date(
+    maxDate.getFullYear() - 150,
+    maxDate.getMonth(),
+    maxDate.getDate()
+  );
 
   let dateOfBirth = control.value;
 
   if (!dateOfBirth) {
     // Allow empty values
-    return {required:true};
+    return { required: true };
   }
 
   try {
     dateOfBirth = new Date(dateOfBirth);
   } catch (error) {
-    console.error(`invalid date of birth : ${dateOfBirth}`)
+    console.error(`invalid date of birth : ${dateOfBirth}`);
   }
 
   if (!(dateOfBirth instanceof Date) || isNaN(dateOfBirth.getTime())) {
@@ -834,8 +897,8 @@ const Step3itemsInitialValues = [
   },
 ];
 
-type step2SymptomType={
+type step2SymptomType = {
   name: string;
   symptoms: { id: string; name: string }[];
   icon: string;
-}
+};
