@@ -21,6 +21,14 @@
             </a>
             <a
               href="#"
+              class="btn btn-primary text-white align-items-center"
+              [routerLink]="['/', 'register-form']"
+              routerLinkActive="active"
+            >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> Add new patient
+            </a>
+            <a
+              href="#"
               class="btn btn-danger text-white align-items-center"
               [routerLink]="['/', 'report-issue-csv']"
               style="border-color: red"

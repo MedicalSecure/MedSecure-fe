@@ -91,7 +91,7 @@ interface FormPatient {
   encapsulation: ViewEncapsulation.None,
 })
 export class RegisterFormComponent implements OnInit {
-  isFormValid = true;
+  isFormValid = false;
   stepNumber: number = 1;
   steps: wizardStepType[] = wizardInitialSteps;
   isPageLoading = true;
@@ -130,6 +130,8 @@ export class RegisterFormComponent implements OnInit {
         console.log(response);
         this.lastCreatedRegisterIdFromResponse = response.id;
         this.isPageLoading = false;
+        //TODO show confirmation message here
+        this.router.navigate(['/register']);
       },
       (error) => {
         console.error(error.error);
