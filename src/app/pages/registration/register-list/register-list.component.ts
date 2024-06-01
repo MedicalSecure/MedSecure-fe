@@ -1,30 +1,15 @@
 import { RegistrationService } from '../../../services/registration/registration.service';
-import {
-  AfterViewInit,
-  Component,
-  ViewChild,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Router, RouterModule } from '@angular/router';
-import {
-  MatDatepicker,
-  MatDatepickerModule,
-} from '@angular/material/datepicker';
+import { RouterModule } from '@angular/router';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatChipsModule } from '@angular/material/chips';
 import { JsonPipe } from '@angular/common';
-import { FormControl, FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSortModule, MatSort } from '@angular/material/sort';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { CommentComponent } from '../../../components/comment/comment.component';
 import { RegisterDto } from '../../../model/Registration';
 import { firstValueFrom } from 'rxjs';
 import { getRegistrationStatus } from '../../../shared/utilityFunctions';
@@ -35,7 +20,7 @@ export interface PeriodicElement {
   MRN: string;
   dateOfBirth: Date;
   registerDate: Date;
-  status: string; 
+  status: string;
 }
 
 @Component({
@@ -49,43 +34,43 @@ export interface PeriodicElement {
     MatTableModule,
     MatDatepickerModule,
     MatIconModule,
-    MatTabsModule,
-    MatSortModule,
-    MatSort,
-    MatTooltipModule,
-    MatProgressBarModule,
     MatGridListModule,
     MatChipsModule,
-    MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule,
-    MatButtonModule,
     JsonPipe,
-    CommentComponent,
     CommonModule,
-    MatProgressSpinner
+    MatProgressSpinner,
   ],
   providers: [],
 })
 export class RegisterViewComponent {
-  columnsToDisplay = ['MRN', 'name', 'age', 'registerDate', 'status','look' ];
+  columnsToDisplay = ['MRN', 'name', 'age', 'registerDate', 'status', 'look'];
   selectedDate: Date = new Date();
-  fetchedData:RegisterDto[]=[]
+  fetchedData: RegisterDto[] = [];
   dataSource = new MatTableDataSource<RegisterDto>(this.fetchedData);
-  isPageLoading =true;
-  ErrorMessage="";
+  isPageLoading = true;
+  ErrorMessage = '';
+
+  constructor(private service: RegistrationService) {}
+
+  ngOnInit() {
+    this.fetchRegistrations();
+  }
+
 
   changeDate(selectedDate: string) {
     this.selectedDate = new Date(selectedDate);
-    let newSelectedDate= this.selectedDate.getDate();
+    let newSelectedDate = this.selectedDate.getDate();
     this.dataSource.data = this.fetchedData.filter(
-      (item) => new Date(item.createdAt  ?? new Date()).getDate() === newSelectedDate
+      (item) =>
+        new Date(item.createdAt ?? new Date()).getDate() === newSelectedDate
     );
   }
+
   onLeftButtonClick() {
     this.selectedDate.setDate(this.selectedDate.getDate() - 1);
-    let currentSelectedDate=this.selectedDate.getDate();
+    let currentSelectedDate = this.selectedDate.getDate();
     this.dataSource.data = this.fetchedData.filter(
       (item) =>
         new Date(item.createdAt ?? new Date()).getDate() === currentSelectedDate
@@ -94,7 +79,7 @@ export class RegisterViewComponent {
 
   onRightButtonClick() {
     this.selectedDate.setDate(this.selectedDate.getDate() + 1);
-    let currentSelectedDate=this.selectedDate.getDate()
+    let currentSelectedDate = this.selectedDate.getDate();
     this.dataSource.data = this.fetchedData.filter(
       (item) =>
         new Date(item.createdAt ?? new Date()).getDate() === currentSelectedDate
@@ -103,48 +88,46 @@ export class RegisterViewComponent {
 
   Filter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filterPredicate = (data: RegisterDto, filter: string) => {
+      const p1 = data.patient.firstName.toString().toLowerCase();
+      const p2 = data.patient.lastName.toString().toLowerCase();
+      const byMRN = data.id?.toString().toLowerCase().includes(filter);
+      if(byMRN) return true;
+
+      const byName1 = (p1 + " " + p2).includes(filter)
+      if(byName1) return true;
+
+      const byName2 = (p2 + " " + p1).includes(filter)
+      if(byName2) return true;
+
+      return false;
+    };
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  constructor(private router: Router ,private service: RegistrationService) {}
-
-  ngOnInit() {
-    this.fetchRegistrations()
-  }
-
-  viewDetails(registerId: string) {
-    this.router.navigate(['/register-details', registerId]);
-  }
-  async fetchRegistrations(){
+  async fetchRegistrations() {
     try {
-      this.isPageLoading=true;
-      let response = await firstValueFrom(this.service.getRegistrations())
-      this.fetchedData = response.registers.data.map(item=>{
-        let elementStatusFromHistory=getRegistrationStatus(item.history,item.id ?? 'not-provided')
+      this.isPageLoading = true;
+      let response = await firstValueFrom(this.service.getRegistrations());
+      this.fetchedData = response.registers.data.map((item) => {
+        let elementStatusFromHistory = getRegistrationStatus(
+          item.history,
+          item.id ?? 'not-provided'
+        );
         //@ts-ignore
-        item.currentStatus=elementStatusFromHistory;//force add on top of the type (not recommended but..)
+        item.currentStatus = elementStatusFromHistory; //force add on top of the type (not recommended but..)
         return item;
       });
-      this.dataSource.data=this.fetchedData;
-      this.isPageLoading=false;
-      this.ErrorMessage=""
+      this.dataSource.data = this.fetchedData;
+      this.isPageLoading = false;
+      this.ErrorMessage = '';
     } catch (error) {
-      console.error("can't fetch registrations")
-      console.error(error)
-      this.ErrorMessage="Can't fetch registrations"
-      this.isPageLoading=false;
+      console.error("can't fetch registrations");
+      console.error(error);
+      this.ErrorMessage = "Can't fetch registrations";
+      this.isPageLoading = false;
     }
   }
-
-  navigateToAddPatient() {
-    this.router.navigate(['/register']);
-  }
-
 
   calculateAge(dateOfBirth: Date): number {
     const today = new Date();
