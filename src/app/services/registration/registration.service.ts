@@ -6,6 +6,7 @@ import {
   RegisterDto,
   GetRegistrationResponse,
   CreateRegisterRequest,
+  archiveUnarchiveRequest,
 } from '../../model/Registration';
 
 import { Observable, catchError, map } from 'rxjs';
@@ -32,7 +33,7 @@ export class RegistrationService {
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
 
-/*     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
+    /*     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
       maxRetries,
       retryDelayInMs,
       displayErrorMessages
@@ -50,6 +51,20 @@ export class RegistrationService {
       );
   }
 
+  // register form
+  postRegister(request: CreateRegisterRequest): Observable<CreatedResponse> {
+    const url = this.url;
+    return this.http.post<CreatedResponse>(url, request);
+  }
+
+  //Archive Unarchive a register
+  postArchiveUnarchive(
+    request: archiveUnarchiveRequest
+  ): Observable<CreatedResponse> {
+    const url = this.url + '/status';
+    return this.http.post<CreatedResponse>(url, request);
+  }
+
   updateComment(id: string, note: string) {
     const body = { Id: id, Note: note };
     return this.http.put(this.url, body).subscribe(
@@ -63,24 +78,16 @@ export class RegistrationService {
   }
 
   createPatient(patient: PatientDto): Observable<any> {
-    return this.http
-      .post<PatientDto>(this.url, patient)
-      .pipe(
-        map((response) => {
-          console.log(patient);
-          console.log('Registration created:', response);
-          return response;
-        }),
-        catchError((error) => {
-          console.error('Error creating registration:', error);
-          throw error;
-        })
-      );
-  }
-
-  // register form
-  postRegister(request: CreateRegisterRequest): Observable<CreatedResponse> {
-    const url = this.url;
-    return this.http.post<CreatedResponse>(url, request);
+    return this.http.post<PatientDto>(this.url, patient).pipe(
+      map((response) => {
+        console.log(patient);
+        console.log('Registration created:', response);
+        return response;
+      }),
+      catchError((error) => {
+        console.error('Error creating registration:', error);
+        throw error;
+      })
+    );
   }
 }

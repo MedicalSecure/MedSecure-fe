@@ -5,12 +5,13 @@ import { MatCardModule } from '@angular/material/card';
 import { NgxMasonryOptions } from 'ngx-masonry';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RegistrationService } from '../../../services/registration/registration.service';
-import { HistoryDto, RegisterDto } from '../../../model/Registration';
+import { HistoryDto, RegisterDto, archiveUnarchiveRequest } from '../../../model/Registration';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { calculateAge, getDateString, getRegistrationStatus } from '../../../shared/utilityFunctions';
 import { ActivityStatus, Gender, HistoryStatus, RegisterStatus } from '../../../enums/enum';
 import { MatChip } from '@angular/material/chips';
 import { RouterDataService } from '../../../services/routerData/router-data.service';
+import { firstValueFrom } from 'rxjs';
 
 interface MasonryItem {
   title: string;
@@ -72,13 +73,49 @@ export class MasonryDpiComponent {
     });
   }
 
-  onClickNewEntryHandler(){
+  async onClickNewEntryHandler(){
     //Create new history => registered
 
+    try {
+      if(!this.registrationData?.id){
+        throw Error("can't find a valid id for the request")
+      }
+      let request:archiveUnarchiveRequest={
+        registerId:this.registrationData.id,
+        registerStatus:RegisterStatus.Active
+      }
+  
+      let observable = this.service.postArchiveUnarchive(request)
+      let result=await firstValueFrom(observable)
+      let updatedRegisterId = result.id;
+      console.log("Unarchive result : ");
+      console.log(result);
+      //we can redirect by id here or refresh and get register by id ...
+    } catch (error) {
+      console.error(error)
+    }
+    
   }
 
-  onClickArchiveHandler(){
-
+  async onClickArchiveHandler(){
+    try {
+      if(!this.registrationData?.id){
+        throw Error("can't find a valid id for the request")
+      }
+      let request:archiveUnarchiveRequest={
+        registerId:this.registrationData.id,
+        registerStatus:RegisterStatus.Archived
+      }
+  
+      let observable = this.service.postArchiveUnarchive(request)
+      let result=await firstValueFrom(observable)
+      let updatedRegisterId = result.id;
+      console.log("Archive result : ");
+      console.log(result);
+      //we can redirect by id here or refresh and get register by id ...
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   getRegisterStatus( status: RegisterStatus | undefined | null):string{

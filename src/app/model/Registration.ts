@@ -11,6 +11,10 @@ export type CreateRegisterRequest = {
   register: RegisterDto;
 };
 
+export type archiveUnarchiveRequest = {
+  registerId:string;
+  registerStatus:RegisterStatus;
+};
 
 
 export interface RegisterDto {
