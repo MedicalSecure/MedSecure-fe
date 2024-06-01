@@ -148,7 +148,7 @@
             <ng-container matColumnDef="registerDate">
               <th mat-header-cell *matHeaderCellDef>Register Date</th>
               <td mat-cell *matCellDef="let element">
-                {{ element.createdAt | date : "yyyy-MM-dd" }}
+                {{ element.createdAt | date : "yyyy-MM-dd - HH:MM" }}
               </td>
             </ng-container>
 
@@ -161,7 +161,7 @@
                 } @else if (element.currentStatus === 1) {
                 <mat-chip class="element mat-chip" style="background-color: rgba(17, 255, 33, 0.05); border: 1px solid green">Resident</mat-chip>
                 }@else if (element.currentStatus === 2) {
-                  <mat-chip class="element mat-chip" style="background-color: rgba(195, 207, 26, 0.05); border: 1px solid yellow">Registered</mat-chip>
+                  <mat-chip class="element mat-chip" style="background-color: rgba(195, 207, 26, 0.05); border: 1px solid rgb(255, 208, 0)">Registered</mat-chip>
                   }
               </td>
             </ng-container>
@@ -181,11 +181,19 @@
               [routerLink]="['/', 'register-details', { registrationDataInRoute: row | json }]"
             ></tr>
 
-            <!-- Row shown when there is no matching data. -->
+            <!-- Row shown when there is no matching data. BUT NOT LOADING-->
             <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="6">No data matching the filter</td>
+              <td *ngIf="fetchedData.length > 0 && !isPageLoading" class="mat-cell pt-2" colspan="6">No data matching the filter</td>
+              <td *ngIf="fetchedData.length == 0 && !isPageLoading" class="mat-cell pt-2" colspan="6">{{ErrorMessage}}</td>
             </tr>
+
           </table>
+          <!-- shown when LOADING-->
+          <ng-container *ngIf="isPageLoading">
+            <div class="mx-auto px-auto my-4" style="width: fit-content;" >
+              <mat-spinner  />
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>

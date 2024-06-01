@@ -4,7 +4,7 @@ import {
   Component,
   ViewChild,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,6 +28,7 @@ import { CommentComponent } from '../../../components/comment/comment.component'
 import { RegisterDto } from '../../../model/Registration';
 import { firstValueFrom } from 'rxjs';
 import { getRegistrationStatus } from '../../../shared/utilityFunctions';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export interface PeriodicElement {
   name: string;
@@ -62,6 +63,8 @@ export interface PeriodicElement {
     MatButtonModule,
     JsonPipe,
     CommentComponent,
+    CommonModule,
+    MatProgressSpinner
   ],
   providers: [],
 })
@@ -70,6 +73,8 @@ export class RegisterViewComponent {
   selectedDate: Date = new Date();
   fetchedData:RegisterDto[]=[]
   dataSource = new MatTableDataSource<RegisterDto>(this.fetchedData);
+  isPageLoading =true;
+  ErrorMessage="";
 
   changeDate(selectedDate: string) {
     this.selectedDate = new Date(selectedDate);
@@ -117,19 +122,22 @@ export class RegisterViewComponent {
 
   async fetchRegistrations(){
     try {
-
+      this.isPageLoading=true;
       let response = await firstValueFrom(this.service.getRegistrations())
       this.fetchedData = response.registers.data.map(item=>{
         let elementStatusFromHistory=getRegistrationStatus(item.history,item.id ?? 'not-provided')
         //@ts-ignore
         item.currentStatus=elementStatusFromHistory;//force add on top of the type (not recommended but..)
-
         return item;
       });
       this.dataSource.data=this.fetchedData;
+      this.isPageLoading=false;
+      this.ErrorMessage=""
     } catch (error) {
       console.error("can't fetch registrations")
       console.error(error)
+      this.ErrorMessage="Can't fetch registrations"
+      this.isPageLoading=false;
     }
   }
 
