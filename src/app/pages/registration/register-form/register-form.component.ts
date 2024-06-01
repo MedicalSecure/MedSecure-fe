@@ -130,7 +130,18 @@ export class RegisterFormComponent implements OnInit {
         this.lastCreatedRegisterIdFromResponse = response.id;
         this.isPageLoading = false;
         //TODO show confirmation message here
-        this.router.navigate(['/register']);
+        
+        let navigateToRegisterDetails=true;
+        
+        if(navigateToRegisterDetails){
+          //Navigate to Register details
+          let registrationId=JSON.stringify(response.id);
+          this.router.navigate(['/', 'register-details', { registrationId }]);
+        }else{
+          //Navigate to Register list
+          this.router.navigate(['/register']);
+        }
+        
       },
       (error) => {
         console.error(error.error);
