@@ -200,10 +200,13 @@
                 <h5 class="card-title"><strong> History</strong></h5>
                 <div class="card-text">
                   <ul>
-                    <li class="text-primary" *ngFor="let item of historiesMappedByDate">
-                      <p *ngIf="item.status==0">Resident on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
-                      <p *ngIf="item.status==1">Out on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
-                      <p *ngIf="item.status==2">Registered on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
+                    <li class="text-primary" *ngFor="let item of historiesMappedByDate;let i = index">
+                      <div [ngClass]="i==0 ? 'highlight rounded':''" style="width: fit-content;">
+                        <p *ngIf="item.status==0" class="m-0"><span class="text-success fw-bold">Resident</span> on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
+                        <p *ngIf="item.status==1" class="m-0"><span class="text-danger fw-bold">Out</span> on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
+                        <p *ngIf="item.status==2" class="m-0"><span class="text-warning fw-bold">Registered</span> on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
+                      </div>
+                      
                     </li>                   
                   </ul>
               </div>
