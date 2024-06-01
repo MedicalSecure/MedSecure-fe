@@ -13,7 +13,7 @@ import { TasksComponent } from './pages/nurseTasks/nurseTasks.component';
 import { MasonryDpiComponent } from './pages/registration/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/registration/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/registration/register-list/register-list.component';
-import { DashboardReceptionComponent } from './pages/dashboard-reception/dashboard-reception/dashboard-reception.component';
+// import { DashboardReceptionComponent } from './pages/dashboard-reception/dashboard-reception/dashboard-reception.component';
 import { NurseDashboardComponent } from './pages/dashboards/nurse-dashboard/nurse-dashboard.component';
 import {FormUnitCareComponent} from './components/form-unit-care/form-unit-care.component';
 import { AddPersonelsComponent } from './components/add-personels/add-personels.component';
@@ -23,7 +23,7 @@ import{SupervisorDashboardComponent} from './components/supervisor-dashboard/sup
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: NurseDashboardComponent },
-  { path: 'dashboard-reception', component: DashboardReceptionComponent },
+  // { path: 'dashboard-reception', component: DashboardReceptionComponent },
   { path: 'unit-care', component: UnitCareComponent },
   { path: 'visits', component: Visits },
   { path: 'widgets', component: WidgetsComponent },
