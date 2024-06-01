@@ -125,7 +125,6 @@ export class RegisterFormComponent implements OnInit {
 
     this.registrationService.postRegister(request).subscribe(
       (response) => {
-        debugger;
         this.ResetWizard();
         console.log(response);
         this.lastCreatedRegisterIdFromResponse = response.id;
@@ -312,8 +311,14 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
-  calculateBMI(weight: number, height: number): number {
-    return calculateBMI(weight, height);
+  calculateBMIString(): string {
+    const weight = this.stp1FormGroup.get('weight')?.value;
+    const height = this.stp1FormGroup.get('height')?.value;
+    if(!height || !weight)
+      return "BMI"
+    let bmi = calculateBMI(weight, height);
+    if(bmi==-1) return "BMI";
+    return `BMI : ${bmi}`;
  }
 
   //******************* STE2 *****************************************************************************

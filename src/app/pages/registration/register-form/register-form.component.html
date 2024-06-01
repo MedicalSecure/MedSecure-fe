@@ -133,7 +133,7 @@
                       <div class="row">
                         <div class="col-md-4">
                           <input
-                            type="text"
+                            type="number"
                             class="form-control"
                             formControlName="weight"
                             id="cc-Weight"
@@ -144,7 +144,7 @@
                         </div>
                         <div class="col-md-4">
                           <input
-                            type="text"
+                            type="number"
                             formControlName="height"
                             class="form-control"
                             id="cc-Height"
@@ -160,6 +160,7 @@
                             id="cc-BMI"
                             placeholder="BMI"
                             required=""
+                            [value]="calculateBMIString()"
                             disabled
                           />
                         </div>
