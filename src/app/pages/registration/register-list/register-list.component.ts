@@ -29,7 +29,6 @@ import { RegisterDto } from '../../../model/Registration';
 import { firstValueFrom } from 'rxjs';
 import { getRegistrationStatus } from '../../../shared/utilityFunctions';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { RouterDataService } from '../../../services/routerData/router-data.service';
 
 export interface PeriodicElement {
   name: string;
@@ -112,15 +111,10 @@ export class RegisterViewComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(private router: Router ,private service: RegistrationService,private routerDataService:RouterDataService) {}
+  constructor(private router: Router ,private service: RegistrationService) {}
 
   ngOnInit() {
     this.fetchRegistrations()
-  }
-  
-  onRowClick(row: any) {
-    this.routerDataService.setData(row);
-    this.router.navigate(['/register-details']);
   }
 
   viewDetails(registerId: string) {

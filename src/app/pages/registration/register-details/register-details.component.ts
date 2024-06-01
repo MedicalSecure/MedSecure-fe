@@ -10,7 +10,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { calculateAge, getDateString, getRegistrationStatus } from '../../../shared/utilityFunctions';
 import { ActivityStatus, Gender, HistoryStatus, RegisterStatus } from '../../../enums/enum';
 import { MatChip } from '@angular/material/chips';
-import { RouterDataService } from '../../../services/routerData/router-data.service';
 import { firstValueFrom } from 'rxjs';
 
 interface MasonryItem {
@@ -48,8 +47,7 @@ export class MasonryDpiComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private service: RegistrationService,
-    private routerDataService:RouterDataService
+    private service: RegistrationService
   ) {}
 
  async ngOnInit() {
