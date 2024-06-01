@@ -197,10 +197,10 @@
                 <h5 class="card-title"><strong> History</strong></h5>
                 <div class="card-text">
                   <ul>
-                    <li class="text-primary" *ngFor="let item of getHistoryMappedByDate()">
+                    <li class="text-primary" *ngFor="let item of historiesMappedByDate">
                       <p *ngIf="item.status==0">Resident on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
                       <p *ngIf="item.status==1">Out on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
-                      <p *ngIf="item.status==2">Registred on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
+                      <p *ngIf="item.status==2">Registered on {{getDateString(item.date, "HH:MM - dd/mm/yyyy")}}</p>
                     </li>                   
                   </ul>
               </div>
@@ -214,38 +214,39 @@
                 <div class="card-text row">
                   <div class="col-7">
                     <p>Register Status :</p>
+                    <p>Save Personal Data :</p>
                     <p>Editing Status :</p>
                   </div>
                   <div class="col-5">
                     <p>
-                      @if ( currentStatus === 0) {
-                        <strong class="text-danger">Out</strong>
-                        } @else if (currentStatus === 1) {
-                        <strong class="text-success">Resident</strong>
-                        }@else if (currentStatus === 2) {
-                          <strong class="text-warning">Registered</strong>
-                        }
-                      </p>
-                      <p>
-                        <strong>{{ true ? "Enabled" : "Disabled" }}</strong>
-                      </p>
+                      <strong  class="text-success" *ngIf="currentStatus === 0">Resident</strong>
+                      <strong class="text-danger" *ngIf="currentStatus === 1">Out</strong>
+                      <strong class="text-warning" *ngIf="currentStatus === 2">Registered</strong>
+                    </p>
+                    <p>
+                      <strong class="text-danger" *ngIf="registrationData?.patient?.saveForNextTime == false">No</strong>
+                      <strong  class="text-success" *ngIf="registrationData?.patient?.saveForNextTime == true">Yes</strong>
+                    </p>
+                    <p><strong>Enabled</strong></p>
                   </div>
                 </div>
                 <div class="mt-2 d-flex justify-content-evenly">
                   <button
                     class="col-5 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
-                    [disabled]="true"
-                    (click)="onClickOutHandler()"
+                    [disabled]="currentStatus !== 0" 
+                    (click)="onClickNewEntryHandler()"
+                    style="width: fit-content;"
                   >
-                    <i class="fa fa-pencil-square-o m-0" aria-hidden="true"></i><span>Out</span>
+                  <!-- can re register only if he is in OUT status currentStatus === 0 -->
+                    <i class="fa fa-plus-square-o m-0" aria-hidden="true"></i><span>New Entry</span>
                   </button>
                   <button
                     class="col-5 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
                     style="border-color: red"
-                    [disabled]="true"
-                    (click)="onClickOutHandler()"
+                    [disabled]="currentStatus === 0"
+                    (click)="onClickArchiveHandler()"
                   >
-                    <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Out</span>
+                    <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Archive</span>
                   </button>
                 </div>
               </div>
