@@ -41,8 +41,11 @@
         <div class="wizard-container {{!isPageLoading && 'd-none'}}" style="height: 490px; overflow-y: auto" >
           <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
         </div>
+        <div class="wizard-container {{!errorMessage && 'd-none'}}" style="height: 490px; overflow-y: auto" >
+          <div class="mx-auto pe-5 mt-5" style="width: fit-content"><h4 class="text-danger">{{errorMessage}}</h4></div>
+        </div>
         
-        <div class="table-responsive mt-1 {{isPageLoading && 'd-none'}}">
+        <div class="table-responsive mt-1" *ngIf="isPageLoading==false && errorMessage == undefined">
           <ngx-masonry [options]="masonryOptions">
           <!-- START MASONRY ********************************  -->
             

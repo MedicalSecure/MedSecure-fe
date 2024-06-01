@@ -34,9 +34,12 @@ export class MasonryDpiComponent {
   };
   cards=_cards;
   registrationData:RegisterDto|undefined;
+  registrationId:string|undefined;
   isPageLoading=true;
   isArchived=true;
   currentStatus:HistoryStatus=HistoryStatus.Out;
+
+  errorMessage:string|undefined;
 
   //caching for optimizing performance
   historiesMappedByDate:HistoryDto[]=[];
@@ -49,28 +52,46 @@ export class MasonryDpiComponent {
     private routerDataService:RouterDataService
   ) {}
 
-  ngOnInit() {
+ async ngOnInit() {
     //GET DATA FROM ROUTE
-    this.routerDataService.data$.subscribe((data) => {
-      this.registrationData = data;
-      // Process the data as needed
+    let dataJson=this.route.snapshot.paramMap.get('registrationId');
+    let minimumLogicalJsonLength=36 //characters GUID = 36
+    if(dataJson && dataJson.length >= minimumLogicalJsonLength)
+    {
       try {
-        if(!data || !data.id) throw Error("error in getting the data")
-        this.registrationData = data;
-        let isActive = this.registrationData?.status === RegisterStatus.Active;
-        this.isArchived = !isActive;
-        this.currentStatus = this.getPatientStatus();
-        this.fillHistoryMappedByDate();
-        
-        this.isPageLoading = false;
+        this.registrationId = JSON.parse(dataJson);
+        if(!this.registrationId || this.registrationId.length<36)
+          throw Error("Register id is invalid")
+        await this.fetchRegisterById(this.registrationId);
       } catch (error) {
+        console.error("cant parse register to view, please check the link, did you come from the right page ?");
         console.error(error)
-        console.error(
-          'cant parse register to view, please check the link, did you come from the right page ?'
-          //show error here TODO
-        );
+        this.errorMessage="Can't fetch data";
+
+        //show error here TODO
       }
-    });
+    }else{
+      this.errorMessage=`register id ${dataJson} is invalid` 
+      console.error(this.errorMessage)
+    }
+    this.isPageLoading=false;
+
+  }
+
+  async fetchRegisterById(registerId:string){
+    this.isPageLoading=true;
+    let observable=this.service.getRegisterById(registerId);
+    let result = await firstValueFrom(observable);
+    if(!result || !result.register || !result.register.id)
+      throw Error("Invalid register from backend")
+    this.registrationData=result.register;
+    let isActive = this.registrationData?.status === RegisterStatus.Active;
+    this.isArchived = !isActive;
+    this.currentStatus = this.getPatientStatus();
+    this.fillHistoryMappedByDate();
+    
+    this.isPageLoading = false;
+    this.errorMessage=undefined;
   }
 
   async onClickNewEntryHandler(){
@@ -90,10 +111,13 @@ export class MasonryDpiComponent {
       let updatedRegisterId = result.id;
       console.log("Unarchive result : ");
       console.log(result);
-      //we can redirect by id here or refresh and get register by id ...
+      if(updatedRegisterId.length==36)
+        this.fetchRegisterById(updatedRegisterId)
     } catch (error) {
       console.error(error)
+      this.errorMessage="Can't fetch data";
     }
+    this.isPageLoading=false;
     
   }
 
@@ -112,10 +136,13 @@ export class MasonryDpiComponent {
       let updatedRegisterId = result.id;
       console.log("Archive result : ");
       console.log(result);
-      //we can redirect by id here or refresh and get register by id ...
+      if(updatedRegisterId.length==36)
+        this.fetchRegisterById(updatedRegisterId)
     } catch (error) {
       console.error(error)
+      this.errorMessage="Can't fetch data";
     }
+    this.isPageLoading=false;
   }
 
   getRegisterStatus( status: RegisterStatus | undefined | null):string{

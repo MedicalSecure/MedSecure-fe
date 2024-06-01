@@ -7,6 +7,7 @@ import {
   GetRegistrationResponse,
   CreateRegisterRequest,
   archiveUnarchiveRequest,
+  GetRegisterByIdResponse,
 } from '../../model/Registration';
 
 import { Observable, catchError, map } from 'rxjs';
@@ -49,6 +50,27 @@ export class RegistrationService {
           return parseDates(response);
         })
       );
+  }
+
+  getRegisterById(
+    registerId: string,
+    maxRetries: number = 3,
+    retryDelayInMs: number = 1000,
+    displayErrorMessages: boolean = true
+  ): Observable<GetRegisterByIdResponse> {
+    let url = this.url ;
+
+/*     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
+      maxRetries,
+      retryDelayInMs,
+      displayErrorMessages
+    ); */
+
+    return this.http
+      .get<GetRegisterByIdResponse>(url+ `/${registerId}`, {
+        //headers: interceptorHeaders,
+      })
+      .pipe(map((response) => parseDates(response)));
   }
 
   // register form

@@ -156,9 +156,9 @@
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
               <td mat-cell *matCellDef="let element">
-                @if ( element.currentStatus === 1) {
+                @if ( element.currentStatus === 0) {
                 <mat-chip class="element mat-chip" style="background-color: rgba(255, 0, 0, 0.05); border: 1px solid red">Out</mat-chip>
-                } @else if (element.currentStatus === 0) {
+                } @else if (element.currentStatus === 1) {
                 <mat-chip class="element mat-chip" style="background-color: rgba(17, 255, 33, 0.05); border: 1px solid green">Resident</mat-chip>
                 }@else if (element.currentStatus === 2) {
                   <mat-chip class="element mat-chip" style="background-color: rgba(195, 207, 26, 0.05); border: 1px solid rgb(255, 208, 0)">Registered</mat-chip>
@@ -178,9 +178,9 @@
             <tr
               mat-row
               *matRowDef="let row; columns: columnsToDisplay"
-              (click)="onRowClick(row)"
+              [routerLink]="['/', 'register-details', { registrationId: row.id | json }]"
             ></tr>
-
+                <!-- (click)="onRowClick" -->
             <!-- Row shown when there is no matching data. BUT NOT LOADING-->
             <tr class="mat-row" *matNoDataRow>
               <td *ngIf="fetchedData.length > 0 && !isPageLoading" class="mat-cell pt-2" colspan="6">No data matching the filter</td>
