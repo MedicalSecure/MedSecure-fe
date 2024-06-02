@@ -134,6 +134,7 @@ export class AddPrescriptionComponent implements DoCheck {
     const filteredPosologies: PosologyCreateDto[] = this.newPosologies.map(
       (posology) => {
         var x: PosologyCreateDto = {
+          medication:posology.medication,
           medicationId: posology.medication?.id ?? "no id given, impossible",
           startDate: posology.startDate,
           endDate: posology.endDate,
