@@ -20,7 +20,8 @@ import { parseDates } from '../bacPatient/bac-patient-services.service';
 })
 export class RegistrationService {
   // Register component
-  url = 'http://localhost:5010/registers';
+  //url = 'http://localhost:5010/registers'; //local
+  url = 'http://localhost:6004/registration-service/registers'; //api gateway through docker
   constructor(private http: HttpClient) {}
 
   getRegistrations(
@@ -87,7 +88,7 @@ export class RegistrationService {
     return this.http.post<CreatedResponse>(url, request);
   }
 
-  updateComment(id: string, note: string) {
+/*   updateComment(id: string, note: string) {
     const body = { Id: id, Note: note };
     return this.http.put(this.url, body).subscribe(
       (response) => {
@@ -111,5 +112,5 @@ export class RegistrationService {
         throw error;
       })
     );
-  }
+  } */
 }
