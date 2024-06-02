@@ -1,6 +1,8 @@
 import { PrescriptionStatus, HistoryStatus } from '../enums/enum';
+import { HistoryDto } from '../model/Registration';
 import { PosologyDto, PrescriptionDto } from '../types/prescriptionDTOs';
 import { History, RegisterForPrescription } from '../types/registerDTOs';
+
 
 export function calculateAge(dateOfBirth: Date): number {
   const currentDate = new Date();
@@ -68,7 +70,7 @@ export function getDateString(
 }
 
 export function getRegistrationStatus(
-  historyList: History[] | null | undefined,
+  historyList: HistoryDto[] | null | undefined,
   registerId: string = 'not specified'
 ): HistoryStatus {
   if (!historyList) {
@@ -98,7 +100,7 @@ export function getRegistrationStatus(
 
 //Get the last registration date from registrations history
 export function getRegistrationDate(
-  historyList: History[] | null | undefined,
+  historyList: HistoryDto[] | null | undefined,
   backUpRegisterDate: string | Date = '1999/9/9',
   registerId: string = 'not specified'
 ): Date {
@@ -126,6 +128,7 @@ export function getRegistrationDate(
   // Return the status of the first history object in the sorted list
   return sortedHistory[0].date;
 }
+
 
 export function getActivePrescriptions(
   register: RegisterForPrescription

@@ -1,0 +1,186 @@
+<div class="content-wrapper">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+      [routerLink]="['/', 'register-view']"
+      routerLinkActive="active"
+    >
+      Liste des Patients
+    </button>
+  </div>
+
+  <div class="card" style="border-radius: 0%">
+    <div class="card-body">
+      <app-wizard-header
+        (currentStepChange)="SwitchToStep($event)"
+        [switchCondition]="true"
+        [currentStep]="stepNumber"
+        [size]="3"
+        [IconSizeRatio]="0.6"
+        [steps]="steps"
+        [showSteps$WithTitle]="false"
+      >
+      </app-wizard-header>
+
+      <div class="wizard-container" style="height: 470px; overflow-y: auto">
+        <!--step 1-->
+        <div class="wizard-step" [class.active]="stepNumber === 1">
+          <div class="row mb-3">
+            <div class="col-md-6 mb-3">
+              <label for="exampleInputPatientname">Patient name:</label>
+              <input type="text" class="form-control form-control-sm" id="exampleInputPatientname" placeholder="name" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Gender:</label>
+              <div>
+                  <label class="mr-2">
+                      <input type="radio" name="gender" value="male" /> Male
+                  </label>
+                  <br/>
+                  <label>
+                      <input type="radio" name="gender" value="female" /> Female
+                  </label>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6 mb-3">
+              <label for="exampleInputage">Age :</label>
+              <input type="number" class="form-control form-control-sm" id="exampleInputage" placeholder="age" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="exampleInputH">Height:</label>
+              <input type="number" class="form-control form-control-sm" id="height" placeholder="Enter height (cm)" formControlName="height" required />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6 mb-3">
+              <label for="exampleInputW">Weight:</label>
+              <input type="number" class="form-control form-control-sm" id="weight" placeholder="Enter weight (kg)" formControlName="weight" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="exampleInputage">Activity Status:</label>
+              <div class="mr-2">
+                <input type="text" class="form-control form-control-sm" id="activity" formControlName="activity" placeholder="Do you workout?" required list="activityOptions" />
+                <datalist id="activityOptions">
+                  <option *ngFor="let activity of activities" [value]="activity.viewValue"></option>
+                </datalist>
+              </div>
+            </div>
+          </div>
+      </div>
+        <!--step 2-->
+        <div class="wizard-step" [class.active]="stepNumber === 2">
+          <!-- Content for step 2 goes here -->
+          <ul
+            class="list-group list-group-flush"
+            *ngFor="let symptom of allergySymptoms"
+          >
+            <li class="list-group-item">
+              <input
+                style="margin-left: 15px; margin-right: 5px"
+                type="checkbox"
+                id="{{ symptom.id }}"
+                formControlName="allergySymptoms"
+                [value]="symptom.id"
+              />
+              {{ symptom.name }}
+            </li>
+          </ul>
+        </div>
+
+        <!--step 3-->
+        <div class="wizard-step" [class.active]="stepNumber === 3">
+          <!-- Content for step 3 goes here -->
+          <ul class="list-group list-group-flush" *ngFor="let item of items">
+            <h5><i class={{item.icon}}></i> {{ item.name }}</h5>
+            <li class="list-group-item">
+              <div *ngFor="let group of item.groups">
+                <input
+                  type="checkbox"
+                  style="margin-right: 5px"
+                  (change)="toggleExpanded(group)"
+                />
+                {{ group.name }}
+                <div *ngIf="group.expand">
+                  <div *ngFor="let child of group.children">
+                    <input
+                      style="margin-left: 20px; margin-right: 5px"
+                      type="checkbox"
+                      (change)="onItemChange($event, child)"
+                    />
+                    {{ child.name }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!--step 4-->
+        <div class="wizard-step" [class.active]="stepNumber === 4">
+          <!-- Content for step 4 goes here -->
+          
+          <p>
+            <i class="fa fa-exclamation-triangle"></i>
+            <em> Consider only <strong>first-degree relatives</strong></em>
+          </p>
+          <br />
+          <ul class="list-group list-group-flush" *ngFor="let item of cardio">
+            <h5>{{ item.name }}</h5>
+            <li class="list-group-item">
+              <div *ngFor="let group of item.groups">
+                <input
+                  type="checkbox"
+                  style="margin-right: 5px"
+                  (change)="toggleExpanded(group)"
+                />
+                {{ group.name }}
+                <div *ngIf="group.expand">
+                  <div *ngFor="let child of group.children">
+                    <input
+                      style="margin-left: 15px; margin-right: 5px"
+                      type="checkbox"
+                      (change)="onItemChange($event, child)"
+                    />
+                    {{ child.name }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div class="col-12 col-lg-8 mb-4">
+          <button
+            type="button"
+            class="btn btn-outline-success"
+            (click)="onCancelClick()"
+          >
+            Cancel
+          </button>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="col-12 col-lg-8 mb-4">
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              (click)="onPrevClick()"
+            >
+              Previous
+            </button>
+          </div>
+          <div class="col-12 col-lg-8 mb-4">
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              (click)="onNextClick()"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+      

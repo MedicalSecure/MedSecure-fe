@@ -1,0 +1,689 @@
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Registration Form</h4>
+            <p class="card-subtitle card-subtitle-dash">
+              Complete patient registration
+            </p>
+          </div>
+
+          <div class="btn-wrapper">
+            <a
+              href="#"
+              class="btn btn-primary text-white align-items-center"
+              [routerLink]="['/', 'register']"
+              routerLinkActive="active"
+            >
+              <i class="fa fa-address-book-o" aria-hidden="true"></i> Patients
+              List
+            </a>
+            <a
+              href="#"
+              class="btn btn-danger text-white align-items-center"
+              [routerLink]="['/', 'report-issue-csv']"
+              style="border-color: red"
+            >
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
+        </div>
+        <div>
+          <!-- Header -->
+          <app-wizard-header
+            (currentStepChange)="SwitchToStep($event)"
+            [switchCondition]="isFormValid"
+            [currentStep]="stepNumber"
+            [size]="3"
+            [IconSizeRatio]="0.6"
+            [steps]="steps"
+            [showSteps$WithTitle]="false"
+          >
+          </app-wizard-header>
+          @if(isPageLoading){
+            <div class="wizard-container" style="height: 490px; overflow-y: auto" >
+              <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
+            </div>
+          }
+          <div class="wizard-container {{isPageLoading && 'd-none'}}" style="height: 450px; overflow-y: auto" >
+            <form [formGroup]="stp1FormGroup">
+              <!--step 1 Patient information-->
+
+              <div class="wizard-step" [class.active]="stepNumber === 1">
+                <div class="container mt-4">
+                  <div class="row">
+                    <!-- Right SIDE : Date of birth ... -->
+                    <div class="col-md-4 order-md-2 mb-3">
+                      <h4>Gender*</h4>
+                      <div class="d-block my-3">
+                        <div class="custom-control custom-radio">
+                          <input
+                            id="credit"
+                            type="radio"
+                            formControlName="gender"
+                            class="custom-control-input"
+                            checked=""
+                            required=""
+                            value="Male"
+                          />
+                          <label
+                            class="custom-control-label"
+                            style="margin-left: 5px"
+                            for="credit"
+                            >Male</label
+                          >
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input
+                            id="debit"
+                            type="radio"
+                            class="custom-control-input"
+                            required=""
+                            formControlName="gender"
+                            value="Female"
+                          />
+                          <label
+                            class="custom-control-label"
+                            style="margin-left: 5px"
+                            for="debit"
+                            >Female</label
+                          >
+                        </div>
+                        <p *ngIf="stp1FormGroup.controls.gender.errors?.['required']" class="text-danger">
+                          Gender is required.
+                        </p>
+                      </div>
+                      <div class="row">
+                        <div class="mb-3">
+                          <input
+                            type="date"
+                            formControlName="dateOfBirth"
+                            class="form-control {{ stp1FormGroup.controls.dateOfBirth.errors && 'border-danger'}}"
+
+                            id="cc-name"
+                            placeholder="Date of birth* (Required)"
+                            required=""
+                            [max]="today.toISOString().split('T')[0]"
+                            [min]="hundredFiftyYearsAgo.toISOString().split('T')[0]"
+                          />
+                          <div *ngIf="stp1FormGroup.controls.dateOfBirth.errors">
+                            <p
+                              *ngIf="stp1FormGroup.controls.dateOfBirth.errors['required']"
+                              class="text-danger"
+                            >
+                              Date of birth is required.
+                            </p>
+                            <p
+                              *ngIf="stp1FormGroup.controls.dateOfBirth.errors['invalidDate']"
+                              class="text-danger"
+                            >
+                              Invalid date format.
+                            </p>
+                            <p
+                              *ngIf="stp1FormGroup.controls.dateOfBirth.errors['dateOutOfRange']"
+                              class="text-danger"
+                            >
+                              Date of birth must be between {{ hundredFiftyYearsAgo.toISOString().split('T')[0] }} and {{ today.toISOString().split('T')[0] }}.
+                           </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <input
+                            type="number"
+                            class="form-control"
+                            formControlName="weight"
+                            id="cc-Weight"
+                            placeholder="Weight kg."
+                            required=""
+                          />
+                          <div class="invalid-feedback">Weight is required</div>
+                        </div>
+                        <div class="col-md-4">
+                          <input
+                            type="number"
+                            formControlName="height"
+                            class="form-control"
+                            id="cc-Height"
+                            placeholder="Height cm."
+                            required=""
+                          />
+                          <div class="invalid-feedback">Height is required</div>
+                        </div>
+                        <div class="col-md-4">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="cc-BMI"
+                            placeholder="BMI"
+                            required=""
+                            [value]="calculateBMIString()"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          formControlName="addressIsRegisterations"
+                          class="custom-control-input"
+                          id="same-address"
+                        />
+                        <label
+                          class="custom-control-label"
+                          style="margin-left: 5px"
+                          for="same-address"
+                          >current address is the same as registration
+                          address</label
+                        >
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          formControlName="saveForNextTime"
+                          class="custom-control-input"
+                          id="save-info"
+                        />
+                        <label
+                          class="custom-control-label"
+                          style="margin-left: 5px"
+                          for="save-info"
+                          >Save this information for next time</label
+                        >
+                      </div>
+                      <hr />
+
+                      <!-- Family Status Section -->
+                      <h4 class="mb-3">Family Status</h4>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <input
+                            type="text"
+                            formControlName="familyStatus"
+                            class="form-control form-control-sm"
+                            style="width: 200px"
+                            id="marital-status"
+                            formControlName="familyStatus"
+                            placeholder="Marital Status..."
+                            required
+                            list="maritalstatus"
+                          />
+                          <datalist id="maritalstatus">
+                            <option
+                              *ngFor="let marital of maritals"
+                              [value]="marital.viewValue"
+                            ></option>
+                          </datalist>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <input
+                            type="text"
+                            formControlName="children"
+                            class="form-control form-control-sm"
+                            style="width: 200px"
+                            id="children-status"
+                            formControlName="children"
+                            placeholder="Children..."
+                            required
+                            list="childrenstatus"
+                          />
+                          <datalist id="childrenstatus">
+                            <option
+                              *ngFor="let child of children"
+                              [value]="child.viewValue"
+                            ></option>
+                          </datalist>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- LEFT SIDE : FIRST LAST NAME ... -->
+                    <div class="col-md-8 order-md-1">
+                      <form class="needs-validation" novalidate="">
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <input
+                              type="text"
+                              formControlName="firstName"
+                              class="form-control {{ stp1FormGroup.controls.firstName.errors && 'border-danger'}}"
+                              id="firstName"
+                              placeholder="First name (Required)"
+                              required=""
+                            />
+                            <p
+                              *ngIf="stp1FormGroup.controls.firstName.errors"
+                              class="text-danger"
+                            >
+                             First name of 2 characters at least is Required
+                           </p>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <input
+                              type="text"
+                              formControlName="lastName"
+                              class="form-control {{ stp1FormGroup.controls.lastName.errors && 'border-danger'}}"
+                              id="lastName"
+                              placeholder="Last name (Required)"
+                              required="Last name"
+                            />
+                            <p
+                              *ngIf="stp1FormGroup.controls.lastName.errors"
+                              class="text-danger"
+                            >
+                             Last name of 2 characters at least is Required
+                           </p>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">CIN*</span>
+                            </div>
+                            <input
+                              type="text"
+                              formControlName="identity"
+                              class="form-control {{ stp1FormGroup.controls.identity.errors && 'border-danger'}}"
+                              id="CIN"
+                              placeholder="Enter CIN (Required)"
+                              required=""
+                            />
+                          
+                          </div>
+                          <p
+                              *ngIf="stp1FormGroup.controls.identity.errors"
+                              class="text-danger"
+                            >
+                             CIN must consists of 8 numbers
+                           </p>
+                        </div>
+
+                        <div class="mb-3">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">CNAM</span>
+                            </div>
+                            <input
+                              type="number"
+                              formControlName="cnam"
+                              class="form-control"
+                              id="CNAM"
+                              placeholder="Enter CNAM Code"
+                              required=""
+                            />
+                            <div class="invalid-feedback" style="width: 100%">
+                              Your CNAM Code is required.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Assurance</span>
+                            </div>
+                            <input
+                              type="text"
+                              formControlName="assurance"
+                              class="form-control"
+                              id="Assurance"
+                              placeholder="Enter Assurance Code"
+                              required=""
+                            />
+                            <div class="invalid-feedback" style="width: 100%">
+                              Your Assurance is required.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <input
+                            type="email"
+                            formControlName="email"
+                            class="form-control {{ stp1FormGroup.controls.email.errors && 'border-danger'}}"
+                            id="email"
+                            placeholder="Email (Optional)"
+                          />
+                          <p
+                              *ngIf="stp1FormGroup.controls.email.errors"
+                              class="text-danger"
+                            >
+                            Please enter a valid email address for updates.
+                           </p>
+                        </div>
+                        <div class="mb-3">
+                          <input
+                            type="text"
+                            formControlName="address1"
+                            class="form-control"
+                            id="address"
+                            placeholder="Address (Optional)"
+                            required=""
+                          />
+                          <div class="invalid-feedback">
+                            Please enter the correct address.
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <input
+                            type="text"
+                            formControlName="address2"
+                            class="form-control"
+                            id="address2"
+                            placeholder="Address 2 (Optional)"
+                          />
+                        </div>
+                        <div class="row">
+                          <div class="col-md-3 mb-3">
+                            <input
+                              type="text"
+                              formControlName="activityStatus"
+                              class="form-control form-control-sm"
+                              style="width: 200px"
+                              id="activity"
+                              placeholder="Activity Status"
+                              required
+                              list="activityOptions"
+                            />
+                            <datalist id="activityOptions">
+                              <option
+                                *ngFor="let activity of activities"
+                                [value]="activity.viewValue"
+                              ></option>
+                            </datalist>
+                          </div>
+
+                          <div class="col-md-3 mb-3">
+                            <input
+                              type="text"
+                              formControlName="country"
+                              class="form-control form-control-sm"
+                              style="width: 200px"
+                              id="country"
+                              placeholder="Select a Country"
+                              required
+                              list="countryOptions"
+                            />
+                            <datalist id="countryOptions">
+                              <option
+                                *ngFor="let country of countries"
+                                [value]="country"
+                              ></option>
+                            </datalist>
+                            <div class="invalid-feedback">
+                              Please select a valid country.
+                            </div>
+                          </div>
+
+                          <div class="col-md-3 mb-3">
+                            <input
+                              type="text"
+                              formControlName="state"
+                              class="form-control form-control-sm"
+                              style="width: 200px"
+                              id="state"
+                              placeholder="Select a State"
+                              required
+                              list="stateOptions"
+                            />
+                            <datalist id="stateOptions">
+                              <option
+                                *ngFor="let state of states"
+                                [value]="state"
+                              ></option>
+                            </datalist>
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+
+                          <div class="col-md-3 mb-3">
+                            <input
+                              type="text"
+                              formControlName="zipCode"
+                              class="form-control"
+                              id="zipCode"
+                              style="width: 110px"
+                              placeholder="Zip-Code"
+                              required
+                            />
+                            <div class="invalid-feedback">
+                              Zip code required.
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <form [formGroup]="allergyForm">
+              <!--step 2 Allergies-->
+              <div class="wizard-step" [class.active]="stepNumber === 2">
+                <div class="container mt-4">
+                  <div class="row">
+                    <div
+                      class="col-md-3"
+                      *ngFor="
+                        let category of allergyCategories;
+                        let catIndex = index
+                      "
+                    >
+                      <div class="category-column border rounded p-2">
+                        <ul style="min-height: 250px; margin-bottom: 0px">
+                          <h5>
+                            <i class="{{ category.icon }}"></i>
+                            {{ category.name }}
+                          </h5>
+                          <li class="list-group-item">
+                            <div class="form-group mb-0">
+                              <div
+                                *ngFor="
+                                  let symptom of category.symptoms;
+                                  let symIndex = index
+                                "
+                              >
+                                <label>
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    style="margin-right: 5px"
+                                    [id]="symptom.id"
+                                    [value]="symptom.id"
+                                    (change)="
+                                      onSymptomChange(
+                                        catIndex,
+                                        symIndex,
+                                        $event
+                                      )
+                                    "
+                                    [formControl]="
+                                      getSymptomControl(catIndex, symIndex)
+                                    "
+                                  />
+                                  {{ symptom.name }}
+                                </label>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <!--step 3 Personal medical history-->
+            <div class="wizard-step" [class.active]="stepNumber === 3">
+              <div class="container mt-4">
+                <div class="row">
+                  <!-- Displaying a list of items -->
+                  <div class="col-md-4 mb-3" *ngFor="let item of step3PersonalMedicalHistoryItems">
+                    <div class="category-column border rounded p-2">
+                      <ul style="min-height: 150px; margin-bottom: 0px">
+                        <!-- Displaying item name with an icon -->
+                        <h5><i class="{{ item.icon }}"></i> {{ item.name }}</h5>
+                        <!-- Iterating through each group within the item -->
+                        <li class="list-group-item">
+                          <div class="form-group mb-0">
+                            <div *ngFor="let group of item.groups">
+                              <label>
+                                <!-- Checkbox to toggle group expansion -->
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  style="margin-right: 5px"
+                                  (change)="toggleExpanded(group)"
+                                  [checked]="group.checked === true"
+                                />
+                                <!-- Displaying group name -->
+                                {{ group.name }}
+                              </label>
+                              <!-- Displaying children of the expanded group -->
+                              <div *ngIf="group.checked">
+                                <!-- Iterating through each child of the group -->
+                                <div *ngFor="let child of group.children">
+                                  <!-- Checkbox for each child item -->
+                                  <label>
+                                    <input
+                                      style="
+                                        margin-left: 20px;
+                                        margin-right: 5px;
+                                      "
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      (change)="onItemChange($event, child)"
+                                      [checked]="child.checked === true"
+                                    />
+                                    <!-- Displaying child item name -->
+                                    {{ child.name }}
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Displaying Cardio-related Items -->
+            <div class="wizard-step" [class.active]="stepNumber === 4">
+              <div class="container mt-4">
+                <div class="row">
+                  <!-- Warning message with icon -->
+                  <div class="col-md-12">
+                    <p>
+                      <i class="fa fa-exclamation-triangle"></i>
+                      Consider only
+                      <strong>first-degree relatives</strong>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- Displaying a list of cardio-related items -->
+                  <div class="col-md-4 mb-3" *ngFor="let item of step4FamilyMedHistItems">
+                    <div class="category-column border rounded p-2">
+                      <ul style="min-height: 155px; margin-bottom: 0px">
+                        <!-- Displaying item name with an icon -->
+                        <h5><i class="{{ item.icon }}"></i> {{ item.name }}</h5>
+                        <!-- Iterating through each group within the item -->
+                        <li class="list-group-item">
+                          <div class="form-group mb-0">
+                            <div *ngFor="let group of item.groups">
+                              <label>
+                                <!-- Checkbox to toggle group expansion -->
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  style="margin-right: 5px"
+                                  (change)="toggleExpanded(group)"
+                                  [checked]="group.checked === true"
+                                />
+                                <!-- Displaying group name -->
+                                {{ group.name }}
+                              </label>
+                              <!-- Displaying children of the expanded group -->
+                              <div *ngIf="group.checked">
+                                <!-- Iterating through each child of the group -->
+                                <div *ngFor="let child of group.children">
+                                  <label>
+                                    <!-- Checkbox for each child item -->
+                                    <input
+                                      style="
+                                        margin-left: 20px;
+                                        margin-right: 5px;
+                                      "
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      (change)="onItemChange($event, child)"
+                                      [checked]="child.checked === true"
+                                    />
+                                    <!-- Displaying child item name -->
+                                    {{ child.name }}
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex">
+            <div class="col-12 col-lg-8">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="onCancelClick()"
+              >
+                Cancel
+              </button>
+            </div>
+            <div class="col-lg-4 d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-primary text-white mr-3"
+                (click)="onPrevClick()"
+                [disabled]="this.stepNumber<2"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary text-white"
+                (click)="onNextClick()"
+                [disabled]="!isFormValid"
+                *ngIf="stepNumber!=4"
+              >
+                Next
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary text-white"
+                (click)="onSubmit()"
+                [disabled]="!isFormValid"
+              >
+                Finish
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
