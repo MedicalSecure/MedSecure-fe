@@ -9,7 +9,9 @@ export type PaginatedResult<TEntity> = {
   count: number;
   data: TEntity[];
 };
-
+export type CreatedResponse={
+  id:string;
+}
 //Activities
 export type ActivityDto = {
   id: string;
@@ -55,3 +57,11 @@ export type medicationType = {
   comments: Array<commentType>;
   summary?:object;
 };
+
+export type Entity = {
+  createdAt: Date;
+  modifiedAt?: Date;
+  createdBy: string;
+  modifiedBy?: string;
+};
+

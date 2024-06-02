@@ -121,7 +121,3 @@ export class MedicationsWidgetComponent implements OnChanges {
     };
   }
 }
-
-
-
-
