@@ -1,7 +1,38 @@
 .masonry-item {
-    justify-content: center;
-    width: 300px;
-    margin-bottom: 10px;
-    transition: top 0.4s ease-in-out, left 0.4s ease-in-out;
-  }
+  justify-content: center;
+  width: 300px;
+  margin-bottom: 10px;
+  transition: top 0.4s ease-in-out, left 0.4s ease-in-out;
+}
+.no-scrollbar {
+  overflow: scroll; /* or overflow: auto; */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Webkit browsers (Chrome, Safari) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.blur-background {
+  background: rgba(255, 255, 255, 0.5); /* Adjust color and opacity as needed */
+  backdrop-filter: blur(5px); /* Adjust blur intensity */
+}
+
+.clickable{
+  cursor: pointer;
+  padding: 0.1rem;
+  margin: 0;
+}
+
+.clickable:hover{
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.068);
+  padding-right: 0.4;
+  padding-left: 0.4;
   
+}
+
+
+

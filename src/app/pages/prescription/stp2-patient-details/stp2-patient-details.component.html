@@ -178,26 +178,29 @@
       <div class="card-body">
         <h5 class="card-title"><strong>MedSecure Prescriptions</strong></h5>
         <div class="card-text">
-          <ul>
-            <li class="text-primary" *ngFor="let item of inputRegister?.prescriptions;let i = index">
+          <ul style="list-style: none;padding: 0;">
+            <li class="text-primary clickable rounded" *ngFor="let item of inputRegister?.prescriptions;let i = index"
+             (click)="selectedPrescription=item" 
+             title='display prescription details'
+             >
               <div *ngIf="item.status==1" class="d-flex justify-content-between">
-                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}}</p>
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "dd/mm/yyyy AT HH:MM")}}</p>
                 <p class="text-warning fw-bold">Pending</p>
               </div>
               <div *ngIf="item.status==2" class="d-flex justify-content-between">
-                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}}</p>
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "dd/mm/yyyy AT HH:MM")}}</p>
                 <p class="text-danger fw-bold">Active</p>
               </div>
               <div *ngIf="item.status==3" class="d-flex justify-content-between">
-                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}} </p>
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "dd/mm/yyyy AT HH:MM")}} </p>
                 <p class="text-warning fw-bold">Rejected</p> 
               </div>
               <div *ngIf="item.status==4" class="d-flex justify-content-between">
-                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}} </p>
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "dd/mm/yyyy AT HH:MM")}} </p>
                 <p class="text-success fw-bold">Discontinued</p>
               </div>
               <div *ngIf="item.status==5" class="d-flex justify-content-between">
-                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}} </p>
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "dd/mm/yyyy AT HH:MM")}} </p>
                 <p class="text-success fw-bold">Completed</p>
               </div>
             </li>                   
@@ -236,4 +239,22 @@
   
   <!-- END MASONRY ********************************  -->
   </ngx-masonry>
+</div>
+
+<!-- ********************************  MODAL POPUP POP UP Prescription Details ********************************  -->
+<div *ngIf="selectedPrescription != undefined" class="modal d-block d-flex justify-content-center blur-background" (click)="selectedPrescription=undefined">
+  <!-- (click)="selectedPrescription=undefined" : is the background => to handle clicks outside the modal -->
+  <!-- (click)="$event.stopPropagation() prevent clicks inside to close the modal -->
+  <div class="card card-rounded shadow-lg col-11 col-md-10 my-auto" style="height:fit-content;max-height: 90vh;min-height: 50vh;" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h4 class="modal-title">Displaying Prescription id : {{selectedPrescription.id}}</h4>
+      <mat-icon class="align-self-center text-danger fw-bold fs-4" (click)="selectedPrescription=undefined">close</mat-icon>
+    </div>
+    <div class="modal-body overflow-scroll no-scrollbar">
+      <app-old-prescription-view  [enableActions]="false" [selectedPrescription]="selectedPrescription" [selectedRegister]="inputRegister" ></app-old-prescription-view>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger text-white px-4 " (click)="selectedPrescription=undefined">Close</button>
+    </div>
+  </div>
 </div>

@@ -13,16 +13,16 @@ import { NgxMasonryModule, NgxMasonryOptions } from 'ngx-masonry';
 import { ActivityStatus, Gender, HistoryStatus, RegisterStatus } from '../../../enums/enum';
 import { calculateBMI, getActivityStatusString, getGender } from '../../registration/register-details/register-details.component';
 import { calculateAge, getDateString, getRegistrationStatus } from '../../../shared/utilityFunctions';
-import { firstValueFrom, timeout } from 'rxjs';
 import { RegistrationService } from '../../../services/registration/registration.service';
 import { HistoryDto, RegisterDto } from '../../../model/Registration';
 import { PrescriptionDto, RegisterForPrescription, RegisterWithPrescriptions } from '../../../types/prescriptionDTOs';
 import { mapRegisterForPrsToRegisterWithPrs } from '../../../shared/DTOsExtensions';
+import { OldPrescriptionViewComponent } from '../old-prescription-view/old-prescription-view.component';
 
 @Component({
   selector: 'app-stp2-patient-details',
   standalone: true,
-  imports: [CommonModule,NgxMasonryModule, MatCardModule, RouterModule,MatProgressSpinnerModule,MatChip],
+  imports: [CommonModule,NgxMasonryModule, MatCardModule, RouterModule,MatProgressSpinnerModule,MatChip,MatIcon,OldPrescriptionViewComponent],
   templateUrl: './stp2-patient-details.component.html',
   styleUrl: './stp2-patient-details.component.css',
 })
@@ -41,8 +41,10 @@ export class Stp2PatientDetailsComponent {
   isPageLoading=true;
   isArchived=true;
   currentStatus:HistoryStatus=HistoryStatus.Out;
-
   errorMessage:string|undefined;
+
+  //when a prescription is selected => the popup will appear!
+  selectedPrescription:PrescriptionDto | undefined;
 
   //caching for optimizing performance
   historiesMappedByDate:HistoryDto[]=[];
@@ -135,8 +137,6 @@ export class Stp2PatientDetailsComponent {
   
 
 }
-
-const dummyData: medicationType[] = [];
 const _cards = [
   { title: 'General informations', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis nisi sed neque tincidunt maximus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis nisi sed neque tincidunt maximus.' },
   { title: 'Allergies', content: 'Vestibulum quis leo id magna ullamcorper venenatis. Quisque commodo massa vitae ante placerat, quis ultricies ligula lacinia.' },

@@ -43,6 +43,7 @@ import { Gender } from '../../../enums/enum';
 export class OldPrescriptionViewComponent {
   @Input() selectedPrescription: PrescriptionDto | undefined = undefined;
   @Input() selectedRegister: RegisterForPrescription | undefined = undefined;
+  @Input() enableActions=true;
 
   @Output() onClickUpdatePrescription = new EventEmitter<void>();
   @Output() onClickSuspendPrescription = new EventEmitter<void>();
