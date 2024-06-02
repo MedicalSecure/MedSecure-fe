@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, timer } from 'rxjs';
+import { Observable, firstValueFrom, timer } from 'rxjs';
 import {
   CreatePrescriptionRequest,
   CreatePrescriptionResponse,
@@ -15,16 +15,18 @@ import {
   PutPrescriptionResponse,
   PutPrescriptionStatusRequest,
   SymptomDto,
+  RegisterWithPrescriptions,
+  RegisterWithPrescriptionsDict,
 } from '../../types/prescriptionDTOs';
-import {
-  GetRegistrationsResponse,
-  RegisterDto,
-} from '../../types/registerDTOs';
+
 import { delay, map, switchMap } from 'rxjs/operators';
 import { HistoryStatus } from '../../enums/enum';
-import { Entity, GetActivitiesResponse } from '../../types';
+import { GetActivitiesResponse } from '../../types';
 import { ActivityService } from '../../components/activities/activities.component';
 import { RetryInterceptor } from '../../config/httpInterceptor';
+
+import { RegisterDto } from '../../model/Registration';
+import { RegistrationService } from '../registration/registration.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -34,7 +36,10 @@ export class PrescriptionApiService implements ActivityService {
   //private apiUrl = `http://localhost:6007/api/v${this.apiVersion}/Prescription`; // Docker
   private apiUrl = `http://localhost:6004/prescription-service/api/v${this.apiVersion}/Prescription`; // api gateway
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    public registrationService: RegistrationService
+  ) {}
 
   getPrescriptions(
     pageIndex: number = 0,
@@ -80,7 +85,7 @@ export class PrescriptionApiService implements ActivityService {
       prescription: prescriptionDto,
     };
     let x = this.http.put<PutPrescriptionResponse>(
-      this.apiUrl+"/Status",
+      this.apiUrl + '/Status',
       postPrescriptionRequest
     );
     return x;
@@ -156,36 +161,6 @@ export class PrescriptionApiService implements ActivityService {
     );
   }
 
-  getRegistrations(
-    pageIndex: number = 0,
-    pageSize: number = 10,
-    maxRetries: number = 3,
-    retryDelayInMs: number = 1000,
-    displayErrorMessages: boolean = true
-  ): Observable<GetRegistrationsResponse> {
-    let apiUrl = '../../../assets/data';
-    const params = new HttpParams()
-      .set('PageIndex', pageIndex.toString())
-      .set('PageSize', pageSize.toString());
-
-    const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
-      maxRetries,
-      retryDelayInMs,
-      displayErrorMessages
-    );
-
-    return this.http
-      .get<GetRegistrationsResponse>(apiUrl + '/registration.json', {
-        params: params,
-        headers: interceptorHeaders,
-      })
-      .pipe(
-        map((response) => {
-          return parseDates(response);
-        })
-      );
-  }
-
   getPrescriptionsByRegisterIds(
     registerIds: string[],
     maxRetries: number = 3,
@@ -213,6 +188,7 @@ export class PrescriptionApiService implements ActivityService {
       .pipe(map((response) => parseDates(response)));
   }
 
+
   public static async getRegistrationsWithPrescriptions(
     service: PrescriptionApiService,
     pageIndex: number = 0,
@@ -220,46 +196,57 @@ export class PrescriptionApiService implements ActivityService {
     maxRetries: number = 3,
     retryDelayInMs: number = 1000,
     displayErrorMessages: boolean = true
-  ): Promise<RegisterDto[]> {
-    let registrations = await service
-      .getRegistrations(pageIndex, pageSize)
-      .toPromise();
-    //debugger;
-    if (!registrations) return [];
-    let registrationsData = registrations.registrations.data;
-    const ids = registrations.registrations.data.map((item) => item.id);
+  ): Promise<RegisterWithPrescriptionsDict | null> {
+
+    let registrations = await firstValueFrom(
+      service.registrationService.getRegistrations(pageIndex, pageSize)
+    );//fetch the Page size registers first
+
+    if (!registrations) return null;
+    let registrationsData = registrations.registers.data;
+
+    // get the Ids as list from the fetched register => to get prescriptions by register ids
+    const ids = registrations.registers.data
+      .map((item) => item.id)
+      .filter((id) => id != null && id != undefined) as string[];
     let prescriptionsByRegistrationsId = await service
-      .getPrescriptionsByRegisterIds(ids,
+      .getPrescriptionsByRegisterIds(
+        ids,
         maxRetries,
         retryDelayInMs,
-        displayErrorMessages)
+        displayErrorMessages
+      )
       .toPromise();
 
-    if (
-      !prescriptionsByRegistrationsId ||
-      prescriptionsByRegistrationsId == undefined
-    )
-      return [];
+    if (!prescriptionsByRegistrationsId ||prescriptionsByRegistrationsId == undefined)
+      return null;
+
+    let result:RegisterWithPrescriptionsDict={};
 
     registrationsData.forEach((registration) => {
       if (!prescriptionsByRegistrationsId) return;
+
       let registerId = registration.id as keyof typeof prescriptionsByRegistrationsId.prescriptionsByRegisterId;
-      registration.prescriptions = prescriptionsByRegistrationsId!.prescriptionsByRegisterId[registerId];
+
+      let newObj:RegisterWithPrescriptions={
+        register:registration,
+        prescriptions:prescriptionsByRegistrationsId!.prescriptionsByRegisterId[registerId]
+      } 
+      //key : register Id, value : {register,prescriptions}
+      result[registerId] = newObj;
     });
-    return registrationsData;
+    /* type:
+      {
+        "999999999999999":{
+          register:{....(id=999999)},
+          prescriptions:[...]
+        }
+      }
+     */
+    return result;
   }
 
-  private _mapStatusEnum(value: any): HistoryStatus {
-    //the enum value is coming as number => we convert it to status enum here
-    if (value == 0) return HistoryStatus.Resident;
-    if (value == 1) return HistoryStatus.Out;
-    return HistoryStatus.Registered;
-  }
 }
-
-/* function parsePrescriptionDates(prescription:PrescriptionDto):PrescriptionDto{
-
-} */
 
 export function parseDates<T>(response: T): T {
   const dateReviver = (key: string, value: any) => {

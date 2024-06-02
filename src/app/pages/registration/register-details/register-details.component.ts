@@ -197,19 +197,7 @@ export class MasonryDpiComponent {
     }
   }
   getGender(gender:undefined | null | Gender):null|string{
-    if(gender == null || gender==undefined) return null;
-
-    switch (gender) {
-      case Gender.Male:
-        return "Male";
-      case Gender.Female:
-        return "Female";
-      case Gender.Other:
-        return "Other";
-    
-      default:
-        return "Not-given"
-    }
+    return getGender(gender);
   }
   
 }
@@ -221,6 +209,21 @@ const _cards = [
   { title: '', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec interdum lectus mauris, nec pharetra sapien imperdiet sed.' }
 ];
 
+export function getGender(gender:undefined | null | Gender):null|string{
+  if(gender == null || gender==undefined) return null;
+
+  switch (gender) {
+    case Gender.Male:
+      return "Male";
+    case Gender.Female:
+      return "Female";
+    case Gender.Other:
+      return "Other";
+  
+    default:
+      return "Not-given"
+  }
+}
 
 export function calculateBMI(weight: number, height: number): number {
   if (isNaN(weight) || isNaN(height) ||  weight <= 0 || height <= 0) {

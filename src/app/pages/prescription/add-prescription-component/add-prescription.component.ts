@@ -24,6 +24,8 @@ import {
   PosologyDto,
   PrescriptionCreateDto,
   PrescriptionDto,
+  RegisterForPrescription,
+  RegisterWithPrescriptions,
   SymptomDto,
 } from '../../../types/prescriptionDTOs';
 import {
@@ -32,15 +34,9 @@ import {
 } from '../stp5-hospitalization/stp5-hospitalization.component';
 import {
   filterScheduleDoses,
-  filterScheduleItems,
 } from '../../../components/schedule/schedule.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
-import {
-  RegisterDto,
-  RegisterForPrescription,
-} from '../../../types/registerDTOs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
 import { DrugService } from '../../../services/medication/medication.service';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
@@ -83,7 +79,7 @@ export class AddPrescriptionComponent implements DoCheck {
   selectedRegister: RegisterForPrescription | undefined;
   isAddMedicationPageValid: boolean = false;
   isHospitalizationValid: boolean = false;
-  ShowPrescriptionList: boolean = true;
+  ShowPrescriptionList: boolean = false;
   isPageLoading = false;
   updatingOldPrescriptionMode = false;
   wizardSteps: wizardStepType[] = _steps;
@@ -104,7 +100,7 @@ export class AddPrescriptionComponent implements DoCheck {
     private dietService: DietService,
     private snackBarMessagesService:SnackBarMessagesService
   )
-   {}
+  {}
 
   ngOnInit() {
     this._updateButtonsState();
@@ -214,7 +210,7 @@ export class AddPrescriptionComponent implements DoCheck {
           },
           (error) => {
             console.error(error.error);
-            this.displayNewErrorMessage(error.error.message);
+            this.displayNewErrorMessage(error.error.message ?? error.message);
             this.isPageLoading = false;
             this._updateButtonsState();
           }
@@ -222,13 +218,10 @@ export class AddPrescriptionComponent implements DoCheck {
     }
   }
 
-  async handleUpdatePrescription({
-    prescription,
-    register,
-  }: {
-    prescription: PrescriptionDto;
-    register: RegisterDto;
-  }) {
+  async handleUpdatePrescription({prescription,register,}
+    : { prescription: PrescriptionDto;register: RegisterForPrescription;})
+   {
+    debugger;
     console.log(prescription);
     this.oldPrescriptionToUpdate = prescription;
     this.clearWizard();
@@ -238,12 +231,11 @@ export class AddPrescriptionComponent implements DoCheck {
     this.stepNumber = 2;
     this.selectedDiagnosis = prescription.diagnoses;
     this.selectedSymptoms = prescription.symptoms;
-
     this.newPosologies = await this.getMedicationDTOsById(
       prescription.posologies
     );
+    this.selectedRegister = register;
 
-    this.selectedRegister = mapRegisterDtoToRegisterForPrescription(register);
     if (
       prescription?.bedId &&
       prescription.diet &&
@@ -401,6 +393,7 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   onSelectPatientChange(register: RegisterForPrescription | undefined) {
+    debugger;
     if (register == undefined) {
       // Deselect patient => clear old wizard
       this.selectedRegister = undefined;

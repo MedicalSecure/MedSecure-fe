@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { PosologyDto, PrescriptionDto } from '../../../types/prescriptionDTOs';
-import { RegisterDto } from '../../../types/registerDTOs';
+import { PosologyDto, PrescriptionDto, RegisterForPrescription, RegisterWithPrescriptions } from '../../../types/prescriptionDTOs';
 import {
   calculateAge,
   getDateString,
@@ -22,6 +21,9 @@ import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { getDietTypeString } from '../stp5-hospitalization/stp5-hospitalization.component';
+import { parseGenderEnum } from '../../registration/register-form/register-form.component';
+import { getGender } from '../../registration/register-details/register-details.component';
+import { Gender } from '../../../enums/enum';
 
 @Component({
   selector: 'app-old-prescription-view',
@@ -40,7 +42,7 @@ import { getDietTypeString } from '../stp5-hospitalization/stp5-hospitalization.
 })
 export class OldPrescriptionViewComponent {
   @Input() selectedPrescription: PrescriptionDto | undefined = undefined;
-  @Input() selectedRegister: RegisterDto | undefined = undefined;
+  @Input() selectedRegister: RegisterForPrescription | undefined = undefined;
 
   @Output() onClickUpdatePrescription = new EventEmitter<void>();
   @Output() onClickSuspendPrescription = new EventEmitter<void>();
@@ -123,6 +125,11 @@ export class OldPrescriptionViewComponent {
       () => (this.isDietLoading = false)
     );
   }
+
+  getGender(gender:undefined | null | Gender):null|string{
+    return getGender(gender);
+  }
+
 
   getRoomFromUnitCare(unitCare: UnitCareDTO | undefined): Room | null {
     //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times 

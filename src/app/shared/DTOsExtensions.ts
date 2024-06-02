@@ -1,28 +1,30 @@
-import { RegisterStatus } from "../enums/enum";
-import { PatientDto, RegisterDto, RegisterForPrescription } from "../types/registerDTOs";
+import { Gender, RegisterStatus } from "../enums/enum";
+import { PatientDto, RegisterDto } from "../model/Registration";
+import { RegisterForPrescription, RegisterWithPrescriptions } from "../types/prescriptionDTOs";
 import { getRegistrationDate, getRegistrationStatus } from "./utilityFunctions";
 
 
 //Register DTO EXTENSIONS
-export function mapRegisterDtoToRegisterForPrescription(registerDto: RegisterDto): RegisterForPrescription {
-    const { id, patient, familyMedicalHistory, personalMedicalHistory, diseases, allergies, history, test, prescriptions, createdAt, modifiedAt, createdBy, modifiedBy } = registerDto;
-  
+export function mapRegisterWithPrsToRegisterForPrs(registerWithPrescriptions: RegisterWithPrescriptions): RegisterForPrescription {
+
+    const { id, patient, familyMedicalHistory, personalMedicalHistory, diseases, allergies, history, test, createdAt } = registerWithPrescriptions.register;
+
     const fullName = patient.firstName + (patient.lastName ? ` ${patient.lastName}` : '');
   
     return {
-      id,
-      mrn: id,
-      currentStatus: getRegistrationStatus(history,id), // You may need to determine the status or leave it undefined
-      registeredAt: getRegistrationDate(history,createdAt,id), // You may need to set the registration date or leave it undefined
-      patient_id: patient.id,
+      id : id ?? "",
+      mrn: id ?? "",
+      currentStatus: getRegistrationStatus(history,id ?? ""), // You may need to determine the status or leave it undefined
+      registeredAt: getRegistrationDate(history,createdAt ?? new Date(),id ?? ""), // You may need to set the registration date or leave it undefined
+      patient_id: patient.id ?? "",
       patient_firstName: patient.firstName,
       patient_lastName: patient.lastName ?? null,
       patient_fullName: fullName,
-      patient_dateOfBirth: patient.dateOfBirth ?? null,
-      patient_identity: patient.identity ?? null,
+      patient_dateOfBirth: patient.dateOfBirth ?? new Date(),
+      patient_identity: patient.identity ,
       patient_cnam: patient.cnam ?? null,
       patient_assurance: patient.assurance ?? null,
-      patient_gender: patient.gender ?? null,
+      patient_gender: patient.gender ?? Gender.Other,
       patient_height: patient.height ?? null,
       patient_weight: patient.weight ?? null,
       patient_addressIsRegistrations: patient.addressIsRegistrations ?? null,
@@ -40,16 +42,16 @@ export function mapRegisterDtoToRegisterForPrescription(registerDto: RegisterDto
       allergies: allergies ?? [],
       history: history ?? [],
       test: test ?? [],
-      prescriptions: prescriptions ?? null,
-      createdAt,
-      modifiedAt,
-      createdBy,
-      modifiedBy
+      prescriptions: registerWithPrescriptions.prescriptions ?? null,
+      createdAt: createdAt ?? new Date(),
+      modifiedAt:undefined,//modifiedAt,
+      createdBy:"",//createdBy,
+      modifiedBy:undefined,//modifiedBy
     };
   }
 
 
- export  function mapRegisterForPrescriptionToRegisterDto(registerForPrescription: RegisterForPrescription): RegisterDto {
+/*  export  function mapRegisterForPrsToRegisterWithPrs(registerForPrescription: RegisterForPrescription): RegisterWithPrescriptions {
     const {
       id,
       patient_id,
@@ -88,9 +90,9 @@ export function mapRegisterDtoToRegisterForPrescription(registerDto: RegisterDto
     const patient: PatientDto = {
       id: patient_id,
       firstName: patient_firstName,
-      lastName: patient_lastName ?? null,
-      dateOfBirth: patient_dateOfBirth ?? null,
-      identity: patient_identity ?? null,
+      lastName: patient_lastName ?? "not-given",
+      dateOfBirth: patient_dateOfBirth ?? new Date(),
+      identity: patient_identity ?? "not-given",
       cnam: patient_cnam ?? null,
       assurance: patient_assurance ?? null,
       gender: patient_gender ?? null,
@@ -104,14 +106,10 @@ export function mapRegisterDtoToRegisterForPrescription(registerDto: RegisterDto
       country: patient_country ?? null,
       state: patient_state ?? null,
       familyStatus: patient_familyStatus ?? null,
-      children: patient_children ?? null,
-      createdAt: createdAt ?? new Date(),
-      modifiedAt: modifiedAt ?? null,
-      createdBy: createdBy ?? '',
-      modifiedBy: modifiedBy ?? null
+      children: patient_children ?? null
     };
   
-    return {
+    let reg:RegisterDto={
       id,
       patient,
       familyMedicalHistory: familyMedicalHistory ?? [],
@@ -120,11 +118,12 @@ export function mapRegisterDtoToRegisterForPrescription(registerDto: RegisterDto
       allergies: allergies ?? [],
       history: history ?? [],
       test: test ?? [],
-      prescriptions: prescriptions ?? null,
+      //prescriptions: prescriptions ?? null,
       status:status ?? RegisterStatus.Active,
-      createdAt: createdAt ?? new Date(),
-      modifiedAt,
-      createdBy: createdBy ?? '',
-      modifiedBy: undefined,
+      createdAt: createdAt ?? new Date()
     };
-  }
+    return {
+      register:reg,
+      prescriptions:prescriptions ?? []
+    }
+  } */

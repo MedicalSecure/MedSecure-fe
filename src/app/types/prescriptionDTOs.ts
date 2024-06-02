@@ -1,6 +1,7 @@
 import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
-import { FamilyStatus, Gender, PrescriptionStatus } from '../enums/enum';
+import { FamilyStatus, Gender, HistoryStatus, PrescriptionStatus, RegisterStatus } from '../enums/enum';
+import { HistoryDto, RegisterDto, RiskFactorDto, TestDto } from '../model/Registration';
 import { UnitCare } from '../model/unitCare/UnitCareData';
 import { DrugDTO } from './DrugDTOs';
 
@@ -38,6 +39,13 @@ export type GetPrescriptionsByRegisterIdResponse = {
   prescriptionsByRegisterId: { [key: string]: PrescriptionDto[] };
 };
 
+export type RegisterWithPrescriptions={
+  register:RegisterDto,
+  prescriptions:PrescriptionDto[]
+}
+export type RegisterWithPrescriptionsDict={
+  [key:string]: RegisterWithPrescriptions
+}
 export type PrescriptionDto = {
   id: string;
   registerId: string;
@@ -164,6 +172,46 @@ export type PatientForPrescription = {
   children?: number | null;
   createdAt: Date;
   modifiedAt?: Date | null;
+  createdBy: string;
+  modifiedBy?: string | null;
+};
+
+
+export type RegisterForPrescription = {
+  id: string;
+  mrn?: string;
+  currentStatus: HistoryStatus;
+  registeredAt?: Date;
+  patient_id: string;
+  patient_firstName: string;
+  patient_lastName: string;
+  patient_fullName: string;
+  patient_dateOfBirth: Date;
+  patient_identity: string | null;
+  patient_cnam?: number | null;
+  patient_assurance?: string | null;
+  patient_gender: Gender;
+  patient_height?: number | null;
+  patient_weight?: number | null;
+  patient_addressIsRegistrations?: boolean | null;
+  patient_saveForNextTime?: boolean | null;
+  patient_email?: string | null;
+  patient_address1?: string | null;
+  patient_address2?: string | null;
+  patient_country?: Country | null;
+  patient_state?: string | null;
+  patient_familyStatus?: FamilyStatus | null;
+  patient_children?: number | null;
+  familyMedicalHistory?: RiskFactorDto[];
+  personalMedicalHistory?: RiskFactorDto[];
+  diseases?: RiskFactorDto[];
+  allergies?: RiskFactorDto[];
+  history?: HistoryDto[];
+  test?: TestDto[];
+  status?:RegisterStatus;
+  prescriptions?: PrescriptionDto[] | null;
+  createdAt: Date;
+  modifiedAt?: Date;
   createdBy: string;
   modifiedBy?: string | null;
 };

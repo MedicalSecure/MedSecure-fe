@@ -11,8 +11,6 @@ import {
 import { FormsModule } from '@angular/forms';
 import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-id/filter-patient-by-name-and-sn.pipe';
 import { FamilyStatus, Gender, HistoryStatus } from '../../../enums/enum';
-import { calculateAge, getDateString } from '../../../shared/utilityFunctions';
-import { RegisterService } from '../../../services/register/register.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
@@ -30,11 +28,11 @@ import {
 } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterModule } from '@angular/router';
-import { key } from 'flatpickr/dist/types/locale';
-import { RegisterForPrescription } from '../../../types/registerDTOs';
+import { RouterModule } from '@angular/router';
 import { Country } from '../../../enums/country';
-import { mapRegisterDtoToRegisterForPrescription } from '../../../shared/DTOsExtensions';
+import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensions';
+import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
+import { RegisterForPrescription } from '../../../types/prescriptionDTOs';
 
 @Component({
   selector: 'app-stp1-patient-selection',
@@ -74,11 +72,10 @@ export class Stp1PatientSelection implements OnChanges {
   @Input()
   RegistrationsList: RegisterForPrescription[] = [];
   IsPatientListLoading = false;
-  selectedDate: string = new Date().toLocaleDateString();
-  today: Date = new Date();
-  tomorrow = new Date();
-  yesterday = new Date();
-  dataSource = new MatTableDataSource([registerForPrescriptionMock]);
+  isFailedToLoad = false;
+  selectedDate: Date = new Date();
+  dataSource = new MatTableDataSource([] as RegisterForPrescription[]);
+  ErrorMessage = '';
 
   columnsToDisplay: (keyof RegisterForPrescription)[] = [
     'mrn',
@@ -95,10 +92,10 @@ export class Stp1PatientSelection implements OnChanges {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
 
-  constructor(private registerService: RegisterService) {}
+  constructor(private prescriptionApiService:PrescriptionApiService) {}
 
   ngOnInit() {
-    this.fetchRegistrations();
+    this.fetchRegistrationsWithPrescriptions();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -109,59 +106,80 @@ export class Stp1PatientSelection implements OnChanges {
     }
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.tomorrow.setDate(this.tomorrow.getDate() + 1);
-    this.yesterday.setDate(this.yesterday.getDate() - 1);
-  }
-
   onClickPatient(selectedRegister: RegisterForPrescription) {
     this.selectedRegisterChange.emit(selectedRegister);
     this.selectedRegister = selectedRegister;
     this.onIsPatientSelectPageValidChange.emit(selectedRegister != undefined);
   }
 
-  fetchRegistrations() {
-    this.IsPatientListLoading = true;
-    this.registerService.getRegistrations().subscribe(
-      (response) => {
-        this.RegistrationsList = response.registrations.data.map(register=>mapRegisterDtoToRegisterForPrescription(register));
-        this.dataSource.data=this.RegistrationsList;
-      },
-      (error) => console.error(error),
-      () => (this.IsPatientListLoading = false)
-    );
+  async fetchRegistrationsWithPrescriptions() {
+    try {
+      this.isFailedToLoad = false;
+      this.IsPatientListLoading = true;
+      var dictByRegisterIdResponse =
+        await PrescriptionApiService.getRegistrationsWithPrescriptions(
+          this.prescriptionApiService
+        );
+      if(!dictByRegisterIdResponse) throw Error("Cant fetch registers with prescriptions");
+      let registerWithPrescriptionsList = Object.values(dictByRegisterIdResponse);
+      this.RegistrationsList=registerWithPrescriptionsList.map(item=>mapRegisterWithPrsToRegisterForPrs(item))
+      
+      //refresh the filter
+      this.changeDate((new Date()).toDateString())
+      
+      this.IsPatientListLoading = false;
+      this.isFailedToLoad = false;
+      this.ErrorMessage = '';
+    } catch (error) {
+      this.ErrorMessage = "Can't fetch registrations";
+      console.error(error);
+      this.isFailedToLoad = true;
+    }
   }
 
   changeDate(selectedDate: string) {
-    this.selectedDate = selectedDate;
-    this.today.setDate(new Date(selectedDate).getDate());
-    this.dataSource.data = [registerForPrescriptionMock].filter(
+    this.selectedDate = new Date(selectedDate);
+    let newSelectedDate = this.selectedDate.getDate();
+    this.dataSource.data = this.RegistrationsList.filter(
       (item) =>
-        new Date(item.registeredAt ?? '').getDate() === this.today.getDate()
+        new Date(item.createdAt ?? new Date()).getDate() === newSelectedDate
     );
   }
 
   onLeftButtonClick() {
-    this.dataSource.data = [registerForPrescriptionMock].filter(
+    this.selectedDate.setDate(this.selectedDate.getDate() - 1);
+    let currentSelectedDate = this.selectedDate.getDate();
+    this.dataSource.data = this.RegistrationsList.filter(
       (item) =>
-        new Date(item.registeredAt ?? '').getDate() === this.today.getDate() - 1
+        new Date(item.createdAt ?? new Date()).getDate() === currentSelectedDate
     );
-    this.today.setDate(this.today.getDate() - 1);
-    this.selectedDate = this.today.toLocaleDateString();
   }
 
   onRightButtonClick() {
-    this.dataSource.data = [registerForPrescriptionMock].filter(
+    this.selectedDate.setDate(this.selectedDate.getDate() + 1);
+    let currentSelectedDate = this.selectedDate.getDate();
+    this.dataSource.data = this.RegistrationsList.filter(
       (item) =>
-        new Date(item.registeredAt ?? '').getDate() === this.today.getDate() + 1
+        new Date(item.createdAt ?? new Date()).getDate() === currentSelectedDate
     );
-    this.today.setDate(this.today.getDate() + 1);
-    this.selectedDate = this.today.toLocaleDateString();
   }
 
   Filter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filterPredicate = (data: RegisterForPrescription, filter: string) => {
+      const p1 = data.patient_firstName.toString().toLowerCase();
+      const p2 = data.patient_lastName.toString().toLowerCase();
+      const byMRN = data.id?.toString().toLowerCase().includes(filter);
+      if(byMRN) return true;
+
+      const byName1 = (p1 + " " + p2).includes(filter)
+      if(byName1) return true;
+
+      const byName2 = (p2 + " " + p1).includes(filter)
+      if(byName2) return true;
+
+      return false;
+    };
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
@@ -187,7 +205,7 @@ const registerForPrescriptionMock: RegisterForPrescription = {
   patient_lastName: 'Doe',
   patient_fullName: 'John Doe',
   patient_dateOfBirth: new Date('1980-01-01'),
-  patient_identity: 1234567890,
+  patient_identity: "1234567890",
   patient_cnam: 9876543210,
   patient_assurance: 'Health Insurance',
   patient_gender: Gender.Male,

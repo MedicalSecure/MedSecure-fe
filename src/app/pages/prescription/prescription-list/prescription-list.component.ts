@@ -19,12 +19,11 @@ import {
   GetPrescriptionsResponse,
   PosologyDto,
   PrescriptionDto,
+  RegisterForPrescription,
+  RegisterWithPrescriptions,
 } from '../../../types/prescriptionDTOs';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
-import {
-  GetRegistrationsResponse,
-  RegisterDto,
-} from '../../../types/registerDTOs';
+
 import { PrescriptionStatus, HistoryStatus } from '../../../enums/enum';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
@@ -33,6 +32,8 @@ import {
   getTimeString,
 } from '../../../shared/utilityFunctions';
 import { OldPrescriptionViewComponent } from '../old-prescription-view/old-prescription-view.component';
+import { RegisterDto } from '../../../model/Registration';
+import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensions';
 
 @Component({
   selector: 'app-prescription-list',
@@ -53,7 +54,7 @@ export class PrescriptionListComponent implements OnInit {
   @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
   @Output() onClickUpdatePrescriptionEvent = new EventEmitter<{
     prescription: PrescriptionDto;
-    register: RegisterDto;
+    register: RegisterForPrescription;
   }>();
 
   @ViewChildren('prescriptionRows') prescriptionRows: QueryList<any>;
@@ -64,9 +65,9 @@ export class PrescriptionListComponent implements OnInit {
 
   @Input() lastCreatedPrescriptionIdFromResponse: string | undefined;
 
-  selectedRegister: RegisterDto | undefined = undefined;
+  selectedRegister: RegisterForPrescription | undefined = undefined;
   searchTerm: string = '';
-  registrations: RegisterDto[] = [];
+  registrations: RegisterWithPrescriptions[] = [];
   prescriptionsGroupedByRegisterIds: { [key: string]: PrescriptionDto[] } = {};
   isLoading: boolean = false;
   isFailedToLoad: boolean = false;
@@ -89,9 +90,10 @@ export class PrescriptionListComponent implements OnInit {
   onClickPrescription(prescription: PrescriptionDto) {
     this.selectedPrescription = prescription;
     console.log(JSON.stringify(prescription));
-    this.selectedRegister = this.registrations.filter(
-      (register) => register.id == prescription.registerId
+    let regWithPrescriptions = this.registrations.filter(
+      (registerWithPrescription) => registerWithPrescription.register.id == prescription.registerId
     )[0];
+    this.selectedRegister = mapRegisterWithPrsToRegisterForPrs(regWithPrescriptions);
   }
 
   onClickDeselectPrescription() {
@@ -110,17 +112,22 @@ export class PrescriptionListComponent implements OnInit {
     try {
       this.isFailedToLoad = false;
       this.isLoading = true;
-      var response =
+      var dictByRegisterIdResponse =
         await PrescriptionApiService.getRegistrationsWithPrescriptions(
           this.prescriptionApiService
         );
-      this.registrations = [...response];
+      if(!dictByRegisterIdResponse) throw Error("Cant fetch registers with prescriptions");
+      this.registrations = Object.values(dictByRegisterIdResponse);
       let extractedPrescriptions:PrescriptionDto[]=[];
-      response.forEach(register=>{
-        let newPrescriptions:PrescriptionDto[]=register.prescriptions? register.prescriptions.filter(p => !!p ) : []
+
+      //extract all prescriptions from the dict
+      this.registrations.forEach(registerWithPrescription=>{
+        //get the prescriptions of this register object
+        let newPrescriptions:PrescriptionDto[]=registerWithPrescription.prescriptions? registerWithPrescription.prescriptions.filter(p => !!p ) : []
+        //add the newPrescriptions to the already extracted (accumulate)
         extractedPrescriptions=[...extractedPrescriptions ,...newPrescriptions]
-      }
-      )
+      })
+      //display them sorted by date
       this.prescriptionsViewList=extractedPrescriptions.sort((a,b)=> a.createdAt < b.createdAt ? 1 : -1);
 
       this.isLoading = false;
@@ -174,8 +181,8 @@ export class PrescriptionListComponent implements OnInit {
 
   getRegister(regId: string):RegisterDto{
     return this.registrations.filter(
-      (register) => register.id == regId
-    )[0];
+      (x) => x.register.id == regId
+    )[0].register;
   }
 
   getRegisterStatus(registerId:string): HistoryStatus {
@@ -207,7 +214,7 @@ export class PrescriptionListComponent implements OnInit {
 
   navigateToUpdatePrescription(
     prescription: PrescriptionDto,
-    register: RegisterDto | undefined
+    register: RegisterForPrescription | undefined
   ) {
     if (register == undefined) return;
     console.log('sent from list');

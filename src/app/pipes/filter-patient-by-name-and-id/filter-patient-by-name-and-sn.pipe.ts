@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PatientDto } from '../../types/registerDTOs';
+import { PatientDto } from '../../model/Registration';
 
 @Pipe({
   name: 'filterPatientByNameAndSn',

@@ -87,9 +87,9 @@
           <p>Age :</p>
         </div>
         <div class="col-8">
-          <p>{{ selectedRegister?.patient?.firstName + " " + selectedRegister?.patient?.lastName }}</p>
-          <p>{{ selectedRegister?.patient?.gender }}</p>
-          <p>{{ getAge(selectedRegister?.patient?.dateOfBirth) }}</p>
+          <p>{{ selectedRegister?.patient_firstName + " " + selectedRegister?.patient_lastName }}</p>
+          <p>{{ getGender(selectedRegister?.patient_gender) ?? "Not-Given" }}</p>
+          <p>{{ getAge(selectedRegister?.patient_dateOfBirth) }}</p>
         </div>
       </div>
     </div>

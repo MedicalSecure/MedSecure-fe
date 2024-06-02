@@ -69,7 +69,7 @@
     <!-- Print a single line displaying Prescription id | Date | Patient name | doctor name And Deselect Button -->
     <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
       <p class="align-self-center m-0">Selected Prescription :</p>
-      <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{selectedRegister?.patient?.firstName}} {{selectedRegister?.patient?.lastName}} {{  getAge(selectedRegister?.patient?.dateOfBirth) }}</span>
+      <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{selectedRegister?.patient_firstName}} {{selectedRegister?.patient_lastName}} {{  getAge(selectedRegister?.patient_dateOfBirth) }}</span>
       <mat-icon class="align-self-center text-danger fw-bold" (click)="onClickDeselectPrescription()">close</mat-icon>
     </div>
     <!-- Display Prescription details component -->
