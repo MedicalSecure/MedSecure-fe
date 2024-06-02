@@ -30,9 +30,9 @@ import { RetryInterceptor } from '../../config/httpInterceptor';
 })
 export class PrescriptionApiService implements ActivityService {
   private apiVersion: number = 1; // Replace 'v1' with your desired API version
-  private apiUrl = `http://localhost:5007/api/v${this.apiVersion}/Prescription`; // swagger
+  //private apiUrl = `http://localhost:5007/api/v${this.apiVersion}/Prescription`; // swagger
   //private apiUrl = `http://localhost:6007/api/v${this.apiVersion}/Prescription`; // Docker
-  //private apiUrl = `http://localhost:5007/prescription-service/api/v${this.apiVersion}/Prescription`; // api gateway
+  private apiUrl = `http://localhost:6004/prescription-service/api/v${this.apiVersion}/Prescription`; // api gateway
 
   constructor(private http: HttpClient) {}
 
