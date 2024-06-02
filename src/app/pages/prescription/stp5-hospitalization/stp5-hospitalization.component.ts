@@ -287,7 +287,7 @@ export class Stp5HospitalizationComponent {
   fetchUnitCaresThenDiets() {
     this.isUnitCaresLoading = true;
     this.myForm.disable();
-    this.UnitCareService.getUnitCares().subscribe(
+    this.UnitCareService.getCardData().subscribe(
       (response) => {
         this.UnitCareList = response.unitCares.data;
         // set selected from parent here in case of update !!
