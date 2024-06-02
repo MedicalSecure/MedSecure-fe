@@ -206,7 +206,7 @@ export class Stp1ImportMapDrugs implements OnInit {
             code: drug.Code,
             unit: drug.Unit,
             description: drug.Description,
-            expiredAt: tryParseDate(drug.ExpiredAt,this.excelDateFormat),
+            expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt,this.excelDateFormat),
             stock: tryParseInt(drug.Stock),
             alertStock: tryParseInt(drug.AlertStock),
             avrgStock: tryParseInt(drug.AverageStock),
@@ -275,10 +275,11 @@ export type MedicationType = {
   IsDrugExist?: string | boolean;
 };
 
-export function tryParseDate(
+export function tryParseDateOnlyFromExcel(
   input: string | Date,
   excelDateFormat: string = 'dd-mm-yyyy'
 ): Date {
+  debugger;
   try {
     if (input instanceof Date) {
       return input;
@@ -288,6 +289,15 @@ export function tryParseDate(
       inputParsed = input.replace(/--/g, '-');
     } else {
       throw new Error('Invalid date: ' + input);
+    }
+
+    try {
+      let aTry=new Date(inputParsed)
+      if (!isNaN(aTry.getTime())) {
+        return aTry;
+      }
+    } catch (error) {
+      //just continue
     }
 
     let [firstPart, secondPart, third] = inputParsed.split('-').map(Number);

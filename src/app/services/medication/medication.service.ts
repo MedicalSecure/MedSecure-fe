@@ -12,6 +12,7 @@ import { Observable, map } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MedicationType } from '../../pages/pharmacy/stp1-import-map-drugs/stp1-import-map-drugs.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { parseDates } from '../prescription/prescription-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,12 +22,17 @@ export class DrugService {
 
   constructor(private http: HttpClient) {}
 
-  apiCheck = 'http://localhost:5008/api/v1/drugsChecked';
+  apiUrl="http://localhost:6004/medication-service/api/v1";
+  apiCheck = this.apiUrl+'/drugsChecked';
 
-  apiCreate = 'http://localhost:5008/api/v1/drugs';
+  apiCrud = this.apiUrl+'/drugs';
 
   getMedications() {
-    return this.http.get<GetDrugsResponse>('./../../assets/data/medications.json');
+    return this.http.get<GetDrugsResponse>(this.apiCrud).pipe(
+      map((response) => {
+        return parseDates(response);
+      })
+    );;
   }
 
   checkDrugs(
@@ -54,13 +60,13 @@ export class DrugService {
       drugs: drugDto,
     };
     return this.http.post<CreateDrugResponse>(
-      this.apiCreate,
+      this.apiCrud,
       postDrugRequest);
   }
 
   getData(dataSource: MatTableDataSource<MedicationType, MatPaginator>) {
     this.http
-      .get<GetDrugsResponse>('http://localhost:5008/api/v1/drugs')
+      .get<GetDrugsResponse>(this.apiCrud)
       .subscribe(
         (response: GetDrugsResponse) => {
           if (response && response.drugs.data) {
