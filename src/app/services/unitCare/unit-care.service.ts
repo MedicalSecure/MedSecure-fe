@@ -16,7 +16,6 @@ export class UnitCareService  {
 
 
   getCardData(): Observable<UnitCareData> {
-
     return this.http.get<UnitCareData>('http://localhost:5102/unitCares').pipe(map(parseDates));
   }
 
@@ -33,14 +32,15 @@ export class UnitCareService  {
   private apiVersion: number = 1; // Replace 'v1' with your desired API version
   private apiUrl = `http://localhost:5007/api/v${this.apiVersion}/UnitCare`;
 
+  //TO REMOVE
   getUnitCares(): Observable<UnitCareData> {
     this.apiUrl="../../../assets/data/unitcares.json"
-
     let x = this.http.get<UnitCareData>(this.apiUrl).pipe(map(parseDates));
     //debugger;
     return x;
   }
 
+  //TO REMOVE
   getUnitCareByBedId(bedId: string): Observable<UnitCare | undefined> {
     this.apiUrl = "../../../assets/data/unitcares.json";
     return this.http.get<UnitCareData>(this.apiUrl).pipe(

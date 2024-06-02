@@ -16,7 +16,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HumanBodyViewerComponent } from '../human-body-viewer/human-body-viewer.component';
 import { getPrescriptionStatus } from '../prescription-list/prescription-list.component';
 import { symptomsCodeByBodyPart } from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
-import { Equipment, Room, UnitCareDTO } from '../../../types/UnitCareDTOs';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
@@ -24,6 +23,7 @@ import { getDietTypeString } from '../stp5-hospitalization/stp5-hospitalization.
 import { parseGenderEnum } from '../../registration/register-form/register-form.component';
 import { getGender } from '../../registration/register-details/register-details.component';
 import { Gender } from '../../../enums/enum';
+import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData';
 
 @Component({
   selector: 'app-old-prescription-view',
@@ -48,7 +48,7 @@ export class OldPrescriptionViewComponent {
   @Output() onClickUpdatePrescription = new EventEmitter<void>();
   @Output() onClickSuspendPrescription = new EventEmitter<void>();
 
-  selectedUnitCare: UnitCareDTO | undefined;
+  selectedUnitCare: UnitCare | undefined;
   selectedDiet: DietDto | undefined;
   selectedRoom: Room | undefined;
   selectedBed: Equipment | undefined;
@@ -132,7 +132,7 @@ export class OldPrescriptionViewComponent {
   }
 
 
-  getRoomFromUnitCare(unitCare: UnitCareDTO | undefined): Room | null {
+  getRoomFromUnitCare(unitCare: UnitCare | undefined): Room | null {
     //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times 
     if (!unitCare) return null;
     if (

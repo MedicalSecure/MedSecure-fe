@@ -18,7 +18,7 @@ export  interface UnitCareData {
   personnels: Personnel[];
 }
 
-interface Room {
+export interface Room {
   id: string;
   unitCareId: string;
   roomNumber: number;
@@ -26,7 +26,7 @@ interface Room {
   equipments: Equipment[];
 }
 
-interface Equipment {
+export interface Equipment {
   id: string;
   roomId: string;
   name: string;
@@ -35,7 +35,7 @@ interface Equipment {
   eq:number;
 }
 
-interface Personnel {
+export interface Personnel {
   id: string;
   unitCareId: string;
   name: string;
