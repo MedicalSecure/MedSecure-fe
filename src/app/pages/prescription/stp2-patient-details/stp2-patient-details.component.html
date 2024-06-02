@@ -172,6 +172,67 @@
       </div>
       </div>
     </div>
+
+    <!-- MedSecure Prescriptions -->
+    <div ngxMasonryItem class="card masonry-item">
+      <div class="card-body">
+        <h5 class="card-title"><strong>MedSecure Prescriptions</strong></h5>
+        <div class="card-text">
+          <ul>
+            <li class="text-primary" *ngFor="let item of inputRegister?.prescriptions;let i = index">
+              <div *ngIf="item.status==1" class="d-flex justify-content-between">
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}}</p>
+                <p class="text-warning fw-bold">Pending</p>
+              </div>
+              <div *ngIf="item.status==2" class="d-flex justify-content-between">
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}}</p>
+                <p class="text-danger fw-bold">Active</p>
+              </div>
+              <div *ngIf="item.status==3" class="d-flex justify-content-between">
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}} </p>
+                <p class="text-warning fw-bold">Rejected</p> 
+              </div>
+              <div *ngIf="item.status==4" class="d-flex justify-content-between">
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}} </p>
+                <p class="text-success fw-bold">Discontinued</p>
+              </div>
+              <div *ngIf="item.status==5" class="d-flex justify-content-between">
+                <p class="m-0"><strong>{{i +1+ ") "}}</strong> {{getDateString(item.createdAt, "HH:MM - dd/mm/yyyy")}} </p>
+                <p class="text-success fw-bold">Completed</p>
+              </div>
+            </li>                   
+          </ul>
+      </div>
+      </div>
+    </div>
+
+    <!-- MedSecure Active Drugs -->
+    <div ngxMasonryItem class="card masonry-item">
+      <div class="card-body">
+        <h5 class="card-title"><strong>Active Drugs</strong></h5>
+        <div class="card-text">
+          <ul>
+            <ng-container *ngFor="let pres of inputRegister?.prescriptions;">
+              <!-- Dont go throught inactive prescriptions => go through active or pending only -->
+              <ng-container *ngIf="pres.status==1 || pres.status==2">
+                <li  *ngFor="let posology of  pres.posologies;let i = index">
+                  <div class="d-flex justify-content-between text-primary" *ngIf="!posology.endDate && posology.isPermanent == true">
+                    <p class="m-0"> {{posology.medication.name}}</p> 
+                    <p class="m-0 text-success fw-bold" *ngIf="pres.status==2">Active - Permanent</p> <!-- Active -->
+                    <p class="m-0 text-warning fw-bold" *ngIf="pres.status==1">Pending - Permanent</p><!-- Pending approval -->
+                  </div>
+                  <div class="d-flex justify-content-between text-primary" *ngIf="posology.endDate && isStillActive(posology.endDate)">
+                    <p class="m-0"> {{posology.medication.name}}</p> 
+                    <p class="m-0 text-success fw-bold" *ngIf="pres.status==2">Active until {{getDateString(posology.endDate,"dd/mm")}} </p> <!-- Active -->
+                    <p class="m-0 text-warning fw-bold" *ngIf="pres.status==1">Pending approval</p><!-- Pending approval -->
+                  </div>
+                </li>   
+              </ng-container>
+            </ng-container>                
+          </ul>
+        </div>
+      </div>
+    </div>
   
   <!-- END MASONRY ********************************  -->
   </ngx-masonry>

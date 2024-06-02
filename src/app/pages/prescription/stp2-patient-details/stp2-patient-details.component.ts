@@ -16,7 +16,7 @@ import { calculateAge, getDateString, getRegistrationStatus } from '../../../sha
 import { firstValueFrom, timeout } from 'rxjs';
 import { RegistrationService } from '../../../services/registration/registration.service';
 import { HistoryDto, RegisterDto } from '../../../model/Registration';
-import { RegisterForPrescription } from '../../../types/prescriptionDTOs';
+import { PrescriptionDto, RegisterForPrescription, RegisterWithPrescriptions } from '../../../types/prescriptionDTOs';
 import { mapRegisterForPrsToRegisterWithPrs } from '../../../shared/DTOsExtensions';
 
 @Component({
@@ -28,7 +28,7 @@ import { mapRegisterForPrsToRegisterWithPrs } from '../../../shared/DTOsExtensio
 })
 export class Stp2PatientDetailsComponent {
   @Input() inputRegister: RegisterForPrescription | undefined = undefined;
-
+  
   public masonryOptions: NgxMasonryOptions = {
     gutter: 10,
     fitWidth: true,
@@ -82,6 +82,10 @@ export class Stp2PatientDetailsComponent {
 
   }
 
+  isStillActive(date:Date) {
+    const currentDate = new Date();
+    return date > currentDate;
+  }
 
   getRegisterStatus( status: RegisterStatus | undefined | null):string{
     if(status == undefined || status == undefined) return "Active";
