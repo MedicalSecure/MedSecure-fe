@@ -62,7 +62,7 @@
 
                 <!-- Step 2 : Patient Details (cards) -->
                 <div *ngIf="stepNumber === 2 && selectedRegister != undefined">
-                  <app-stp2-patient-details />
+                  <app-stp2-patient-details [inputRegister]="selectedRegister"/>
                 </div>
 
                 <!-- Step 3: Add Diagnostic -->

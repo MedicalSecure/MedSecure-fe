@@ -51,7 +51,7 @@ export function mapRegisterWithPrsToRegisterForPrs(registerWithPrescriptions: Re
   }
 
 
-/*  export  function mapRegisterForPrsToRegisterWithPrs(registerForPrescription: RegisterForPrescription): RegisterWithPrescriptions {
+  export  function mapRegisterForPrsToRegisterWithPrs(registerForPrescription: RegisterForPrescription): RegisterWithPrescriptions {
     const {
       id,
       patient_id,
@@ -126,4 +126,4 @@ export function mapRegisterWithPrsToRegisterForPrs(registerWithPrescriptions: Re
       register:reg,
       prescriptions:prescriptions ?? []
     }
-  } */
+  } 

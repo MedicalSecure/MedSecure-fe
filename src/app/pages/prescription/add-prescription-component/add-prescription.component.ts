@@ -221,7 +221,6 @@ export class AddPrescriptionComponent implements DoCheck {
   async handleUpdatePrescription({prescription,register,}
     : { prescription: PrescriptionDto;register: RegisterForPrescription;})
    {
-    debugger;
     console.log(prescription);
     this.oldPrescriptionToUpdate = prescription;
     this.clearWizard();
@@ -393,7 +392,6 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   onSelectPatientChange(register: RegisterForPrescription | undefined) {
-    debugger;
     if (register == undefined) {
       // Deselect patient => clear old wizard
       this.selectedRegister = undefined;

@@ -143,6 +143,10 @@ export class MasonryDpiComponent {
     this.isPageLoading=false;
   }
 
+  getGender(gender:undefined | null | Gender){
+    return getGender(gender)
+  }
+
   getRegisterStatus( status: RegisterStatus | undefined | null):string{
     if(status == undefined || status == undefined) return "Active";
     if(status==RegisterStatus.Active) return "Active"
@@ -182,24 +186,8 @@ export class MasonryDpiComponent {
      return calculateBMI(weight, height);
   }
   getActivityStatusString(status:undefined | null | ActivityStatus):null|string{
-    if(status == null || status==undefined) return null;
-
-    switch (status) {
-      case ActivityStatus.Intense:
-        return "Intense";
-      case ActivityStatus.Light:
-        return "Light";
-      case ActivityStatus.Medium:
-        return "Medium";
-    
-      default:
-        return "Not-given"
-    }
+    return getActivityStatusString(status);
   }
-  getGender(gender:undefined | null | Gender):null|string{
-    return getGender(gender);
-  }
-  
 }
 const _cards = [
   { title: 'General informations', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis nisi sed neque tincidunt maximus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis nisi sed neque tincidunt maximus.' },
@@ -208,6 +196,22 @@ const _cards = [
   { title: '', content: 'Sed quis nisi sed neque tincidunt maximus. Quisque commodo massa vitae ante placerat, quis ultricies ligula lacinia.' },
   { title: '', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec interdum lectus mauris, nec pharetra sapien imperdiet sed.' }
 ];
+
+export function getActivityStatusString(status:undefined | null | ActivityStatus):null|string{
+  if(status == null || status==undefined) return null;
+
+  switch (status) {
+    case ActivityStatus.Intense:
+      return "Intense";
+    case ActivityStatus.Light:
+      return "Light";
+    case ActivityStatus.Medium:
+      return "Medium";
+  
+    default:
+      return "Not-given"
+  }
+}
 
 export function getGender(gender:undefined | null | Gender):null|string{
   if(gender == null || gender==undefined) return null;

@@ -20,7 +20,7 @@ import {
 } from '../../types/prescriptionDTOs';
 
 import { delay, map, switchMap } from 'rxjs/operators';
-import { HistoryStatus } from '../../enums/enum';
+import { HistoryStatus, RegisterStatus } from '../../enums/enum';
 import { GetActivitiesResponse } from '../../types';
 import { ActivityService } from '../../components/activities/activities.component';
 import { RetryInterceptor } from '../../config/httpInterceptor';
@@ -195,7 +195,8 @@ export class PrescriptionApiService implements ActivityService {
     pageSize: number = 10,
     maxRetries: number = 3,
     retryDelayInMs: number = 1000,
-    displayErrorMessages: boolean = true
+    displayErrorMessages: boolean = true,
+    filterArchivedPatients=true
   ): Promise<RegisterWithPrescriptionsDict | null> {
 
     let registrations = await firstValueFrom(
@@ -204,7 +205,8 @@ export class PrescriptionApiService implements ActivityService {
 
     if (!registrations) return null;
     let registrationsData = registrations.registers.data;
-
+    if(filterArchivedPatients)
+      registrationsData.filter(reg=>reg.status== RegisterStatus.Active)
     // get the Ids as list from the fetched register => to get prescriptions by register ids
     const ids = registrations.registers.data
       .map((item) => item.id)
