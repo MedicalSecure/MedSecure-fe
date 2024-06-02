@@ -13,7 +13,7 @@ import { NgxMasonryModule, NgxMasonryOptions } from 'ngx-masonry';
 import { ActivityStatus, Gender, HistoryStatus, RegisterStatus } from '../../../enums/enum';
 import { calculateBMI, getActivityStatusString, getGender } from '../../registration/register-details/register-details.component';
 import { calculateAge, getDateString, getRegistrationStatus } from '../../../shared/utilityFunctions';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 import { RegistrationService } from '../../../services/registration/registration.service';
 import { HistoryDto, RegisterDto } from '../../../model/Registration';
 import { RegisterForPrescription } from '../../../types/prescriptionDTOs';
@@ -30,7 +30,7 @@ export class Stp2PatientDetailsComponent {
   @Input() inputRegister: RegisterForPrescription | undefined = undefined;
 
   public masonryOptions: NgxMasonryOptions = {
-    gutter: 40,
+    gutter: 10,
     fitWidth: true,
     horizontalOrder: true,
   };
@@ -76,7 +76,9 @@ export class Stp2PatientDetailsComponent {
       this.errorMessage=`register id ${this.inputRegister?.id} is invalid` 
       console.error(this.errorMessage)
     }
-    this.isPageLoading=false;
+    setTimeout(() => {
+      this.isPageLoading=false;
+    }, 300);
 
   }
 

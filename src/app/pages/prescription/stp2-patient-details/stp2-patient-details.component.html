@@ -172,54 +172,6 @@
       </div>
       </div>
     </div>
-
-    <!-- ACTIONS -->
-    <div ngxMasonryItem class="card masonry-item">
-      <div class="card-body">
-        <h5 class="card-title"><strong>Actions</strong></h5>
-        <div class="card-text row">
-          <div class="col-7">
-            <p>Register Status :</p>
-            <p>Save Personal Data :</p>
-            <p>Editing Status :</p>
-          </div>
-          <div class="col-5">
-            <p>
-              <strong  class="text-success" *ngIf="currentStatus === 0">Resident</strong>
-              <strong class="text-danger" *ngIf="currentStatus === 1">Out</strong>
-              <strong class="text-warning" *ngIf="currentStatus === 2">Registered</strong>
-            </p>
-            <p>
-              <strong class="text-danger" *ngIf="registrationData?.patient?.saveForNextTime == false">No</strong>
-              <strong  class="text-success" *ngIf="registrationData?.patient?.saveForNextTime == true">Yes</strong>
-            </p>
-            <p><strong>Enabled</strong></p>
-          </div>
-        </div>
-        <div class="mt-2 d-flex justify-content-evenly">
-          <button
-            class="col-5 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
-            [disabled]="true" 
-            style="width: fit-content;"
-          >
-          <!-- can re register only if he is in OUT status currentStatus === 0 -->
-            <i class="fa fa-plus-square-o m-0" aria-hidden="true"></i><span>New Entry</span>
-          </button>
-          <!-- TODO here we can have a discussion between : 
-            1) [disabled]="!(currentStatus === 1 && isArchived==false)" => the OUT decision must be coming from the doctor => so can't archive until the patient is already out
-            2) [disabled]="!(isArchived==false)" => receptionist can archive directly (the archive can handle adding a new OUT history if no one is already created)
-            i chosen 2) because the patient can go out after registering and doesn't wait for the doctor, also can go out if he is resident without waiting for doctor
-          -->
-          <button
-            class="col-5 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
-            style="border-color: red"
-            [disabled]="true"
-          >
-            <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Archive</span>
-          </button>
-        </div>
-      </div>
-    </div>
   
   <!-- END MASONRY ********************************  -->
   </ngx-masonry>
