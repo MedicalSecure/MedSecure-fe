@@ -11,6 +11,7 @@ import { calculateAge, getDateString, getRegistrationStatus } from '../../../sha
 import { ActivityStatus, Gender, HistoryStatus, RegisterStatus } from '../../../enums/enum';
 import { MatChip } from '@angular/material/chips';
 import { firstValueFrom } from 'rxjs';
+import { SensorThingspeakService } from '../../../services/sensor-thingspeak/sensor-thingspeak.service';
 
 interface MasonryItem {
   title: string;
@@ -43,10 +44,21 @@ export class MasonryDpiComponent {
   //caching for optimizing performance
   historiesMappedByDate:HistoryDto[]=[];
 
+  feed: any = {
+    created_at: '',
+    field1: '',
+    field2: '',
+    field3: '',
+    field4: '',
+    field5: '',
+    field6: '',
+    field7: ''
+  };
+
   // sample data for cards
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    private sensorThingspeakService: SensorThingspeakService,
     private service: RegistrationService
   ) {}
 
@@ -61,6 +73,10 @@ export class MasonryDpiComponent {
         if(!this.registrationId || this.registrationId.length<36)
           throw Error("Register id is invalid")
         await this.fetchRegisterById(this.registrationId);
+
+        let obs=this.sensorThingspeakService.getDataStreamHealth();
+        this.feed = await firstValueFrom(obs);
+
       } catch (error) {
         console.error("cant parse register to view, please check the link, did you come from the right page ?");
         console.error(error)
