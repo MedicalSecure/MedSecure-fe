@@ -12,22 +12,24 @@ import { UnitCare, UnitCareData } from '../../model/unitCare/UnitCareData';
 
 
 export class UnitCareService  {
+
+  link = "https://localhost:6064/unitcare-service/unitCares";
   constructor(private http: HttpClient) {}
 
 
   getCardData(): Observable<UnitCareData> {
 
-    return this.http.get<UnitCareData>('http://localhost:5102/unitCares');
+    return this.http.get<UnitCareData>(this.link);
   }
 
   deleteCardData(id: number|string|undefined): Observable<any> {
-    const url = `http://localhost:5102/unitCares/${id}`; // Construct URL with ID
+    const url = `${this.link}/${id}`; // Construct URL with ID
     return this.http.delete(url); // Use HTTP DELETE method
   }
   postUnitCare(unitcare: UnitCare): Observable<any> {
     const formData = { "UnitCare": unitcare };
-    const url = 'http://localhost:5102/unitCares'; // URL for POST request
-    return this.http.post<any>(url, formData);
+
+    return this.http.post<any>(this.link, formData);
   }
 
 }

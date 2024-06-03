@@ -1,0 +1,80 @@
+
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Tasks</h4>
+            <p class="card-subtitle card-subtitle-dash">Tasks Kanban Board</p>
+          </div>
+          <div class="btn-wrapper">
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="fa fa-paper-plane"></i> Forward
+            </a>
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export CSV
+            </a>
+            <a href="#" class="btn btn-outline-primary align-items-center">
+              <i class="icon-printer"></i> Export PDF
+            </a>
+            <a href="#" class="btn btn btn-primary text-white"  (click)="toggleTextarea()" >
+              <i class="icon-plus"></i> Add Task
+            </a>
+          </div>
+        </div>
+        <div *ngIf="showTextarea">
+          <form [formGroup]="taskForm" (ngSubmit)="addTask()">
+            <textarea
+              class="form-control mt-3"
+              rows="3"
+              formControlName="content"
+              
+              placeholder="new task"
+              style="height: 100px; width: 500px;"
+              required
+            ></textarea>
+            <button type="submit"class="btn btn-primary text-white align-items-center">Add Task</button>
+          </form>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4" *ngFor="let status of [ 1, 2,3]">
+            <div class="status-columns">
+              {{ status === 1 ? 'pending' : (status === 2 ? 'onProgress' : 'completed') }}
+
+              <div class="tasks-list">
+                <div class="task" *ngFor="let item of data_list">
+                  <div *ngIf="item.taskState === status">
+                    <ul class="list-group mb-3 sticky-top">
+                      <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                          <h6 class="my-0">Task</h6>
+                          <small class="text-muted">{{ item.content }}</small>
+                        </div>
+
+
+                        <div>
+                          <input class="form-control form-control-sm btn btn-primary text-white" style="width: 100px;" id="actions"
+                            formControlName="selectedAction" placeholder="Actions..." required list="actionsList">
+                          <datalist id="actionsList">
+                            <option *ngFor="let action of actions" [value]="action.value" (click)="onActionClick(action.value, item)">
+                              <a href="#" class="btn btn btn-primary text-white">
+                                <i [ngClass]="'fa fa-' + action.icon" aria-hidden="true"></i>{{ action.label }}
+                              </a>
+                            </option>
+                          </datalist>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

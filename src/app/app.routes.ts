@@ -9,7 +9,7 @@ import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
 import { AddPrescriptionComponent } from './pages/prescription/add-prescription-component/add-prescription.component';
-import { TasksComponent } from './pages/nurseTasks/nurseTasks.component';
+
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/register/register.component';
@@ -17,6 +17,8 @@ import { NurseDashboardComponent } from './pages/dashboards/nurse-dashboard/nurs
 import {FormUnitCareComponent} from './components/form-unit-care/form-unit-care.component';
 import { AddPersonelsComponent } from './components/add-personels/add-personels.component';
 import{SupervisorDashboardComponent} from './components/supervisor-dashboard/supervisor-dashboard.component';
+import { NurseTasksComponent } from './pages/nurseTasks/nurseTasks.component';
+import { TasksComponent } from './pages/tasks/tasks.component';
 
 
 export const routes: Routes = [
@@ -28,6 +30,7 @@ export const routes: Routes = [
   { path: 'UnitSelector', component: UnitSelectorComponent },
   { path: 'bac-patient', component: BacPatientComponent },
   { path: 'timeline', component: TimelineComponent },
+  { path: 'nurse-tasks', component: NurseTasksComponent },
   { path: 'tasks', component: TasksComponent },
   { path: 'search', component: SearchBarComponent },
   { path: 'pharmacy', component: AddPharmacyComponent },

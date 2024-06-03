@@ -20,7 +20,6 @@
         class="form-control mt-3"
         rows="3"
         formControlName="content"
-        name="taskContent"
         placeholder="new task"
         style="height: 100px; "
         required
@@ -39,9 +38,9 @@
               {{ task.content }}
               <i class="input-helper rounded"></i>
             </label>
-            <div class="d-flex mt-2">
+            <div class="d-flex justify-content-between mt-2">
               <div class="ps-4 text-small me-3">
-                  {{ task.taskAction=== 1 ? 'done' : (task.taskAction === 2 ? 'blocked' : 'close' ) }}
+                {{ task.createdAt | date:'yyyy-MM-dd' }}
 
               </div>
               <div
@@ -52,8 +51,9 @@
               }"
               >
                 {{ task.taskState === 1 ? 'pending' : (task.taskState === 2 ? 'onProgress' : 'completed' ) }}
+                <i class="mdi mdi-flag ms-2 flag-color"></i>
               </div>
-              <i class="mdi mdi-flag ms-2 flag-color"></i>
+
             </div>
           </div>
         </li>
