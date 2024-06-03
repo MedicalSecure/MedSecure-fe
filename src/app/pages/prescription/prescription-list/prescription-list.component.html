@@ -73,7 +73,8 @@
       <mat-icon class="align-self-center text-danger fw-bold" (click)="onClickDeselectPrescription()">close</mat-icon>
     </div>
     <!-- Display Prescription details component -->
-    <app-old-prescription-view [selectedPrescription]="selectedPrescription" 
+    <!-- /* This component will be deleted, its duplicated due to an angular error when calling them both */ -->
+    <app-old-prescription-view-for-prescription-list [selectedPrescription]="selectedPrescription" 
     [selectedRegister]="selectedRegister"
     (onClickUpdatePrescription)="navigateToUpdatePrescription(selectedPrescription,selectedRegister)" 
     (onClickSuspendPrescription)="suspendPrescription(selectedPrescription)"  />

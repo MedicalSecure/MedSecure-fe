@@ -22,7 +22,7 @@ export class UnitCareService  {
   }
 
   deleteCardData(id: number|string|undefined): Observable<any> {
-    const url = `http://localhost:5102/unitCares/${id}`; // Construct URL with ID
+    const url = `${this.link}/${id}`; // Construct URL with ID
     return this.http.delete(url); // Use HTTP DELETE method
   }
 
@@ -36,6 +36,7 @@ export class UnitCareService  {
   getUnitCareByBedId(bedId: string): Observable<UnitCare | undefined> {
     this.apiUrl = this.link;
     return this.http.get<UnitCareData>(this.apiUrl).pipe(
+      map(parseDates),//parse dates of response then filter by id
       map((unitCares: UnitCareData) => unitCares.unitCares.data.find(uc => 
         {
           let isUnitCareFound=false;
@@ -48,8 +49,7 @@ export class UnitCareService  {
           })
           return isUnitCareFound;
         }
-      )), 
-      map(parseDates)
+      ))
     );
   }
 

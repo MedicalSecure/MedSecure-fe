@@ -86,7 +86,6 @@ export class Stp3AddDiagnosticComponent {
     if(this.updatingOldPrescriptionMode){
       this.selectedSymptoms=[...this.updateInitialData.symptoms];
       this.selectedDiagnosis=[...this.updateInitialData.diagnosis];
-      this.continuePredicting= this.updateInitialData.diagnosis.length > 0;
     }
   }
 

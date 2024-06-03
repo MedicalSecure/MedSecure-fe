@@ -1,0 +1,230 @@
+
+<!-- /* This component will be deleted, its duplicated due to an angular error when calling them both */
+ -->
+@if (selectedPrescription && !isDrugsLoading) {
+
+    <!-- Display Prescription details component -->
+    <ngx-masonry [options]="masonryOptions" [className]="'py-2'">
+      <!-- Posologies // Medications -->
+      <div ngxMasonryItem class="card masonry-item">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h5 class="card-title"><strong> Medications</strong></h5>
+            <p style="cursor: pointer" (click)="onToggleShowDetails()">{{ showDetails ? "Hide" : "Show" }} details</p>
+          </div>
+          <div class="card-text">
+            @if(isDrugsLoading==false){
+            <ul class="p-1 m-0 ps-3">
+              <li *ngFor="let posology of selectedPrescription.posologies; let $index = index">
+                <div class="mb-0">
+                  <div class="mb-0 d-flex justify-content-start align-middle align-items-center">
+                    <span style="cursor: pointer" class="text-primary fw-bold">
+                      {{ posology?.medication?.name ?? posology.medicationId.slice(0, 20) + "..." }}
+                    </span>
+                  </div>
+                  <p class="fw-light mb-0">
+                    {{ posology.isPermanent === true ? "Permanent" : getNumberOfDaysInRange([posology.startDate, posology.endDate]) + " Days" }}
+                    <span style="font-size: small">{{ getDateString(posology.startDate, "dd/mm/yyyy") }}</span>
+                    @if (posology.isPermanent ===false) {
+                    <span style="font-size: small">{{ " - " + getDateString(posology.endDate!, "dd/mm/yyyy") }}</span>
+                    } @if (getPosologySummary(posology).numberOfCautions > 0) {
+                    <span style="position: relative; margin-left: 6px" [title]="getPosologySummary(posology).numberOfCautions + ' Total caution comments for this posology'">
+                      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                      <span class="icon-counter">{{ getPosologySummary(posology).numberOfCautions }}</span>
+                    </span>
+                    } @if (getPosologySummary(posology).numberOfComments > 0) {
+                    <span style="position: relative; margin-left: 8px" [title]="getPosologySummary(posology).numberOfComments + ' Total comments for this posology'">
+                      <i class="fa fa-comments-o" aria-hidden="true"></i>
+                      <span class="icon-counter">{{ getPosologySummary(posology).numberOfComments }}</span>
+                    </span>
+                    }
+                  </p>
+    
+                  <p class="text-dark fw-bold" style="font-size: small; margin-top: -0.2rem">
+                    <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
+                    @if (true) {
+                    {{ getPosologySummary(posology).timesADay }}
+                    <!--   {{ getPosologySummary(posology).average }} units on avg | -->
+                    max dose: {{ getPosologySummary(posology).maximumDispenseQuantity }}
+                    }
+                  </p>
+                  <ul *ngIf="showDetails && posology.dispenses" style="margin-top: -0.4rem; line-height: 1">
+                    <li *ngFor="let dispense of posology.dispenses; let i = index">
+                      @if(dispense.beforeMeal){<strong>{{ dispense.hour + ":00 " }}: </strong> <strong class="text-danger">{{ dispense.beforeMeal.quantity }}</strong
+                      >{{ " *" + posology?.medication?.dosage }} } @if(dispense.afterMeal){ <strong>{{ dispense.hour + ":00 " }} </strong>
+                      <strong class="text-danger">{{ dispense.afterMeal.quantity }}</strong
+                      >{{ " *" + posology?.medication?.dosage }}}
+                    </li>
+                  </ul>
+    
+                  <ul *ngIf="showDetails && posology.comments">
+                    <li *ngFor="let comment of posology.comments; let i = index">
+                      <strong>{{ comment.label }}:</strong> {{ " " + comment.content }}
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+            } @if(isDrugsLoading){
+            <mat-spinner></mat-spinner>
+            }
+          </div>
+        </div>
+      </div>
+    
+      <!-- Human Body Viewer -->
+      <div ngxMasonryItem class="card masonry-item" *ngIf="selectedBodyParts.size > 0">
+        <div class="card-body me-1">
+          <app-human-body-viewer [handleClicksByParent]="true" [viewFilterButton]="false" [selectedParts]="selectedBodyParts"></app-human-body-viewer>
+        </div>
+      </div>
+    
+      <!-- Patient info -->
+      <div ngxMasonryItem class="card masonry-item">
+        <div class="card-body">
+          <h5 class="card-title"><strong> Patient information</strong></h5>
+          <div class="card-text row">
+            <div class="col-4">
+              <p>Name :</p>
+              <p>Gender :</p>
+              <p>Age :</p>
+            </div>
+            <div class="col-8">
+              <p>{{ selectedRegister?.patient_firstName + " " + selectedRegister?.patient_lastName }}</p>
+              <p>{{ getGender(selectedRegister?.patient_gender) ?? "Not-Given" }}</p>
+              <p>{{ getAge(selectedRegister?.patient_dateOfBirth) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Symptoms -->
+      <div ngxMasonryItem class="card masonry-item">
+        <div class="card-body">
+          <h5 class="card-title"><strong> Symptoms</strong></h5>
+          <div class="card-text">
+            <ul>
+              <li *ngFor="let symptom of selectedPrescription.symptoms">
+                <strong>{{ symptom.name }}</strong>
+              </li>
+              <li *ngIf="!selectedPrescription.symptoms.length">There are no symptoms added for this prescription</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Diagnosis -->
+      <div ngxMasonryItem class="card masonry-item">
+        <div class="card-body">
+          <h5 class="card-title"><strong> Diagnosis</strong></h5>
+          <div class="card-text">
+            <ul>
+              <li *ngFor="let diag of selectedPrescription.diagnoses">
+                <strong>{{ diag.name }}</strong>
+              </li>
+              <li *ngIf="!selectedPrescription.diagnoses.length">There are no Diagnosis added for this prescription</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Hospitalization -->
+      <div ngxMasonryItem class="card masonry-item">
+        <div class="card-body">
+          <h5 class="card-title"><strong>Hospitalization Decision</strong></h5>
+          <div class="card-text row">
+            <div class="col-5">
+              <p>Hospitalized :</p>
+              <p>Unit care    :</p>
+              <p>Room         :</p>
+              <p>Bed          :</p>
+            </div>
+            <div class="col-7">
+              <p>
+                <strong>{{ selectedPrescription.bedId ? "Resident" : "Out" }}</strong>
+              </p>
+              <ng-container *ngIf="isUnitCareLoading==false; else elseUnitCareLoading">
+                <p>
+                    <strong>{{ !selectedPrescription.bedId ? "Not Applicable" : selectedUnitCare?.title  ?? "Not Found" }}</strong>
+                  </p>
+                  <p>
+                    <strong>{{ !selectedPrescription.bedId ? "Not Applicable" : selectedRoom?.roomNumber ?? "Not Found" }}</strong>
+                  </p>
+                  <p>
+                    <strong>{{  !selectedPrescription.bedId ? "Not Applicable" : selectedBed?.reference ?? "Not Found" }}</strong>
+                  </p>
+              </ng-container>
+              <ng-template #elseUnitCareLoading>
+                  <mat-spinner [style]="{height:'1rem',width:'1rem',marginTop:'0.7rem'}"></mat-spinner>
+                  <mat-spinner [style]="{height:'1rem',width:'1rem',marginTop:'0.7rem'}"></mat-spinner>
+                  <mat-spinner [style]="{height:'1rem',width:'1rem',marginTop:'0.7rem'}"></mat-spinner>
+              </ng-template> 
+            </div>
+            
+          </div>
+          <div class="card-text row">
+            <div class="col-3">
+              <p>Diet :</p>
+              <p>Period :</p>
+            </div>
+            <div class="col-9">
+              <ng-container *ngIf="isDietLoading==false; else elseDietLoading">
+                  <p>
+                    <strong>{{  !selectedPrescription.bedId ? "Not Applicable" : selectedDiet?.dietTypeString  ?? "Not Found" }}</strong>
+                  </p>
+                  <p>
+                    <strong>{{  !selectedPrescription.bedId ? "Not Applicable" : getDietRange(selectedDiet) ?? "Not Found" }}</strong>
+                  </p>
+    
+              </ng-container>
+              <ng-template #elseDietLoading>
+                  <mat-spinner [style]="{height:'1rem',width:'1rem',marginTop:'0.7rem'}"></mat-spinner>
+                  <mat-spinner [style]="{height:'1rem',width:'1rem',marginTop:'0.7rem'}"></mat-spinner>
+              </ng-template> 
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    
+      <!-- Actions -->
+      <div ngxMasonryItem class="card masonry-item">
+        <div class="card-body">
+          <h5 class="card-title"><strong>Actions</strong></h5>
+          <div class="card-text row">
+            <div class="col-7">
+              <p>Prescription Status :</p>
+              <p>Editing Status :</p>
+            </div>
+            <div class="col-5">
+              <p>
+                <strong>{{ getPrescriptionStatus(selectedPrescription) }}</strong>
+              </p>
+              <p>
+                <strong>{{ [0, 1, 2].includes(selectedPrescription.status) && enableActions ? "Enabled" : "Disabled" }}</strong>
+              </p>
+            </div>
+          </div>
+          <div class="mt-2 d-flex justify-content-evenly">
+            <button
+              class="col-5 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+              [disabled]="![1, 2].includes(selectedPrescription.status) || !enableActions"
+              (click)="onClickUpdatePrescriptionHandler()"
+            >
+              <i class="fa fa-pencil-square-o m-0" aria-hidden="true"></i><span>Update</span>
+            </button>
+            <button
+              class="col-5 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+              style="border-color: red"
+              [disabled]="![1, 2].includes(selectedPrescription.status) || !enableActions"
+              (click)="onClickSuspendPrescriptionHandler()"
+            >
+              <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Suspend</span>
+            </button>
+          </div>
+          <p *ngIf="enableActions==false" class="mt-1"> <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; "  /> You are currently in Read-Only mode</p>
+        </div>
+      </div>
+    </ngx-masonry>
+    }
+    

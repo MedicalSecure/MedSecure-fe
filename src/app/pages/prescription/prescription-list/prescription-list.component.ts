@@ -13,11 +13,7 @@ import { FormsModule } from '@angular/forms';
 
 import { MatIcon } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-id/filter-patient-by-name-and-sn.pipe';
 import {
-  GetPrescriptionsByRegisterIdResponse,
-  GetPrescriptionsResponse,
-  PosologyDto,
   PrescriptionDto,
   RegisterForPrescription,
   RegisterWithPrescriptions,
@@ -31,9 +27,9 @@ import {
   getDateString,
   getTimeString,
 } from '../../../shared/utilityFunctions';
-import { OldPrescriptionViewComponent } from '../old-prescription-view/old-prescription-view.component';
 import { RegisterDto } from '../../../model/Registration';
 import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensions';
+import { OldPrescriptionViewForPrescriptionListComponent } from '../old-prescription-view-for-prescription-list/old-prescription-view-for-prescription-list.component';
 
 @Component({
   selector: 'app-prescription-list',
@@ -44,7 +40,7 @@ import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensio
     MatIcon,
     RouterModule,
     MatProgressSpinnerModule,
-    OldPrescriptionViewComponent
+    OldPrescriptionViewForPrescriptionListComponent
   ],
   templateUrl: './prescription-list.component.html',
   styleUrl: './prescription-list.component.css',
