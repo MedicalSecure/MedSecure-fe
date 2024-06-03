@@ -103,7 +103,6 @@ export class OldPrescriptionViewForPrescriptionListComponent {
     this.isUnitCareLoading = true;
     this.unitCareService.getUnitCareByBedId(bedId).subscribe(
       (response) => {
-        debugger;
         this.selectedUnitCare = response ;
         this.getRoomFromUnitCare(response);
         this.getBedById(this.selectedPrescription?.bedId)

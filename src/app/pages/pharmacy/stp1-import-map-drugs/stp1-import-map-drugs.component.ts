@@ -279,7 +279,6 @@ export function tryParseDateOnlyFromExcel(
   input: string | Date,
   excelDateFormat: string = 'dd-mm-yyyy'
 ): Date {
-  debugger;
   try {
     if (input instanceof Date) {
       return input;
