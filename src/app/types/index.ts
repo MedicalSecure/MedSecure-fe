@@ -9,7 +9,9 @@ export type PaginatedResult<TEntity> = {
   count: number;
   data: TEntity[];
 };
-
+export type CreatedResponse={
+  id:string;
+}
 //Activities
 export type ActivityDto = {
   id: string;
@@ -27,16 +29,9 @@ export type ActivityView = {
   content: string;
   createdBy: string;
   creatorName: string;
-  activityTime : string;
+  activityTime: string;
 };
 
-
-
-
-export type medicationHourType = {
-  hour: number;
-  isBeforeFood: boolean;
-};
 export type commentType = {
   id?: string;
   label?: string;
@@ -53,7 +48,7 @@ export type medicationType = {
   administrationHours: Dispense[];
   Caution?: string;
   comments: Array<commentType>;
-  summary?:object;
+  summary?: object;
 };
 
 export type Entity = {
@@ -62,3 +57,4 @@ export type Entity = {
   createdBy: string;
   modifiedBy?: string;
 };
+
