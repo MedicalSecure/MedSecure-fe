@@ -17,7 +17,7 @@ export class UnitCareService  {
   constructor(private http: HttpClient) {}
   private apiVersion: number = 1; // Replace 'v1' with your desired API version
   private apiUrl = `http://localhost:5007/api/v${this.apiVersion}/UnitCare`;
-  link = "https://localhost:6064/unitcare-service/unitCares";
+
 
   getCardData(): Observable<UnitCareData> {
     return this.http.get<UnitCareData>(this.link).pipe(map(parseDates));
