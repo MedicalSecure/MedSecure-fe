@@ -20,7 +20,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
-import { DiagnosisDto, SymptomDto } from '../../../types/prescriptionDTOs';
+import { DiagnosisDto, SymptomDto } from '../../../model/Prescription';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 
 @Component({

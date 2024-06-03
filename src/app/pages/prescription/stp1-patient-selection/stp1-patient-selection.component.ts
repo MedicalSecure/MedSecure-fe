@@ -32,7 +32,7 @@ import { RouterModule } from '@angular/router';
 import { Country } from '../../../enums/country';
 import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensions';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
-import { RegisterForPrescription } from '../../../types/prescriptionDTOs';
+import { RegisterForPrescription } from '../../../model/Prescription';
 
 @Component({
   selector: 'app-stp1-patient-selection',

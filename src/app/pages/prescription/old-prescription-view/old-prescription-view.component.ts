@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { PosologyDto, PrescriptionDto, RegisterForPrescription, RegisterWithPrescriptions } from '../../../types/prescriptionDTOs';
+import { PosologyDto, PrescriptionDto, RegisterForPrescription, RegisterWithPrescriptions } from '../../../model/Prescription';
 import {
   calculateAge,
   getDateString,
@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DrugService } from '../../../services/medication/medication.service';
-import { DrugDTO } from '../../../types/DrugDTOs';
+import { DrugDTO } from '../../../model/Drugs';
 import { NgxMasonryModule, NgxMasonryOptions } from 'ngx-masonry';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';

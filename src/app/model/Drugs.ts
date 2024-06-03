@@ -1,4 +1,4 @@
-import { PaginatedResult } from '.';
+import { PaginatedResult } from "../types";
 
 export type GetDrugsResponse = {
   drugs: PaginatedResult<DrugDTO>;

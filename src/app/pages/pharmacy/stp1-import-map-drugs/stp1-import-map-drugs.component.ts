@@ -14,7 +14,7 @@ import { NavbarComponent } from '../../../partials/navbar/navbar.component';
 import { Observable, firstValueFrom } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { DrugService } from '../../../services/medication/medication.service';
-import { CheckDrugRequest, CheckDrugResponse } from '../../../types/DrugDTOs';
+import { CheckDrugRequest, CheckDrugResponse } from '../../../model/Drugs';
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
 import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 

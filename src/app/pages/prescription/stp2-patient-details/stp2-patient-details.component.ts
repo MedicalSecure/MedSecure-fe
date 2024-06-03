@@ -15,7 +15,7 @@ import { calculateBMI, getActivityStatusString, getGender } from '../../registra
 import { calculateAge, getDateString, getRegistrationStatus } from '../../../shared/utilityFunctions';
 import { RegistrationService } from '../../../services/registration/registration.service';
 import { HistoryDto, RegisterDto } from '../../../model/Registration';
-import { PrescriptionDto, RegisterForPrescription, RegisterWithPrescriptions } from '../../../types/prescriptionDTOs';
+import { PrescriptionDto, RegisterForPrescription } from '../../../model/Prescription';
 import { mapRegisterForPrsToRegisterWithPrs } from '../../../shared/DTOsExtensions';
 import { OldPrescriptionViewComponent } from '../old-prescription-view/old-prescription-view.component';
 

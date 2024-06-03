@@ -17,7 +17,7 @@ import {
   SymptomDto,
   RegisterWithPrescriptions,
   RegisterWithPrescriptionsDict,
-} from '../../types/prescriptionDTOs';
+} from '../../model/Prescription';
 
 import { delay, map, switchMap } from 'rxjs/operators';
 import { HistoryStatus, RegisterStatus } from '../../enums/enum';

@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DrugDTO } from '../../types/DrugDTOs';
+import { DrugDTO } from '../../model/Drugs';
 
 @Component({
   selector: 'app-search-bar',

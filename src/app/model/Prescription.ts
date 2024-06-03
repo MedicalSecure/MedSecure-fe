@@ -1,9 +1,9 @@
-import { PaginatedResult } from '.';
 import { Country } from '../enums/country';
 import { FamilyStatus, Gender, HistoryStatus, PrescriptionStatus, RegisterStatus } from '../enums/enum';
-import { HistoryDto, RegisterDto, RiskFactorDto, TestDto } from '../model/Registration';
-import { UnitCare } from '../model/unitCare/UnitCareData';
-import { DrugDTO } from './DrugDTOs';
+import { HistoryDto, RegisterDto, RiskFactorDto, TestDto } from './Registration';
+import { UnitCare } from './unitCare/UnitCareData';
+import { PaginatedResult } from '../types';
+import { DrugDTO } from './Drugs';
 
 export type GetPrescriptionsResponse = {
   prescriptions: PaginatedResult<PrescriptionDto>;

@@ -1,18 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  CheckDrugRequest,
-  CheckDrugResponse,
-  CreateDrugRequest,
-  CreateDrugResponse,
-  DrugDTO,
-  GetDrugsResponse,
-} from '../../types/DrugDTOs';
 import { Observable, map } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MedicationType } from '../../pages/pharmacy/stp1-import-map-drugs/stp1-import-map-drugs.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { parseDates } from '../prescription/prescription-api.service';
+import { CheckDrugRequest,
+  CheckDrugResponse,
+  CreateDrugRequest,
+  CreateDrugResponse,
+  DrugDTO,
+  GetDrugsResponse, } from '../../model/Drugs';
 
 @Injectable({
   providedIn: 'root',

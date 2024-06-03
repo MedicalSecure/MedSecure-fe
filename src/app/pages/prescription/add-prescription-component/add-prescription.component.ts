@@ -27,7 +27,7 @@ import {
   RegisterForPrescription,
   RegisterWithPrescriptions,
   SymptomDto,
-} from '../../../types/prescriptionDTOs';
+} from '../../../model/Prescription';
 import {
   Stp5HospitalizationComponent,
   stp5FormsValueEvent,

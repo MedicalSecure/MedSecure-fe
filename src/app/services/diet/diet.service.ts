@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, filter, map, mergeMap, toArray } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { DietDto, GetDietResponse } from '../../types/DietDTOs';
 import { HttpClient } from '@angular/common/http';
 import { parseDates } from '../prescription/prescription-api.service';

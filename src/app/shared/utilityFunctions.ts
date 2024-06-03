@@ -1,6 +1,6 @@
 import { PrescriptionStatus, HistoryStatus } from '../enums/enum';
+import { PosologyDto, PrescriptionDto, RegisterForPrescription } from '../model/Prescription';
 import { HistoryDto } from '../model/Registration';
-import { PosologyDto, PrescriptionDto, RegisterForPrescription } from '../types/prescriptionDTOs';
 
 
 export function calculateAge(dateOfBirth: Date): number {

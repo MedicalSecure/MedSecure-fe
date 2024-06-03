@@ -19,7 +19,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MedicationType, tryParseDateOnlyFromExcel } from '../stp1-import-map-drugs/stp1-import-map-drugs.component';
 import { DrugService } from '../../../services/medication/medication.service';
-import { DrugDTO } from '../../../types/DrugDTOs';
+import { DrugDTO } from '../../../model/Drugs';
 import { firstValueFrom } from 'rxjs';
 import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';

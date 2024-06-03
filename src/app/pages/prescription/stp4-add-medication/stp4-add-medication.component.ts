@@ -39,14 +39,14 @@ import {
   CommentsDto,
   DispenseDto,
   PosologyDto,
-} from '../../../types/prescriptionDTOs';
+} from '../../../model/Prescription';
 
 import { getDateString } from '../../../shared/utilityFunctions';
 import {
   SearchBarComponent,
   searchTerm,
 } from '../../../components/search-bar/search-bar.component';
-import { DrugDTO } from '../../../types/DrugDTOs';
+import { DrugDTO } from '../../../model/Drugs';
 
 @Component({
   selector: 'app-stp4-add-medication',

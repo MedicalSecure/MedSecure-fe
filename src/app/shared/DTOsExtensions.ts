@@ -1,6 +1,6 @@
 import { Gender, RegisterStatus } from "../enums/enum";
+import { RegisterWithPrescriptions,RegisterForPrescription } from "../model/Prescription";
 import { PatientDto, RegisterDto } from "../model/Registration";
-import { RegisterForPrescription, RegisterWithPrescriptions } from "../types/prescriptionDTOs";
 import { getRegistrationDate, getRegistrationStatus } from "./utilityFunctions";
 
 

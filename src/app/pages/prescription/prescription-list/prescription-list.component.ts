@@ -17,7 +17,7 @@ import {
   PrescriptionDto,
   RegisterForPrescription,
   RegisterWithPrescriptions,
-} from '../../../types/prescriptionDTOs';
+} from '../../../model/Prescription';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 
 import { PrescriptionStatus, HistoryStatus } from '../../../enums/enum';
