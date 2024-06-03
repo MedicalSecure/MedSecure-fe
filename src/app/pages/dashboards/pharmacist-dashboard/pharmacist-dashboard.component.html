@@ -1,0 +1,240 @@
+<div class="tab-content tab-content-basic">
+  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="statistics-details d-flex align-items-center justify-content-between">
+          <div>
+            <p class="statistics-title">Total Prescriptions</p>
+            <h3 class="rate-percentage">{{ totalPrescriptions }}</h3>
+            <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>prescriptions</span></p>
+          </div>
+          <div>
+            <p class="statistics-title">Pending Prescription</p>
+            <h3 class="rate-percentage">{{ pendingPrescriptions }}</h3>
+            <p class="text-warning d-flex"><i class="mdi mdi-menu-down"></i><span>pending</span></p>
+          </div>
+          <div>
+            <p class="statistics-title">Valid Prescription</p>
+            <h3 class="rate-percentage">{{ validPrescription }}</h3>
+            <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>valid</span></p>
+          </div>
+          <div class="d-none d-md-block">
+            <p class="statistics-title">Invalid Prescription</p>
+            <h3 class="rate-percentage">{{ invalidPrescription }}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-up"></i><span>invalid</span></p>
+          </div>
+          <div class="d-none d-md-block">
+            <p class="statistics-title">Reserved Stock</p>
+            <h3 class="rate-percentage">{{ reservedStock }}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-up"></i><span>reserved</span></p>
+          </div>
+          <div class="d-none d-md-block">
+            <p class="statistics-title">Available Stock</p>
+            <h3 class="rate-percentage">{{ availableStock }}</h3>
+            <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>available</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 d-flex flex-column">
+        <div class="row flex-grow">
+          <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <div>
+                        <h4 class="card-title card-title-dash">Environmental Monitoring of the Medical Cabinet</h4>
+                      </div>
+                    </div>
+                    <div class="mt-3">
+                      <app-widgets-all-data />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex flex-column">
+        <div class="row flex-grow">
+          <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+            <div class="card bg-primary card-rounded">
+              <div class="card-body pb-0">
+                <div class="col-sm-8">
+                  <h3 class="text-white upgrade-info mb-0">
+                    Medsecure - Doing now what
+                    <span class="fw-bold">patients</span> need next
+                  </h3>
+                  <a href="#" class="btn btn-info upgrade-btn">Create User Account</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2 mb-sm-0">
+                      <div class="circle-progress-width">
+                        <div id="totalVisitors" class="progressbar-js-circle pr-2"></div>
+                      </div>
+                      <div>
+                        <p class="text-small mb-2">Total Personnels</p>
+                        <h4 class="mb-0 fw-bold">100</h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="circle-progress-width">
+                        <div id="visitperday" class="progressbar-js-circle pr-2"></div>
+                      </div>
+                      <div>
+                        <p class="text-small mb-2">Actif Personnels</p>
+                        <h4 class="mb-0 fw-bold">65</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 d-flex flex-column">
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div>
+                  <app-widgets-liste-medications></app-widgets-liste-medications>
+                </div>
+              </div>
+        
+            </div>
+          </div>
+        </div>
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+
+
+              <div class="card card-rounded">
+                <div class="card-body">
+                  <app-widgets-liste-repture></app-widgets-liste-repture>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <app-widgets-armoire-med></app-widgets-armoire-med>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <h4 class="card-title card-title-dash">Medicines List By Perscription</h4>
+                <app-widgets-liste-prescription></app-widgets-liste-prescription>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row flex-grow">
+          <div class="col-md-6 col-lg-6 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body card-rounded">
+                <h4 class="card-title card-title-dash">Recent Events</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- <app-activities [service]="test" [className]="'col-md-6 col-lg-6 grid-margin stretch-card'"></app-activities> -->
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex flex-column">
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <div>
+                        <h4 class="card-title card-title-dash">Top Urgency Cases</h4>
+                      </div>
+                    </div>
+                    <div class="mt-3">
+                      <!-- @for( patient of topUrgentPatients;track patient){
+                      <div class="wrapper d-flex align-items-center justify-content-between py-2 border-bottom">
+                        <div class="d-flex">
+                          <img class="img-sm rounded-10" [src]="patient.gender === 'female' ? '../../../assets/images/faces/face5.jpg' : '../../../assets/images/faces/face1.jpg'" alt="profile" />
+                          <div class="wrapper ms-3">
+                            <p class="ms-1 mb-1 fw-bold">{{ patient.name }}</p>
+                            <small class="text-muted mb-0">{{ patient.cin }}</small>
+                          </div>
+                        </div>
+                        <div class="text-muted text-small">{{ patient.checkInDate | date : "short" }}</div>
+                      </div>
+                      } -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <h4 class="card-title card-title-dash" style="margin-bottom: 10px">Climatic Conditions of the Medical Cabine</h4>
+                    <app-multisense-widget></app-multisense-widget>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div class="row">
+                  <!-- <div class="col-lg-12">
+                         partie congé
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div class="row">
+                  <app-task></app-task>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
