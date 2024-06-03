@@ -5,3 +5,7 @@
 .mat-option {
   margin-bottom: 2px;
 }
+
+.clickable{
+  cursor: pointer;
+}

@@ -17,7 +17,7 @@ import { MultiSenseWidgetComponent} from '../../components/widgets/multisense-wi
 import {ArmoireStock } from "../../model/ArmoireStock"
 import { Medication } from './../../model/Medications';
 import {Stockout} from "../../model/stockout"
-import { Presecription } from "../../model/Presecription"
+
 @Component({
   selector: 'app-widgets',
   standalone: true,
@@ -31,7 +31,7 @@ import { Presecription } from "../../model/Presecription"
 export class WidgetsComponent implements OnInit {
   medicationData: Medication[]= [];
   medicationsInRupture: Stockout[] = [];
-  medicationsDataprescription: Presecription[] = [];
+  //medicationsDataprescription: Presecription[] = [];
   medicationArmoireStock:ArmoireStock []=[]
 
   DateUsedMedicationsByMonth: Date[] = []
@@ -96,7 +96,7 @@ export class WidgetsComponent implements OnInit {
     }
 
     //displays the medications of presecription
-    getJsonMedicationDataPresecription(): void {
+/*     getJsonMedicationDataPresecription(): void {
       const jsonFilePath = 'assets/data/prescriptions.json';
       this.http.get<any>(jsonFilePath).subscribe(
         (data: any) => {
@@ -107,7 +107,7 @@ export class WidgetsComponent implements OnInit {
           console.error('Erreur lors du chargement des données JSON:', error);
         }
       );
-    }
+    } */
 
    //displays the medications that are in armoire 
     getJsonArmoireMedicationStock(): void {

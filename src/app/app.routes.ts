@@ -9,6 +9,11 @@ import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
 import { AddPrescriptionComponent } from './pages/prescription/add-prescription-component/add-prescription.component';
+import { TasksComponent } from './pages/nurseTasks/nurseTasks.component';
+import { MasonryDpiComponent } from './pages/registration/register-details/register-details.component';
+import { RegisterFormComponent } from './pages/registration/register-form/register-form.component';
+import { RegisterViewComponent } from './pages/registration/register-list/register-list.component';
+// import { DashboardReceptionComponent } from './pages/dashboard-reception/dashboard-reception/dashboard-reception.component';
 
 import { MasonryDpiComponent } from './pages/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
@@ -24,6 +29,7 @@ import { TasksComponent } from './pages/tasks/tasks.component';
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: NurseDashboardComponent },
+  // { path: 'dashboard-reception', component: DashboardReceptionComponent },
   { path: 'unit-care', component: UnitCareComponent },
   { path: 'visits', component: Visits },
   { path: 'widgets', component: WidgetsComponent },

@@ -22,33 +22,46 @@
   <!-- If no prescription is selected: Search + table part -->
   <div [className]="selectedPrescription != undefined && 'd-none'">
     <!-- Search prescription -->
-    <div class="form-group d-flex gap-2 col-lg-5 mx-auto mt-2 mb-0">
-      <input type="text" class="form-control form-control-sm" name="" id="" aria-describedby="helpId" [(ngModel)]="searchTerm" placeholder="Enter Id or Patient Name" />
-      <input name="" id="" class="btn btn-outline-primary" type="button" value="Search" />
+    <div class="form-group d-flex gap-3 col-lg-5 mx-auto mt-2 mb-0 align-content-center align-items-center">
+      <input [disabled]="isLoading" type="text" class="form-control form-control-sm" name="" id="" aria-describedby="helpId" [(ngModel)]="searchTerm" placeholder="Enter Id or Patient Name" />
+      <input [disabled]="isLoading" name="" id="" class="btn btn-outline-primary m-0" type="button" value="Search" />
+      <i class="fa fa-refresh" id="refresh-icon" aria-hidden="true" title="Refresh" (click)="onClickRefresh()"></i>
     </div>
     <!-- Search result : Table of prescriptions -->
+    @if(isLoading == false){
     <table class="table table-responsive">
       <thead>
         <tr id="table-head-row">
-          <th class="col-3">Prescription ID</th>
+          <th class="col-1">Medical Record ID</th>
+          <th class="col-1">Prescription ID</th>
           <th class="col-3">Patient Name</th>
+          <th class="col-2">Prescription Status</th>
+          <th class="col-2">Patient Status</th>
           <th class="col-2">Doctor Name</th>
           <th class="col-2">Date</th>
-          <th class="col-1">Type</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of dataList | filterPatientByNameAndSn: searchTerm" (click)="onClickPrescription(data)" [class]="data === selectedPrescription ? 'table-primary' : ''">
-          <td class="col-3">{{ data.sn }}</td>
-          <td class="col-3">{{ data.name }}</td>
-          <td class="col-2">{{ data.name }}</td>
-          <td class="col-2">
-            {{ ("0" + data.registrationDate.getHours()).slice(-2) + ":" + ("0" + data.registrationDate.getMinutes()).slice(-2) }}
-          </td>
-          <td class="col-1">{{ "data.type" }}</td>
-        </tr>
+        <ng-container *ngFor="let prescription of prescriptionsViewList;let i = index">
+          <tr  #prescriptionRows (click)="onClickPrescription(prescription)" style="cursor: pointer;" [id]="(i == 0 && prescription.id == lastCreatedPrescriptionIdFromResponse) ? 'last-selected-prescription' : ''">
+            <td class="col-1">{{ prescription.registerId.slice(-10) + "..." }}</td>
+            <td class="col-1">{{ prescription.id.slice(-10) + "..." }}</td>
+            <td class="col-3">{{ getRegister(prescription.registerId).patient.firstName + " " + getRegister(prescription.registerId).patient.lastName }}</td>
+            <td class="col-2">{{ getPrescriptionStatus(prescription) }}</td>
+            <td class="col-2">{{ getRegisterStatus(prescription.registerId) }}</td>
+            <td class="col-2">{{ "After AZURE" }}</td>
+            <td class="col-2">{{ getDateString(prescription.createdAt) }}</td>
+          </tr>
+        </ng-container>
+        >
       </tbody>
     </table>
+    } @if(isLoading && isFailedToLoad==false){
+    <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
+    }
+    @if(isFailedToLoad==true){
+      <div class="mx-auto pe-5 mt-5" style="width: fit-content">Error in fetching prescriptions after several retries, please click on retry</div>
+    }
   </div>
 
   <!-- If one prescription is selected:display result -->
@@ -56,10 +69,14 @@
     <!-- Print a single line displaying Prescription id | Date | Patient name | doctor name And Deselect Button -->
     <div class="d-flex gap-2 justify-content-center" style="height: 2rem">
       <p class="align-self-center m-0">Selected Prescription :</p>
-      <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.sn }} | {{ selectedPrescription.name }} - {{ selectedPrescription.age }} years</span>
-      <mat-icon class="align-self-center" (click)="onClickPrescription(undefined)">close</mat-icon>
+      <span class="text-primary fw-bold align-self-center"> Id : {{ selectedPrescription.id.slice(-10) + "..." }} | {{selectedRegister?.patient_firstName}} {{selectedRegister?.patient_lastName}} {{  getAge(selectedRegister?.patient_dateOfBirth) }}</span>
+      <mat-icon class="align-self-center text-danger fw-bold" (click)="onClickDeselectPrescription()">close</mat-icon>
     </div>
     <!-- Display Prescription details component -->
-    <div>Prescription Details here (TODO)</div>
+    <!-- /* This component will be deleted, its duplicated due to an angular error when calling them both */ -->
+    <app-old-prescription-view-for-prescription-list [selectedPrescription]="selectedPrescription" 
+    [selectedRegister]="selectedRegister"
+    (onClickUpdatePrescription)="navigateToUpdatePrescription(selectedPrescription,selectedRegister)" 
+    (onClickSuspendPrescription)="suspendPrescription(selectedPrescription)"  />
   }
 </div>
