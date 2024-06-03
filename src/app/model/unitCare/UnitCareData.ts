@@ -1,3 +1,5 @@
+import { EquipmentType } from "../../enums/enum";
+
 export  interface UnitCareData {
   unitCares: {
     pageIndex: number;
@@ -32,7 +34,7 @@ export interface Equipment {
   name: string;
   reference: string;
   eqStatus:number;
-  eq:number;
+  eqType:EquipmentType;
 }
 
 export interface Personnel {
