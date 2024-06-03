@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { patientType } from '../../../prescription/stp1-patient-selection/stp1-patient-selection.component';
 import { medicationType } from '../../../../types';
 import { CardMedicationComponent } from "../../../../components/card-medication/card-medication.component";
 
@@ -11,7 +10,6 @@ import { CardMedicationComponent } from "../../../../components/card-medication/
     imports: [CardMedicationComponent]
 })
 export class PatientDetailComponent {
-  @Input() selectedPatient: patientType | undefined = undefined;
   @Input()
   medication: medicationType[] = dummyData;
 maxWidth: { [klass: string]: string; };

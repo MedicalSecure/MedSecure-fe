@@ -20,13 +20,11 @@
         </thead>
         <tbody>
           <tr *ngFor="let data of dataList | filterPatientByNameAndSn: searchTerm" (click)="onClickPrescription(data)" [class]="data === selectedPrescription ? 'table-primary' : ''">
-            <td class="col-3" style="text-align: center;">{{ data.sn }}</td>
-            <td class="col-3" style="text-align: center;">{{ data.name }}</td>
-            <td class="col-2" style="text-align: center;">{{ data.name }}</td>
-            <td class="col-2" style="text-align: center;">
-              {{ ("0" + data.registrationDate.getHours()).slice(-2) + ":" + ("0" + data.registrationDate.getMinutes()).slice(-2) }}
-            </td>
-            <td class="col-1" style="text-align: center;">{{ data.type }}</td>
+            <td class="col-3" style="text-align: center;">{{ data }}</td>
+            <td class="col-3" style="text-align: center;">{{ data }}</td>
+            <td class="col-2" style="text-align: center;">{{ data }}</td>
+           
+            <td class="col-1" style="text-align: center;">{{ data }}</td>
           </tr>
         </tbody>
       </table>
