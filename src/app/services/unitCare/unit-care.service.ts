@@ -37,19 +37,14 @@ export class UnitCareService  {
     this.apiUrl = this.link;
     return this.http.get<UnitCareData>(this.apiUrl).pipe(
       map(parseDates),//parse dates of response then filter by id
-      map((unitCares: UnitCareData) => unitCares.unitCares.data.find(uc => 
-        {
-          let isUnitCareFound=false;
-          uc.rooms.forEach(room=>{
-            room.equipments.forEach(bed=>{
-              isUnitCareFound=bed.id==bedId
-              if(isUnitCareFound==true) return;
-            })
-            if(isUnitCareFound==true) return;
-          })
-          return isUnitCareFound;
-        }
-      ))
+      map((unitCareData: UnitCareData) => {
+        // Find the UnitCare object that contains the bed with the given bedId
+        return unitCareData.unitCares.data.find(uc =>
+          uc.rooms.some(room =>
+            room.equipments.some(bed => bed.id === bedId)
+          )
+        );
+      })
     );
   }
 
