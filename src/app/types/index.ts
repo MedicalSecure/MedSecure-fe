@@ -29,16 +29,9 @@ export type ActivityView = {
   content: string;
   createdBy: string;
   creatorName: string;
-  activityTime : string;
+  activityTime: string;
 };
 
-
-
-
-export type medicationHourType = {
-  hour: number;
-  isBeforeFood: boolean;
-};
 export type commentType = {
   id?: string;
   label?: string;
@@ -55,7 +48,7 @@ export type medicationType = {
   administrationHours: Dispense[];
   Caution?: string;
   comments: Array<commentType>;
-  summary?:object;
+  summary?: object;
 };
 
 export type Entity = {

@@ -14,15 +14,16 @@ import { NavbarComponent } from '../../../partials/navbar/navbar.component';
 import { Observable, firstValueFrom } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { DrugService } from '../../../services/medication/medication.service';
-import { CheckDrugRequest, CheckDrugResponse } from '../../../types/DrugDTOs';
-import { ErrorMessageComponent } from '../../../components/error-message/error-message.component';
+import { CheckDrugRequest, CheckDrugResponse } from '../../../model/Drugs';
+import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
+import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Component({
   selector: 'app-stp1-import-map-drugs',
   standalone: true,
   templateUrl: './stp1-import-map-drugs.component.html',
   styleUrl: './stp1-import-map-drugs.component.css',
-  imports: [CommonModule, FormsModule, NavbarComponent, MatSelectModule,ErrorMessageComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, MatSelectModule],
 })
 @Injectable({
   providedIn: 'root',
@@ -32,8 +33,7 @@ export class Stp1ImportMapDrugs implements OnInit {
   @Output() CheckedDrugsEvent = new EventEmitter<MedicationType[]>();
   @Output() onIsStep1PageValidChange = new EventEmitter<boolean>();
   @Output() areAllCheckedDrugsValid = new EventEmitter<boolean>();
-  @ViewChild(ErrorMessageComponent)
-  errorMessageComponent!: ErrorMessageComponent;
+
 
   importedData: { [key: string]: any }[] = [];
   excelDateFormat = 'dd-mm-yyyy';
@@ -64,7 +64,7 @@ export class Stp1ImportMapDrugs implements OnInit {
     this.columnMappings
   ) as (keyof MedicationType)[];
 
-  constructor(private drugService: DrugService) {}
+  constructor(private drugService: DrugService,private snackBarMessagesService:SnackBarMessagesService) {}
 
   ngOnInit() {
     this.dbHeaders = Object.keys(
@@ -206,7 +206,7 @@ export class Stp1ImportMapDrugs implements OnInit {
             code: drug.Code,
             unit: drug.Unit,
             description: drug.Description,
-            expiredAt: tryParseDate(drug.ExpiredAt,this.excelDateFormat),
+            expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt,this.excelDateFormat),
             stock: tryParseInt(drug.Stock),
             alertStock: tryParseInt(drug.AlertStock),
             avrgStock: tryParseInt(drug.AverageStock),
@@ -242,9 +242,8 @@ export class Stp1ImportMapDrugs implements OnInit {
   displayNewErrorMessage(
     content: string,
     duration = 4,
-    title: string = 'Error : '
   ) {
-    this.errorMessageComponent.openSnackBar(content, duration, title);
+    this.snackBarMessagesService.displaySnackBarMessage(content,snackbarMessageType.Error,duration,true)
   }
 
   onSelectchange(event: any, dbColumn: keyof MedicationType) {
@@ -276,19 +275,28 @@ export type MedicationType = {
   IsDrugExist?: string | boolean;
 };
 
-export function tryParseDate(
+export function tryParseDateOnlyFromExcel(
   input: string | Date,
   excelDateFormat: string = 'dd-mm-yyyy'
-): string {
+): Date {
   try {
     if (input instanceof Date) {
-      return input.toISOString();
+      return input;
     }
     let inputParsed = '';
     if (typeof input == 'string') {
       inputParsed = input.replace(/--/g, '-');
     } else {
       throw new Error('Invalid date: ' + input);
+    }
+
+    try {
+      let aTry=new Date(inputParsed)
+      if (!isNaN(aTry.getTime())) {
+        return aTry;
+      }
+    } catch (error) {
+      //just continue
     }
 
     let [firstPart, secondPart, third] = inputParsed.split('-').map(Number);
@@ -336,7 +344,7 @@ export function tryParseDate(
     if (isNaN(result2.getTime())) {
       throw new Error('Invalid date: ' + input);
     }
-    return result2.toISOString();
+    return result2;
   } catch (error) {
     throw error;
   }

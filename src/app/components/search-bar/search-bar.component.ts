@@ -1,5 +1,13 @@
 import { MatSelectModule } from '@angular/material/select';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  OnChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +21,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltip } from '@angular/material/tooltip';
-import { Medication } from '../../model/Medications';
+import { DrugDTO } from '../../model/Drugs';
 
 @Component({
   selector: 'app-search-bar',
@@ -35,15 +43,52 @@ import { Medication } from '../../model/Medications';
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css',
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent implements OnInit, OnChanges {
   searchControl = new FormControl();
-  searchKeys: string[] = ['Nom', 'Laboratoire', 'Indications'];
-  searchKey: string = '';
-  Medications: Medication[] = [];
-  filteredMedications: Observable<Medication[]>;
-  selectedMedications: Medication[] = [];
+  @Input()
+  displaySelectedMedication = true;
+  @Input()
+  hideSearchIfMaximumReached = false;
+  @Input()
+  minimumNumberOfCharacters = 2;
+  @Input()
+  maxNumberOfSelectedMedications = 15;
+  @Input()
+  containerClasses: string = 'd-flex gap-3 flex-wrap justify-content-center';
+  @Input()
+  selectedMedications: DrugDTO[] = [];
+  @Output() selectedMedicationsChange = new EventEmitter<DrugDTO[]>();
 
-  @Output() searchMedicationsChange = new EventEmitter<Medication[]>();
+  @Input()
+  searchTerms: searchTerm[] = [
+    { label: 'Name', medicationKey: 'name' },
+    { label: 'Form', medicationKey: 'form' },
+  ];
+  selectedSearchTerm: searchTerm =
+    this.searchTerms.length > 0
+      ? this.searchTerms[0]
+      : { label: 'Name', medicationKey: 'name' };
+  Medications: DrugDTO[] = [];
+  filteredMedications: Observable<DrugDTO[]>;
+
+  hasReachedLimit =
+    this.selectedMedications.length === this.maxNumberOfSelectedMedications;
+
+  ngOnChanges(changes: SimpleChanges) {
+    // Check if the inputVariable has changed
+    if (changes['selectedMedications']) {
+      this.updateFormControlState();
+    }
+  }
+
+  updateFormControlState() {
+    this.hasReachedLimit = this.selectedMedications.length === this.maxNumberOfSelectedMedications;
+
+    let c1 = this.hasReachedLimit;
+    let c2 = this.selectedSearchTerm == undefined || this.selectedSearchTerm == null;
+    if (c1 || c2) this.searchControl.disable();
+    else this.searchControl.enable();
+  }
 
   constructor(private medicationService: DrugService) {
     this.filteredMedications = this.searchControl.valueChanges.pipe(
@@ -53,24 +98,59 @@ export class SearchBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.medicationService.getMedications().subscribe((data) => {
-      this.Medications = data.Medications.medication;
+    this.medicationService.getMedications().subscribe(
+      (response) => {
+        this.Medications = response.drugs.data;
+      },
+      null,
+      () => this.afterLoadingData()
+    );
+    this.updateFormControlState();
+  }
+
+  afterLoadingData() {
+    this.verifyInputKeys();
+
+    //select default search term
+    if (this.searchTerms.length > 0)
+      this.selectedSearchTerm = this.searchTerms[0];
+  }
+
+  verifyInputKeys() {
+    //check wether the keys of the input searchTerms are compatible with the object props
+    if (this.Medications.length == 0) {
+      console.error('No Medications were loaded to the search bar component');
+      return;
+    }
+    let medicationExample = this.Medications[0];
+    let objectKeys = Object.keys(medicationExample);
+    this.searchTerms = this.searchTerms.filter((searchTerm) => {
+      if (objectKeys.includes(searchTerm.medicationKey)) return true;
+      console.error(
+        'cannot find property with key : ' +
+          searchTerm.medicationKey +
+          ' in the medication object'
+      );
+
+      return false;
     });
   }
 
-  filterMedications(searchTerm: string): Medication[] {
+  filterMedications(searchTerm: string): DrugDTO[] {
     if (typeof searchTerm !== 'string' || searchTerm.trim() === '') {
       return [];
-    } else {
-      return this.Medications.filter((medication) =>
-        medication[this.searchKey]
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      );
     }
+    if (searchTerm.length < this.minimumNumberOfCharacters) return [];
+
+    return this.Medications.filter((medication) =>
+      medication[this.selectedSearchTerm.medicationKey]
+        ?.toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
   }
 
-  onChangeSelectedMedication(medication: Medication): void {
+  onChangeSelectedMedication(medication: DrugDTO): void {
     if (!this.selectedMedications.includes(medication)) {
       this.selectedMedications.push(medication);
       this.emitSelectedMedications();
@@ -78,33 +158,38 @@ export class SearchBarComponent implements OnInit {
     this.searchControl.setValue('');
   }
 
-  onSelectionChange(event: MatChipListboxChange) {
-    this.searchKey = event.source.value;
+  onSearchKeySelectionChange(event: MatChipListboxChange) {
+    if (
+      event == undefined ||
+      event.source == undefined ||
+      event.source.value == undefined
+    )
+      return;
+    this.selectedSearchTerm = event.source.value;
     this.emitSelectedMedications();
   }
 
-  getMedicationProperty(medication: Medication): string {
-    switch (this.searchKey) {
-      case 'Nom':
-        return medication['Nom'];
-      case 'Laboratoire':
-        return medication['Laboratoire'];
-      case 'Indications':
-        return medication['Indications'];
-      default:
-        return '';
-    }
+  getMedicationProperty(medication: DrugDTO): string {
+    //@ts-ignore
+    return medication[
+      this.selectedSearchTerm.medicationKey as keyof DrugDTO
+    ].toString();
   }
 
-  removemedication(medication: Medication): void {
-    const index = this.selectedMedications.indexOf(medication);
-    if (index !== -1) {
-      this.selectedMedications.splice(index, 1);
-      this.emitSelectedMedications();
-    }
+  removeMedication(medication: DrugDTO, index: any): void {
+    //better performance
+    //this.selectedMedications = this.selectedMedications.filter(med => med != medication)
+    this.selectedMedications.splice(index, 1);
+    this.emitSelectedMedications();
   }
 
   private emitSelectedMedications(): void {
-    this.searchMedicationsChange.emit(this.selectedMedications);
+    this.selectedMedicationsChange.emit(this.selectedMedications);
+    this.updateFormControlState();
   }
 }
+
+export type searchTerm = {
+  label: string;
+  medicationKey: keyof DrugDTO;
+};

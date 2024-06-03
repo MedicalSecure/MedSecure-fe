@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PharmacyListComponent } from '../pharmacy-list/pharmacy-list.component';
 import { Stp3ConfirmUpdateDrugs } from '../stp3-confirm-update-drugs/stp3-confirm-update-drugs.component';
-import { DrugDTO } from '../../../types/DrugDTOs';
+import { DrugDTO } from '../../../model/Drugs';
 
 @Component({
   selector: 'app-add-pharmacy',

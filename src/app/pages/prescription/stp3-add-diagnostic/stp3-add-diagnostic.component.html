@@ -1,22 +1,39 @@
-<table class="table">
-  <tbody>
-    <tr>
-      <td class="col-md-4">
-        <div>
-          <chips-select
-            [ObjectName]="'Symptom'"
-            [customLabel]="'Symptoms'"
-            class="w-100"
-            (selectedChipsChange)="selectedSymptomsChipsChange($event)"
-            [enableCustomAdditions]="false"
-            [enableQuickSelectFromSuggestions]="true"
-            [fullData]="symptomsData"
-            [minimumSearchLength]="1"
-            [minimumAddedLabelLength]="5"
-            [isStartWithSearch]="false"
-            [searchPropertyName]="'label'"
-          ></chips-select>
+<div class="container-fluid pt-2">
+  <div class="row align-items-center">
+    <div class="col-md-4">
+      <div>
+        <chips-select
+          [ObjectName]="'Symptom'"
+          [customLabel]="'Symptoms'"
+          class="w-100"
+          (selectedChipsChange)="selectedSymptomsChipsChange($event)"
+          [enableCustomAdditions]="false"
+          [enableQuickSelectFromSuggestions]="true"
+          [fullData]="symptomsData"
+          [minimumSearchLength]="1"
+          [minimumAddedLabelLength]="5"
+          [isStartWithSearch]="false"
+          [searchPropertyName]="'name'"
+          [disabled]="symptomsData.length === 0 || isSymptomsLoading"
+          [isLoading]="isSymptomsLoading"
+          [selectedChips]="selectedSymptoms"
+          [tooltipPropertyName]="'shortDescription'"
+        ></chips-select>
+        <p style="margin-top: -0.7rem">
+          <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; margin-bottom : 5px "  /> Required at least {{ minimumSymptomsForPrediction }} symptoms for prediction,
+          <strong>({{ selectedSymptoms.length >= minimumSymptomsForPrediction ? "Met" : "Not met" }})</strong>
+        </p>
+        @if(selectedBodyParts.length > 0 && isFilteringEnabled) {
+        <p>
+          <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; margin-bottom : 5px "  /> filter is applied : viewing symptoms for @if(selectedBodyParts.length == 1){ this part: {{ selectedBodyParts[0] }}
+          }@else{ these parts : @for(selectedBodyPart of selectedBodyParts;track $index ){
+          <span>{{ selectedBodyPart }}, </span>
+          } }
+        </p>
+        }
 
+        <div id="diagnosis-chips-select-container" class="mt-4">
+          <!-- this id is for shake animation :  id= diagnosis-chips-select-container-->
           <chips-select
             [ObjectName]="'Diagnosis'"
             [customLabel]="'Diagnosis'"
@@ -28,22 +45,28 @@
             [minimumSearchLength]="1"
             [minimumAddedLabelLength]="5"
             [isStartWithSearch]="false"
-            [searchPropertyName]="'label'"
+            [searchPropertyName]="'name'"
+            [disabled]="diagnosesData.length === 0"
+            [isLoading]="isDiagnosisLoading"
+            [selectedChips]="selectedDiagnosis"
+            [tooltipPropertyName]="'shortDescription'"
           ></chips-select>
         </div>
-      </td>
-      <td class="col-md-3">
-        <div>
-          <form class="container d-flex card py-2 shadow-sm">
-            <app-human-body-viewer></app-human-body-viewer>
-          </form>
-        </div>
-      </td>
-      <td class="col-md-4">
-        <div [className]="selectedPatient == undefined && 'd-none'">
-          <app-stp2-patient-details />
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+        <p>
+          <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; margin-bottom : 5px "  /> If manual modifications have been made, please remove all diagnostics to get new the predictions, its currently
+          <strong>{{ continuePredicting ? "enabled" : "disabled" }}</strong>
+        </p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div>
+        <form class="container d-flex card py-2 shadow-sm">
+          <app-human-body-viewer (onSelectedPartsChange)="onSelectedBodyPartsChange($event)" (isFilteringEnabledChange)="handleIsFilteringEnabledChange($event)"></app-human-body-viewer>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-4">
+      TODO
+    </div>
+  </div>
+</div>

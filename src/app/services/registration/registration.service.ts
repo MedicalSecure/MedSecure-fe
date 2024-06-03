@@ -14,6 +14,7 @@ import { Observable, catchError, map } from 'rxjs';
 import { CreatedResponse } from '../../types';
 import { getRegistrationStatus } from '../../shared/utilityFunctions';
 import { parseDates } from '../bacPatient/bac-patient-services.service';
+import { RetryInterceptor } from '../../config/httpInterceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -35,16 +36,16 @@ export class RegistrationService {
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
 
-    /*     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
+      const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
       maxRetries,
       retryDelayInMs,
       displayErrorMessages
-    ); */
+    ); 
 
     return this.http
       .get<GetRegistrationResponse>(this.url, {
         params: params,
-        //headers: interceptorHeaders,
+        headers: interceptorHeaders,
       })
       .pipe(
         map((response) => {
@@ -61,15 +62,15 @@ export class RegistrationService {
   ): Observable<GetRegisterByIdResponse> {
     let url = this.url ;
 
-/*     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
+     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
       maxRetries,
       retryDelayInMs,
       displayErrorMessages
-    ); */
+    ); 
 
     return this.http
       .get<GetRegisterByIdResponse>(url+ `/${registerId}`, {
-        //headers: interceptorHeaders,
+        headers: interceptorHeaders,
       })
       .pipe(map((response) => parseDates(response)));
   }

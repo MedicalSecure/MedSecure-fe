@@ -1,5 +1,7 @@
 import { PrescriptionStatus, HistoryStatus } from '../enums/enum';
+import { PosologyDto, PrescriptionDto, RegisterForPrescription } from '../model/Prescription';
 import { HistoryDto } from '../model/Registration';
+
 
 export function calculateAge(dateOfBirth: Date): number {
   const currentDate = new Date();
@@ -124,4 +126,112 @@ export function getRegistrationDate(
 
   // Return the status of the first history object in the sorted list
   return sortedHistory[0].date;
+}
+
+
+export function getActivePrescriptions(
+  register: RegisterForPrescription
+): PrescriptionDto[] {
+  let activePrescriptions: PrescriptionDto[] = [];
+
+  register.prescriptions?.forEach((prescription) => {
+    if (
+      !(
+        prescription.status == PrescriptionStatus.Active ||
+        prescription.status == PrescriptionStatus.Pending
+      )
+    )
+      return; // continue (return from current prescription arrow fn and not from getActivePrescriptions)
+
+    for (const posology of prescription.posologies) {
+      if (posology.isPermanent || posology.endDate == null) {
+        activePrescriptions.push(prescription);
+        return; // go to next prescription
+      }
+
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0); // Set the time to 00:00:00
+      if (posology.endDate < todayMidnight) {
+        activePrescriptions.push(prescription);
+        return; // go to next prescription
+      }
+    }
+  });
+  return activePrescriptions;
+}
+
+export function getActiveMedications(
+  register: RegisterForPrescription
+): PosologyDto[] {
+  let activePosologies: PosologyDto[] = [];
+
+  register.prescriptions?.forEach((prescription) => {
+    if (
+      !(
+        prescription.status == PrescriptionStatus.Active ||
+        prescription.status == PrescriptionStatus.Pending
+      )
+    )
+      return; // continue (return from current prescription arrow fn and not from getActivePrescriptions)
+
+    for (const posology of prescription.posologies) {
+      if (posology.isPermanent || posology.endDate == null) {
+        activePosologies.push(posology);
+        continue; //go to next posology
+      }
+
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0); // Set the time to 00:00:00
+      if (posology.endDate < todayMidnight) {
+        activePosologies.push(posology);
+      }
+    }
+  });
+  return activePosologies;
+}
+
+export function extractErrorMessage(error: any): string {
+  let errorMessage = '';
+  // Check if the error has a single message property
+  if (error.error && error.error.message) {
+    errorMessage = error.error.message;
+  }else if(error.error && error.error.detail){
+    errorMessage = error.error.detail;
+  }
+  else if (error && error.message) {
+    errorMessage = error.message;
+  }
+  // Check if the error has an array of errors
+  else if (error.error && Array.isArray(error.error.errors)) {
+    errorMessage = error.error.errors.map((err: any) => err.message).join(', ');
+  }
+  // Check if the error has an errors object with individual error messages
+  else if (error.error && typeof error.error.errors === 'object') {
+    const errorMessages = Object.values(error.error.errors).map(
+      (err: any) => err.message || err
+    );
+    errorMessage = errorMessages.join(', ');
+  }
+  // If none of the above cases match, return the original error object as a string
+  else {
+    errorMessage = error.toString();
+  }
+
+  if (error.status != undefined) {
+    errorMessage= `http${error.status}: ${errorMessage}`;
+  } else if (error.error.status) {
+    errorMessage= `http${error.error.status}: ${errorMessage}`;
+  }
+  
+  return errorMessage;
+}
+
+export function getDateOnlyFromDateTime(dateTime: Date): string {
+  const year = dateTime.getFullYear();
+  const month = String(dateTime.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(dateTime.getDate()).padStart(2, '0');
+
+  // Format the date as a string in the desired format (e.g., "yyyy-MM-dd")
+  const dateOnly = `${year}-${month}-${day}`;
+  return dateOnly;
 }

@@ -5,6 +5,9 @@ import { PaginatedResult } from "../types";
 export interface GetRegistrationResponse{
   registers: PaginatedResult<RegisterDto>;
 }
+export type GetPatientsResponse = {
+  patients: PaginatedResult<PatientDto>;
+};
 
 
 export type CreateRegisterRequest = {
