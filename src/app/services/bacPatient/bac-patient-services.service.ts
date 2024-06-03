@@ -32,7 +32,7 @@ export class BacPatientService implements ActivityService {
     return x;
   }
   getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) : bacpatient[] {
-    this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
+    this.http.get<BacPatientResponse>('http://localhost:5005/v1/bacPatient')
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
@@ -56,7 +56,7 @@ export class BacPatientService implements ActivityService {
   }
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('http://localhost:5005/v1/bacPatient', body).subscribe(response => {
  
     },
     error => {
@@ -73,7 +73,7 @@ export class BacPatientService implements ActivityService {
       
   });
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('http://localhost:5005/v1/bacPatient', body).subscribe(response => {
  console.log(response);
  
     },
@@ -84,6 +84,7 @@ export class BacPatientService implements ActivityService {
 
    }
 }
+
 export function parseDates<T>(response:T):T{
 
   const dateReviver = (key: string, value: any) => {

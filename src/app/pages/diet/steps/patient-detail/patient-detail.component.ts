@@ -14,6 +14,7 @@ export class PatientDetailComponent {
   @Input() selectedPatient: patientType | undefined = undefined;
   @Input()
   medication: medicationType[] = dummyData;
+maxWidth: { [klass: string]: string; };
 
   onClickEditMedication(x: any, y: any) {}
   onClickRemoveMedication(x: any, y: any) {}

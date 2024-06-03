@@ -1,59 +1,80 @@
-<div class="d-flex flex-row flex-wrap gap-2 justify-content-center align-middle mt-md-3">
-    <div class="col-12">
-      @if (medication.length > 0) {
-        <app-card-medication [medicationList]="medication" [containerClass]="'card mb-2 py-2'"></app-card-medication>
-      }
-    </div>
-  
-    <div>
-      <div class="card mb-2 py-2">
+<div class="d-flex flex-row flex-wrap gap-1 justify-content-center align-middle" style="width: 100%;">
+  <div>
+    <div class="d-flex"> 
+      <div class="card mb-3 py-2 h custom-shadow" >
         <div class="card-body pb-0 pt-3">
           <h4 class="card-title fs-6 mb-1">Diet</h4>
           <ul class="list p-1 m-0 ps-3">
             <li>
               <div class="mb-0">
-                <p class="fw-bold fs-6 text-primary mb-0">Type<span class="fw-light fs-6 text-dark mb-0">diabetic</span></p>
+                <p class="fw-bold fs-6 text-primary mb-0">Type :
+                   <span class="fw-light fs-6 text-dark mb-0">diabetic</span></p>
               </div>
             </li>
+          </ul>
+          <ul>
             <li>
-              <p class="fw-bold fs-6 text-primary mb-0">Note : <span class="fw-light fs-6 text-dark mb-0"> bla bla bla </span></p>
-
+              <p class="fw-bold fs-6 text-primary mb-0">Note : <span class="fw-light fs-6 text-dark mb-0"> bla bla bla
+                </span></p>
+  
             </li>
           </ul>
         </div>
       </div>
-      <div class="card mb-2 py-2">
+      <div class="card mb-3 py-2  custom-shadow" style="margin-left: 1%;" >
         <div class="card-body pb-0 pt-3">
-          <h4 class="card-title fs-6 mb-1">Today's Plan : </h4>
+          <h4 class="card-title fs-6 mb-1">About the Patient </h4>
           <ul class="list p-1 m-0 ps-3 d-flex flex-wrap">
-            <li class="flex-grow-1"  style="margin-left: 5%;">
+            <li class="flex-grow-1" style="margin-left: 5%;">
               <div class="mb-3">
-                <p class="fw-bold fs-6 text-primary mb-0">Meal: Breakfast</p>
-                <p class="text-dark mb-0"><span>Starter: Soup</span></p>
-                <p class="text-dark mb-0"><span>Main dish: Pizza</span></p>
-                <p class="text-dark mb-0"><span>Dessert: Chocolate</span></p>
-              </div>
-            </li>
-            <li class="flex-grow-1"  style="margin-left: 5%;">
-              <div class="mb-3">
-                <p class="fw-bold fs-6 text-primary mb-0">Meal: Lunch</p>
-                <p class="text-dark mb-0"><span>Starter: Soup</span></p>
-                <p class="text-dark mb-0"><span>Main dish: Pizza</span></p>
-                <p class="text-dark mb-0"><span>Dessert: Chocolate</span></p>
-              </div>
-            </li>
-            <li class="flex-grow-1"  style="margin-left: 5%;">
-              <div class="mb-3">
-                <p class="fw-bold fs-6 text-primary mb-0">Meal: Dinner</p>
-                <p class="text-dark mb-0"><span>Starter: Soup</span></p>
-                <p class="text-dark mb-0"><span>Main dish: Pizza</span></p>
-                <p class="text-dark mb-0"><span>Dessert: Chocolate</span></p>
+                <p class="fw-bold fs-6 text-primary mb-0">allergirs : </p>
               </div>
             </li>
           </ul>
-          
+          <ul>
+            <li class="flex-grow-1" style="margin-left: 5%;">
+              <div class="mb-3">
+                <p class="fw-bold fs-6 text-primary mb-0">Note : </p>
+  
+              </div>
+            </li>
+          </ul>
         </div>
+      </div>
+     </div>
+     <div class="card mb-3 py-2   custom-shadow" >
+      <div class="card-body pb-0 pt-3">
+        <h4 class="card-title fs-6 mb-1">Today's Plan : </h4>
+        <ul class="list p-1 m-0 ps-3 d-flex flex-wrap">
+          <li class="flex-grow-1" style="margin-left: 5%;">
+            <div class="mb-3">
+              <p class="fw-bold fs-6 text-primary mb-0">Meal: Breakfast</p>
+            </div>
+          </li>
+          </ul>
+          <ul>
+          <li class="flex-grow-1" style="margin-left: 5%;">
+            <div class="mb-3">
+              <p class="fw-bold fs-6 text-primary mb-0">Meal: Lunch</p>
+
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="flex-grow-1" style="margin-left: 5%;">
+            <div class="mb-3">
+              <p class="fw-bold fs-6 text-primary mb-0">Meal: Dinner</p>
+            </div>
+          </li>
+          <li class="flex-grow-1" style="margin-left: 5%;">
+            <div class="mb-3">
+              <p class="fw-bold fs-6 text-primary mb-0">Meal: Snack</p>
+
+            </div>
+          </li>
+        </ul>
+
       </div>
     </div>
   </div>
-  
+</div>

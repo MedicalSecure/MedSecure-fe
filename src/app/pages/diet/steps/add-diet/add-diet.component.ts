@@ -20,6 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class AddDietComponent implements OnInit {
   @Input() note: string[];
+  @Input()
+  CardBodyClass: string = 'card-body pb-0 pt-3';
   liststring: Comment[] = [];
   selectedMealType: string;
   isMealSelected: boolean[] = [];

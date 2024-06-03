@@ -28,7 +28,7 @@
                     <app-wizard-header [steps]="steps" (currentStepChange)="SwitchToStep($event)"
                         [currentStep]="stepNumber" [size]="3" [IconSizeRatio]="0.5"></app-wizard-header>
                     <div class="wizard-container" style="height: 490px; overflow-y: auto">
-                        <div [className]="stepNumber != 1 && 'd-none'">
+                        <div [className]="stepNumber != 1 && 'd-none'" >
                            <app-prescription-list></app-prescription-list>
                         </div>
                        
