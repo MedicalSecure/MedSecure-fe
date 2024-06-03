@@ -81,6 +81,7 @@ export class AddPrescriptionComponent implements DoCheck {
   isHospitalizationValid: boolean = false;
   ShowPrescriptionList: boolean = false;
   isPageLoading = false;
+  onSubmitLoading = false;
   updatingOldPrescriptionMode = false;
   wizardSteps: wizardStepType[] = _steps;
   Hospitalization: stp5FormsValueEvent = { unitCare: null, diet: null };
@@ -121,7 +122,7 @@ export class AddPrescriptionComponent implements DoCheck {
       console.error('cant submit without selecting a patient / registration');
       return;
     }
-    this.isPageLoading = true;
+    this.onSubmitLoading = true;
     const summary = {
       patient: this.selectedRegister,
       symptoms: this.selectedSymptoms,
@@ -173,7 +174,6 @@ export class AddPrescriptionComponent implements DoCheck {
       diet: diet,
     };
     console.log(JSON.stringify(finalPrescription));
-    //debugger;
     if (
       this.updatingOldPrescriptionMode &&
       this.oldPrescriptionToUpdate &&
@@ -183,17 +183,17 @@ export class AddPrescriptionComponent implements DoCheck {
       finalPrescription.id = this.oldPrescriptionToUpdate.id;
       this.prescriptionApiService.putPrescriptions(finalPrescription).subscribe(
         (response) => {
-          this.ShowPrescriptionList = true;
           this.clearWizard();
-          console.log(response);
-          this.isPageLoading = false;
+          this.ShowPrescriptionList = true;
           this.lastCreatedPrescriptionIdFromResponse = response.id;
+          console.log(response);
+          this.onSubmitLoading = false;
 
         },
         (error) => {
-          console.error(extractErrorMessage(error));
+          console.error(error.error);
           this.displayNewErrorMessage(extractErrorMessage(error));
-          this.isPageLoading = false;
+          this.onSubmitLoading = false;
           this._updateButtonsState();
         }
       );
@@ -204,15 +204,15 @@ export class AddPrescriptionComponent implements DoCheck {
         .subscribe(
           (response) => {
             this.clearWizard();
+            this.lastCreatedPrescriptionIdFromResponse = response.id;
             this.ShowPrescriptionList = true;
             console.log(response);
-            this.isPageLoading = false;
-            this.lastCreatedPrescriptionIdFromResponse = response.id;
+            this.onSubmitLoading = false;
           },
           (error) => {
             console.error(error.error);
-            this.displayNewErrorMessage(error.error.message ?? error.message);
-            this.isPageLoading = false;
+            this.displayNewErrorMessage(extractErrorMessage(error));
+            this.onSubmitLoading = false;
             this._updateButtonsState();
           }
         );
@@ -256,8 +256,6 @@ export class AddPrescriptionComponent implements DoCheck {
     }
     this._updateButtonsState();
     this.isPageLoading = false;
-    //this.stp5HospitalizationComponent.insertOldHospitalizationData(this.Hospitalization)
-
   }
 
   handlePosologyChange(posologies: PosologyDto[]) {
@@ -319,9 +317,8 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   displayNewErrorMessage(
-    title: string,
-    duration = 4,
-    content: string = 'Error : '
+    content: string,
+    duration = 4
   ) {
     this.snackBarMessagesService.displaySnackBarMessage(content,snackbarMessageType.Error,duration,true)
   }
@@ -338,6 +335,7 @@ export class AddPrescriptionComponent implements DoCheck {
     this.ShowPrescriptionList = true;
     this.Hospitalization = { unitCare: null, diet: null };
     this.isPageLoading = false;
+    this.onSubmitLoading = false;
     if(this.stp3AddDiagnosticComponent) this.stp3AddDiagnosticComponent.forceClearPage()
     if(this.stp5HospitalizationComponent) this.stp5HospitalizationComponent.forceClearPage()
 
@@ -350,7 +348,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
     // arrow function to hold the callback context ?? xD
     //if (index > this.stepsLimit + 1) return false;
-    if (this.isPageLoading) return false;
+    if (this.isPageLoading || this.onSubmitLoading) return false;
     if (index < 1) return false;
     //if we are currently updating an old prescription, we cant go back to patient select, UNTIL we deselect the current patient
     if (index == 1 && this.updatingOldPrescriptionMode) return false;
@@ -431,7 +429,7 @@ export class AddPrescriptionComponent implements DoCheck {
 
   /* wizard buttons */
   SwitchToStep(index: number) {
-    if (this.isPageLoading) return;
+    if (this.isPageLoading || this.onSubmitLoading) return;
 
     if (index === 0) {
       this.onSelectPatientChange(undefined);
@@ -503,7 +501,7 @@ export class AddPrescriptionComponent implements DoCheck {
   }
 
   private _updateButtonsState() {
-    if (this.isPageLoading) {
+    if (this.isPageLoading || this.onSubmitLoading) {
       this.setNextButtonClass('', 'disabled');
     } else if (!this.validatePageSwitch(this.stepNumber + 1)) {
       this.setNextButtonClass('', 'disabled');
@@ -512,7 +510,7 @@ export class AddPrescriptionComponent implements DoCheck {
       this.setNextButtonClass('', '', true);
     }
 
-    if (this.isPageLoading) {
+    if (this.isPageLoading || this.onSubmitLoading) {
       this.setBackButtonClass('', 'disabled');
     } else if (!this.validatePageSwitch(this.stepNumber - 1)) {
       this.setBackButtonClass('', 'disabled');

@@ -42,7 +42,7 @@ export class RetryInterceptor implements HttpInterceptor {
       retry({
         count: maxRetries,
         delay: (error: HttpErrorResponse, retryCount: number) => {
-          if (error.status === 0 || error.status >= 500) {
+          if (error.status === 0 || error.status > 500) {
             console.log(`Retrying request (${retryCount}/${maxRetries})`);
             const messageProps: SnackBarMessageProps = {
               messageContent: `Retrying (${retryCount}/${
@@ -65,6 +65,9 @@ export class RetryInterceptor implements HttpInterceptor {
         },
       }),
       catchError((error: HttpErrorResponse) => {
+        //same condition as above, only display retries errors for the Targeted errors
+        if(!(error.status === 0 || error.status > 500))
+          return throwError(() => error);
         // Handle any remaining errors after retries
         console.error(
           `HTTP request failed after ${maxRetries} retries:`,

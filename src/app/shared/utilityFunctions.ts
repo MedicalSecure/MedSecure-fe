@@ -192,7 +192,6 @@ export function getActiveMedications(
 
 export function extractErrorMessage(error: any): string {
   let errorMessage = '';
-
   // Check if the error has a single message property
   if (error.error && error.error.message) {
     errorMessage = error.error.message;
@@ -216,9 +215,9 @@ export function extractErrorMessage(error: any): string {
   }
 
   if (error.status != undefined) {
-    errorMessage= `http status ${error.status} : ${errorMessage}`;
+    errorMessage= `http${error.status}: ${errorMessage}`;
   } else if (error.error.status) {
-    errorMessage= `http status ${error.error.status} : ${errorMessage}`;
+    errorMessage= `http${error.error.status}: ${errorMessage}`;
   }
   
   return errorMessage;

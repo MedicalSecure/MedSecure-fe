@@ -113,6 +113,7 @@ export class Stp1PatientSelection implements OnChanges {
   }
 
   async fetchRegistrationsWithPrescriptions() {
+    debugger;
     try {
       this.isFailedToLoad = false;
       this.IsPatientListLoading = true;
