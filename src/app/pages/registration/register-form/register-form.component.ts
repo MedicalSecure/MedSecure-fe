@@ -26,6 +26,9 @@ import { ActivityStatus, Children, FamilyStatus, Gender } from '../../../enums/e
 import { Country } from '../../../enums/country';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { calculateBMI } from '../register-details/register-details.component';
+import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
+import { extractErrorMessage } from '../../../shared/utilityFunctions';
+import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 
 // Interfaces
 
@@ -101,7 +104,8 @@ export class RegisterFormComponent implements OnInit {
 
   constructor(
     public registrationService: RegistrationService,
-    private router: Router
+    private router: Router,
+    private snackBarMessagesService:SnackBarMessagesService
   ) {}
 
   ngOnInit(): void {
@@ -147,6 +151,14 @@ export class RegisterFormComponent implements OnInit {
         console.error(error.error);
         //this.displayNewErrorMessage(error.error.message); TODO LATER
         this.isPageLoading = false;
+        let messageprops={
+          messageContent:extractErrorMessage(error),
+          durationInSeconds:4,
+          messageType:snackbarMessageType.Error,
+          showIcon:true,
+          title:undefined
+        }
+        this.snackBarMessagesService.displaySnackBarMessage(messageprops);
       }
     );
   }

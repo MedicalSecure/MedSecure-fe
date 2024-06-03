@@ -195,7 +195,10 @@ export function extractErrorMessage(error: any): string {
   // Check if the error has a single message property
   if (error.error && error.error.message) {
     errorMessage = error.error.message;
-  } else if (error && error.message) {
+  }else if(error.error && error.error.detail){
+    errorMessage = error.error.detail;
+  }
+  else if (error && error.message) {
     errorMessage = error.message;
   }
   // Check if the error has an array of errors
