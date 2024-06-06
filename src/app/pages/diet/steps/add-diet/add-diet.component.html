@@ -32,16 +32,19 @@
                 </label>
                 }
             </div>
+
             <app-comment [note]="liststring" class="ms-3"></app-comment>
             <div formArrayName="foods" class="answers mt-3">
               @for (food of meal.controls.foods.controls; track food; let FoodIndex = $index) {
               <div class="d-flex flex-wrap"  [formGroupName]="FoodIndex">
                 @for (option of foodCategory; track $index) {
-                <div class="form-check form-check-inline"  >
-                  <mat-chip-set  aria-label="Food selection" >
-                    <mat-chip-option  color="primary" (click)="chipSelected(option, mealIndex, FoodIndex)"
-                      [disabled]="isChipDisabled(mealIndex, FoodIndex)">
-                    
+                  <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <label class="d-flex align-items-center me-3">
+
+                    <input class="form-check-input me-2" type="radio"
+                 formControlName="foodCategory"     [id]="'foodCategory' + FoodIndex + '_' + option" [value]="option"
+                  (click)="chipSelected(option, mealIndex, FoodIndex)"
+                      [disabled]="isChipDisabled(mealIndex, FoodIndex)" required />
                       @if (option == 0) {
                        starter
                          } @else if (option == 1) {
@@ -53,23 +56,23 @@
                              @else if (option == 3) {
                               dessert
                                } 
-                    
-                    </mat-chip-option>
-                  </mat-chip-set>
+                              </label>
+
                 </div> 
                 }
-              </div>
+             
               <div class="invalid-feedback">
                 Please select a Food.
               </div>
               <div class="d-flex align-items-center mt-3">
                 <mat-form-field class="me-2 flex-grow-1">
-                  <select matNativeControl required class="w-100">
+                  <select class="field" formControlName="name" matNativeControl required class="w-100" >
                     @for (food of FoodList[mealIndex][FoodIndex]; track food) {
-                    <option mat-menu-item value="food">{{food}}</option>
+                    <option mat-menu-item [value]="food">{{food}}</option>
                     }
                   </select>
                 </mat-form-field>
+              </div>
                 <div class="icon-button" (click)="removeFood(mealIndex, FoodIndex)" style="cursor: pointer;">
                   <i class="fas fa-trash" style="font-size: 1.5rem;"></i>
                 </div>

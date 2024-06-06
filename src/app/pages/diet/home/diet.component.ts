@@ -29,7 +29,6 @@ export class DietComponent implements OnInit {
   backButtonContent: { label: string; class: string } = _backButtonContent;
   emittedMeals: Meal[];
   ngOnInit(): void {
-    console.log("init mtea el home : " +this.inputRegister);
   
   }
   steps: wizardStepType[] = [
@@ -55,19 +54,11 @@ export class DietComponent implements OnInit {
     this.stepNumber = 2;
     this.inputRegister = register;
     this.selectedRegister = register;
-    console.log("inputRegisterinputRegister"+this.inputRegister?.id);
     
   }
   onMealsEmitter(meals: Meal[]) {
     this.emittedMeals = meals;
-    this.emittedMeals.forEach(element => {
-      console.log("gk,lgqn" + element.name);
-      element.foods.forEach(food => {
-        console.log(food.name);
-        
-      });
-
-    });
+  
     
   }
 }

@@ -7,7 +7,7 @@
           <ul class="list p-1 m-0 ps-3">
             <li>
               <div class="mb-0">
-                <p class="fw-bold fs-6 text-primary mb-0">Type flex-wrap :
+                <p class="fw-bold fs-6 text-primary mb-0"> Diet type :
                    <span class="fw-light fs-6 text-dark mb-0">diabetic</span></p>
               </div>
             </li>
@@ -58,9 +58,21 @@
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Breakfast</p>
               @for (Meal of currentmeals; track $index) {
                 @if (Meal.mealType==0) {
-                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
                   @for (food of Meal.foods; track $index) {
-                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
+                    
+                   <p class="fw-light fs-6 text-dark mb-0">
+
+                    @if (food.foodCategory == 0) {
+                     starter : 
+
+                      } @else if (food.foodCategory == 1) {
+                        main dish : 
+                      } 
+                        @else if (food.foodCategory == 2) { drinks :  } 
+                          @else if (food.foodCategory == 3) { dessert :  }
+                          <span class="fw-light fs-6 text-dark mb-0"> {{food.name}} </span>  
+
+                          </p>
                   }
                 }
               }
@@ -73,10 +85,22 @@
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Lunch</p>
               @for (Meal of currentmeals; track $index) {
                 @if (Meal.mealType==1) {
-                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
                   @for (food of Meal.foods; track $index) {
-                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
-                  }
+                    
+                    <p class="fw-light fs-6 text-dark mb-0">
+ 
+                     @if (food.foodCategory == 0) {
+                      starter : 
+ 
+                       } @else if (food.foodCategory == 1) {
+                         main dish : 
+                       } 
+                         @else if (food.foodCategory == 2) { drinks:  } 
+                           @else if (food.foodCategory == 3) { dessert : }
+                           <span class="fw-light fs-6 text-dark mb-0"> {{food.name}} </span>  
+ 
+                           </p>
+                   }
                 }
               }
 
@@ -89,10 +113,22 @@
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Dinner</p>
               @for (Meal of currentmeals; track $index) {
                 @if (Meal.mealType==2) {
-                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
                   @for (food of Meal.foods; track $index) {
-                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
-                  }
+                    
+                    <p class="fw-light fs-6 text-dark mb-0">
+ 
+                     @if (food.foodCategory == 0) {
+                      starter :
+ 
+                       } @else if (food.foodCategory == 1) {
+                         main dish :
+                       } 
+                         @else if (food.foodCategory == 2) { drinks :} 
+                           @else if (food.foodCategory == 3) { dessert :}
+                           <span class="fw-light fs-6 text-dark mb-0"> {{food.name}} </span>  
+ 
+                           </p>
+                   }
                 }
               }
             </div>
@@ -102,10 +138,22 @@
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Snack</p>
               @for (Meal of currentmeals; track $index) {
                 @if (Meal.mealType==3) {
-                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
                   @for (food of Meal.foods; track $index) {
-                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
-                  }
+                    
+                    <p class="fw-light fs-6 text-dark mb-0">
+ 
+                     @if (food.foodCategory == 0) {
+                      starter :
+ 
+                       } @else if (food.foodCategory == 1) {
+                         main dish :
+                       } 
+                         @else if (food.foodCategory == 2) { drinks : } 
+                           @else if (food.foodCategory == 3) { dessert : }
+                           <span class="fw-light fs-6 text-dark mb-0"> {{food.name}}  </span>  
+ 
+                           </p>
+                   }
                 }
               }
 
