@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Diet, Meal } from '../../../../model/Diet';
+import { Diet, Food, Meal } from '../../../../model/Diet';
 import { CommentsDto, PrescriptionDto, RegisterForPrescription } from '../../../../model/Prescription';
 import { PrescriptionApiService } from '../../../../services/prescription/prescription-api.service';
 
@@ -31,7 +31,8 @@ export class AddDietComponent implements OnInit {
   isMealSelected: boolean[] = [];
   diet: Diet;
   Prescrotion: PrescriptionDto;
-
+  @Output() mealsEmitter = new EventEmitter<Meal[]>();
+  Diet: Diet | any;
   MealType: number[] = [0,1,2,3];
   foodCategory: number[];
   StarterList = ['Soup', 'Salad', 'Bruschetta', 'Garlic Bread', 'Spring Rolls', 'Stuffed Mushrooms', 'Nachos'];
@@ -39,11 +40,14 @@ export class AddDietComponent implements OnInit {
   DessertList = ['Cake', 'Ice Cream', 'Pie', 'Brownies', 'Cheesecake', 'Pudding', 'Mousse', 'Cookies', 'Tiramisu', 'Macarons'];
   DrinkList = ['Soda', 'Juice', 'Water', 'Coffee', 'Tea', 'Milkshake', 'Smoothie', 'Wine', 'Beer', 'Cocktail'];
   FoodList: { [key: number]: { [key: number]: string[] } } = { 0: { 0: ["Please select a food option"] } };
- 
   disableChipState: { [key: number]: { [key: number]: boolean } } = {};
   fb = inject(NonNullableFormBuilder);
   DietForm : Form = this.fb.group({
-    meals : this.fb.array<FormMeal>([this.generateMeal()]),
+    meals : this.fb.array<FormMeal>([  this.fb.group({
+      foods: this.fb.array<FormFood>([]),
+      name:'',
+      mealType:0
+    })]),
     dietType : 0 ,
     label : '',
   })
@@ -58,6 +62,17 @@ export class AddDietComponent implements OnInit {
     this.DietForm.controls.meals.valueChanges.subscribe(() => {
       this.isMealSelected = Array(this.DietForm.controls.meals.length).fill(false);
     });
+    
+this.DietForm = this.fb.group({
+  meals : this.fb.array<FormMeal>([  this.fb.group({
+    foods: this.fb.array<FormFood>([]),
+    name:'',
+    mealType:0
+  })]),
+  dietType : 0 ,
+  label : '',
+})
+console.log(this.DietForm.value);
 
   }
 
@@ -126,8 +141,6 @@ export class AddDietComponent implements OnInit {
     
     this.DietForm.controls.meals.at(mealIndex)?.controls?.foods?.push(newFood);
     const foodIndex = this.DietForm.controls.meals.at(mealIndex)?.controls?.foods?.length - 1;
-
-    // Ensure FoodList is initialized up to mealIndex and foodIndex
     if (!this.FoodList[mealIndex]) {
       this.FoodList[mealIndex] = {};
     }
@@ -170,8 +183,33 @@ export class AddDietComponent implements OnInit {
     this.cards.push({ id: newId });
   }
   Submit() {
-   console.log(this.DietForm.value);
-   
+   this.Diet = this.DietForm.value
+   let mappeddiet = this.Diet
+   if (mappeddiet.meals) {
+    mappeddiet.meals = mappeddiet.meals.map((meal: Meal) => {
+       return {
+        ...meal,
+        id: '',
+        name: meal.name,
+        mealType: meal.mealType,
+        foods: meal.foods.map((food: Food) => {
+          return {
+            ...food,
+            id: '', 
+            name: food.name,
+            calories: food.calories,
+            description: food.description,
+            foodCategory: food.foodCategory
+          };
+        }),
+      };
+    });
+    
+  } 
+  this.mealsEmitter.emit(mappeddiet.meals);
+  console.log("eli fil add " +mappeddiet.meals);
+  
+
   }
 
 }

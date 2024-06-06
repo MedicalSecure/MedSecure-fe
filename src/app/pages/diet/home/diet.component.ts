@@ -6,6 +6,7 @@ import { AddDietComponent } from "../steps/add-diet/add-diet.component";
  import {PrescriptionListComponent} from"../steps/prescription-list/prescription-list.component"
  import{PatientDetailComponent} from "../steps/patient-detail/patient-detail.component"
 import { RegisterForPrescription } from '../../../model/Prescription';
+import { Meal } from '../../../model/Diet';
 @Component({
     selector: 'app-diet',
     standalone: true,
@@ -20,10 +21,13 @@ export class DietComponent implements OnInit {
   updatingOldPrescriptionMode = false;
   ShowPrescriptionList: boolean = false;
   @Output() emitStepNumber : number ;
+  @Output() emitMeal : Meal[] ;
+
   @Input() inputRegister: RegisterForPrescription | undefined = undefined;
   selectedRegister: RegisterForPrescription | undefined;
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
   backButtonContent: { label: string; class: string } = _backButtonContent;
+  emittedMeals: Meal[];
   ngOnInit(): void {
     console.log("init mtea el home : " +this.inputRegister);
   
@@ -54,7 +58,18 @@ export class DietComponent implements OnInit {
     console.log("inputRegisterinputRegister"+this.inputRegister?.id);
     
   }
- 
+  onMealsEmitter(meals: Meal[]) {
+    this.emittedMeals = meals;
+    this.emittedMeals.forEach(element => {
+      console.log("gk,lgqn" + element.name);
+      element.foods.forEach(food => {
+        console.log(food.name);
+        
+      });
+
+    });
+    
+  }
 }
 const _nextButtonContent = {
   label: 'next',

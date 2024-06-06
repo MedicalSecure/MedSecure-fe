@@ -12,26 +12,51 @@
           <div class="question mb-4" [formGroupName]="mealIndex">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
               @for (type of MealType; track type) {
-              <label class="d-flex align-items-center me-3">
-                <input  class="form-check-input me-2" type="radio" [name]="'mealType_' + mealIndex"
-                  [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
-                  (change)="onMealTypeChange($event, mealIndex)"
-                  [checked]="DietForm.controls.meals.at(mealIndex).value.mealType === type" required />
-                {{ type }}
-              </label>
-              }
+                <label class="d-flex align-items-center me-3">
+                  <input class="form-check-input me-2" type="radio"
+                  [name]="'mealType_' + mealIndex" [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
+                   (change)="onMealTypeChange($event, mealIndex)"
+                   [checked]="DietForm.controls.meals.at(mealIndex).value.mealType === type" required />
+                   @if (type == 0) {
+                  Break Fast
+                   } @else if (type == 1) {
+                    Lunch
+                     } 
+                     @else if (type == 2) {
+                      Dinner
+                       } 
+                       @else if (type == 3) {
+                        Snack
+                         } 
+                
+                </label>
+                }
             </div>
             <app-comment [note]="liststring" class="ms-3"></app-comment>
             <div formArrayName="foods" class="answers mt-3">
               @for (food of meal.controls.foods.controls; track food; let FoodIndex = $index) {
-              <div class="d-flex flex-wrap"  formControlName="foodCategory">
+              <div class="d-flex flex-wrap"  [formGroupName]="FoodIndex">
                 @for (option of foodCategory; track $index) {
-                <div class="form-check form-check-inline" >
-                  <mat-chip-set  aria-label="Food selection">
+                <div class="form-check form-check-inline"  >
+                  <mat-chip-set  aria-label="Food selection" >
                     <mat-chip-option  color="primary" (click)="chipSelected(option, mealIndex, FoodIndex)"
-                      [disabled]="isChipDisabled(mealIndex, FoodIndex)">{{option}}</mat-chip-option>
+                      [disabled]="isChipDisabled(mealIndex, FoodIndex)">
+                    
+                      @if (option == 0) {
+                       starter
+                         } @else if (option == 1) {
+                          main dish
+                           } 
+                           @else if (option == 2) {
+                            drinks
+                             } 
+                             @else if (option == 3) {
+                              dessert
+                               } 
+                    
+                    </mat-chip-option>
                   </mat-chip-set>
-                </div>
+                </div> 
                 }
               </div>
               <div class="invalid-feedback">
@@ -51,7 +76,7 @@
               </div>
               }
               <button type="button" class="btn btn-primary mt-3" style="color: white;" (click)="addFood(mealIndex)"
-                [disabled]="!isMealTypeSelected(mealIndex)">
+               >
                 Add Food
               </button>
             </div>

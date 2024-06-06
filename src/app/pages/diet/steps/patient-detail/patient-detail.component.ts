@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { medicationType } from '../../../../types';
 import { CardMedicationComponent } from "../../../../components/card-medication/card-medication.component";
 import { RegisterForPrescription } from '../../../../model/Prescription';
+import { Meal } from '../../../../model/Diet';
 
 @Component({
     selector: 'app-patient-detail',
@@ -10,12 +11,19 @@ import { RegisterForPrescription } from '../../../../model/Prescription';
     styleUrl: './patient-detail.component.css',
     imports: [CardMedicationComponent]
 })
-export class PatientDetailComponent implements OnInit{
+export class PatientDetailComponent implements OnChanges{
 
   @Input() inputRegister: RegisterForPrescription | undefined = undefined;
+  @Input() meal:Meal[];
+  currentmeals : Meal[];
+
+
   ngOnInit(): void {
-    console.log(this.inputRegister);
     
+  }
+  ngOnChanges() {
+    this.currentmeals = this.meal ;
+
   }
 maxWidth: { [klass: string]: string; };
   onClickEditMedication(x: any, y: any) {}

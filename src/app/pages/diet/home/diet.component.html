@@ -36,10 +36,10 @@
                             <div style="display: flex; align-items: center;">
                                 <div style="display: table; height: 200px;">
                                     <div style="display: table-cell; vertical-align: left; width: 60%;">
-                                        <app-add-diet [inputRegister]="selectedRegister" ></app-add-diet>
+                                        <app-add-diet (mealsEmitter)="onMealsEmitter($event)" [inputRegister]="selectedRegister" ></app-add-diet>
                                     </div>
                                     <div style="display: table-cell; vertical-align: right; width: 40%;">
-                                        <app-patient-detail  [inputRegister]="selectedRegister" ></app-patient-detail>
+                                        <app-patient-detail  [meal]="emittedMeals" [inputRegister]="selectedRegister" ></app-patient-detail>
                                     </div>
                                 </div>
                             </div>

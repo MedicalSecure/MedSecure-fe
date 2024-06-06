@@ -54,7 +54,16 @@
         <ul class="list p-1 m-0 ps-3 d-flex flex-wrap">
           <li class="flex-grow-1" style="margin-left: 5%;">
             <div class="mb-3">
+
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Breakfast</p>
+              @for (Meal of currentmeals; track $index) {
+                @if (Meal.mealType==0) {
+                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
+                  @for (food of Meal.foods; track $index) {
+                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
+                  }
+                }
+              }
             </div>
           </li>
           </ul>
@@ -62,6 +71,14 @@
           <li class="flex-grow-1" style="margin-left: 5%;">
             <div class="mb-3">
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Lunch</p>
+              @for (Meal of currentmeals; track $index) {
+                @if (Meal.mealType==1) {
+                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
+                  @for (food of Meal.foods; track $index) {
+                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
+                  }
+                }
+              }
 
             </div>
           </li>
@@ -70,11 +87,27 @@
           <li class="flex-grow-1" style="margin-left: 5%;">
             <div class="mb-3">
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Dinner</p>
+              @for (Meal of currentmeals; track $index) {
+                @if (Meal.mealType==2) {
+                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
+                  @for (food of Meal.foods; track $index) {
+                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
+                  }
+                }
+              }
             </div>
           </li>
           <li class="flex-grow-1" style="margin-left: 5%;">
             <div class="mb-3">
               <p class="fw-bold fs-6 text-primary mb-0">Meal: Snack</p>
+              @for (Meal of currentmeals; track $index) {
+                @if (Meal.mealType==3) {
+                  <p class="fw-light fs-6 text-dark mb-0">{{Meal.name}} : </p>
+                  @for (food of Meal.foods; track $index) {
+                    <p class="fw-light fs-6 text-dark mb-0">{{food.name}} : </p>
+                  }
+                }
+              }
 
             </div>
           </li>
