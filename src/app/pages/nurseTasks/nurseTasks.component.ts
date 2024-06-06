@@ -15,7 +15,7 @@ export class NurseTasksComponent implements AfterViewInit {
 
   constructor(private bacPatientService: BacPatientService) { }
   ngAfterViewInit(): void {
-    this.data_list = this.bacPatientService.getData(this.dataSource);
+    this.data_list = this.bacPatientService.getData(this.dataSource , true);
   }
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   data_list: bacpatient[] = ELEMENT_DATA;

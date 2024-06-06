@@ -18,7 +18,7 @@ export class GanttChartComponent implements AfterViewInit {
   ngAfterViewInit(): void {
 
     this.dataList = [];
-    this.dataList = this.bacPatientService.getData(this.dataSource);
+    this.dataList = this.bacPatientService.getData(this.dataSource , true );
 
     this.getUniqueRooms();
   }

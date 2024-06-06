@@ -23,6 +23,7 @@ import { HttpClient } from '@angular/common/http';
 import { Dispense, ScheduleComponent } from "../../components/schedule/schedule.component";
 import { bacpatient } from '../../model/BacPatient';
 import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -37,7 +38,7 @@ import { BacPatientService } from '../../services/bacPatient/bac-patient-service
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [RouterModule, DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
+  imports: [RouterModule, MatProgressSpinnerModule ,DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
   dispenseQuantity: number = 0;
@@ -58,6 +59,8 @@ export class BacPatientComponent implements AfterViewInit {
   tomorrow = new Date();
   yesterday = new Date();
   uniqueRooms: any;
+  isLoading: boolean = true;
+
   boxcheked: Dispense[] = [];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
@@ -76,7 +79,10 @@ export class BacPatientComponent implements AfterViewInit {
   ngOnInit() {
 
 
-    this.bacPatientService.getData(this.dataSource);
+    this.bacPatientService.getData(this.dataSource , this.isLoading);
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
 
   }
   onLeftButtonClick() {

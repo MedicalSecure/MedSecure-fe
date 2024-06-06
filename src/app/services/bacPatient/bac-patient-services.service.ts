@@ -31,7 +31,7 @@ export class BacPatientService implements ActivityService {
     );
     return x;
   }
-  getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) : bacpatient[] {
+  getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ,isLoading :boolean) : bacpatient[] {
     this.http.get<BacPatientResponse>('http://localhost:6005/v1/bacPatient')
       .subscribe(
         (response: BacPatientResponse) => {
@@ -39,7 +39,7 @@ export class BacPatientService implements ActivityService {
           if (response && response.bacPatients.data) {
            dataSource.data = response.bacPatients.data;
            this.data_source = response.bacPatients.data
-           
+           isLoading = true ;
            response.bacPatients.data.forEach(element => {
               console.log(element);
               ELEMENT_DATA.push(element);

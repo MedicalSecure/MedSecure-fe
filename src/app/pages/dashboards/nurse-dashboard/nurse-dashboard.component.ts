@@ -26,7 +26,7 @@ data : bacpatient[] = [] ;
 dataSource = new MatTableDataSource(ELEMENT_DATA);
 constructor(public bacPatientService : BacPatientService){}
   ngOnInit(): void {
-  this.data = this.bacPatientService.getData(this.dataSource);
+  this.data = this.bacPatientService.getData(this.dataSource , true );
   this.calculateStatus();
   }
 calculateStatus(){
