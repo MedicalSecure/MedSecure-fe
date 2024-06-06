@@ -28,33 +28,36 @@
                     <app-wizard-header [steps]="steps" (currentStepChange)="SwitchToStep($event)"
                         [currentStep]="stepNumber" [size]="3" [IconSizeRatio]="0.5"></app-wizard-header>
                     <div class="wizard-container" style="height: 490px; overflow-y: auto">
-                        <div [className]="stepNumber != 1 && 'd-none'" >
-                           <app-prescription-list-for-diet></app-prescription-list-for-diet>
+                        <div [className]="stepNumber != 1 && 'd-none'">
+                            <app-prescription-list-for-diet   [stepNumber]="stepNumber"
+                            (selectedRegisterChange)="onSelectPatientChange($event)" ></app-prescription-list-for-diet>
                         </div>
-                       
                         <div *ngIf="stepNumber === 2 ">
-                           <app-add-diet></app-add-diet>
-                           
+                            <div style="display: flex; align-items: center;">
+                                <div style="display: table; height: 200px;">
+                                    <div style="display: table-cell; vertical-align: left; width: 60%;">
+                                        <app-add-diet [inputRegister]="selectedRegister" ></app-add-diet>
+                                    </div>
+                                    <div style="display: table-cell; vertical-align: right; width: 40%;">
+                                        <app-patient-detail  [inputRegister]="selectedRegister" ></app-patient-detail>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-                        <div [className]="stepNumber != 4&& 'd-none'">
-                            step three
-                        </div>
-
                     </div>
-
-                    <!-- Wizard buttons -->
                     <div class="d-flex">
                         <div class="col-12 col-lg-8">
-                            <button  class="btn btn-outline-primary">Cancel</button>
+                          <button type="button" class="btn btn-outline-primary" >Cancel</button>
                         </div>
                         <div class="col-lg-4 d-flex justify-content-end">
-                            <button >
-
-                            </button>
-                            
+                          <button type="button" [className]="backButtonContent.class" >
+                            {{ backButtonContent.label }}
+                          </button>
+                          <button type="button" [className]="nextButtonContent.class">
+                            {{ nextButtonContent.label }}
+                          </button>
                         </div>
-                    </div>
+                      </div>   
                 </div>
 
 

@@ -13,7 +13,10 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap">
               @for (type of MealType; track type) {
               <label class="d-flex align-items-center me-3">
-                <input class="form-check-input me-2" type="radio" [name]="'mealType_' + mealIndex" [id]="'mealType_' + mealIndex + '_' + type" [value]="type" (change)="onMealTypeChange($event, mealIndex)" [checked]="DietForm.controls.meals.at(mealIndex).value.type === type" required />
+                <input  class="form-check-input me-2" type="radio" [name]="'mealType_' + mealIndex"
+                  [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
+                  (change)="onMealTypeChange($event, mealIndex)"
+                  [checked]="DietForm.controls.meals.at(mealIndex).value.mealType === type" required />
                 {{ type }}
               </label>
               }
@@ -21,11 +24,12 @@
             <app-comment [note]="liststring" class="ms-3"></app-comment>
             <div formArrayName="foods" class="answers mt-3">
               @for (food of meal.controls.foods.controls; track food; let FoodIndex = $index) {
-              <div class="d-flex flex-wrap">
-                @for (option of FoodOptions; track $index) {
-                <div class="form-check form-check-inline">
-                  <mat-chip-set aria-label="Food selection">
-                    <mat-chip-option color="primary" (click)="chipSelected(option, mealIndex, FoodIndex)" [disabled]="isChipDisabled(mealIndex, FoodIndex)">{{option}}</mat-chip-option>
+              <div class="d-flex flex-wrap"  formControlName="foodCategory">
+                @for (option of foodCategory; track $index) {
+                <div class="form-check form-check-inline" >
+                  <mat-chip-set  aria-label="Food selection">
+                    <mat-chip-option  color="primary" (click)="chipSelected(option, mealIndex, FoodIndex)"
+                      [disabled]="isChipDisabled(mealIndex, FoodIndex)">{{option}}</mat-chip-option>
                   </mat-chip-set>
                 </div>
                 }
@@ -46,16 +50,31 @@
                 </div>
               </div>
               }
-              <button type="button" class="btn btn-primary mt-3" (click)="addFood(mealIndex)" [disabled]="!isMealTypeSelected(mealIndex)">
+              <button type="button" class="btn btn-primary mt-3" style="color: white;" (click)="addFood(mealIndex)"
+                [disabled]="!isMealTypeSelected(mealIndex)">
                 Add Food
               </button>
             </div>
           </div>
           }
         </div>
-        <div class="add-question">
-          <button type="button" class="btn btn-primary" (click)="addMeal()">Add meal</button>
+        <div style="display: flex; align-items: center;">
+          <div style="display: table; height: 200px;">
+            <div style="display: table-cell; vertical-align: left;">
+              <div class="add-question">
+                <button type="button" class="btn btn-primary"  style="color: white;" (click)="addMeal()">Add meal</button>
+              </div>
+            </div>
+            <div style="display: table-cell; vertical-align: right; ">
+              <div class="add-question">
+                <button type="button" class="btn btn-primary" style="color: white;" (click)="Submit()">Submit</button>
+              </div>
+            </div>
+          </div>
         </div>
+
+
+
       </div>
     </div>
   </form>

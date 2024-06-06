@@ -129,20 +129,13 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay" " ></tr>
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr
       mat-row
       *matRowDef="let row; columns: columnsToDisplay"
       (click)="onClickPatient(row)"
-    ></tr>
-        <!-- (click)="onRowClick" -->
-    <!-- Row shown when there is no matching data. BUT NOT LOADING-->
-    <tr class="mat-row" *matNoDataRow>
-      <td *ngIf="RegistrationsList.length > 0 && !IsPatientListLoading" class="mat-cell pt-2" colspan="6">No data matching the filter</td>
-      <td *ngIf="RegistrationsList.length == 0 && !IsPatientListLoading" class="mat-cell pt-2" colspan="6">{{ErrorMessage}}</td>
-    </tr>
+    ></tr>   
   </table>
-  <!-- shown when LOADING-->
   <ng-container *ngIf="IsPatientListLoading">
     <div class="mx-auto px-auto my-4" style="width: fit-content;" >
       <mat-spinner  />
