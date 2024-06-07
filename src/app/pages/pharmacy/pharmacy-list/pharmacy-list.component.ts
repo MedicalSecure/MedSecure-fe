@@ -30,7 +30,7 @@ export class PharmacyListComponent implements OnInit {
   @Input() mappedMedications: MedicationType[] = [];
   
   @Input() selectedPrescription: any | undefined = undefined;
-  @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
+  @Output() onClickNewMedicationEvent = new EventEmitter<boolean>();
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   
@@ -85,12 +85,12 @@ export class PharmacyListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  onClickPrescription(Prescription: any) {
-    this.selectedPrescription = Prescription;
+  onClickMedication(Medication: any) {
+    this.selectedPrescription = Medication;
   }
 
-  onClickNewPrescription() {
-    this.onClickNewPrescriptionEvent.emit(false);
-    this.onClickPrescription(undefined);
+  onClickNewMedication() {
+    this.onClickNewMedicationEvent.emit(false);
+    this.onClickMedication(undefined);
   }
 }

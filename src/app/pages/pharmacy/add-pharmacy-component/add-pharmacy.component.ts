@@ -15,6 +15,9 @@ import { CommonModule } from '@angular/common';
 import { PharmacyListComponent } from '../pharmacy-list/pharmacy-list.component';
 import { Stp3ConfirmUpdateDrugs } from '../stp3-confirm-update-drugs/stp3-confirm-update-drugs.component';
 import { DrugDTO } from '../../../model/Drugs';
+import { PrescriptonToValidateComponent } from '../prescripton-to-validate/prescripton-to-validate.component';
+import * as signalR from '@microsoft/signalr';
+
 
 @Component({
   selector: 'app-add-pharmacy',
@@ -28,6 +31,7 @@ import { DrugDTO } from '../../../model/Drugs';
     RouterModule,
     CommonModule,
     PharmacyListComponent,
+    PrescriptonToValidateComponent
   ],
   templateUrl: './add-pharmacy.component.html',
   styleUrl: './add-pharmacy.component.css',
@@ -47,6 +51,7 @@ export class AddPharmacyComponent implements OnInit {
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
   ShowMedicationList: boolean = false;
+  ShowPrescriptionList: boolean = false;
   wizardSteps: wizardStepType[] = _steps;
   eventsSubject: Subject<number> = new Subject<number>();
 
@@ -56,10 +61,40 @@ export class AddPharmacyComponent implements OnInit {
 
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
   backButtonContent: { label: string; class: string } = _backButtonContent;
+  downloadButtonContent: { label: string; class: string } = _downloadButtonContent;
+
+  private hubConnection: signalR.HubConnection;
+
 
   ngOnInit() {
     this._updateButtonsState();
     this.mappedMedications;
+    this.startConnection();
+  }
+  
+  ngAfterViewInit() {
+    // This ensures that the view is initialized before trying to access the child component
+  }
+
+  private startConnection() {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('http://localhost:6008/createdPrescription') // Replace with your backend URL
+      .build();
+
+    this.hubConnection.start().then(() => {
+      console.log('SignalR connection established');
+    }).catch(err => {
+      console.error('Error establishing SignalR connection:', err);
+    });
+
+    this.hubConnection.on('SendEventToAll', (message: any) => {
+      console.log('Received PrescriptionToValidateEvent: ', message);
+      // Handle the received prescription message here
+    });
+  }
+
+  handleDownloadButtonClick() {
+    this.stp2ViewCheckDrugs.ExportExcel(); // Directly call the method in the child component
   }
 
   validatePageSwitch = (index: number): boolean => {
@@ -90,6 +125,7 @@ export class AddPharmacyComponent implements OnInit {
     this.isStep2PageValid = false;
     this.nextButtonContent = _nextButtonContent;
     this.backButtonContent = _backButtonContent;
+    this.downloadButtonContent = _downloadButtonContent
   }
 
   emitNextEventToChild() {
@@ -126,6 +162,15 @@ export class AddPharmacyComponent implements OnInit {
     this.ShowMedicationList = !this.ShowMedicationList;
   }
 
+  onClickNewPrescriptionEventHandler(viewPrescriptions: boolean) {
+    this.clearWizard();
+    this.ShowPrescriptionList = viewPrescriptions;
+  }
+
+  onClickViewPrescriptions() {
+    this.ShowPrescriptionList = !this.ShowPrescriptionList;
+  }
+
   /* wizard buttons */
   SwitchToStep(index: number) {
     //INDEX is the next page we are trying to go to.
@@ -160,8 +205,6 @@ export class AddPharmacyComponent implements OnInit {
       this._updateButtonsState();
     }
   }
-
-  
 
   isStepNumber(step: number): boolean {
     return this.stepNumber === step;
@@ -222,7 +265,7 @@ export class AddPharmacyComponent implements OnInit {
   }
 
   private _updateButtonsState() {
-     if (!this.validatePageSwitch(this.stepNumber + 1)) {
+    if (!this.validatePageSwitch(this.stepNumber + 1)) {
       this.setNextButtonClass('', 'disabled');
     } else {
       //reset styles
@@ -250,6 +293,7 @@ export class AddPharmacyComponent implements OnInit {
       this.setBackButtonClass('', '', true);
     }
   }
+
 }
 
 const _nextButtonContent = {
@@ -259,6 +303,11 @@ const _nextButtonContent = {
 
 const _backButtonContent = {
   label: 'back',
+  class: 'btn btn-primary text-white',
+};
+
+const _downloadButtonContent = {
+  label: 'Download Invalid Drugs',
   class: 'btn btn-primary text-white',
 };
 

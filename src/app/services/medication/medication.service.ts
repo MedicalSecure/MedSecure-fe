@@ -21,8 +21,8 @@ export class DrugService {
   constructor(private http: HttpClient) {}
 
   apiUrl="http://localhost:6004/medication-service/api/v1";
+  
   apiCheck = this.apiUrl+'/drugsChecked';
-
   apiCrud = this.apiUrl+'/drugs';
 
   getMedications() {

@@ -22,7 +22,7 @@ import{SupervisorDashboardComponent} from './components/supervisor-dashboard/sup
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: NurseDashboardComponent },
+  { path: 'dashboard', component: DashboardComponent },
   // { path: 'dashboard-reception', component: DashboardReceptionComponent },
   { path: 'unit-care', component: UnitCareComponent },
   { path: 'visits', component: Visits },
