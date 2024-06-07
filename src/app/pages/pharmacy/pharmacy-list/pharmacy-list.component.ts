@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
-import { MedicationType } from '../../../partials/navbar/navbar.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { DrugService } from '../../../services/medication/medication.service';
+import { MedicationType } from '../stp1-import-map-drugs/stp1-import-map-drugs.component';
 @Component({
   selector: 'app-pharmacy-list',
   standalone: true,
