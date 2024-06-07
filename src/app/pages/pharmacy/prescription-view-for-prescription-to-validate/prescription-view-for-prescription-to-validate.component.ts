@@ -8,10 +8,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DrugService } from '../../../services/medication/medication.service';
-import { DrugDTO } from '../../../model/Drugs';
+import { DrugDTO, ValidationDto } from '../../../model/Drugs';
 import { NgxMasonryModule, NgxMasonryOptions } from 'ngx-masonry';
 import { MatCardModule } from '@angular/material/card';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
@@ -22,7 +22,10 @@ import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData'
 import { HumanBodyViewerComponent } from '../../prescription/human-body-viewer/human-body-viewer.component';
 import { symptomsCodeByBodyPart } from '../../prescription/stp3-add-diagnostic/stp3-add-diagnostic.component';
 import { getDietTypeString } from '../../prescription/stp5-hospitalization/stp5-hospitalization.component';
-import { getPrescriptionStatus } from '../prescripton-to-validate/prescripton-to-validate.component';
+import { getPrescriptionStatus } from '../../prescription/prescription-list/prescription-list.component';
+import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
+import { ScheduleComponent } from '../../../components/schedule/schedule.component';
+
 
 @Component({
   selector: 'app-old-prescription-view-for-prescription-to-validate',
@@ -34,29 +37,35 @@ import { getPrescriptionStatus } from '../prescripton-to-validate/prescripton-to
     MatCardModule,
     RouterModule,
     MatProgressSpinnerModule,
-    HumanBodyViewerComponent
+    HumanBodyViewerComponent,
+    ScheduleComponent
   ],
   templateUrl: './prescription-view-for-prescription-to-validate.component.html',
   styleUrl: './prescription-view-for-prescription-to-validate.component.css'
 })
 export class PrescriptionViewForPrescriptionToValidateComponent {
-  @Input() selectedPrescription: PrescriptionDto | undefined = undefined;
-  @Input() selectedRegister: RegisterForPrescription | undefined = undefined;
-  @Input() enableActions=true;
+  //from query
+  validationId:string | null=null;
+  prescriptionId:string | null=null;
 
-  @Output() onClickUpdatePrescription = new EventEmitter<void>();
-  @Output() onClickSuspendPrescription = new EventEmitter<void>();
+
+  selectedValidation: ValidationDto | undefined = undefined;
+  selectedPrescription: PrescriptionDto | undefined = undefined;
+  enableActions=true;
 
   selectedUnitCare: UnitCare | undefined;
   selectedDiet: DietDto | undefined;
   selectedRoom: Room | undefined;
   selectedBed: Equipment | undefined;
   showDetails = true;
-  isDrugsLoading = false;
-  isDietLoading = false;
-  isUnitCareLoading = false;
   fetchedMedications: DrugDTO[] = [];
   selectedBodyParts: Set<string> = new Set<string>();
+
+  //loading
+  isDietLoading = false;
+  isUnitCareLoading = false;
+  isPrescriptionLoading = false;
+  isValidationLoading=false
 
   public masonryOptions: NgxMasonryOptions = {
     gutter: 10,
@@ -67,30 +76,43 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   constructor(
     private drugService: DrugService,
     private unitCareService: UnitCareService,
-    private dietService: DietService
+    private dietService: DietService,
+    private prescriptionService: PrescriptionApiService,
+    private route: ActivatedRoute
+
   ) {}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    console.log(this.selectedRegister);
+    this.route.queryParamMap.subscribe(params => {
+      this.validationId = params.get('validationId');
+      this.prescriptionId = params.get('prescriptionId');
 
-    this.fetchMedications();
-    this.mapSymptomsToBodyParts();
-    this.fetchUnitCareByBedId(this.selectedPrescription?.bedId);
-    this.fetchDietById(this.selectedPrescription?.diet?.dietsId[0]);
+      // Now fetch data based on validationId and prescriptionId
+      if(this.validationId){
+        this.fetchValidationById(this.validationId);
+      }
+      if(this.prescriptionId){
+        this.fetchPrescriptionById(this.prescriptionId);
+      }
+      if (!this.validationId && !this.prescriptionId) {
+        console.error('Missing required parameters');
+      } 
+    });
   }
 
-  fetchMedications() {
-    this.isDrugsLoading = true;
-    this.drugService.getMedications().subscribe(
+  fetchValidationById(validationId: string | null){
+    this.isValidationLoading = true;
+    this.drugService.getValidations().subscribe(
       (response) => {
-        this.fetchedMedications = response?.drugs?.data;
+        //debugger;
+        if(response?.validations?.data || response?.validations?.data.length >0)
+          this.selectedValidation = response.validations.data.find(p=>p.id===validationId);
+        
       },
       (error) => {
         console.error(error);
       },
-      () => (this.isDrugsLoading = false)
+      () => (this.isValidationLoading = false)
     );
   }
 
@@ -123,6 +145,24 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
       },
       (error) => console.error(error),
       () => (this.isDietLoading = false)
+    );
+  }
+
+  fetchPrescriptionById(prescriptionId: string | null | undefined) {
+    if (!prescriptionId) return;
+    if (this.selectedDiet?.id == prescriptionId) return;
+    this.isPrescriptionLoading = true;
+    this.prescriptionService.getPrescriptionById(prescriptionId).subscribe(
+      (response) => {
+        if(!response || response.prescriptions.data.length ==0) return;
+        this.selectedPrescription = response.prescriptions.data[0];
+  
+        this.mapSymptomsToBodyParts();
+        this.fetchUnitCareByBedId(this.selectedPrescription?.bedId);
+        this.fetchDietById(this.selectedPrescription?.diet?.dietsId[0]);
+      },
+      (error) => console.error(error),
+      () => (this.isPrescriptionLoading = false)
     );
   }
 
@@ -201,11 +241,11 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     this.selectedBodyParts = bodyParts;
   }
 
-  onClickUpdatePrescriptionHandler() {
-    this.onClickUpdatePrescription.emit();
+  onClickConfirmPrescriptionHandler() {
+    //this.onClickUpdatePrescription.emit();
   }
-  onClickSuspendPrescriptionHandler() {
-    this.onClickSuspendPrescription.emit();
+  onClickRejectPrescriptionHandler() {
+    //this.onClickSuspendPrescription.emit();
   }
 
   mapMedicationsToPrescriptions() {

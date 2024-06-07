@@ -11,7 +11,7 @@ import {
 import { FormsModule } from '@angular/forms';
 
 import { MatIcon } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
   PrescriptionDto,
   RegisterForPrescription,
@@ -19,7 +19,7 @@ import {
 } from '../../../model/Prescription';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 
-import { PrescriptionStatus, HistoryStatus } from '../../../enums/enum';
+import { PrescriptionStatus, HistoryStatus, ValidationStatus } from '../../../enums/enum';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   calculateAge,
@@ -29,6 +29,8 @@ import {
 import { RegisterDto } from '../../../model/Registration';
 import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensions';
 import { PrescriptionViewForPrescriptionToValidateComponent } from '../prescription-view-for-prescription-to-validate/prescription-view-for-prescription-to-validate.component';
+import { DrugService } from '../../../services/medication/medication.service';
+import { ValidationDto } from '../../../model/Drugs';
 
 @Component({
   selector: 'app-prescription-to-validate',
@@ -45,96 +47,76 @@ import { PrescriptionViewForPrescriptionToValidateComponent } from '../prescript
   styleUrl: './prescripton-to-validate.component.css'
 })
 export class PrescriptonToValidateComponent {
-  @Input() selectedPrescription: PrescriptionDto | undefined = undefined;
-  @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
-  @Output() onClickUpdatePrescriptionEvent = new EventEmitter<{
-    prescription: PrescriptionDto;
-    register: RegisterForPrescription;
-  }>();
+  selectedValidation: ValidationDto | undefined = undefined;
+  @Output() onClickImportMedicationEvent = new EventEmitter<boolean>();
 
   @ViewChildren('prescriptionRows') prescriptionRows: QueryList<any>;
 
-  @Input() clearTextAfterEachSearch: boolean = false;
-  @Input()
-  checked: boolean = true;
+  clearTextAfterEachSearch: boolean = false;
 
-  @Input() lastCreatedPrescriptionIdFromResponse: string | undefined;
+  @Input() lastCreatedValidationIdFromNotification: string | undefined;
 
-  selectedRegister: RegisterForPrescription | undefined = undefined;
+
   searchTerm: string = '';
-  registrations: RegisterWithPrescriptions[] = [];
-  prescriptionsGroupedByRegisterIds: { [key: string]: PrescriptionDto[] } = {};
+
+  validations: ValidationDto[] = [];
   isLoading: boolean = false;
   isFailedToLoad: boolean = false;
 
-  prescriptionsViewList:PrescriptionDto[]=[];
 
-  constructor(private prescriptionApiService: PrescriptionApiService) {}
+  constructor(private drugsService:DrugService,private router: Router) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.clearTextAfterEachSearch) return;
     let newChange = changes['selectedPatient'];
     if (newChange && !newChange.firstChange) {
-      if (this.selectedPrescription === undefined) this.searchTerm = '';
+      if (this.selectedValidation === undefined) this.searchTerm = '';
     }
   }
   ngOnInit() {
-    this.fetchRegistrationsWithPrescriptions();
+    //this.fetchRegistrationsWithPrescriptions();
+    this.fetchValidations();
   }
 
-  onClickPrescription(prescription: PrescriptionDto) {
-    this.selectedPrescription = prescription;
-    console.log(JSON.stringify(prescription));
-    let regWithPrescriptions = this.registrations.filter(
-      (registerWithPrescription) => registerWithPrescription.register.id == prescription.registerId
-    )[0];
-    this.selectedRegister = mapRegisterWithPrsToRegisterForPrs(regWithPrescriptions);
+  onClickOnValidation(validation: ValidationDto) {
+    this.selectedValidation = validation;
+    this.router.navigate(['/pharmacyValidation'],{ 
+      queryParams: { 
+        validationId: validation.id, 
+        prescriptionId: validation.prescriptionId
+      }
+    });
   }
 
-  onClickDeselectPrescription() {
-    this.selectedRegister = undefined;
-    this.selectedPrescription = undefined;
+  onClickDeselectValidation() {
+    this.selectedValidation = undefined;
   }
 
-  onClickNewPrescription() {
+  onClickImportMedications() {
     // Go to wizard ==>
-    this.onClickNewPrescriptionEvent.emit(false);
+    this.onClickImportMedicationEvent.emit(false);
     // empty this page / reset it
-    this.onClickDeselectPrescription();
+    this.onClickDeselectValidation();
   }
 
-  async fetchRegistrationsWithPrescriptions() {
-    try {
-      this.isFailedToLoad = false;
+  async fetchValidations(){
+    this.isFailedToLoad = false;
       this.isLoading = true;
-      var dictByRegisterIdResponse =
-        await PrescriptionApiService.getRegistrationsWithPrescriptions(
-          this.prescriptionApiService
-        );
-      if(!dictByRegisterIdResponse) throw Error("Cant fetch registers with prescriptions");
-      this.registrations = Object.values(dictByRegisterIdResponse);
-      let extractedPrescriptions:PrescriptionDto[]=[];
-
-      //extract all prescriptions from the dict
-      this.registrations.forEach(registerWithPrescription=>{
-        //get the prescriptions of this register object
-        let newPrescriptions:PrescriptionDto[]=registerWithPrescription.prescriptions? registerWithPrescription.prescriptions.filter(p => !!p ) : []
-        //add the newPrescriptions to the already extracted (accumulate)
-        extractedPrescriptions=[...extractedPrescriptions ,...newPrescriptions]
-      })
-      //display them sorted by date
-      this.prescriptionsViewList=extractedPrescriptions.sort((a,b)=> a.createdAt < b.createdAt ? 1 : -1);
-
-      this.isLoading = false;
-      this.isFailedToLoad = false;
-      this.highlightLastAddedPrescription();
+    try {
+      this.drugsService.getValidations().subscribe(response=>{
+        this.validations=response.validations.data.sort((a,b)=> a.createdAt < b.createdAt ? 1 : -1);;
+        this.isLoading = false;
+        this.isFailedToLoad = false;
+        this.highlightLastAddedValidation();
+      },error=>{throw error})
     } catch (error) {
+
       console.error(error);
       this.isFailedToLoad = true;
     }
   }
 
-  highlightLastAddedPrescription() {
+  highlightLastAddedValidation() {
     setTimeout(() => {
       const element = document.getElementById(
         'last-selected-prescription'
@@ -142,50 +124,26 @@ export class PrescriptonToValidateComponent {
       if (element) {
         element.classList.add('highlight-animation');
       }
-      setTimeout(()=>this.lastCreatedPrescriptionIdFromResponse=undefined,3000) // after 3 seconds, disable highlighting again
+      setTimeout(()=>this.lastCreatedValidationIdFromNotification=undefined,3000) // after 3 seconds, disable highlighting again
     },200)//wait for table to be rendered first
   }
 
-  suspendPrescription(prescription:PrescriptionDto){  
-    this.isLoading = true;
-
-    prescription.status=PrescriptionStatus.Discontinued;
-    
-    this.prescriptionApiService
-        .putPrescriptionsStatus(prescription)
-        .subscribe(
-          (response) => {
-            this.isLoading = false;
-            this.lastCreatedPrescriptionIdFromResponse = response.id;
-            this.selectedRegister = undefined;
-            this.selectedPrescription = undefined;
-            this.highlightLastAddedPrescription()
-          },
-          (error) => {
-            this.isLoading = false;
-          }
-        );
-
-  }
-  
-
   onClickRefresh() {
-    //this.fetchPrescriptions();
-    this.fetchRegistrationsWithPrescriptions();
+    this.fetchValidations();
   }
 
-  getRegister(regId: string):RegisterDto{
+/*   getRegister(regId: string):RegisterDto{
     return this.registrations.filter(
       (x) => x.register.id == regId
     )[0].register;
-  }
+  } */
 
-  getRegisterStatus(registerId:string): HistoryStatus {
+/*   getRegisterStatus(registerId:string): HistoryStatus {
     return getPatientStatusFromRegister(this.getRegister(registerId));
-  }
+  } */
 
-  getPrescriptionStatus(prescription: PrescriptionDto): string {
-    return getPrescriptionStatus(prescription);
+  getValidationStatus(validatation: ValidationDto): string {
+    return getValidationStatus(validatation);
   }
 
   getDateString(
@@ -215,7 +173,7 @@ export class PrescriptonToValidateComponent {
     console.log('sent from list');
     //add checks of status here before submitting
     //...
-    this.onClickUpdatePrescriptionEvent.emit({ prescription, register });
+    //this.onClickUpdatePrescriptionEvent.emit({ prescription, register });
   }
 }
 
@@ -237,20 +195,14 @@ export function getPatientStatusFromRegister(register: RegisterDto): HistoryStat
   return lastOne.status;
 }
 
-export function getPrescriptionStatus(prescription: PrescriptionDto): string {
-  switch (prescription.status) {
-    case PrescriptionStatus.Draft:
-      return 'Draft';
-    case PrescriptionStatus.Pending:
+export function getValidationStatus(validation: ValidationDto): string {
+  switch (validation.status) {
+    case ValidationStatus.Pending:
       return 'Pending';
-    case PrescriptionStatus.Active:
-      return 'Active'; // Done: validée
-    case PrescriptionStatus.Rejected:
+    case ValidationStatus.Validated:
+      return 'Validated';
+    case ValidationStatus.Rejected:
       return 'Rejected';
-    case PrescriptionStatus.Discontinued:
-      return 'Discontinued';
-    case PrescriptionStatus.Completed:
-      return 'Completed';
     // Add cases for other statuses if they are uncommented in the enum
     default:
       return 'Unknown Status';

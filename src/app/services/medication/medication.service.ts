@@ -10,23 +10,71 @@ import { CheckDrugRequest,
   CreateDrugRequest,
   CreateDrugResponse,
   DrugDTO,
-  GetDrugsResponse, } from '../../model/Drugs';
+  GetDrugsResponse,
+  GetValidationsResponse, } from '../../model/Drugs';
+  import { Subject } from 'rxjs';
+  import * as signalR from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DrugService {
   data_source: DrugDTO[] = [];
+  private hubConnection: signalR.HubConnection;
+  private messageSubject = new Subject<any>();
+  message$ = this.messageSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+    //.withUrl('http://localhost:6004/medication-service/pharmacist') // 
+    .withUrl('http://localhost:6008/pharmacist')
+      .build();
+    this.hubConnection.on('ReceiveMessage', (message: string) => {
+      this.messageSubject.next(message);
+    });
+    this.startConnection();
+  }
 
   apiUrl="http://localhost:6004/medication-service/api/v1";
   
   apiCheck = this.apiUrl+'/drugsChecked';
   apiCrud = this.apiUrl+'/drugs';
+  
+
+  private startConnection() {
+    
+
+    this.hubConnection.start().then(() => {
+      console.log('SignalR connection established');
+    }).catch(err => {
+      console.error('Error establishing SignalR connection:', err);
+    });
+
+    this.hubConnection.on('PrescriptionToValidateEvent', (message: any) => {
+      debugger;
+      console.log('Received PrescriptionToValidateEvent: ', message);
+      // Handle the received prescription message here
+    });
+  }
 
   getMedications() {
     return this.http.get<GetDrugsResponse>(this.apiCrud).pipe(
+      map((response) => {
+        return parseDates(response);
+      })
+    );;
+  }
+
+  getValidations() {
+    return this.http.get<GetValidationsResponse>(this.apiUrl + "/Validations").pipe(
+      map((response) => {
+        return parseDates(response);
+      })
+    );;
+  }
+
+  getPendingValidations() {
+    return this.http.get<GetValidationsResponse>(this.apiUrl + "/PendingValidations").pipe(
       map((response) => {
         return parseDates(response);
       })

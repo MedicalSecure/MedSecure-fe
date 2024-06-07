@@ -58,6 +58,28 @@ export class PrescriptionApiService implements ActivityService {
     return x;
   }
 
+
+  getPrescriptionById(
+    registerId: string,
+    maxRetries: number = 3,
+    retryDelayInMs: number = 300,
+    displayErrorMessages: boolean = true
+  ): Observable<GetPrescriptionsResponse> {
+
+     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
+      maxRetries,
+      retryDelayInMs,
+      displayErrorMessages
+    ); 
+
+    return this.http
+      .get<GetPrescriptionsResponse>(this.apiUrl+ `/${registerId}`, {
+        headers: interceptorHeaders,
+      })
+      .pipe(map((response) => parseDates(response)));
+  }
+
+
   postPrescriptions(prescriptionDto: PrescriptionCreateDto) {
     const postPrescriptionRequest: CreatePrescriptionRequest = {
       prescription: prescriptionDto,

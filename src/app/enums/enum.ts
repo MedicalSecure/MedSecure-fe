@@ -89,6 +89,12 @@ export enum PrescriptionStatus {
   Completed = 5,
 }
 
+export enum ValidationStatus {
+  Pending = 0,
+  Validated = 1,
+  Rejected = 2
+}
+
 export enum RegisterStatus {
   Active = 0,
   Archived = 1,

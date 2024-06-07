@@ -16,7 +16,6 @@ import { PharmacyListComponent } from '../pharmacy-list/pharmacy-list.component'
 import { Stp3ConfirmUpdateDrugs } from '../stp3-confirm-update-drugs/stp3-confirm-update-drugs.component';
 import { DrugDTO } from '../../../model/Drugs';
 import { PrescriptonToValidateComponent } from '../prescripton-to-validate/prescripton-to-validate.component';
-import * as signalR from '@microsoft/signalr';
 
 
 @Component({
@@ -51,7 +50,7 @@ export class AddPharmacyComponent implements OnInit {
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
   ShowMedicationList: boolean = false;
-  ShowPrescriptionList: boolean = false;
+  ShowPrescriptionList: boolean = true;
   wizardSteps: wizardStepType[] = _steps;
   eventsSubject: Subject<number> = new Subject<number>();
 
@@ -69,29 +68,12 @@ export class AddPharmacyComponent implements OnInit {
   ngOnInit() {
     this._updateButtonsState();
     this.mappedMedications;
-    this.startConnection();
   }
   
   ngAfterViewInit() {
     // This ensures that the view is initialized before trying to access the child component
   }
 
-  private startConnection() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:6008/createdPrescription') // Replace with your backend URL
-      .build();
-
-    this.hubConnection.start().then(() => {
-      console.log('SignalR connection established');
-    }).catch(err => {
-      console.error('Error establishing SignalR connection:', err);
-    });
-
-    this.hubConnection.on('SendEventToAll', (message: any) => {
-      console.log('Received PrescriptionToValidateEvent: ', message);
-      // Handle the received prescription message here
-    });
-  }
 
   handleDownloadButtonClick() {
     this.stp2ViewCheckDrugs.ExportExcel(); // Directly call the method in the child component
