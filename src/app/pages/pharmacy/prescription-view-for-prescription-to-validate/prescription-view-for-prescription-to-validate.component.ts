@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PosologyDto, PrescriptionDto, RegisterForPrescription } from '../../../model/Prescription';
 import {
   calculateAge,
+  extractErrorMessage,
   getDateString,
   getTimeString,
 } from '../../../shared/utilityFunctions';
@@ -17,7 +18,7 @@ import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { getGender } from '../../registration/register-details/register-details.component';
-import { Gender } from '../../../enums/enum';
+import { Gender, ValidationStatus } from '../../../enums/enum';
 import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData';
 import { HumanBodyViewerComponent } from '../../prescription/human-body-viewer/human-body-viewer.component';
 import { symptomsCodeByBodyPart } from '../../prescription/stp3-add-diagnostic/stp3-add-diagnostic.component';
@@ -25,6 +26,8 @@ import { getDietTypeString } from '../../prescription/stp5-hospitalization/stp5-
 import { getPrescriptionStatus } from '../../prescription/prescription-list/prescription-list.component';
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 import { ScheduleComponent } from '../../../components/schedule/schedule.component';
+import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
+import { SnackBarMessageProps, snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 
 
 @Component({
@@ -78,7 +81,8 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     private unitCareService: UnitCareService,
     private dietService: DietService,
     private prescriptionService: PrescriptionApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBarMessagesService: SnackBarMessagesService
 
   ) {}
 
@@ -242,10 +246,52 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   }
 
   onClickConfirmPrescriptionHandler() {
-    //this.onClickUpdatePrescription.emit();
+    if(!this.selectedValidation)
+      return;
+    if(this.selectedValidation?.status != ValidationStatus.Pending)
+      return;
+    this.isValidationLoading=true
+    this.selectedValidation.status = ValidationStatus.Validated;
+    this.drugService.putValidation(this.selectedValidation).subscribe(response=>{
+      var props:SnackBarMessageProps={
+        messageContent:"Prescription is now active",
+        messageType:snackbarMessageType.Success
+      }
+      this.snackBarMessagesService.displaySnackBarMessage(props)
+      this.isValidationLoading=false
+    },error=>{
+      console.error(error);
+      var props:SnackBarMessageProps={
+          messageContent:extractErrorMessage(error),
+          messageType:snackbarMessageType.Error
+      }
+      this.snackBarMessagesService.displaySnackBarMessage(props)
+    });
+    this.isValidationLoading=false
   }
   onClickRejectPrescriptionHandler() {
-    //this.onClickSuspendPrescription.emit();
+    if(!this.selectedValidation)
+      return;
+    if(this.selectedValidation?.status != ValidationStatus.Pending)
+      return;
+    this.isValidationLoading=true
+    this.selectedValidation.status = ValidationStatus.Rejected;
+    this.drugService.putValidation(this.selectedValidation).subscribe(response=>{
+      var props:SnackBarMessageProps={
+        messageContent:"Prescription has been rejected",
+        messageType:snackbarMessageType.Success
+      }
+      this.snackBarMessagesService.displaySnackBarMessage(props)
+      this.isValidationLoading=false
+    },error=>{
+      console.error(error);
+      var props:SnackBarMessageProps={
+          messageContent:extractErrorMessage(error),
+          messageType:snackbarMessageType.Error
+      }
+      this.snackBarMessagesService.displaySnackBarMessage(props)
+    });
+    this.isValidationLoading=false
   }
 
   mapMedicationsToPrescriptions() {

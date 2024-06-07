@@ -11,9 +11,13 @@ import { CheckDrugRequest,
   CreateDrugResponse,
   DrugDTO,
   GetDrugsResponse,
-  GetValidationsResponse, } from '../../model/Drugs';
+  GetValidationsResponse,
+  ValidationDto,
+  putValidationRequest, } from '../../model/Drugs';
   import { Subject } from 'rxjs';
   import * as signalR from '@microsoft/signalr';
+import { SnackBarMessagesService } from '../util/snack-bar-messages.service';
+import { SnackBarMessageProps, snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +28,7 @@ export class DrugService {
   private messageSubject = new Subject<any>();
   message$ = this.messageSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient , private snackBarMessages:SnackBarMessagesService) {
     this.hubConnection = new signalR.HubConnectionBuilder()
     //.withUrl('http://localhost:6004/medication-service/pharmacist') // 
     .withUrl('http://localhost:6008/pharmacist')
@@ -53,6 +57,12 @@ export class DrugService {
     this.hubConnection.on('PrescriptionToValidateEvent', (message: any) => {
       debugger;
       console.log('Received PrescriptionToValidateEvent: ', message);
+      var props:SnackBarMessageProps={
+        messageContent:"A New prescription is waiting for your confirmation",
+        messageType:snackbarMessageType.Warning,
+        durationInSeconds:10
+      }
+      this.snackBarMessages.displaySnackBarMessage(props)
       // Handle the received prescription message here
     });
   }
@@ -79,6 +89,17 @@ export class DrugService {
         return parseDates(response);
       })
     );;
+  }
+
+  putValidation(validation: ValidationDto) {
+    const putValidationRequest: putValidationRequest = {
+      validation: validation,
+    };
+    let x = this.http.put<putValidationRequest>(
+      this.apiUrl + "/Validations",
+      putValidationRequest
+    );
+    return x;
   }
 
   checkDrugs(

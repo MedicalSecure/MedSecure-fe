@@ -46,6 +46,10 @@ export type CreateDrugResponse = {
   ids: Array<string>;
 }
 
+export type putValidationRequest = {
+  validation: ValidationDto;
+};
+
 
 
 export type ValidationPosologyDto = {

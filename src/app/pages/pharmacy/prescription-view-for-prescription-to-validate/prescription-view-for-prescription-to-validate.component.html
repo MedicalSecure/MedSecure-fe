@@ -20,7 +20,7 @@
         </div>
         <!-- /* This component will be deleted, its duplicated due to an angular error when calling them both */
  -->
-        @if (selectedPrescription && !isPrescriptionLoading) {
+        @if (selectedPrescription && !isPrescriptionLoading && !isValidationLoading) {
 
         <!-- Display Prescription details component -->
         <ngx-masonry [options]="masonryOptions" [className]="'py-2'">
@@ -112,7 +112,7 @@
                       <app-schedule [partsOfDayHours]="posology.dispenses"></app-schedule>
                       <ul *ngIf="showDetails && posology.comments">
                         <li *ngFor="let comment of posology.comments; let i = index">
-                          <strong>{{ comment.label }}:</strong> {{ " " + comment.content }}
+                          <p><strong class="{{comment.label=='Caution' && ' text-warning fw-bold'}}">{{ comment.label }}:</strong> {{ " " + comment.content }}</p>
                         </li>
                       </ul>
                     </div>
