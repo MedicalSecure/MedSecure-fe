@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PosologyDto, PrescriptionDto, RegisterForPrescription } from '../../../model/Prescription';
+import { Component } from '@angular/core';
+import { PosologyDto, PrescriptionDto } from '../../../model/Prescription';
 import {
   calculateAge,
   extractErrorMessage,
@@ -19,7 +19,11 @@ import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { getGender } from '../../registration/register-details/register-details.component';
 import { Gender, ValidationStatus } from '../../../enums/enum';
-import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData';
+import {
+  Equipment,
+  Room,
+  UnitCare,
+} from '../../../model/unitCare/UnitCareData';
 import { HumanBodyViewerComponent } from '../../prescription/human-body-viewer/human-body-viewer.component';
 import { symptomsCodeByBodyPart } from '../../prescription/stp3-add-diagnostic/stp3-add-diagnostic.component';
 import { getDietTypeString } from '../../prescription/stp5-hospitalization/stp5-hospitalization.component';
@@ -27,8 +31,10 @@ import { getPrescriptionStatus } from '../../prescription/prescription-list/pres
 import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
 import { ScheduleComponent } from '../../../components/schedule/schedule.component';
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
-import { SnackBarMessageProps, snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
-
+import {
+  SnackBarMessageProps,
+  snackbarMessageType,
+} from '../../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Component({
   selector: 'app-old-prescription-view-for-prescription-to-validate',
@@ -43,18 +49,18 @@ import { SnackBarMessageProps, snackbarMessageType } from '../../../components/s
     HumanBodyViewerComponent,
     ScheduleComponent,
   ],
-  templateUrl: './prescription-view-for-prescription-to-validate.component.html',
-  styleUrl: './prescription-view-for-prescription-to-validate.component.css'
+  templateUrl:
+    './prescription-view-for-prescription-to-validate.component.html',
+  styleUrl: './prescription-view-for-prescription-to-validate.component.css',
 })
 export class PrescriptionViewForPrescriptionToValidateComponent {
   //from query
-  validationId:string | null=null;
-  prescriptionId:string | null=null;
-
+  validationId: string | null = null;
+  prescriptionId: string | null = null;
 
   selectedValidation: ValidationDto | undefined = undefined;
   selectedPrescription: PrescriptionDto | undefined = undefined;
-  enableActions=true;
+  enableActions = true;
 
   selectedUnitCare: UnitCare | undefined;
   selectedDiet: DietDto | undefined;
@@ -68,7 +74,7 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   isDietLoading = false;
   isUnitCareLoading = false;
   isPrescriptionLoading = false;
-  isValidationLoading=false
+  isValidationLoading = false;
 
   public masonryOptions: NgxMasonryOptions = {
     gutter: 10,
@@ -83,35 +89,38 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     private prescriptionService: PrescriptionApiService,
     private route: ActivatedRoute,
     private snackBarMessagesService: SnackBarMessagesService
-
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.subscribe((params) => {
       this.validationId = params.get('validationId');
       this.prescriptionId = params.get('prescriptionId');
 
       // Now fetch data based on validationId and prescriptionId
-      if(this.validationId){
+      if (this.validationId) {
         this.fetchValidationById(this.validationId);
       }
-      if(this.prescriptionId){
+      if (this.prescriptionId) {
         this.fetchPrescriptionById(this.prescriptionId);
       }
       if (!this.validationId && !this.prescriptionId) {
         console.error('Missing required parameters');
-      } 
+      }
     });
   }
 
-  fetchValidationById(validationId: string | null){
+  fetchValidationById(validationId: string | null) {
     this.isValidationLoading = true;
     this.drugService.getValidations().subscribe(
       (response) => {
         //debugger;
-        if(response?.validations?.data || response?.validations?.data.length >0)
-          this.selectedValidation = response.validations.data.find(p=>p.id===validationId);
-        
+        if (
+          response?.validations?.data ||
+          response?.validations?.data.length > 0
+        )
+          this.selectedValidation = response.validations.data.find(
+            (p) => p.id === validationId
+          );
       },
       (error) => {
         console.error(error);
@@ -125,9 +134,9 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     this.isUnitCareLoading = true;
     this.unitCareService.getUnitCareByBedId(bedId).subscribe(
       (response) => {
-        this.selectedUnitCare = response ;
+        this.selectedUnitCare = response;
         this.getRoomFromUnitCare(response);
-        this.getBedById(this.selectedPrescription?.bedId)
+        this.getBedById(this.selectedPrescription?.bedId);
       },
       (error) => console.error(error),
       () => (this.isUnitCareLoading = false)
@@ -140,12 +149,11 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     this.isDietLoading = true;
     this.dietService.getDietById(dietId).subscribe(
       (response) => {
-        if(!response) return;
+        if (!response) return;
         this.selectedDiet = {
           ...response,
-          dietTypeString:getDietTypeString(response.dietType)
+          dietTypeString: getDietTypeString(response.dietType),
         };
-        
       },
       (error) => console.error(error),
       () => (this.isDietLoading = false)
@@ -158,9 +166,9 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     this.isPrescriptionLoading = true;
     this.prescriptionService.getPrescriptionById(prescriptionId).subscribe(
       (response) => {
-        if(!response || response.prescriptions.data.length ==0) return;
+        if (!response || response.prescriptions.data.length == 0) return;
         this.selectedPrescription = response.prescriptions.data[0];
-  
+
         this.mapSymptomsToBodyParts();
         this.fetchUnitCareByBedId(this.selectedPrescription?.bedId);
         this.fetchDietById(this.selectedPrescription?.diet?.dietsId[0]);
@@ -170,13 +178,12 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     );
   }
 
-  getGender(gender:undefined | null | Gender):null|string{
+  getGender(gender: undefined | null | Gender): null | string {
     return getGender(gender);
   }
 
-
   getRoomFromUnitCare(unitCare: UnitCare | undefined): Room | null {
-    //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times 
+    //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times
     if (!unitCare) return null;
     if (
       this.selectedPrescription?.bedId &&
@@ -199,12 +206,12 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
       if (isFound) return;
     });
     if (roomFound == undefined) return null;
-    this.selectedRoom=roomFound;
+    this.selectedRoom = roomFound;
     return roomFound;
   }
 
   getBedById(bedId: string | null | undefined): Equipment | null {
-    //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times 
+    //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times
     if (!bedId) return null;
     if (this.selectedBed?.id == bedId) return this.selectedBed;
     let room = this.getRoomFromUnitCare(this.selectedUnitCare);
@@ -222,12 +229,12 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     return equipmentFound;
   }
 
-  getDietRange(diet:DietDto | undefined | null):string | null{
-    if(!diet || !diet.startDate || !diet.endDate) return null;
-    let start=getDateString(diet.startDate, "dd/mm/yyyy");
-    let end=getDateString(diet.endDate, "dd/mm/yyyy");
-    let nbDays= this.getNumberOfDaysInRange([diet.startDate, diet.endDate])
-    if(!nbDays || !end || !start ) return null;
+  getDietRange(diet: DietDto | undefined | null): string | null {
+    if (!diet || !diet.startDate || !diet.endDate) return null;
+    let start = getDateString(diet.startDate, 'dd/mm/yyyy');
+    let end = getDateString(diet.endDate, 'dd/mm/yyyy');
+    let nbDays = this.getNumberOfDaysInRange([diet.startDate, diet.endDate]);
+    if (!nbDays || !end || !start) return null;
     return `${nbDays}d ${start}-${end}`;
   }
 
@@ -242,68 +249,60 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
         }
       }
     });
-   
+
     this.selectedBodyParts = bodyParts;
   }
 
   onClickConfirmPrescriptionHandler() {
-    var props22:SnackBarMessageProps={
-        messageContent:"test Successsss conentent ofhzefio",
-        messageType:snackbarMessageType.Success,
-        redirectionPath:"pharmacyValidation",
-        queryParams: { 
-          validationId: "test", 
-          prescriptionId: "validation.prescriptionId"
-        }
-    }
-    this.snackBarMessagesService.displaySnackBarMessage(props22)
-
-/*     if(!this.selectedValidation)
-      return;
-    if(this.selectedValidation?.status != ValidationStatus.Pending)
-      return;
-    this.isValidationLoading=true
+    if (!this.selectedValidation) return;
+    if (this.selectedValidation?.status != ValidationStatus.Pending) return;
+    this.isValidationLoading = true;
     this.selectedValidation.status = ValidationStatus.Validated;
-    this.drugService.putValidation(this.selectedValidation).subscribe(response=>{
-      var props:SnackBarMessageProps={
-        messageContent:"Prescription is now active",
-        messageType:snackbarMessageType.Success
+    this.drugService.putValidation(this.selectedValidation).subscribe(
+      (response) => {
+        var props: SnackBarMessageProps = {
+          messageContent: 'Prescription is now active',
+          messageType: snackbarMessageType.Success,
+        };
+        this.snackBarMessagesService.displaySnackBarMessage(props);
+        this.isValidationLoading = false;
+      },
+      (error) => {
+        console.error(error);
+        var props: SnackBarMessageProps = {
+          messageContent: extractErrorMessage(error),
+          messageType: snackbarMessageType.Error,
+        };
+        this.snackBarMessagesService.displaySnackBarMessage(props);
       }
-      this.snackBarMessagesService.displaySnackBarMessage(props)
-      this.isValidationLoading=false
-    },error=>{
-      console.error(error);
-      var props:SnackBarMessageProps={
-          messageContent:extractErrorMessage(error),
-          messageType:snackbarMessageType.Error
-      }
-      this.snackBarMessagesService.displaySnackBarMessage(props)
-    });
-    this.isValidationLoading=false */
+    );
+    this.isValidationLoading = false;
   }
+
   onClickRejectPrescriptionHandler() {
-    if(!this.selectedValidation)
-      return;
-    if(this.selectedValidation?.status != ValidationStatus.Pending)
-      return;
-    this.isValidationLoading=true
+    if (!this.selectedValidation) return;
+    if (this.selectedValidation?.status != ValidationStatus.Pending) return;
+    this.isValidationLoading = true;
     this.selectedValidation.status = ValidationStatus.Rejected;
-    this.drugService.putValidation(this.selectedValidation).subscribe(response=>{
-      var props:SnackBarMessageProps={
-        messageContent:"Prescription has been rejected",
-        messageType:snackbarMessageType.Success
+    this.drugService.putValidation(this.selectedValidation).subscribe(
+      (response) => {
+        var props: SnackBarMessageProps = {
+          messageContent: 'Prescription has been rejected',
+          messageType: snackbarMessageType.Success,
+        };
+        this.snackBarMessagesService.displaySnackBarMessage(props);
+        this.isValidationLoading = false;
+      },
+      (error) => {
+        console.error(error);
+        var props: SnackBarMessageProps = {
+          messageContent: extractErrorMessage(error),
+          messageType: snackbarMessageType.Error,
+        };
+        this.snackBarMessagesService.displaySnackBarMessage(props);
       }
-      this.snackBarMessagesService.displaySnackBarMessage(props)
-      this.isValidationLoading=false
-    },error=>{
-      console.error(error);
-      var props:SnackBarMessageProps={
-          messageContent:extractErrorMessage(error),
-          messageType:snackbarMessageType.Error
-      }
-      this.snackBarMessagesService.displaySnackBarMessage(props)
-    });
-    this.isValidationLoading=false
+    );
+    this.isValidationLoading = false;
   }
 
   mapMedicationsToPrescriptions() {
