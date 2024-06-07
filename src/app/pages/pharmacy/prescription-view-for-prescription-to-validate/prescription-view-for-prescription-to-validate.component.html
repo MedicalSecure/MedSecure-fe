@@ -80,9 +80,9 @@
                           {{ posology?.medication?.name ?? posology.medicationId.slice(0, 20) + "..." }}
                         </span>
                       </div>
-                      <p class="text-black-50 fw-bold fs-6">
-                        Requested a total of {{ getPosologySummary(posology).beforeFoodCounter + getPosologySummary(posology).afterFoodCounter }}*
-                        <span class="text-danger">{{ posology.medication.dosage }} Units</span>
+                      <p class="text-black-50 fw-bolder fs-6">
+                        Requested a total of <strong class="text-decoration-underline">{{ getPosologySummary(posology).beforeFoodCounter + getPosologySummary(posology).afterFoodCounter }}</strong>
+                        <span class="text-danger">{{" *"+ posology.medication.dosage }} Units</span>
                       </p>
                       <p class="fw-light mb-0">
                         {{ posology.isPermanent === true ? "Permanent" : getNumberOfDaysInRange([posology.startDate, posology.endDate]) + " Days" }}
@@ -112,7 +112,7 @@
                       <app-schedule [partsOfDayHours]="posology.dispenses"></app-schedule>
                       <ul *ngIf="showDetails && posology.comments">
                         <li *ngFor="let comment of posology.comments; let i = index">
-                          <p><strong class="{{comment.label=='Caution' && ' text-warning fw-bold'}}">{{ comment.label }}:</strong> {{ " " + comment.content }}</p>
+                          <p><strong class="{{comment.label=='Caution' ? ' text-warning fs-6 fw-bold' :''}}">{{ comment.label }}:</strong> {{ " " + comment.content }}</p>
                         </li>
                       </ul>
                     </div>
