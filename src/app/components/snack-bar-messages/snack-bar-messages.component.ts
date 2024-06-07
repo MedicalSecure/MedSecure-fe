@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { SnackBarMessagesService } from '../../services/util/snack-bar-messages.service';
+import { Router } from '@angular/router';
 
 @Component({
   template: '',
@@ -30,8 +31,6 @@ export class SnackBarMessagesComponent {
 
   @Input()
   defaultShowIcon: boolean = true;
-
-
 
   constructor(
     private _snackBar: MatSnackBar,
@@ -52,7 +51,6 @@ export class SnackBarMessagesComponent {
     );
   }
 
-  
   // Function overload signatures
   public openSnackBar(props: SnackBarMessageProps): void;
   public openSnackBar(
@@ -60,16 +58,20 @@ export class SnackBarMessagesComponent {
     messageType?: snackbarMessageType,
     duration?: number,
     showIcon?: boolean,
-    title?: string | null
+    title?: string | null,
+    redirectionPath?: string | undefined,
+    queryParams?: { [key: string]: string }
   ): void;
 
   // can be called using @ViewChild(SnackBarMessagesComponent)
-  public  openSnackBar(
+  public openSnackBar(
     propsOrMessage: SnackBarMessageProps | string,
     messageType: snackbarMessageType = this.defaultMessageType,
     duration: number = 4,
     showIcon: boolean = true,
-    title: string | null = null
+    title: string | null = null,
+    redirectionPath?: string | undefined,
+    queryParams?: { [key: string]: string }
   ) {
     let props: SnackBarMessageProps;
 
@@ -80,7 +82,9 @@ export class SnackBarMessagesComponent {
         messageType: messageType,
         durationInSeconds: duration,
         showIcon: showIcon,
-        title: title ?? undefined
+        title: title ?? undefined,
+        redirectionPath: redirectionPath,
+        queryParams: queryParams,
       };
     } else {
       //using First overload => => propsOrMessage is the type SnackBarMessageProps
@@ -95,6 +99,8 @@ export class SnackBarMessagesComponent {
         title: validProps.title,
         messageType: validProps.messageType,
         showIcon: validProps.showIcon,
+        redirectionPath: redirectionPath ?? props.redirectionPath,
+        queryParams: queryParams ?? props.queryParams,
       },
     });
   }
@@ -188,6 +194,19 @@ export type SnackBarMessageProps = {
    * If not provided, the default duration is 4 seconds.
    */
   durationInSeconds?: number;
+
+  /**
+   * The path you want the notification to redirect to
+   *
+   * If not provided, it wont redirect
+   */
+  redirectionPath?: string | undefined;
+  /**
+   * Optional parameters thats is needed in the destination page, won't have an effect without redirectionPath
+   *
+   * If not provided, the redirect can still work
+   */
+  queryParams?: { [key: string]: string };
 };
 
 type requiredSnackBarMessageProps = {
@@ -218,14 +237,18 @@ class ErrorMessagePrivateViewComponent {
   title = 'Error : ';
   messageType = snackbarMessageType.Info;
   showIcon = false;
+  redirectionPath: string | undefined = '';
 
   constructor(
+    private router: Router,
     @Inject(MAT_SNACK_BAR_DATA)
     public data: {
       message: string;
       title: string;
       messageType: snackbarMessageType;
       showIcon: boolean;
+      redirectionPath?: string | undefined; // Ensure this is included in the data object
+      queryParams?: { [key: string]: string }; // Optional query parameters
     }
   ) {
     // Inject the data object with message and title properties
@@ -233,6 +256,16 @@ class ErrorMessagePrivateViewComponent {
     this.title = data.title;
     this.messageType = data.messageType;
     this.showIcon = data.showIcon;
+    this.redirectionPath = data.redirectionPath;
+  }
+
+  handleRedirect() {
+    if (!this.redirectionPath) return;
+    if (this.redirectionPath) {
+      this.router.navigate([this.redirectionPath], {
+        queryParams: this.data.queryParams,
+      });
+    }
   }
 
   snackBarRef = inject(MatSnackBarRef);

@@ -41,7 +41,7 @@ import { SnackBarMessageProps, snackbarMessageType } from '../../../components/s
     RouterModule,
     MatProgressSpinnerModule,
     HumanBodyViewerComponent,
-    ScheduleComponent
+    ScheduleComponent,
   ],
   templateUrl: './prescription-view-for-prescription-to-validate.component.html',
   styleUrl: './prescription-view-for-prescription-to-validate.component.css'
@@ -242,11 +242,23 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
         }
       }
     });
+   
     this.selectedBodyParts = bodyParts;
   }
 
   onClickConfirmPrescriptionHandler() {
-    if(!this.selectedValidation)
+    var props22:SnackBarMessageProps={
+        messageContent:"test Successsss conentent ofhzefio",
+        messageType:snackbarMessageType.Success,
+        redirectionPath:"pharmacyValidation",
+        queryParams: { 
+          validationId: "test", 
+          prescriptionId: "validation.prescriptionId"
+        }
+    }
+    this.snackBarMessagesService.displaySnackBarMessage(props22)
+
+/*     if(!this.selectedValidation)
       return;
     if(this.selectedValidation?.status != ValidationStatus.Pending)
       return;
@@ -267,7 +279,7 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
       }
       this.snackBarMessagesService.displaySnackBarMessage(props)
     });
-    this.isValidationLoading=false
+    this.isValidationLoading=false */
   }
   onClickRejectPrescriptionHandler() {
     if(!this.selectedValidation)
