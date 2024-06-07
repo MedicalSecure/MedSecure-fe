@@ -71,7 +71,7 @@
       </div>
       <!-- Display Prescription details component -->
       <!-- /* This component will be deleted, its duplicated due to an angular error when calling them both */ -->
-      <app-old-prescription-view-for-prescription-list [selectedPrescription]="selectedPrescription" 
+      <app-old-prescription-view-for-prescription-to-validate [selectedPrescription]="selectedPrescription" 
       [selectedRegister]="selectedRegister"
       (onClickUpdatePrescription)="navigateToUpdatePrescription(selectedPrescription,selectedRegister)" 
       (onClickSuspendPrescription)="suspendPrescription(selectedPrescription)"  />

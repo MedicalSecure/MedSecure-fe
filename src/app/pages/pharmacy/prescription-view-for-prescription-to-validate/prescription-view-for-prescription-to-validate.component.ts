@@ -25,7 +25,7 @@ import { getDietTypeString } from '../../prescription/stp5-hospitalization/stp5-
 import { getPrescriptionStatus } from '../prescripton-to-validate/prescripton-to-validate.component';
 
 @Component({
-  selector: 'app-old-prescription-view-for-prescription-list',
+  selector: 'app-old-prescription-view-for-prescription-to-validate',
   standalone: true,
   imports: [
     CommonModule,
