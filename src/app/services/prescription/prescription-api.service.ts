@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, firstValueFrom, timer } from 'rxjs';
+import { Observable, Subject, firstValueFrom, timer } from 'rxjs';
 import {
   CreatePrescriptionRequest,
   CreatePrescriptionResponse,
@@ -18,15 +18,16 @@ import {
   RegisterWithPrescriptions,
   RegisterWithPrescriptionsDict,
 } from '../../model/Prescription';
-
+import * as signalR from '@microsoft/signalr';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { HistoryStatus, RegisterStatus } from '../../enums/enum';
 import { GetActivitiesResponse } from '../../types';
 import { ActivityService } from '../../components/activities/activities.component';
 import { RetryInterceptor } from '../../config/httpInterceptor';
-
 import { RegisterDto } from '../../model/Registration';
 import { RegistrationService } from '../registration/registration.service';
+import { SnackBarMessagesService } from '../util/snack-bar-messages.service';
+import { SnackBarMessageProps, snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
 @Injectable({
   providedIn: 'root',
 })
@@ -36,10 +37,48 @@ export class PrescriptionApiService implements ActivityService {
   //private apiUrl = `http://localhost:6007/api/v${this.apiVersion}/Prescription`; // Docker
   private apiUrl = `http://localhost:6004/prescription-service/api/v${this.apiVersion}/Prescription`; // api gateway
 
-  constructor(
-    private http: HttpClient,
-    public registrationService: RegistrationService
-  ) {}
+  private hubUrl = `http://localhost:6007/doctors`;
+  private hubConnection: signalR.HubConnection;
+  private messageSubject = new Subject<any>();
+  message$ = this.messageSubject.asObservable();
+
+  constructor(private http: HttpClient ,
+     private snackBarMessages:SnackBarMessagesService,
+     public registrationService: RegistrationService) {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+    .withUrl(this.hubUrl)
+      .build();
+    this.hubConnection.on('ReceiveMessage', (message: string) => {
+      this.messageSubject.next(message);
+    });
+    this.startConnection();
+  }
+
+  private startConnection() {
+    
+
+    this.hubConnection.start().then(() => {
+      console.log('SignalR connection established');
+    }).catch(err => {
+      console.error('Error establishing SignalR connection:', err);
+    });
+
+    //PrescriptionValidationSharedEvent
+    this.hubConnection.on('PrescriptionRejected', (message: any) => {
+      console.log('Received PrescriptionRejected: ', message);
+      var props:SnackBarMessageProps={
+        messageContent:"A prescription has been rejected",
+        messageType:snackbarMessageType.Warning,
+        durationInSeconds:10,
+        redirectionPath:"prescribe",
+        queryParams:{
+          prescriptionId:message.PrescriptionId
+        }
+      }
+      this.snackBarMessages.displaySnackBarMessage(props)
+      // Handle the received prescription message here
+    });
+  }
 
   getPrescriptions(
     pageIndex: number = 0,
