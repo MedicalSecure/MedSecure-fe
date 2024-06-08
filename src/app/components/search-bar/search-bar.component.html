@@ -46,8 +46,8 @@
           {{ medication.name }} 
           {{ medication.dosage }}
           {{ medication.unit }}
-          {{ medication.code }}
-          {{ medication.stock}}
+          <span class="fw-normal">Available : </span>
+          <span style="color: green;">{{ medication.availableStock}}</span>
         </p>
         <img src="assets/info.svg" alt="info" class="image my-auto" style="height: 15px; width: 15px; margin-right: 5px" matTooltip="{{ medication.description }}" />
 
