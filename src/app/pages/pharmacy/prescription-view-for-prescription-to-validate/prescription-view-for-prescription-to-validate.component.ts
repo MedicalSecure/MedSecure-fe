@@ -35,11 +35,13 @@ import {
   SnackBarMessageProps,
   snackbarMessageType,
 } from '../../../components/snack-bar-messages/snack-bar-messages.component';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-old-prescription-view-for-prescription-to-validate',
   standalone: true,
   imports: [
+    FormsModule,
     CommonModule,
     MatIconModule,
     NgxMasonryModule,
@@ -48,12 +50,14 @@ import {
     MatProgressSpinnerModule,
     HumanBodyViewerComponent,
     ScheduleComponent,
+    ReactiveFormsModule
   ],
   templateUrl:
     './prescription-view-for-prescription-to-validate.component.html',
   styleUrl: './prescription-view-for-prescription-to-validate.component.css',
 })
 export class PrescriptionViewForPrescriptionToValidateComponent {
+  ConfirmationForm: FormGroup;
   //from query
   validationId: string | null = null;
   prescriptionId: string | null = null;
@@ -72,6 +76,9 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   showDetails = true;
   fetchedMedications: DrugDTO[] = [];
   selectedBodyParts: Set<string> = new Set<string>();
+
+  //true : confirmation popup / false: rejection popup, undefined: hide popup
+  isConfirmationPopUp :boolean|undefined = undefined;
 
   //loading
   isDietLoading = false;
@@ -95,7 +102,8 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     private dietService: DietService,
     private prescriptionService: PrescriptionApiService,
     private route: ActivatedRoute,
-    private snackBarMessagesService: SnackBarMessagesService
+    private snackBarMessagesService: SnackBarMessagesService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +125,32 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
         console.error('Missing required parameters');
       }
     });
+
+
+    // Confirmation form
+    this.ConfirmationForm = this.fb.group({
+      notesInput: ['', this.isConfirmationPopUp===false ? Validators.compose([Validators.required, Validators.minLength(20)]) : null]
+    });
+    // Confirmation form : Subscribe to value changes
+    this.ConfirmationForm.statusChanges.subscribe(status => {
+      this.onValidationStatusChange(status);
+    });
+  }
+
+  setValidation(): void {
+    const notesInputControl = this.ConfirmationForm.get('notesInput');
+    if(!notesInputControl)
+      return;
+    if (this.isConfirmationPopUp===false) {
+      notesInputControl.setValidators([Validators.required, Validators.minLength(20)]);
+    } else {
+      notesInputControl.clearValidators();
+    }
+    notesInputControl.updateValueAndValidity();
+  }
+
+  onValidationStatusChange(status: string): void {
+    console.log('Form validation status changed:', status);
   }
 
   fetchValidationById(validationId: string | null,searchByPrescriptionIdToo=false) {
@@ -273,11 +307,23 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     this.selectedBodyParts = bodyParts;
   }
 
+   onClickValidate(){
+     this.isConfirmationPopUp=true;
+    this.setValidation();
+   }
+
+   onClickReject(){
+     this.isConfirmationPopUp=false;
+    this.setValidation();
+   }
+
    onClickConfirmPrescriptionHandler() {
+    //hide popup
+    this.isConfirmationPopUp=undefined;
     if (!this.selectedValidation) return;
     if (this.selectedValidation?.status != ValidationStatus.Pending) return;
     this.isValidationLoading = true;
-
+   
     //TODO
     this.selectedValidation.pharmacistId=this.PharmacistId;
     this.selectedValidation.pharmacistName=this.pharmacistName;
@@ -309,11 +355,13 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   }
 
   onClickRejectPrescriptionHandler() {
+    //hide popup
+    this.isConfirmationPopUp=undefined;
     if (!this.selectedValidation) return;
     if (this.selectedValidation?.status != ValidationStatus.Pending) return;
     this.isValidationLoading = true;
     this.selectedValidation.status = ValidationStatus.Rejected;
-    this.selectedValidation.notes="You NEED TO FIX THIS"
+    this.selectedValidation.notes=this.ConfirmationForm.get('notesInput')?.value;
     this.selectedValidation.pharmacistId=this.PharmacistId;
     this.selectedValidation.pharmacistName=this.pharmacistName;
 

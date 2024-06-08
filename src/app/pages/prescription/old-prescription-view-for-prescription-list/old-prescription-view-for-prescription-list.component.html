@@ -141,7 +141,8 @@
             </div>
             <div class="col-7">
               <p>
-                <strong>{{ selectedPrescription.bedId ? "Resident" : "Out" }}</strong>
+                  <strong  class="text-success" *ngIf="selectedPrescription.bedId">Resident</strong>
+                  <strong class="text-danger" *ngIf="!selectedPrescription.bedId">Out</strong>
               </p>
               <ng-container *ngIf="isUnitCareLoading==false; else elseUnitCareLoading">
                 <p>
@@ -188,11 +189,11 @@
       </div>
     
       <!-- Actions -->
-      <div ngxMasonryItem class="card masonry-item">
+      <div ngxMasonryItem class="card masonry-item no-wrap">
         <div class="card-body">
           <h5 class="card-title"><strong>Actions</strong></h5>
           <div class="card-text row">
-            <div class="col-7">
+            <div class="col-6">
               <p>Prescription Status :</p>
               <p>Editing Status :</p>
               <p>Prescription Date :</p>
@@ -201,9 +202,9 @@
               <p>Validated By :</p>
               <p>Notes :</p>
             </div>
-            <div class="col-5">
+            <div class="col-6 ">
               <p>
-                <strong>{{ getPrescriptionStatus(selectedPrescription) }}</strong>
+                <strong [class]="getPrescriptionStatus(selectedPrescription).class">{{ getPrescriptionStatus(selectedPrescription).text }}</strong>
               </p>
               <p>
                 <strong>{{ [0, 1, 2].includes(selectedPrescription.status) && enableActions ? "Enabled" : "Disabled" }}</strong>

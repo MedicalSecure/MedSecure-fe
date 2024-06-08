@@ -47,8 +47,13 @@
             <td class="col-1">{{ prescription.registerId.slice(-10) + "..." }}</td>
             <td class="col-1">{{ prescription.id.slice(-10) + "..." }}</td>
             <td class="col-3">{{ getRegister(prescription.registerId).patient.firstName + " " + getRegister(prescription.registerId).patient.lastName }}</td>
-            <td class="col-2">{{ getPrescriptionStatus(prescription) }}</td>
-            <td class="col-2">{{ getRegisterStatus(prescription.registerId) }}</td>
+            <td class="col-2 fw-bold {{getPrescriptionStatus(prescription).class}}">{{ getPrescriptionStatus(prescription).text }}</td>
+            <!-- Patient status (register status) -->
+            <td class="col-2">
+              <strong  class="text-success" *ngIf="getRegisterStatus(prescription.registerId) === 0">Resident</strong>
+              <strong class="text-danger" *ngIf="getRegisterStatus(prescription.registerId) === 1">Out</strong>
+              <strong class="text-warning" *ngIf="getRegisterStatus(prescription.registerId) === 2">Registered</strong>
+            </td>
             <td class="col-2">{{ "After AZURE" }}</td>
             <td class="col-2">{{ getDateString(prescription.createdAt) }}</td>
           </tr>

@@ -91,11 +91,11 @@
           <div class="col">
             <ngx-masonry [options]="masonryOptions" className="py-2">
               <!-- Actions -->
-              <div ngxMasonryItem class="card masonry-item">
+              <div ngxMasonryItem class="card masonry-item no-wrap">
                 <div class="card-body">
                   <h5 class="card-title"><strong>Actions</strong></h5>
                   <div class="card-text row">
-                    <div class="col-7">
+                    <div class="col-5">
                       <p>Prescription Status :</p>
                       <p>Prescription Date :</p>
                       <p>Validation Status :</p>
@@ -105,9 +105,9 @@
                       <p>Pharmacist :</p>
                       <p>Notes :</p>
                     </div>
-                    <div class="col-5">
+                    <div class="col-7">
                       <p>
-                        <strong>{{ getPrescriptionStatus(selectedPrescription) }}</strong>
+                        <strong [class]="getPrescriptionStatus(selectedPrescription).class">{{ getPrescriptionStatus(selectedPrescription).text }}</strong>
                       </p>
                       <p>
                         <strong>{{ getDateString(selectedPrescription.createdAt, "dd/mm - HH:MM") }}</strong>
@@ -152,7 +152,7 @@
                     <button
                       class="col-5 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
                       [disabled]="selectedPrescription.status != 1  || !enableActions"
-                      (click)="onClickConfirmPrescriptionHandler()"
+                      (click)="onClickValidate()"
                     >
                       <i class="fa fa-pencil-square-o m-0" aria-hidden="true"></i><span>Confirm</span>
                     </button>
@@ -160,7 +160,7 @@
                       class="col-5 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
                       style="border-color: red"
                       [disabled]="selectedPrescription.status != 1 || !enableActions"
-                      (click)="onClickRejectPrescriptionHandler()"
+                      (click)="onClickReject()"
                     >
                       <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Reject</span>
                     </button>
@@ -238,7 +238,8 @@
                     </div>
                     <div class="col-7">
                       <p>
-                        <strong>{{ selectedPrescription.bedId ? "Resident" : "Out" }}</strong>
+                        <strong  class="text-success" *ngIf="selectedPrescription.bedId">Resident</strong>
+                        <strong class="text-danger" *ngIf="!selectedPrescription.bedId">Out</strong>
                       </p>
                       <ng-container *ngIf="isUnitCareLoading == false; else elseUnitCareLoading">
                         <p>
@@ -290,6 +291,55 @@
           </div> 
         }
       </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- ********************************  CONFIRMATION  POPUP  ********************************  -->
+<div *ngIf="isConfirmationPopUp != undefined" class="modal d-block d-flex justify-content-center blur-background clickable" (click)="isConfirmationPopUp=undefined">
+  <!-- (click)="isConfirmationPopUp=undefined" : is the background => to handle clicks outside the modal -->
+  <!-- (click)="$event.stopPropagation() prevent clicks inside the modal to close the modal (prevent the outer click : (click)="isConfirmationPopUp=undefined") -->
+  <div class="card card-rounded shadow-lg col-11 col-md-8 col-lg-6 my-auto not-clickable" style="height:fit-content;max-height: 80vh;min-height: 50vh;" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h4 class="modal-title">Confirm the {{isConfirmationPopUp ? "validation" : "rejection "}}for prescription id : {{selectedPrescription?.id}}</h4>
+      <mat-icon class="align-self-center text-danger fw-bold fs-4 clickable" (click)="isConfirmationPopUp=undefined">close</mat-icon>
+    </div>
+    <div class="modal-body overflow-scroll no-scrollbar">
+      <div [formGroup]="ConfirmationForm">
+        <h6 class="text-primary">Add Notes for the {{isConfirmationPopUp ? "Confirmation" : "Rejection "}}</h6>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="height: 100%;">Notes</span>
+          </div>
+          <textarea  style="min-height: 7rem" id="notesInput" formControlName="notesInput" type="text" class="form-control" aria-label="Notes"></textarea>
+        </div>
+      
+        <div *ngIf="ConfirmationForm.get('notesInput')?.invalid && (ConfirmationForm.get('notesInput')?.dirty || ConfirmationForm.get('notesInput')?.touched)">
+          <div *ngIf="ConfirmationForm.get('notesInput')?.errors" class="text-danger fw-bolder">
+           <p> Input for rejection must be at least 20 characters long.</p>
+          </div>
+        </div>
+        <p></p>
+        <p> <img src="assets/info.svg" alt="info" style="height: 15px; width: 15px;margin-right: 2px;padding-bottom: 2px;" /><span> Notes are required for rejection only</span> </p>
+        
+      </div>
+    </div>
+    <div class="modal-footer justify-content-between px-0 px-md-4">
+      <button class="btn text-black px-5 " (click)="isConfirmationPopUp=undefined">Cancel</button>
+      <button *ngIf="isConfirmationPopUp === true" 
+        class="btn btn-primary text-white px-5" 
+        (click)="onClickConfirmPrescriptionHandler()">
+          Validate
+      </button>
+      <button *ngIf="isConfirmationPopUp === false"
+       class="btn btn-danger text-white px-5"
+        (click)="onClickRejectPrescriptionHandler()"
+        [disabled]="ConfirmationForm.get('notesInput')?.errors">
+          Reject
+      </button>
     </div>
   </div>
 </div>
