@@ -82,7 +82,10 @@
           }
           @if (this.ShowMedicationList == true) {
             <div id="medication-list">
-              <app-pharmacy-list (onClickNewMedicationEvent)="onClickMedicationListEventHandler($event)"></app-pharmacy-list>
+              <app-pharmacy-list 
+              (onClickNewMedicationEvent)="onClickMedicationListEventHandler($event)"
+              (onClickViewPrescriptionsEvent)="onClickViewPrescriptions($event)"
+              ></app-pharmacy-list>
             </div>
           }
           @if (ShowPrescriptionList == true){

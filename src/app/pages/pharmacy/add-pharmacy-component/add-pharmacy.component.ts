@@ -138,6 +138,8 @@ export class AddPharmacyComponent implements OnInit {
 
   onClickMedicationListEventHandler(viewMedications: boolean) {
     this.ShowMedicationList = viewMedications;
+    if(viewMedications==true)
+      this.ShowPrescriptionList = false;
   }
 
   onClickViewMedications() {
@@ -149,8 +151,10 @@ export class AddPharmacyComponent implements OnInit {
     this.ShowPrescriptionList = viewPrescriptions;
   }
 
-  onClickViewPrescriptions() {
-    this.ShowPrescriptionList = !this.ShowPrescriptionList;
+  onClickViewPrescriptions(show : boolean = true) {
+    this.ShowPrescriptionList = show;
+    if(show)
+      this.ShowMedicationList=false;
   }
 
   /* wizard buttons */

@@ -94,7 +94,7 @@ export class PrescriptonToValidateComponent {
 
   onClickImportMedications() {
     // Go to wizard ==>
-    this.onClickImportMedicationEvent.emit(false);
+    this.onClickImportMedicationEvent.emit(true);
     // empty this page / reset it
     this.onClickDeselectValidation();
   }

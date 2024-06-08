@@ -31,6 +31,7 @@ export class PharmacyListComponent implements OnInit {
   
   @Input() selectedPrescription: any | undefined = undefined;
   @Output() onClickNewMedicationEvent = new EventEmitter<boolean>();
+  @Output() onClickViewPrescriptionsEvent = new EventEmitter<boolean>();
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   
@@ -92,5 +93,9 @@ export class PharmacyListComponent implements OnInit {
   onClickNewMedication() {
     this.onClickNewMedicationEvent.emit(false);
     this.onClickMedication(undefined);
+  }
+
+  onClickViewPrescriptions() {
+    this.onClickViewPrescriptionsEvent.emit(true);
   }
 }
