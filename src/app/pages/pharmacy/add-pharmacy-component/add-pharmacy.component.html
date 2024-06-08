@@ -65,8 +65,8 @@
               <div class="d-flex">
                 <div class="col-12 col-lg-8">
                   <button type="button" class="btn btn-outline-primary" (click)="clearWizard()">Cancel</button>
-                  <button type="button" [className]="backButtonContent.class" (click)="handleDownloadButtonClick()">
-                    {{ downloadButtonContent.label }}
+                  <button class="btn btn-primary text-white"  type="button" *ngIf="stepNumber == 2" (click)="handleDownloadButtonClick()">
+                    <i class="fa fa-download" aria-hidden="true"></i>Download Ivalid Drugs
                   </button>
                 </div>
                 <div class="col-lg-4 d-flex justify-content-end">

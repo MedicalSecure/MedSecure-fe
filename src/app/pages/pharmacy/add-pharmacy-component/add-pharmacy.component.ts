@@ -60,7 +60,6 @@ export class AddPharmacyComponent implements OnInit {
 
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
   backButtonContent: { label: string; class: string } = _backButtonContent;
-  downloadButtonContent: { label: string; class: string } = _downloadButtonContent;
 
   private hubConnection: signalR.HubConnection;
 
@@ -107,7 +106,6 @@ export class AddPharmacyComponent implements OnInit {
     this.isStep2PageValid = false;
     this.nextButtonContent = _nextButtonContent;
     this.backButtonContent = _backButtonContent;
-    this.downloadButtonContent = _downloadButtonContent
   }
 
   emitNextEventToChild() {
@@ -132,8 +130,8 @@ export class AddPharmacyComponent implements OnInit {
   }
 
   onClickFinish() {
-    this.ShowMedicationList = true;
     this.clearWizard();
+    this.ShowMedicationList = true;
   }
 
   onClickMedicationListEventHandler(viewMedications: boolean) {
@@ -161,7 +159,7 @@ export class AddPharmacyComponent implements OnInit {
   SwitchToStep(index: number) {
     //INDEX is the next page we are trying to go to.
     if (this.validatePageSwitch(index) == false) return;
-    if (index > this.stepsLimit) this.onClickFinish();
+    if (index > this.stepsLimit) return this.onClickFinish();
 
     if (index === 2 && this.stepNumber === 1)
       return this.handleSubmitStep1ThenSwitchToStep2();
@@ -292,10 +290,6 @@ const _backButtonContent = {
   class: 'btn btn-primary text-white',
 };
 
-const _downloadButtonContent = {
-  label: 'Download Invalid Drugs',
-  class: 'btn btn-primary text-white',
-};
 
 const _steps: wizardStepType[] = [
   {
