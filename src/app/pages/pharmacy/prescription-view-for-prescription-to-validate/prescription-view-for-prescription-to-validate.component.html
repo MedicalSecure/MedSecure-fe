@@ -114,7 +114,7 @@
                       </p>
                       <ng-container *ngIf="isValidationLoading == false; else ValidationIsLoading">
                         <p><!-- Validation status -->
-                          <strong [className]="getGeneralValidationInfo().class">{{ getGeneralValidationInfo().text }}</strong>
+                          <strong [className]="getValidationStatusInfo().class">{{ getValidationStatusInfo().text }}</strong>
                         </p>
                         <p><!-- Editing Status : -->
                           <strong>{{ [0, 1, 2].includes(selectedPrescription.status) && enableActions ? "Enabled" : "Disabled" }}</strong>
@@ -130,7 +130,7 @@
                         </p>
                         <p>
                           <strong *ngIf="!getValidationActionInfo().notes">No notes</strong>
-                          <strong *ngIf="getValidationActionInfo().notes">View Notes</strong>
+                          <strong *ngIf="getValidationActionInfo().notes" [title]="getValidationActionInfo().notes">View Notes <i class="fa fa-info-circle" aria-hidden="true"></i></strong>
                         </p>
                       </ng-container>
                       <ng-template #ValidationIsLoading>

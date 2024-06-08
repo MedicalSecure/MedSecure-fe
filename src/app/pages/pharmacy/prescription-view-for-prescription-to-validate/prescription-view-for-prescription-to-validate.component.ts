@@ -408,7 +408,7 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     this.showDetails = !this.showDetails;
   }
 
-  getGeneralValidationInfo():{text:string,class:string}{
+  getValidationStatusInfo():{text:string,class:string}{
     if(this.isValidationLoading)
       return {text:"Loading",class:'text-danger'};
 
