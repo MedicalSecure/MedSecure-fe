@@ -55,12 +55,16 @@ export class DrugService {
     });
 
     this.hubConnection.on('PrescriptionToValidateEvent', (message: any) => {
-      debugger;
       console.log('Received PrescriptionToValidateEvent: ', message);
       var props:SnackBarMessageProps={
         messageContent:"A New prescription is waiting for your confirmation",
         messageType:snackbarMessageType.Warning,
-        durationInSeconds:10
+        durationInSeconds:10,
+        redirectionPath:"pharmacyValidation",
+        queryParams:{
+          validationId:message.validationId,//TODO still missing
+          prescriptionId:message.id
+        }
       }
       this.snackBarMessages.displaySnackBarMessage(props)
       // Handle the received prescription message here

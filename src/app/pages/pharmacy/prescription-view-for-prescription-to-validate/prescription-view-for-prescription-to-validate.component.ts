@@ -80,6 +80,10 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     gutter: 10,
     fitWidth: true,
     horizontalOrder: false,
+    animations: {
+      show: [],
+      hide: []
+    }
   };
 
   constructor(
@@ -402,5 +406,43 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
 
   onToggleShowDetails() {
     this.showDetails = !this.showDetails;
+  }
+
+  getGeneralValidationInfo():{text:string,class:string}{
+    if(this.isValidationLoading)
+      return {text:"Loading",class:'text-danger'};
+
+    if(!this.selectedValidation)
+      return {text:"Error",class:'text-danger'};
+    
+    if(this.selectedValidation.status==ValidationStatus.Pending)
+      return {text:"Pending",class:'text-warning'};
+
+    if(this.selectedValidation.status==ValidationStatus.Rejected)
+      return {text:"Rejected",class:'text-danger'};
+
+    if(this.selectedValidation.status==ValidationStatus.Validated)
+      return {text:"Validated",class:'text-success'};
+
+    return {text:"Unknown",class:'text-danger'};
+  }
+
+  getValidationActionInfo():{notes:string | undefined,pharmacist:string,validatedAt:string}{
+
+    let validatedAt="Not applicable"
+    if(this.selectedValidation?.modifiedAt){
+      validatedAt = getDateString(this.selectedValidation.modifiedAt,"dd/mm - HH:MM")
+    }
+    let pharmacist="Not applicable"
+    if(this.selectedValidation?.pharmacistName){
+      pharmacist = this.selectedValidation.pharmacistName
+    }
+    let notes=undefined;
+    if(this.selectedValidation?.notes){
+      notes = this.selectedValidation.notes;
+    }
+    return{
+      notes,pharmacist,validatedAt
+    }
   }
 }

@@ -70,4 +70,5 @@ export type ValidationDto = {
   status: ValidationStatus;
   notes?: string;
   createdAt: Date;
+  modifiedAt:Date;
 };
