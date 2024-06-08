@@ -62,7 +62,7 @@ export class DrugService {
         durationInSeconds:10,
         redirectionPath:"pharmacyValidation",
         queryParams:{
-          validationId:message.validationId,//TODO still missing
+          //validationId:message.validationId,//TODO still missing
           prescriptionId:message.id
         }
       }

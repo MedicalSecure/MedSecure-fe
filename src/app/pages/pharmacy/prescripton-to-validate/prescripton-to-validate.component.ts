@@ -203,6 +203,9 @@ export function getValidationStatus(validation: ValidationDto): string {
       return 'Validated';
     case ValidationStatus.Rejected:
       return 'Rejected';
+    case ValidationStatus.Cancelled:
+      return 'Cancelled';
+
     // Add cases for other statuses if they are uncommented in the enum
     default:
       return 'Unknown Status';

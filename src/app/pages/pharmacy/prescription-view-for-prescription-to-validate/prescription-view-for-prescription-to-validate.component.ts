@@ -62,6 +62,9 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   selectedPrescription: PrescriptionDto | undefined = undefined;
   enableActions = true;
 
+  private pharmacistName="Hammadi Pharmacist";
+  private PharmacistId="11111111-1111-1111-1111-111111114214";
+
   selectedUnitCare: UnitCare | undefined;
   selectedDiet: DietDto | undefined;
   selectedRoom: Room | undefined;
@@ -106,25 +109,37 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
       }
       if (this.prescriptionId) {
         this.fetchPrescriptionById(this.prescriptionId);
+        if(!this.validationId)
+          this.fetchValidationById(this.validationId,true);
       }
+
       if (!this.validationId && !this.prescriptionId) {
         console.error('Missing required parameters');
       }
     });
   }
 
-  fetchValidationById(validationId: string | null) {
+  fetchValidationById(validationId: string | null,searchByPrescriptionIdToo=false) {
     this.isValidationLoading = true;
     this.drugService.getValidations().subscribe(
       (response) => {
-        //debugger;
         if (
           response?.validations?.data ||
           response?.validations?.data.length > 0
         )
           this.selectedValidation = response.validations.data.find(
-            (p) => p.id === validationId
+            (p) => {
+              if(p.id === validationId) return true
+              //search by prescription id if applicable
+              if(this.prescriptionId && searchByPrescriptionIdToo)
+                 return p.prescriptionId === this.prescriptionId;
+              return false;
+            }
           );
+          if(this.selectedValidation){
+            if(this.selectedValidation.status != ValidationStatus.Pending)
+              this.enableActions = false;
+          }
       },
       (error) => {
         console.error(error);
@@ -132,6 +147,7 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
       () => (this.isValidationLoading = false)
     );
   }
+
 
   fetchUnitCareByBedId(bedId: string | null | undefined) {
     if (!bedId) return;
@@ -257,19 +273,28 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     this.selectedBodyParts = bodyParts;
   }
 
-  onClickConfirmPrescriptionHandler() {
+   onClickConfirmPrescriptionHandler() {
     if (!this.selectedValidation) return;
     if (this.selectedValidation?.status != ValidationStatus.Pending) return;
     this.isValidationLoading = true;
+
+    //TODO
+    this.selectedValidation.pharmacistId=this.PharmacistId;
+    this.selectedValidation.pharmacistName=this.pharmacistName;
+
     this.selectedValidation.status = ValidationStatus.Validated;
     this.drugService.putValidation(this.selectedValidation).subscribe(
-      (response) => {
+      async (response) => {
         var props: SnackBarMessageProps = {
           messageContent: 'Prescription is now active',
           messageType: snackbarMessageType.Success,
         };
+        await this.fetchPrescriptionById(response.validation.prescriptionId ?? this.prescriptionId)
+        await this.fetchValidationById(response.validation.id ?? this.validationId,true)
         this.snackBarMessagesService.displaySnackBarMessage(props);
         this.isValidationLoading = false;
+        this.enableActions = false;
+        
       },
       (error) => {
         console.error(error);
@@ -288,14 +313,21 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
     if (this.selectedValidation?.status != ValidationStatus.Pending) return;
     this.isValidationLoading = true;
     this.selectedValidation.status = ValidationStatus.Rejected;
+    this.selectedValidation.notes="You NEED TO FIX THIS"
+    this.selectedValidation.pharmacistId=this.PharmacistId;
+    this.selectedValidation.pharmacistName=this.pharmacistName;
+
     this.drugService.putValidation(this.selectedValidation).subscribe(
-      (response) => {
+      async (response) => {
         var props: SnackBarMessageProps = {
           messageContent: 'Prescription has been rejected',
           messageType: snackbarMessageType.Success,
         };
+        await this.fetchPrescriptionById(response.validation.prescriptionId ?? this.prescriptionId)
+        await this.fetchValidationById(response.validation.id ?? this.validationId,true)
         this.snackBarMessagesService.displaySnackBarMessage(props);
         this.isValidationLoading = false;
+        this.enableActions = false;
       },
       (error) => {
         console.error(error);
@@ -413,13 +445,16 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
       return {text:"Loading",class:'text-danger'};
 
     if(!this.selectedValidation)
-      return {text:"Error",class:'text-danger'};
+      return {text:"Pending",class:'text-warning'};
     
     if(this.selectedValidation.status==ValidationStatus.Pending)
       return {text:"Pending",class:'text-warning'};
 
     if(this.selectedValidation.status==ValidationStatus.Rejected)
       return {text:"Rejected",class:'text-danger'};
+
+    if(this.selectedValidation.status==ValidationStatus.Cancelled)
+      return {text:"Cancelled",class:'text-danger'};
 
     if(this.selectedValidation.status==ValidationStatus.Validated)
       return {text:"Validated",class:'text-success'};

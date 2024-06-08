@@ -48,6 +48,7 @@ export class Stp2PatientDetailsComponent {
 
   //caching for optimizing performance
   historiesMappedByDate:HistoryDto[]=[];
+  
 
   // sample data for cards
   constructor(
@@ -65,6 +66,7 @@ export class Stp2PatientDetailsComponent {
         this.isArchived = !isActive;
         this.currentStatus = this.getPatientStatus();
         this.fillHistoryMappedByDate();
+        this.MapPrescriptionByDate();
   
         this.errorMessage=undefined;
       } catch (error) {
@@ -100,7 +102,15 @@ export class Stp2PatientDetailsComponent {
       return b.date.getTime() - a.date.getTime()}
     )
     this.historiesMappedByDate =res ?? [];
-    
+  }
+
+  MapPrescriptionByDate(){
+    if(!this.inputRegister?.prescriptions)
+      return;
+    this.inputRegister.prescriptions=this.inputRegister.prescriptions
+      .sort((a, b) =>{
+        return b.createdAt.getTime() - a.createdAt.getTime()}
+      );
   }
   getDateString(date:Date,format:string){
     return getDateString(date,format)

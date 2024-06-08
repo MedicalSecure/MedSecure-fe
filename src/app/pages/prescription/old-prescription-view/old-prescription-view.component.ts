@@ -74,7 +74,8 @@ export class OldPrescriptionViewComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    console.log(this.selectedRegister);
+  
+    console.log(this.selectedPrescription);
 
     this.fetchMedications();
     this.mapSymptomsToBodyParts();
@@ -177,6 +178,39 @@ export class OldPrescriptionViewComponent {
     if (equipmentFound == undefined) return null;
     this.selectedBed = equipmentFound;
     return equipmentFound;
+  }
+
+  getValidationStatusInfo():{text:string,class:string}{
+    if(!this.selectedPrescription)
+      return {text:"Loading",class:'text-danger'};
+    
+    if(!this.selectedPrescription.validation)
+      return {text:"Pending",class:'text-warning'};
+    
+    if(this.selectedPrescription.validation.isValid)
+      return {text:"Validated",class:'text-success'};
+    else
+      return {text:"Rejected",class:'text-danger'};
+  }
+
+  getValidationActionInfo():{notes:string | undefined,pharmacist:string,validatedAt:string}{
+    if(!this.selectedPrescription)
+      return {notes:"Loading",pharmacist:"Loading",validatedAt:"Loading"}
+
+    if(!this.selectedPrescription.validation){
+      return {notes:undefined,pharmacist:"Not applicable",validatedAt:"Not applicable"}
+    }
+    let validatedAt="Not applicable"
+    
+    validatedAt = getDateString(this.selectedPrescription.validation.createdAt,"dd/mm - HH:MM")
+    
+
+    let pharmacist = this.selectedPrescription.validation.pharmacistName ?? "Not applicable";
+    let notes = this.selectedPrescription.validation.notes;
+    
+    return{
+      notes,pharmacist,validatedAt
+    }
   }
 
   getDietRange(diet:DietDto | undefined | null):string | null{

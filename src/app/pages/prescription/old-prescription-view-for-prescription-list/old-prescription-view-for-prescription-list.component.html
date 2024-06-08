@@ -104,30 +104,30 @@
           <h5 class="card-title"><strong> Symptoms</strong></h5>
           <div class="card-text">
             <ul>
-              <li *ngFor="let symptom of selectedPrescription.symptoms">
-                <strong>{{ symptom.name }}</strong>
+              <li *ngFor="let symptom of selectedPrescription.symptoms" [title]="symptom.longDescription">
+                <strong>{{ symptom.name }}</strong><i class="fa fa-info-circle ms-2" aria-hidden="true"></i>
               </li>
               <li *ngIf="!selectedPrescription.symptoms.length">There are no symptoms added for this prescription</li>
             </ul>
           </div>
         </div>
       </div>
-    
+
       <!-- Diagnosis -->
       <div ngxMasonryItem class="card masonry-item">
         <div class="card-body">
           <h5 class="card-title"><strong> Diagnosis</strong></h5>
           <div class="card-text">
             <ul>
-              <li *ngFor="let diag of selectedPrescription.diagnoses">
-                <strong>{{ diag.name }}</strong>
+              <li *ngFor="let diag of selectedPrescription.diagnoses" [title]="diag.longDescription">
+                <strong >{{ diag.name }}</strong><i class="fa fa-info-circle ms-2" aria-hidden="true"></i>
               </li>
               <li *ngIf="!selectedPrescription.diagnoses.length">There are no Diagnosis added for this prescription</li>
             </ul>
           </div>
         </div>
       </div>
-    
+        
       <!-- Hospitalization -->
       <div ngxMasonryItem class="card masonry-item">
         <div class="card-body">
@@ -195,6 +195,11 @@
             <div class="col-7">
               <p>Prescription Status :</p>
               <p>Editing Status :</p>
+              <p>Prescription Date :</p>
+              <p>Validation Status :</p>
+              <p>Validated At :</p>
+              <p>Validated By :</p>
+              <p>Notes :</p>
             </div>
             <div class="col-5">
               <p>
@@ -202,6 +207,27 @@
               </p>
               <p>
                 <strong>{{ [0, 1, 2].includes(selectedPrescription.status) && enableActions ? "Enabled" : "Disabled" }}</strong>
+              </p>
+              <p>
+                <strong>{{ getDateString(selectedPrescription.createdAt, "dd/mm - HH:MM") }}</strong>
+              </p>
+              <p><!-- Validation status -->
+                <strong [className]="getValidationStatusInfo().class">{{ getValidationStatusInfo().text }}</strong>
+              </p>
+              <p>
+                <strong>{{ getValidationActionInfo().validatedAt}}</strong>
+              </p>
+              <p>
+                <strong>{{ getValidationActionInfo().pharmacist}}</strong>
+              </p>
+              <p>
+                <strong *ngIf="!getValidationActionInfo().notes">No notes</strong>
+                <strong *ngIf="getValidationActionInfo().notes" 
+                [title]="getValidationActionInfo().notes"
+                style="text-decoration: underline;">
+                  View Notes 
+                </strong>
+                <i *ngIf="getValidationActionInfo().notes" class="fa fa-info-circle" aria-hidden="true"></i>
               </p>
             </div>
           </div>
