@@ -30,13 +30,8 @@ export class DrugService {
 
   constructor(private http: HttpClient , private snackBarMessages:SnackBarMessagesService) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-    //.withUrl('http://localhost:6004/medication-service/pharmacist') // 
     .withUrl('http://localhost:6008/pharmacist')
       .build();
-    this.hubConnection.on('ReceiveMessage', (message: string) => {
-      this.messageSubject.next(message);
-    });
-    this.startConnection();
   }
 
   apiUrl="http://localhost:6004/medication-service/api/v1";
@@ -49,13 +44,38 @@ export class DrugService {
     return this.http.get<any>(this.dataUrlDashboard);
   }
 
-  private startConnection() {
-    
+  public async disconnectSignalR(){
+    if(!this.hubConnection.connectionId)
+      return console.log("pharmacist already disconnected")
+    await this.hubConnection.stop();
+    var props: SnackBarMessageProps = {
+      messageContent: 'pharmacist Notification service disconnected',
+      messageType: snackbarMessageType.Warning,
+      durationInSeconds: 2,
+    };
+    this.snackBarMessages.displaySnackBarMessage(props);
+  }
 
-    this.hubConnection.start().then(() => {
+  public async connectSignalR() {
+    if(this.hubConnection.connectionId)
+      return console.log("pharmacist already connected")
+
+    await this.hubConnection.start().then(() => {
       console.log('SignalR connection established');
+      var props: SnackBarMessageProps = {
+        messageContent: 'Pharmacist Notification service connected',
+        messageType: snackbarMessageType.Info,
+        durationInSeconds: 2,
+      };
+      this.snackBarMessages.displaySnackBarMessage(props);
     }).catch(err => {
       console.error('Error establishing SignalR connection:', err);
+      var props: SnackBarMessageProps = {
+        messageContent: "Couldn't connect to Notification service, please refresh the page",
+        messageType: snackbarMessageType.Error,
+        durationInSeconds: 5,
+      };
+      this.snackBarMessages.displaySnackBarMessage(props);
     });
 
     this.hubConnection.on('PrescriptionToValidateEvent', (message: any) => {
