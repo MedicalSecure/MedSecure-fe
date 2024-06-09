@@ -27,7 +27,14 @@ import { RetryInterceptor } from '../../config/httpInterceptor';
 import { RegisterDto } from '../../model/Registration';
 import { RegistrationService } from '../registration/registration.service';
 import { SnackBarMessagesService } from '../util/snack-bar-messages.service';
-import { SnackBarMessageProps, snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
+import {
+  SnackBarMessageProps,
+  snackbarMessageType,
+} from '../../components/snack-bar-messages/snack-bar-messages.component';
+import {
+  NewRegisterSharedEvent,
+  RegisterEvent,
+} from '../../model/events/RegisterEvents';
 @Injectable({
   providedIn: 'root',
 })
@@ -42,11 +49,13 @@ export class PrescriptionApiService implements ActivityService {
   private messageSubject = new Subject<any>();
   message$ = this.messageSubject.asObservable();
 
-  constructor(private http: HttpClient ,
-     private snackBarMessages:SnackBarMessagesService,
-     public registrationService: RegistrationService) {
+  constructor(
+    private http: HttpClient,
+    private snackBarMessages: SnackBarMessagesService,
+    public registrationService: RegistrationService
+  ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl(this.hubUrl)
+      .withUrl(this.hubUrl)
       .build();
     this.hubConnection.on('ReceiveMessage', (message: string) => {
       this.messageSubject.next(message);
@@ -55,27 +64,48 @@ export class PrescriptionApiService implements ActivityService {
   }
 
   private startConnection() {
-    
-
-    this.hubConnection.start().then(() => {
-      console.log('SignalR connection established');
-    }).catch(err => {
-      console.error('Error establishing SignalR connection:', err);
-    });
+    this.hubConnection
+      .start()
+      .then(() => {
+        console.log('SignalR connection established');
+      })
+      .catch((err) => {
+        console.error('Error establishing SignalR connection:', err);
+      });
 
     //PrescriptionValidationSharedEvent
     this.hubConnection.on('PrescriptionRejected', (message: any) => {
       console.log('Received PrescriptionRejected: ', message);
-      var props:SnackBarMessageProps={
-        messageContent:"A prescription has been rejected",
-        messageType:snackbarMessageType.Warning,
-        durationInSeconds:10,
-        redirectionPath:"prescribe",
-        queryParams:{
-          prescriptionId:message.PrescriptionId
-        }
-      }
-      this.snackBarMessages.displaySnackBarMessage(props)
+      var props: SnackBarMessageProps = {
+        messageContent: 'A prescription has been rejected',
+        messageType: snackbarMessageType.Warning,
+        durationInSeconds: 10,
+        redirectionPath: 'prescribe',
+        queryParams: {
+          prescriptionId: message.PrescriptionId,
+        },
+      };
+      this.snackBarMessages.displaySnackBarMessage(props);
+      // Handle the received prescription message here
+    });
+
+    //NewRegisterSharedEvent
+    this.hubConnection.on('NewRegister', (message: NewRegisterSharedEvent) => {
+      console.log('Received new register: ', message);
+      let queryParams: { registerId: string } | undefined = undefined;
+      if (message.register.id)
+        queryParams = {
+          registerId: message.register.id,
+        };
+
+      var props: SnackBarMessageProps = {
+        messageContent: 'A new patient is waiting for you',
+        messageType: snackbarMessageType.Info,
+        durationInSeconds: 10,
+        redirectionPath: 'prescribe',
+        queryParams: queryParams,
+      };
+      this.snackBarMessages.displaySnackBarMessage(props);
       // Handle the received prescription message here
     });
   }
@@ -97,27 +127,24 @@ export class PrescriptionApiService implements ActivityService {
     return x;
   }
 
-
   getPrescriptionById(
     registerId: string,
     maxRetries: number = 3,
     retryDelayInMs: number = 300,
     displayErrorMessages: boolean = true
   ): Observable<GetPrescriptionsResponse> {
-
-     const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
+    const interceptorHeaders = RetryInterceptor.CreateInterceptorHeaders(
       maxRetries,
       retryDelayInMs,
       displayErrorMessages
-    ); 
+    );
 
     return this.http
-      .get<GetPrescriptionsResponse>(this.apiUrl+ `/${registerId}`, {
+      .get<GetPrescriptionsResponse>(this.apiUrl + `/${registerId}`, {
         headers: interceptorHeaders,
       })
       .pipe(map((response) => parseDates(response)));
   }
-
 
   postPrescriptions(prescriptionDto: PrescriptionCreateDto) {
     const postPrescriptionRequest: CreatePrescriptionRequest = {
@@ -249,7 +276,6 @@ export class PrescriptionApiService implements ActivityService {
       .pipe(map((response) => parseDates(response)));
   }
 
-
   public static async getRegistrationsWithPrescriptions(
     service: PrescriptionApiService,
     pageIndex: number = 0,
@@ -257,18 +283,19 @@ export class PrescriptionApiService implements ActivityService {
     maxRetries: number = 3,
     retryDelayInMs: number = 1000,
     displayErrorMessages: boolean = true,
-    filterArchivedPatients=true
+    filterArchivedPatients = true
   ): Promise<RegisterWithPrescriptionsDict | null> {
-
     let registrations = await firstValueFrom(
       service.registrationService.getRegistrations(pageIndex, pageSize)
-    );//fetch the Page size registers first
+    ); //fetch the Page size registers first
 
     if (!registrations) return null;
     let registrationsData = registrations.registers.data;
-    if(filterArchivedPatients)
-      registrationsData=registrationsData.filter(reg=> reg.status== RegisterStatus.Active)
-    
+    if (filterArchivedPatients)
+      registrationsData = registrationsData.filter(
+        (reg) => reg.status == RegisterStatus.Active
+      );
+
     // get the Ids as list from the fetched register => to get prescriptions by register ids
     const ids = registrations.registers.data
       .map((item) => item.id)
@@ -282,20 +309,25 @@ export class PrescriptionApiService implements ActivityService {
       )
       .toPromise();
 
-    if (!prescriptionsByRegistrationsId ||prescriptionsByRegistrationsId == undefined)
+    if (
+      !prescriptionsByRegistrationsId ||
+      prescriptionsByRegistrationsId == undefined
+    )
       return null;
 
-    let result:RegisterWithPrescriptionsDict={};
+    let result: RegisterWithPrescriptionsDict = {};
 
     registrationsData.forEach((registration) => {
       if (!prescriptionsByRegistrationsId) return;
 
-      let registerId = registration.id as keyof typeof prescriptionsByRegistrationsId.prescriptionsByRegisterId;
+      let registerId =
+        registration.id as keyof typeof prescriptionsByRegistrationsId.prescriptionsByRegisterId;
 
-      let newObj:RegisterWithPrescriptions={
-        register:registration,
-        prescriptions:prescriptionsByRegistrationsId!.prescriptionsByRegisterId[registerId]
-      } 
+      let newObj: RegisterWithPrescriptions = {
+        register: registration,
+        prescriptions:
+          prescriptionsByRegistrationsId!.prescriptionsByRegisterId[registerId],
+      };
       //key : register Id, value : {register,prescriptions}
       result[registerId] = newObj;
     });
@@ -309,7 +341,6 @@ export class PrescriptionApiService implements ActivityService {
      */
     return result;
   }
-
 }
 
 export function parseDates<T>(response: T): T {
