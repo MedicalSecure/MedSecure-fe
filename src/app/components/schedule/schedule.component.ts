@@ -39,9 +39,6 @@ export class ScheduleComponent implements OnInit {
   persistCache: boolean = true;
   private _partsOfDayHoursMapped: Dispense[][];
 
-  get hourClasses() {
-    return _hourClassesMap;
-  }
   get partsOfDayNames() {
     return _partsOfDayNamesMap;
   }
@@ -57,7 +54,7 @@ export class ScheduleComponent implements OnInit {
       const timezoneHours: Dispense[] = [];
       for (const hoursNumber of timezone) {
         for (const hourObj of this.partsOfDayHours) {
-          if (hoursNumber === hourObj.hour) {
+          if (hoursNumber == hourObj.hour) {
             timezoneHours.push(hourObj);
           }
         }
@@ -104,6 +101,14 @@ export class ScheduleComponent implements OnInit {
     this._emitChanges();
   }
 
+  GetHourClasses(hour:string|number){
+    for (const key of Object.keys(_hourClassesMap)) {
+      if(key==hour)
+        return _hourClassesMap[key];
+    }
+    return "Pre-Dawn/Dawn";
+  }
+
   updateHourValue(
     HourObject: Dispense,
     isBeforeFood: boolean,
@@ -117,18 +122,18 @@ export class ScheduleComponent implements OnInit {
     // if the values is 0 => parse it into EmptyString ""
 
     if (isBeforeFood) {
-      if (newHourObject.beforeMeal?.Quantity != undefined) {
+      if (newHourObject.beforeMeal?.quantity != undefined) {
         try {
-          oldValue = parseInt(newHourObject.beforeMeal?.Quantity || '');
+          oldValue = parseInt(newHourObject.beforeMeal?.quantity || '');
           if (Number.isNaN(oldValue)) oldValue = 0;
         } catch (error) {
           oldValue = 0;
         }
       }
     } else {
-      if (newHourObject.afterMeal?.Quantity != undefined) {
+      if (newHourObject.afterMeal?.quantity != undefined) {
         try {
-          oldValue = parseInt(newHourObject.afterMeal?.Quantity || '');
+          oldValue = parseInt(newHourObject.afterMeal?.quantity || '');
           if (Number.isNaN(oldValue)) oldValue = 0;
         } catch (error) {
           oldValue = 0;
@@ -141,23 +146,23 @@ export class ScheduleComponent implements OnInit {
     if (isBeforeFood) {
       if (newHourObject.beforeMeal == undefined) {
         newHourObject.beforeMeal = {
-          Quantity: finalValue,
+          quantity: finalValue,
           isPostValid: false,
           isValid: false,
         };
       } else {
-        newHourObject.beforeMeal.Quantity = finalValue;
+        newHourObject.beforeMeal.quantity = finalValue;
       }
     }
     if (!isBeforeFood) {
       if (newHourObject.afterMeal == undefined) {
         newHourObject.afterMeal = {
-          Quantity: finalValue,
+          quantity: finalValue,
           isPostValid: false,
           isValid: false,
         };
       } else {
-        newHourObject.afterMeal.Quantity = finalValue;
+        newHourObject.afterMeal.quantity = finalValue;
       }
     }
 
@@ -236,18 +241,7 @@ export class ScheduleComponent implements OnInit {
   private _emitChanges() {
     // filter empty objects before emitting in some cases
     this.partsOfDayHoursChange.emit(this.partsOfDayHours);
-    let filteredList = this.partsOfDayHours.filter((item) => {
-      let isBeforeFoodEmpty =
-        item.beforeMeal == undefined ||
-        item.beforeMeal.Quantity == '' ||
-        item.beforeMeal.Quantity == undefined;
-      let isAfterFoodEmpty =
-        item.afterMeal == undefined ||
-        item.afterMeal.Quantity == '' ||
-        item.afterMeal.Quantity == undefined;
-      if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
-      return true;
-    });
+    let filteredList = filterScheduleItems(this.partsOfDayHours);
     this.filteredPartsOfDayHoursChange.emit(filteredList);
   }
 
@@ -257,19 +251,79 @@ export class ScheduleComponent implements OnInit {
     this.partsOfDayHours = initialData.map((hourObj) => {
       if (hourObj.afterMeal == undefined)
         hourObj.afterMeal = {
-          Quantity: '',
+          quantity: '',
           isPostValid: false,
           isValid: false,
         };
       if (hourObj.beforeMeal == undefined)
         hourObj.beforeMeal = {
-          Quantity: '',
+          quantity: '',
           isPostValid: false,
           isValid: false,
         };
       return hourObj;
     });
   }
+}
+
+/**
+ * filter empty Hours
+ * remove the full hour if the TWO DOSES ARE EMPTY !!
+ * if the hour has one dose, it wont be filtered, use filterScheduleDoses
+ * @param { Dispense[]} unFilteredList - The unfiltered list
+ */
+export function filterScheduleItems(unFilteredList: Dispense[]): Dispense[] {
+  //
+  return unFilteredList.filter((item) => {
+    let isBeforeFoodEmpty =
+      item.beforeMeal == undefined ||
+      item.beforeMeal.quantity == '' ||
+      item.beforeMeal.quantity == undefined;
+    let isAfterFoodEmpty =
+      item.afterMeal == undefined ||
+      item.afterMeal.quantity == '' ||
+      item.afterMeal.quantity == undefined;
+    if (isBeforeFoodEmpty && isAfterFoodEmpty) return false;
+    return true;
+  });
+}
+
+/**
+ * filter empty Hours and  Doses too
+ * remove the full hour if the TWO DOSES ARE EMPTY !!
+ * remove the Empty quantity dose if the other dose exist
+ * so if you have beforeMeal filled but afterMeal quantity is empty, the afterMeal dose will be removed entirely
+ * @param { Dispense[]} unFilteredList - The unfiltered list
+ */
+export function filterScheduleDoses(unFilteredList: Dispense[]): Dispense[] {
+  let filteredList: Dispense[] = [];
+  unFilteredList.forEach((item) => {
+    let isBeforeFoodEmpty =
+      item.beforeMeal == undefined ||
+      item.beforeMeal.quantity == '' ||
+      item.beforeMeal.quantity == undefined;
+    let isAfterFoodEmpty =
+      item.afterMeal == undefined ||
+      item.afterMeal.quantity == '' ||
+      item.afterMeal.quantity == undefined;
+    //remove the full hour object (skip it)
+    if (isBeforeFoodEmpty && isAfterFoodEmpty) return;
+
+    //push the full hour object 
+    if(!isBeforeFoodEmpty && !isAfterFoodEmpty){
+      filteredList.push(item);
+      return;
+    }
+
+    //add half filled hour object (afterMeal)
+    if (isBeforeFoodEmpty)
+      filteredList.push({ hour: item.hour, afterMeal: item.afterMeal });
+
+    //add half filled hour object (beforeMeal)
+    if (isAfterFoodEmpty)
+      filteredList.push({ hour: item.hour, beforeMeal: item.beforeMeal });
+  });
+  return filteredList;
 }
 
 const _initialPartsOfDayHours: Dispense[] = [
@@ -372,7 +426,7 @@ export type Dispense = {
 };
 
 export type Dose = {
-  Quantity?: string;
+  quantity: string;
   isValid: boolean;
   isPostValid: boolean;
 };

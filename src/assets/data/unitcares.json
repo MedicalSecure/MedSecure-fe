@@ -1,0 +1,201 @@
+{
+  "unitCares": {
+    "pageIndex": 1,
+    "pageSize": 6,
+    "count": 6,
+    "data": [
+      {
+        "id": "da533a05-82cc-48c4-91c3-05d66b83b7d8",
+        "type": "Type 1",
+        "description": "Description 1",
+        "title": "Title 1",
+        "rooms": [
+          {
+            "id": "3c78859b-d22f-4a4e-8537-b51d6ecf11d0",
+            "unitCareId": "da533a05-82cc-48c4-91c3-05d66b83b7d8",
+            "roomNumber": 101,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "33333333-3333-3333-3333-333333333333",
+                "roomId": "3c78859b-d22f-4a4e-8537-b51d6ecf11d0",
+                "name": "Bed",
+                "eqStatus": 1,
+                "reference": "Ref 1"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "ab5b28d1-547b-41d1-81f8-5f429e1ed9f0",
+            "unitCareId": "da533a05-82cc-48c4-91c3-05d66b83b7d8",
+            "name": "Personnel 1",
+            "shift": 1,
+            "gender": 1
+          }
+        ]
+      },
+      {
+        "id": "15bc1b6b-9aae-4eaa-b508-14863d10a924",
+        "type": "Type 2",
+        "description": "Description 2",
+        "title": "Title 2",
+        "rooms": [
+          {
+            "id": "8b1e7f85-cc27-4735-98c3-6c4fe2011f81",
+            "unitCareId": "15bc1b6b-9aae-4eaa-b508-14863d10a924",
+            "roomNumber": 102,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "d681e76d-526d-4d2d-a861-358e8ffbe75d",
+                "roomId": "8b1e7f85-cc27-4735-98c3-6c4fe2011f81",
+                "name": "Equipment 2",
+                "reference": "Ref 2"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "b4db3f6b-6a91-4724-9c4d-daf1797a4a8c",
+            "unitCareId": "15bc1b6b-9aae-4eaa-b508-14863d10a924",
+            "name": "Personnel 2",
+            "shift": 2,
+            "gender": 2
+          }
+        ]
+      },
+      {
+        "id": "38e46d3b-eb2a-4840-8c0b-22c8477b889e",
+        "type": "Type 3",
+        "description": "Description 3",
+        "title": "Title 3",
+        "rooms": [
+          {
+            "id": "36c8e632-69c2-4094-baf5-bf03a033a9ff",
+            "unitCareId": "38e46d3b-eb2a-4840-8c0b-22c8477b889e",
+            "roomNumber": 103,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "33d3a631-52e9-45a9-9332-7dd96cb3e35e",
+                "roomId": "36c8e632-69c2-4094-baf5-bf03a033a9ff",
+                "name": "Bed",
+                "eqStatus": 1,
+                "reference": "Ref 3"
+                
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "b20a51d3-7c94-41a4-8f26-fc0761f49ef8",
+            "unitCareId": "38e46d3b-eb2a-4840-8c0b-22c8477b889e",
+            "name": "Personnel 3",
+            "shift": 3,
+            "gender": 1
+          }
+        ]
+      },
+      {
+        "id": "e90cf3e8-d2b7-45d8-a2bc-6f16e3b3a302",
+        "type": "Type 4",
+        "description": "Description 4",
+        "title": "Title 4",
+        "rooms": [
+          {
+            "id": "aaf9a0f7-bb1a-41c0-bf1b-d1dbb7845ed3",
+            "unitCareId": "e90cf3e8-d2b7-45d8-a2bc-6f16e3b3a302",
+            "roomNumber": 104,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "4d196fbf-fb15-46b4-b1d2-b9ff9ef7cb45",
+                "roomId": "aaf9a0f7-bb1a-41c0-bf1b-d1dbb7845ed3",
+                "reference": "Ref 4",
+                "name": "Bed",
+                "eqStatus": 1
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "84b46b7e-141b-4b5d-9c51-cf8c748a797f",
+            "unitCareId": "e90cf3e8-d2b7-45d8-a2bc-6f16e3b3a302",
+            "name": "Personnel 4",
+            "shift": 1,
+            "gender": 2
+          }
+        ]
+      },
+      {
+        "id": "65f2fe46-6930-4052-8d64-27a88276a9a9",
+        "type": "Type 5",
+        "description": "Description 5",
+        "title": "Title 5",
+        "rooms": [
+          {
+            "id": "18fd95e3-d48d-4f47-892d-ff94de5f072b",
+            "unitCareId": "65f2fe46-6930-4052-8d64-27a88276a9a9",
+            "roomNumber": 105,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "ecbc82ff-5745-4ba4-9af8-93f0a9b82fe5",
+                "roomId": "18fd95e3-d48d-4f47-892d-ff94de5f072b",
+                "name": "Bed",
+                "eqStatus": 2,
+                "reference": "Ref 5"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "0382cd48-dad4-4397-8039-dce5aaef1284",
+            "unitCareId": "65f2fe46-6930-4052-8d64-27a88276a9a9",
+            "name": "Personnel 5",
+            "shift": 2,
+            "gender": 1
+          }
+        ]
+      },
+      {
+        "id": "1c90e79c-d54a-4842-92b1-54f6952bfa24",
+        "type": "Type 6",
+        "description": "Description 6",
+        "title": "Title 6",
+        "rooms": [
+          {
+            "id": "8ed51781-d238-45f7-9866-fc55cf4b0891",
+            "unitCareId": "1c90e79c-d54a-4842-92b1-54f6952bfa24",
+            "roomNumber": 106,
+            "status": 1,
+            "equipments": [
+              {
+                "id": "b36a231e-f205-4d2e-9c97-1f504f8a7585",
+                "roomId": "8ed51781-d238-45f7-9866-fc55cf4b0891",
+                "name": "Bed",
+                "eqStatus": 0,
+                "reference": "Ref 6"
+              }
+            ]
+          }
+        ],
+        "personnels": [
+          {
+            "id": "44c74cd4-1c25-4ef3-9dc3-180e0a3ae22b",
+            "unitCareId": "1c90e79c-d54a-4842-92b1-54f6952bfa24",
+            "name": "Personnel 6",
+            "shift": 3,
+            "gender": 2
+          }
+        ]
+      }
+    ]
+  }
+}

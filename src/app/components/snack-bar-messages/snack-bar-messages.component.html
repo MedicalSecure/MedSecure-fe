@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-between align-content-center align-items-center" style="width: fit-content; min-width: 21rem; min-height: 3.2rem">
+    <!-- Error message  -->
+  <div *ngIf="messageType == 'Error'" >
+    <span class="fw-bold text-danger p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==false">{{ title }}</span>
+    <span class="fw-bold text-danger p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==true"><i class="fa fa-exclamation-circle fs-5" aria-hidden="true"></i></span>
+    <span class="text-white-50 p-0 me-1 my-auto" matSnackBarLabel>{{ message.slice(0,70) }} <i class="fa fa-external-link ms-1" *ngIf="this.redirectionPath" aria-hidden="true"></i></span>
+  </div>
+
+    <!-- Info message  -->
+  <div *ngIf="messageType == 'Info'" (click)="handleRedirect()" [style]="this.redirectionPath ? 'cursor: pointer;': ''">
+    <span class="fw-bold text-info p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==false">{{ title }}</span>
+    <span class="fw-bold text-info p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==true"><i class="fa fa-info-circle fs-5" aria-hidden="true"></i></span>
+    <span class="text-white p-0 me-1 my-auto" matSnackBarLabel>{{ message.slice(0,70) }} <i class="fa fa-external-link ms-1" *ngIf="this.redirectionPath" aria-hidden="true"></i></span>
+  </div>
+
+  <!-- Warning message  -->
+  <div *ngIf="messageType == 'Warning'" (click)="handleRedirect()" [style]="this.redirectionPath ? 'cursor: pointer;': ''">
+    <span class="fw-bold text-warning p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==false">{{ title }}</span>
+    <span class="fw-bold text-warning p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==true"><i class="fa fa-exclamation-triangle fs-5" aria-hidden="true"></i></span>
+    <span class="text-white p-0 me-1 my-auto" matSnackBarLabel>{{ message.slice(0,70) }}<i class="fa fa-external-link ms-1" *ngIf="this.redirectionPath" aria-hidden="true"></i></span>
+  </div>
+
+  <!-- Success message  -->
+  <div *ngIf="messageType == 'Success'" (click)="handleRedirect()" [style]="this.redirectionPath ? 'cursor: pointer;' : ''">
+    <span class="fw-bold text-success p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==false">{{ title }}</span>
+    <span class="fw-bold text-success p-0 mx-2 my-auto" matSnackBarLabel *ngIf="showIcon==true"><i class="fa fa-check-circle-o fs-5" aria-hidden="true"></i></span>
+    <span class="text-white p-0 me-1 my-auto" matSnackBarLabel>{{ message.slice(0,70) }} <i class="fa fa-external-link ms-1" *ngIf="this.redirectionPath" aria-hidden="true"></i></span>
+  </div>
+  
+  <mat-icon mat-button (click)="snackBarRef.dismissWithAction()" class="text-white p-0 my-auto">close</mat-icon>
+</div>

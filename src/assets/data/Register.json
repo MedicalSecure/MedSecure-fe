@@ -1,0 +1,95 @@
+{
+    "Register": {
+      "Id": "register-1",
+      "Patient": {
+        "Id": "patient-1",
+        "FirstName": "John",
+        "LastName": "Doe",
+        "DateOfBirth": "1980-01-01T00:00:00",
+        "Identity": "123456789",
+        "CNAM": 12345,
+        "Assurance": "MyInsurance",
+        "Gender": "Male",
+        "Height": 180,
+        "Weight": 75,
+        "AddressIsRegisterations": true,
+        "SaveForNextTime": false,
+        "Email": "john.doe@example.com",
+        "Address1": "123 Main St",
+        "Address2": "Apt 4B",
+        "Country": "USA",
+        "State": "NY",
+        "ZipCode": 10001,
+        "FamilyStatus": "Single",
+        "Children": null
+      },
+      "Tests": [
+        {
+          "Id": "test-1",
+          "Name": "Blood Test",
+          "Result": "Positive"
+        }
+      ],
+      "FamilyMedicalHistory": [
+        {
+          "Id": "riskfactor-1",
+          "Key": "Diabetes",
+          "Value": "Yes",
+          "Code": "DIA",
+          "Description": "Family history of diabetes",
+          "IsSelected": true,
+          "Type": "Family",
+          "Icon": "icon-diabetes",
+          "SubRiskFactors": []
+        }
+      ],
+      "PersonalMedicalHistory": [
+        {
+          "Id": "riskfactor-2",
+          "Key": "Hypertension",
+          "Value": "Yes",
+          "Code": "HYP",
+          "Description": "Personal history of hypertension",
+          "IsSelected": true,
+          "Type": "Personal",
+          "Icon": "icon-hypertension",
+          "SubRiskFactors": []
+        }
+      ],
+      "Disease": [
+        {
+          "Id": "riskfactor-3",
+          "Key": "Asthma",
+          "Value": "Yes",
+          "Code": "AST",
+          "Description": "Diagnosed with asthma",
+          "IsSelected": true,
+          "Type": "Disease",
+          "Icon": "icon-asthma",
+          "SubRiskFactors": []
+        }
+      ],
+      "Allergy": [
+        {
+          "Id": "riskfactor-4",
+          "Key": "Peanuts",
+          "Value": "Yes",
+          "Code": "PEA",
+          "Description": "Allergic to peanuts",
+          "IsSelected": true,
+          "Type": "Allergy",
+          "Icon": "icon-peanuts",
+          "SubRiskFactors": []
+        }
+      ],
+      "History": [
+        {
+          "Id": "history-1",
+          "Date": "2023-05-01T00:00:00",
+          "Status": "Completed",
+          "RegisterId": "register-1"
+        }
+      ]
+    }
+  }
+  

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { CalendarEventType, CalendarShedulerComponent } from '../../components/calendar-scheduler/calendar-scheduler.component';
+import {  CalendarShedulerComponent } from '../../components/calendar-scheduler/calendar-scheduler.component';
+import { CalendarEventType} from '../../interface/CalendarEventType';
 import { RouterModule } from '@angular/router';
 
 

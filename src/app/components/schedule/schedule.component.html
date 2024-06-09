@@ -7,8 +7,8 @@
       <div class="d-flex me-2" *ngFor="let partOfDayHours of partsOfDayHoursMapped; let partOfDayIndex = index">
         <div class="py-1" *ngFor="let hourItem of partOfDayHours; let hourIndex = index">
           <div
-            *ngIf="showEmptyCases || (!showEmptyCases && (hourItem.afterMeal?.Quantity || hourItem.beforeMeal?.Quantity))"
-            class="mr-1 cursor-pointer {{ hourClasses[hourItem.hour] }} color-white"
+            *ngIf="showEmptyCases || (!showEmptyCases && (hourItem.afterMeal?.quantity || hourItem.beforeMeal?.quantity))"
+            class="mr-1 cursor-pointer {{ GetHourClasses(hourItem.hour) }} color-white"
             style="width: 2.2rem; height: fit-content; border-radius: 8px"
           >
             <div class="card-header p-0 text-center" [title]="partsOfDayNames[hourItem.hour]">
@@ -20,7 +20,7 @@
                   class="form-control text-center"
                   style="padding: 0%"
                   [disabled]="isDispenseQuantityReadOnly"
-                  [value]="hourItem.beforeMeal?.Quantity ? hourItem.beforeMeal?.Quantity : ''"
+                  [value]="hourItem.beforeMeal?.quantity ? hourItem.beforeMeal?.quantity : ''"
                   (input)="onInputChange($event)"
                   pattern="[0-9]*"
                   (change)="onInputFinalChange($event, partOfDayIndex, hourIndex, hourItem, true)"
@@ -59,7 +59,7 @@
                   class="form-control text-center"
                   style="padding: 0%"
                   [disabled]="isDispenseQuantityReadOnly"
-                  [value]="hourItem.afterMeal?.Quantity ? hourItem.afterMeal?.Quantity : ''"
+                  [value]="hourItem.afterMeal?.quantity ? hourItem.afterMeal?.quantity : ''"
                   (input)="onInputChange($event)"
                   pattern="[0-9]*"
                   (change)="onInputFinalChange($event, partOfDayIndex, hourIndex, hourItem, false)"

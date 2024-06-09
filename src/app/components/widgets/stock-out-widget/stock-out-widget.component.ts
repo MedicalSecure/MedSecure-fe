@@ -33,7 +33,7 @@ export class StockOutWidgetComponent implements OnChanges{
  @Input() medicationData: Medication[] = [];
   public chartOptions!: Partial<ChartOptions>;
   constructor() {
-    
+
   }
 
   ngOnChanges(): void {
@@ -53,13 +53,13 @@ export class StockOutWidgetComponent implements OnChanges{
                   name: "Stock Alerte",
                   value: i.StockAlerte,
                   strokeWidth: 4,
-                  strokeColor: "#EDDF38" 
+                  strokeColor: "#EDDF38"
                 },
                 {
                   name: "Stock Min",
                   value: i.StockMin,
                   strokeWidth: 4,
-                  strokeColor: "#0ABF6A" 
+                  strokeColor: "#0ABF6A"
                 },
                 {
                   name: "Stock Securite",
@@ -75,21 +75,25 @@ export class StockOutWidgetComponent implements OnChanges{
           height: 350,
           type: "bar",
         },
-      
+
         plotOptions: {
           bar: {
             horizontal: true
           }
         },
         title: {
-          text: "Liste des medicaments en repture de stock "
+          text: "list of out-of-stock medicines",
+          style: {
+            fontSize: '16px',
+            fontFamily: 'Manrope, sans-serif',
+          }
         },
         colors: ["#FF0000"],
         dataLabels: {
           formatter: function (val: any, opts: any) {
             const goals =
               opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].goals;
-  
+
             if (goals && goals.length) {
               return `${val} / ${goals[0].value}`;
             }
@@ -99,13 +103,15 @@ export class StockOutWidgetComponent implements OnChanges{
         legend: {
           show: true,
           showForSingleSeries: true,
+          fontFamily: 'Manrope, sans-serif',
           customLegendItems: ["Stock Disponible","Stock Securite","Stock Min","Stock Alerte"],
           markers: {
             fillColors: ["#FF0000","#360ABF","#0ABF6A","#EDDF38"]
           }
-        }
+        },
+
+
       };
     }
   }
-  
-  
+

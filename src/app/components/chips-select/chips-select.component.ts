@@ -1,10 +1,11 @@
-import { COMMA, ENTER, V } from '@angular/cdk/keycodes';
+import { COMMA, ENTER} from '@angular/cdk/keycodes';
 import {
   Component,
   ElementRef,
   EventEmitter,
   Input,
   Output,
+  SimpleChanges,
   ViewChild,
   inject,
 } from '@angular/core';
@@ -12,6 +13,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocompleteSelectedEvent,
   MatAutocompleteModule,
+  MatAutocompleteTrigger,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { Observable, Subscription } from 'rxjs';
@@ -22,6 +24,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { URL_REGEX } from '../../shared/const';
+import { MatProgressBar } from '@angular/material/progress-bar';
+
 /**
  * @title Chips Autocomplete
  */
@@ -39,33 +43,104 @@ import { URL_REGEX } from '../../shared/const';
     ReactiveFormsModule,
     AsyncPipe,
     MatTooltipModule,
+    MatProgressBar
   ],
 })
 export class ShipsSelectComponent<T> {
   @Input() ObjectName!: string;
   @Input() customLabel!: string;
-  @Input() searchPropertyName: string = 'label';
-  @Input() imagePropertyName: string = ''; // optional : add the property name of the image
+  @Input() searchPropertyName: keyof T;
+
+  @Input() tooltipPropertyName: keyof T; // optional : add the property name to display tooltip text
+
+  @Input() imagePropertyName: keyof T; // optional : add the property name of the image
   @Input() minimumSearchLength: number = 2;
   @Input() minimumAddedLabelLength: number = 5;
+  @Input() maximumNumberOfAddedItems: number = -1; //-1 is unlimited
   @Input() class: string = '';
   @Input() enableCustomAdditions: boolean = true;
   @Input() enableQuickSelectFromSuggestions: boolean = true;
   @Input() isStartWithSearch: boolean = false;
-  @Input() fullData: any[] = [{ index: 1, label: 'test', value: '5555' }];
+  @Input() fullData: T[] = [];
+  @Input() disabled: boolean = false;
+  @Input() selectedChips: T[] = [];
+  @Input() isLoading: boolean = false;
+
+
+  keepFilterAfterSelection = false;
+  updatedSuggestionList: T[] = [];
+
+  @Output() selectedChipsChange = new EventEmitter<
+    onChipsSelectionEmitType<T>
+  >();
+
+  /* assure that the input propertyName refers to string prop?
+    type StringKeys<T> = {
+    [K in keyof T]: T[K] extends string ? K : never;
+  }[keyof T];
+  interface MyComponent<T extends object> {
+    @Input() tooltipPropertyName: StringKeys<T>;
+  }
+  */
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
+  // we gonna cache the input value minimumSearchLength so we can work with the minSearchLength instead, so we can set it sometimes to ZERO (incase of forceSuggest)
+  //and be able to reset it to minimumSearchLength(from the parent / default settings)
+  minSearchLength: number = 2;
   ObjectControl = new FormControl<string | any>('');
-  filteredDataByInput: Observable<any[]>;
+  filteredDataByInput: Observable<T[]>;
   filteredDataSubscription!: Subscription;
-  updatedSuggestionList: any[] = [];
-  selectedObjects: any[] = [];
   private _isAdditionEnabled: boolean = false;
 
   @ViewChild('ValueInput') ValueInput!: ElementRef<HTMLInputElement>;
   announcer = inject(LiveAnnouncer);
 
-  @Output() selectedChipsChange = new EventEmitter<onChipsSelectionEmitType<T>>();
+  @ViewChild('autoInput', { read: MatAutocompleteTrigger })
+  autoCompleteTrigger: MatAutocompleteTrigger;
+
+  handleForcedSuggestions(
+    handleForcedSuggestions: handleForcedSuggestionsAction<T>
+  ) {
+    //handleForcedSuggestions(newFilteredData:T[],keepFilterAfterSelection=false,handleForcedSuggestionsParams) {
+    let keepFilterAfterSelection =
+      handleForcedSuggestions?.keepFilterAfterSelection ?? false;
+    let newFilteredData = handleForcedSuggestions.newFilteredData;
+    let forceReset = handleForcedSuggestions?.forceReset ?? false;
+
+    this.keepFilterAfterSelection = keepFilterAfterSelection;
+
+    //newFilteredData in case of force reset, it must be the full original data ( handled by the parent )
+    if (forceReset) {
+      this.minSearchLength = this.minimumSearchLength;
+      this.fullData = newFilteredData;
+      return;
+    }
+
+    // else :
+    //newFilteredData is gonna be the given data filtered by body Part
+
+    //updatedSuggestionList is the new filtered data but also filtered by input and already selected ones
+    //its just temporary list viewed once!! then it will be filtered from the fullData list
+    //this helps for example when you tape in the input two letters XY then click on the LEG in the body
+    //it will suggest the selected leg symptoms but also filter by XY search ! and even don't suggest the already selected ones!
+    const inputValue = this.ObjectControl.value ? this.ObjectControl.value : '';
+    let filteredBySearch = this._filter(inputValue, newFilteredData);
+    this.updatedSuggestionList = filteredBySearch.filter(
+      (item) => !this.selectedChips.includes(item)
+    );
+
+    // params for the suggestion panel to open!
+    if (this.autoCompleteTrigger && this.fullData.length > 0) {
+      this.minSearchLength = 0;
+      this.ValueInput.nativeElement.focus();
+      this.autoCompleteTrigger.openPanel();
+    }
+
+    // if the keep filter option is true, the searchable data will be the newFilteredData for the next searches.
+    if (keepFilterAfterSelection) {
+      this.fullData = newFilteredData;
+    }
+  }
 
   constructor() {
     this.filteredDataByInput = this.ObjectControl.valueChanges.pipe(
@@ -80,12 +155,22 @@ export class ShipsSelectComponent<T> {
     this.filteredDataSubscription = this.filteredDataByInput.subscribe(
       (data) => {
         this.updatedSuggestionList = data.filter(
-          (item) => !this.selectedObjects.includes(item)
+          (item) => !this.selectedChips.includes(item)
         );
       }
     );
     this._verifySearchPropertyName();
     this._verifyImagePropertyName();
+    this.disabled ? this.ObjectControl.disable() : this.ObjectControl.enable();
+    //set the original input value (this is needed when the forceOpenAutocompletePanel is called from the parent)
+    if (!this.keepFilterAfterSelection)
+      this.minSearchLength = this.minimumSearchLength;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['disabled']){
+      this.disabled ? this.ObjectControl.disable() : this.ObjectControl.enable();
+    }
   }
 
   ngOnDestroy() {
@@ -99,14 +184,22 @@ export class ShipsSelectComponent<T> {
   ) {
     // Emit the updated array to the parent component
     this.selectedChipsChange.emit({
-      SelectedObjectList: this.selectedObjects,
+      SelectedObjectList: this.selectedChips,
       lastAddedItem,
       lastSelectedItem,
       lastRemovedItem,
     } as onChipsSelectionEmitType<T>);
+
+    //restore the original input value (this is needed when the forceOpenAutocompletePanel is called from the parent)
+    if (!this.keepFilterAfterSelection)
+      this.minSearchLength = this.minimumSearchLength;
   }
 
   add(event: MatChipInputEvent): void {
+    //restore the original input value (this is needed when the forceOpenAutocompletePanel is called from the parent)
+    if (!this.keepFilterAfterSelection)
+      this.minSearchLength = this.minimumSearchLength;
+
     if (this._isAdditionEnabled === false) return;
     const value = (event.value || '').trim();
     if (value.length < this.minimumSearchLength) {
@@ -119,6 +212,7 @@ export class ShipsSelectComponent<T> {
       );
       return;
     }
+
     if (
       this.enableQuickSelectFromSuggestions == true &&
       this.updatedSuggestionList.length > 0
@@ -141,7 +235,7 @@ export class ShipsSelectComponent<T> {
     }
     // Proceed to Add custom value
     let isAlreadyRegistered = false;
-    this.selectedObjects.forEach((selectedObject) => {
+    this.selectedChips.forEach((selectedObject) => {
       if (value.toLowerCase() == this._getStringToCompareTo(selectedObject)) {
         isAlreadyRegistered = true;
         /*  TODO : display input error message [ 'customLabel' length must be at least 'this.minimumSearchLength' ] */
@@ -162,7 +256,11 @@ export class ShipsSelectComponent<T> {
   }
 
   remove(objectToRemove: any): void {
-    this.selectedObjects = this.selectedObjects.filter(
+    //restore the original input value (this is needed when the forceOpenAutocompletePanel is called from the parent)
+    if (!this.keepFilterAfterSelection)
+      this.minSearchLength = this.minimumSearchLength;
+
+    this.selectedChips = this.selectedChips.filter(
       (chipObject: any) => chipObject != objectToRemove
     );
     this.onSelectionChange(undefined, undefined, objectToRemove);
@@ -172,7 +270,7 @@ export class ShipsSelectComponent<T> {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    if (!this.selectedObjects.includes(event.option.value)) {
+    if (!this.selectedChips.includes(event.option.value)) {
       this._addChipToSelection(event.option.value);
       this.ValueInput.nativeElement.value = '';
     }
@@ -198,7 +296,7 @@ export class ShipsSelectComponent<T> {
   }
 
   private _addChipToSelection(newChip: any, isAdded = false): void {
-    this.selectedObjects.push(newChip);
+    this.selectedChips.push(newChip);
     this.ObjectControl.setValue(null);
     let lastAddedItem, lastSelectedItem;
     if (isAdded) lastAddedItem = newChip;
@@ -206,16 +304,17 @@ export class ShipsSelectComponent<T> {
     this.onSelectionChange(lastAddedItem, lastSelectedItem, undefined);
   }
 
-  private _filter(value: string | any): any[] {
+  private _filter(
+    value: string | any,
+    arrayToFilter: T[] = this.fullData
+  ): T[] {
     let filterValueLower = this._getStringToCompareTo(value);
-    return this.fullData.filter((object) => {
+    return arrayToFilter.filter((object) => {
       let stringCasted = this._getStringToCompareTo(object);
       const isResultFound = this.isStartWithSearch
         ? stringCasted.startsWith(filterValueLower)
         : stringCasted.includes(filterValueLower);
       return isResultFound;
-      /* const isObjectAlreadySelected = this.selectedObjects.includes(object);
-      return isResultFound && !isObjectAlreadySelected; */
     });
   }
 
@@ -232,22 +331,27 @@ export class ShipsSelectComponent<T> {
 
   private _verifySearchPropertyName(): void {
     if (!this.fullData || this.fullData.length == 0) return;
-    if (!this.fullData[0].hasOwnProperty(this.searchPropertyName)) {
+    const firstDataItem = this.fullData[0] as Record<string, any>;
+    if (!firstDataItem.hasOwnProperty(this.searchPropertyName)) {
+      this.ObjectControl.disable();
+      //this.disabled = true;
       throw new TypeError(
         'Chip select component : ' +
           " the provided data doesn't contain the searchPropertyName : " +
-          this.searchPropertyName +
+          this.searchPropertyName.toString() +
           ' || Component Label : ' +
           this.customLabel
       );
     }
     let searchablePropertyType =
-      typeof this.fullData[0][this.searchPropertyName];
+      typeof this.fullData[0][this.searchPropertyName as keyof T];
     if (['number', 'string'].includes(searchablePropertyType) == false) {
+      //this.disabled = true;
+      this.ObjectControl.disable();
       throw new TypeError(
         'Chip select component : ' +
           'the provided searchPropertyName ( ' +
-          this.searchPropertyName +
+          this.searchPropertyName.toString() +
           " ) isn't of type String Or Number" +
           ' || Component Label : ' +
           this.customLabel
@@ -258,7 +362,9 @@ export class ShipsSelectComponent<T> {
     if (!this.fullData || this.fullData.length == 0) return;
     if (this.imagePropertyName === '' || this.imagePropertyName === undefined)
       return;
-    if (!this.fullData[0].hasOwnProperty(this.imagePropertyName)) {
+    const firstDataItem = this.fullData[0] as Record<string, any>;
+
+    /* if (!firstDataItem.hasOwnProperty(this.imagePropertyName)) {
       throw new TypeError(
         'Chip select component : ' +
           " the provided data doesn't contain the image property name : " +
@@ -267,7 +373,7 @@ export class ShipsSelectComponent<T> {
           this.customLabel
       );
     }
-    let imagePropertyType = typeof this.fullData[0][this.imagePropertyName];
+    let imagePropertyType = typeof firstDataItem[this.imagePropertyName];
     if (imagePropertyType != 'string') {
       throw new TypeError(
         'Chip select component : ' +
@@ -278,7 +384,7 @@ export class ShipsSelectComponent<T> {
           this.customLabel
       );
     }
-    let imageUrl = this.fullData[0][this.imagePropertyName];
+    let imageUrl = firstDataItem[this.imagePropertyName];
     const isValidUrl = URL_REGEX.test(imageUrl);
     if (!isValidUrl) {
       throw new TypeError(
@@ -289,7 +395,7 @@ export class ShipsSelectComponent<T> {
           ' || Component Label : ' +
           this.customLabel
       );
-    }
+    } */
   }
 }
 
@@ -298,6 +404,12 @@ export type onChipsSelectionEmitType<T> = {
   lastAddedItem?: T;
   lastSelectedItem?: T;
   lastRemovedItem?: T;
+};
+
+export type handleForcedSuggestionsAction<T> = {
+  newFilteredData: T[];
+  keepFilterAfterSelection?: boolean;
+  forceReset?: boolean;
 };
 
 /* 

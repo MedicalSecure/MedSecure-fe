@@ -1,5 +1,7 @@
 import {
+  ChangeDetectorRef,
   Component,
+  DoCheck,
   EventEmitter,
   Input,
   OnDestroy,
@@ -10,13 +12,7 @@ import {
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { MedicationAutocompleteInputComponent } from '../../../components/medication-autocomplete-input/medication-autocomplete-input.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
@@ -28,22 +24,29 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import {
-  ScheduleComponent,
   Dispense,
+  ScheduleComponent,
 } from '../../../components/schedule/schedule.component';
-import { patientType } from '../stp1-patient-selection/stp1-patient-selection.component';
+
 import {
   DateRangeType,
   DatepickerRangePopupComponent,
 } from '../../../components/datepicker-range-popup/datepicker-range-popup.component';
 import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component';
-import {
-  commentType,
-  medicationHourType,
-  medicationType,
-  styleClass,
-} from '../../../types';
+
 import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patient-details.component';
+import {
+  CommentsDto,
+  DispenseDto,
+  PosologyDto,
+} from '../../../model/Prescription';
+
+import { getDateString } from '../../../shared/utilityFunctions';
+import {
+  SearchBarComponent,
+  searchTerm,
+} from '../../../components/search-bar/search-bar.component';
+import { DrugDTO } from '../../../model/Drugs';
 
 @Component({
   selector: 'app-stp4-add-medication',
@@ -69,51 +72,59 @@ import { Stp2PatientDetailsComponent } from '../stp2-patient-details/stp2-patien
     ToggleButtonComponent,
     MatChipsModule,
     Stp2PatientDetailsComponent,
+    SearchBarComponent,
   ],
 })
-export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
-  @Input()
-  selectedPatient: patientType | undefined;
-  /* on click finish listener */
+export class Stp4AddMedicationComponent implements OnInit, OnDestroy, DoCheck {
   @Input() events: Observable<void>;
-  private finishEventSubscription: Subscription;
-  @Output() onMedicationsChange = new EventEmitter<medicationType[]>();
+  @Input() newPosologiesList: PosologyDto[] = [];
+  @Input() updatingOldPrescriptionMode: boolean = false;
+
+  @Output() onPosologiesChange = new EventEmitter<PosologyDto[]>();
   @Output() onIsMedicationPageValidChange = new EventEmitter<boolean>();
   @Output() onSubmitChange = new EventEmitter<void>();
 
+  private finishEventSubscription: Subscription;
+
+  searchTerms = _searchTerms;
   isSelectedForceOrder: boolean = false;
   isFilteredForceOrder: boolean = false;
   isEditingMode: boolean = false;
   isCautionEnabled: boolean = false;
-  cautionComment: commentType = initialCautionComment;
+  cautionComment: CommentsDto = {...initialCautionComment};
   consumptionMinStartDate: Date = new Date();
-  isPageValid: boolean = true;
-  selectedMedication: medicationType = _getFormInitialValues();
-  prescribedMedications: medicationType[] = [];
+  isPageValid: boolean = false;
+  selectedPosology: PosologyDto = this._getFormInitialValues();
+  selectedPosologyDateRange = getInitialDateRange();
 
-  /* autocomplete medication  search */
-  medicationFormGroup = this._formBuilder.group({
-    medicationNameInputFormControl: '',
-  });
-  medicationGroupOptions!: Observable<MedicationGroupType[]>;
-  constructor(private _formBuilder: FormBuilder) {}
+  //in this page case, selectedMedications[].length will at max contains 1 medication
+  //but the searchBar component require the selectedMedications input to be a LIST OF MEDICATIONS..
+  selectedMedications: DrugDTO[] = [];
+
+  //If no medications is selected, don't modify the posology values, only the search medications will work
+  canUpdatePosology: boolean = this.selectedMedications.length > 0;
+
+  private previousPosologiesListLength: number = 0;
+  constructor(private changeDetector: ChangeDetectorRef) {}
 
   ngOnInit() {
     /* autocomplete */
-    this.medicationGroupOptions = this.medicationFormGroup
-      .get('medicationNameInputFormControl')!
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => this._filterGroup(value || ''))
-      );
-
     this.finishEventSubscription = this.events.subscribe(() =>
       this.onClickFinish()
     );
 
     /* if is caution enabled by default => add a caution comment at the beginning of the array  */
     this.isCautionEnabled &&
-      this.selectedMedication.comments.unshift(this.cautionComment);
+      this.selectedPosology.comments.unshift(this.cautionComment);
+
+    if (this.updatingOldPrescriptionMode) {
+      this.newPosologiesList = this.newPosologiesList.map((posology) => {
+        return {
+          ...posology,
+          dispenses: this.fillEmptyDispenses(posology.dispenses),
+        };
+      });
+    }
 
     /* emit wether or not we can finish the prescription */
     this.onIsMedicationPageValidChange.emit(this.isPageValid);
@@ -123,24 +134,45 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     this.finishEventSubscription.unsubscribe();
   }
 
-  /* Form inputs change */
-  onSelectedMedicationChange(group: any) {
-    //this.appendMedication();
-    this.selectedMedication = {
-      ..._getFormInitialValues(),
-      id: group.option.value,
-      label: group.option.value,
-      isForceOrder: group.option.group.label === 'out of stock',
-    };
-    this.isSelectedForceOrder = group.option.group.label === 'out of stock';
+  ngDoCheck() {
+    //handle changes whenever the new posologies list changes
+    const currentPosologiesListLength = this.newPosologiesList.length;
+    if (currentPosologiesListLength !== this.previousPosologiesListLength) {
+      //emit is  page now valid
+      let isThisPageValid = currentPosologiesListLength > 0;
+      this.onIsMedicationPageValidChange.emit(isThisPageValid);
+      // Update the previous list length
+      this.previousPosologiesListLength = currentPosologiesListLength;
+    }
   }
 
-  HandleScheduleChange(FilteredHoursList: Dispense[]) {
-    console.log(FilteredHoursList);
+  /* Form inputs change */
+  onSelectedMedicationChange(medications: DrugDTO[]) {
+    if (medications.length === 0) {
+      this.selectedMedications = [];
+      this.selectedPosology = this._getFormInitialValues();
+      this.canUpdatePosology = this.selectedMedications.length > 0;
+      return;
+    }
+    this.selectedPosology = this._getFormInitialValues();
+    this.selectedMedications = medications;
+    this.selectedPosology.medication = medications[0];
+    this.canUpdatePosology = this.selectedMedications.length > 0;
   }
+
   onIsCautionEnabledChange(caution: boolean) {
+    const bugCondition =
+      caution &&
+      this.isEditingMode &&
+      this.selectedPosology.comments.length > 0 &&
+      this.selectedPosology.comments[0].label === 'Caution';
+    if (bugCondition) {
+      // in this if, i will handle the caution enabling in case of editing a medication (click on edit)
+      //and this medication has a caution comment => it will trigger this function and cause comment duplication
+      return;
+    }
     this.isCautionEnabled = caution;
-    let commentList = this.selectedMedication.comments;
+    let commentList = this.selectedPosology.comments;
     if (caution) {
       // Add the caution to the beginning of the array
       commentList.unshift(this.cautionComment);
@@ -149,60 +181,68 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       const index = commentList.indexOf(this.cautionComment);
       if (index !== -1) {
         commentList.splice(index, 1);
+        this.cautionComment={...initialCautionComment}
       }
     }
   }
+
   onIsPermanentChange(newIsPermanentState: boolean) {
-    this.switchIsPermanent(newIsPermanentState);
-    let dateRange = this.selectedMedication.consumptionPeriod.dateRange;
-    if (dateRange === null) {
-      dateRange = getInitialDateRange();
-    }
+    this.selectedPosology.isPermanent = newIsPermanentState;
+    let startDate = this.selectedPosology.startDate;
+    let endDate = this.selectedPosology.endDate;
     if (newIsPermanentState == true) {
-      dateRange[1] = null;
+      endDate = null;
     } else {
-      if (dateRange === null || dateRange[0] === null) {
-        dateRange = getInitialDateRange();
-      } else if (dateRange[0] != null) {
-        let oldStartDate = dateRange[0];
-        let newEndDate = getInitialDateRange(oldStartDate)[1];
-        dateRange[1] = newEndDate;
+      //newIsPermanentState==false
+      //two cases, either we don't have a start date (error somehow) => handled in if (startDate === null) => {NEwStartDate = today, NewEndDate == 15days}
+      // or we have a startDate ( normal case ) => handled in if (startDate != null)  ==> {NewEndDate == old start date + 14days}
+      if (startDate === null) {
+        [startDate, endDate] = getInitialDateRange();
+      } else if (startDate != null) {
+        let newEndDate = getInitialDateRange(startDate)[1];
+        endDate = newEndDate;
       }
     }
-    this.selectedMedication.consumptionPeriod.dateRange = [...dateRange];
+    //Update the DatePicker component Values
+    this.selectedPosologyDateRange = [startDate, endDate];
   }
+
   onPeriodChange(newDateRange: DateRangeType) {
+    //debugger;
     if (newDateRange === null) {
       //clear button disabling
       newDateRange = getInitialDateRange();
-      if (this.selectedMedication.consumptionPeriod.isPermanent) {
+      if (this.selectedPosology.isPermanent) {
         //maintain the old permanent state
         newDateRange[1] = null;
       }
     }
-    this.selectedMedication.consumptionPeriod.dateRange = [...newDateRange];
-    this.switchIsPermanent(newDateRange[1] === null);
-  }
-  switchIsPermanent(newState: boolean) {
-    this.selectedMedication.consumptionPeriod.isPermanent = newState;
+    //Update the selected posology object
+    this.selectedPosology.startDate = newDateRange[0];
+    this.selectedPosology.endDate = newDateRange[1];
+
+    //Update IsPermanent button
+    let NewIsPermanentState = newDateRange[1] === null; // EndDate==Null => NewIsPermanentState = true
+    this.selectedPosology.isPermanent = NewIsPermanentState;
+    this.changeDetector.detectChanges();
   }
 
   /* Comments */
   onAddComment() {
-    let commentList = this.selectedMedication.comments;
+    if (this.canUpdatePosology == false) return;
+    let commentList = this.selectedPosology.comments;
     if (commentList.length > 0) {
       let lastElement = commentList.at(commentList.length - 1);
       const isLastElementCautionComment = lastElement === this.cautionComment;
       if (lastElement?.content != '' || isLastElementCautionComment === true)
         commentList.push({
-          id: undefined,
           label: 'Comment',
           content: '',
         });
     } else if (commentList.length == 0)
-      commentList.push({ id: undefined, label: 'Comment', content: '' });
+      commentList.push({ label: 'Comment', content: '' });
   }
-  onCommentChange(event: any, comment: commentType) {
+  onCommentChange(event: any, comment: CommentsDto) {
     let commentContent: string = event.value as string;
     comment.content = commentContent;
     if (!commentContent || commentContent.trim() === '') {
@@ -210,56 +250,69 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       this.onRemoveComment(comment);
     }
   }
-  onRemoveComment(comment: commentType) {
-    let commentList = this.selectedMedication.comments;
+  onRemoveComment(comment: CommentsDto) {
+    let commentList = this.selectedPosology.comments;
     if (comment === this.cautionComment) {
       this.onIsCautionEnabledChange(false);
       return;
     }
-    commentList = commentList.filter((item) => {
+    this.selectedPosology.comments = commentList.filter((item) => {
       return item != comment;
     });
   }
 
   /* medications */
-  onClickEditMedication(index: number, medication: medicationType) {
+  onClickEditMedication(index: number, posology: PosologyDto) {
     if (this.isEditingMode == true) {
       //if, after checking the current edited one, we can append it,
       //then we can swap the two medications, first append then proceed to edit the new one
       if (this.onAppendMedication() == false) return;
     }
     this.isEditingMode = true;
-    this.prescribedMedications = this.prescribedMedications.filter(
+    this.newPosologiesList = this.newPosologiesList.filter(
       (item, i) => index != i
     );
-    this.selectedMedication = medication;
-    this.medicationFormGroup.setValue({
-      medicationNameInputFormControl: medication.label,
+    this.selectedPosology = posology;
+    this.selectedPosologyDateRange = [posology.startDate, posology.endDate];
+    this.selectedMedications = [posology.medication];
+    this.canUpdatePosology = this.selectedMedications.length > 0;
+    //Caution comment is always the first one, so we can change the state here!
+    this.isCautionEnabled =
+      this.selectedPosology.comments.length > 0
+        ? this.selectedPosology.comments[0].label === 'Caution'
+        : false;
+  }
+
+  onClickRemoveMedication(index: number) {
+    this.newPosologiesList = this.newPosologiesList.filter((item, i) => {
+      //if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
+      return index != i;
     });
+    this.onPosologiesChange.emit(this.newPosologiesList);
   }
-  onClickRemoveMedication(index: number, medication: medicationType) {
-    this.prescribedMedications = this.prescribedMedications.filter(
-      (item, i) => {
-        if (item.isForceOrder && index != i) this.isFilteredForceOrder = true;
-        return index != i;
-      }
-    );
-    console.log('result ' + this.isFilteredForceOrder);
-  }
+
   onAppendMedication(): boolean {
-    const CurrentMedication = this.selectedMedication;
-    if (CurrentMedication != null && CurrentMedication.label != '') {
+    //debugger;
+    //if (this.canUpdatePosology == false) return false;
+
+    const CurrentPosology = this.selectedPosology;
+    if (
+      CurrentPosology != null &&
+      CurrentPosology.medication != null &&
+      CurrentPosology.medication.name != ''
+    ) {
       this._cleanComments();
-      this.prescribedMedications.push(CurrentMedication);
-      this.selectedMedication = _getFormInitialValues();
+      this.newPosologiesList.push(CurrentPosology);
+      this.cautionComment={...initialCautionComment}
+      this.onSelectedMedicationChange([]);
       this.isEditingMode = false;
-      this.medicationFormGroup.setValue({ medicationNameInputFormControl: '' });
-      if (this.isFilteredForceOrder === false)
+      this.isCautionEnabled = false;
+      /*       if (this.isFilteredForceOrder === false)
         this.isFilteredForceOrder =
-          CurrentMedication.isForceOrder == undefined
+          CurrentPosology.isForceOrder == undefined
             ? false
-            : CurrentMedication.isForceOrder;
-      this.onMedicationsChange.emit(this.prescribedMedications);
+            : CurrentPosology.isForceOrder; */
+      this.onPosologiesChange.emit(this.newPosologiesList);
       return true;
     }
     return false;
@@ -285,17 +338,14 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     if (this.validateFinish() === false) return;
     /* handle prescription submission to backend */
 
-    console.log('valid medication: ');
-    console.log(this.prescribedMedications);
+    console.log('valid posologies: ');
+    console.log(this.newPosologiesList);
     this.onSubmitChange.emit();
   }
 
   validateFinish(): boolean {
     let isFormValid = true;
     //add conditions here like
-    const currentInput =
-      this.medicationFormGroup.getRawValue().medicationNameInputFormControl;
-    if (currentInput !== '') isFormValid = false;
 
     //emit changes
     this.onIsMedicationPageValidChange.emit(isFormValid);
@@ -303,7 +353,7 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
   }
 
   /* prescribed/selected medications display */
-  getPrescribedMedicationSummary(medication: medicationType): {
+  getPosologySummary(posology: PosologyDto): {
     timesADay: string;
     beforeFoodCounter: number;
     afterFoodCounter: number;
@@ -319,23 +369,24 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     let maximumDispenseQuantity: number = 0;
     let numberOfComments: number = 0;
     let numberOfCautions: number = 0;
-    medication.administrationHours.forEach((hourObj) => {
-      if (hourObj.beforeMeal?.Quantity) {
-        const beforeFQ = parseInt(hourObj.beforeMeal?.Quantity);
+
+    posology.dispenses.forEach((hourObj) => {
+      if (hourObj.beforeMeal?.quantity) {
+        const beforeFQ = parseInt(hourObj.beforeMeal?.quantity);
         beforeFoodCounter += beforeFQ;
         timesADayCounter++;
         if (beforeFQ > maximumDispenseQuantity)
           maximumDispenseQuantity = beforeFQ;
       }
-      if (hourObj.afterMeal?.Quantity) {
-        const afterFQ = parseInt(hourObj.afterMeal?.Quantity);
+      if (hourObj.afterMeal?.quantity) {
+        const afterFQ = parseInt(hourObj.afterMeal?.quantity);
         afterFoodCounter += afterFQ;
         timesADayCounter++;
         if (afterFQ > maximumDispenseQuantity)
           maximumDispenseQuantity = afterFQ;
       }
     });
-    medication.comments.forEach((comment) => {
+    posology.comments.forEach((comment) => {
       if (comment.label === 'Caution') numberOfCautions++;
       else numberOfComments++;
     });
@@ -364,8 +415,45 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
     return daysDifference;
   }
 
-  private _cleanComments(medication: medicationType = this.selectedMedication) {
-    medication.comments.forEach((comment) => {
+  getDateString(date: Date, format = 'dd/mm/yyyy'): string {
+    if (!date) {
+      //fix this
+      console.log('date is null');
+      return '';
+    }
+    return getDateString(date, format);
+  }
+
+  fillEmptyDispenses(dispensesDto: DispenseDto[]): Dispense[] {
+    let dispensesResult = _getACopyOfAdministrationHours();
+
+    for (const dispense of dispensesResult) {
+      let dispenseDto = dispensesDto.find((item) => item.hour == dispense.hour);
+      if (dispenseDto == undefined) continue; // if the DTO to update doesn't have this hour already;
+      dispense.afterMeal = dispenseDto?.afterMeal;
+      dispense.beforeMeal = dispenseDto?.beforeMeal;
+    }
+
+    return dispensesResult;
+  }
+
+  private _getFormInitialValues(): PosologyDto {
+    this.selectedMedications = [];
+    return {
+      id: '',
+      prescriptionId: '',
+      medication: initialEmptyMedication,
+      medicationId: initialEmptyMedication?.id ?? "empty id : impossible",
+      startDate: getInitialDateRange()[0],
+      endDate: getInitialDateRange()[1],
+      isPermanent: false,
+      dispenses: _getACopyOfAdministrationHours(),
+      comments: [],
+    };
+  }
+
+  private _cleanComments(posology: PosologyDto = this.selectedPosology) {
+    posology.comments.forEach((comment) => {
       let commentContent = comment.content;
       if (!commentContent || commentContent.trim() === '') {
         //remove the comment if its empty or whitespace
@@ -373,21 +461,6 @@ export class Stp4AddMedicationComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  private _filterGroup(value: string): MedicationGroupType[] {
-    if (value) {
-      return MedicationGroups.map((group) => ({
-        letter: group.letter,
-        labels: _filterInputAutoCompleteOptions(group.labels, value),
-      })).filter((group) => group.labels.length > 0);
-    }
-
-    return MedicationGroups;
-  }
-}
-export interface MedicationGroupType {
-  letter: string;
-  labels: string[];
 }
 
 export type ConsumptionPeriodType = {
@@ -403,40 +476,19 @@ export const _filterInputAutoCompleteOptions = (
   return opt.filter((item) => item.toLowerCase().includes(filterValue));
 };
 
-const MedicationGroups: MedicationGroupType[] = [
-  {
-    letter: 'in stock',
-    labels: ['Doliprane', 'Fervex', 'Aspirin'],
-  },
-  {
-    letter: 'out of stock',
-    labels: ['ARPL'],
-  },
+const _searchTerms: searchTerm[] = [
+  { label: 'Name', medicationKey: 'name' },
+  { label: 'Form', medicationKey: 'form' },
 ];
-
-const initialCautionComment = {
-  id: undefined,
+const initialCautionComment: CommentsDto = {
   label: 'Caution',
   content: '',
-  labelClass: 'text-warning fw-bold',
 };
 
 const consumptionPeriod: ConsumptionPeriodType = {
   isPermanent: false,
   dateRange: getInitialDateRange(),
 };
-function _getFormInitialValues(): medicationType {
-  return {
-    id: '',
-    label: '',
-    dispenseUnit: '',
-    consumptionPeriod: { ...consumptionPeriod },
-    isForceOrder: false,
-    administrationHours: _getACopyOfAdministrationHours(),
-    Caution: '',
-    comments: [],
-  };
-}
 
 function _getACopyOfAdministrationHours(
   source = _initialPartsOfDayHours
@@ -451,8 +503,14 @@ function _getACopyOfAdministrationHours(
   return result;
 }
 
-function getInitialDateRange(startDay = new Date()): [Date, Date] {
-  let twoWeeksLater = new Date(startDay.getTime() + 14 * 24 * 60 * 60 * 1000);
+function getInitialDateRange(
+  startDay = new Date(),
+  numberOfDays = 14
+): [Date, Date | null] {
+  //by default: two weeks late (14days)
+  let twoWeeksLater = new Date(
+    startDay.getTime() + numberOfDays * 24 * 60 * 60 * 1000
+  );
   //set the time to midnight
   twoWeeksLater.setHours(0, 0, 0, 0);
   return [startDay, twoWeeksLater];
@@ -484,3 +542,22 @@ const _initialPartsOfDayHours: Dispense[] = [
   { hour: '22' },
   { hour: '23' },
 ];
+
+const initialEmptyMedication: DrugDTO = {
+  id: '',
+  name: '',
+  dosage: '',
+  form: '',
+  code: '',
+  unit: '',
+  description: '',
+  expiredAt: new Date('9999-12-01'),
+  stock: 0,
+  alertStock: 0,
+  avrgStock: 0,
+  minStock: 0,
+  safetyStock: 0,
+  reservedStock: 0,
+  availableStock: 0,
+  price: 0,
+};

@@ -24,6 +24,9 @@ export class DatepickerRangePopupComponent {
   @Input()
   maxDate:Date=new Date('9999/01/01');
 
+  @Input()
+  disabled:boolean=false
+
   panelStyle: string = 'd-none';
   @Output()
   DateRangeChange: EventEmitter<DateRangeType> =
@@ -32,7 +35,7 @@ export class DatepickerRangePopupComponent {
   inputStyle: object = this.isMinimalisticView ? { maxWidth: '14.2rem' } : {};
 
   emitFinalDateRange() {
-    console.log('selected range :', this.dateRange);
+    //console.log('selected range :', this.dateRange);
     this.DateRangeChange.emit(this.dateRange);
   }
 

@@ -149,8 +149,10 @@ export class ActivitiesComponent<T extends ActivityService> {
     this.isActivities = true;
     if (!this.service) return;
 
+
     this.service.getActivities(0, this.numberOfActivitiesToShow).subscribe(
       (response) => {
+      
         this.activities = response.activities.data;
         this.updateActivitiesTimes();
       },

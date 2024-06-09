@@ -1,13 +1,7 @@
-import {
-  Component,
-  Inject,
-  NO_ERRORS_SCHEMA,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import '@angular/localize/init';
+import { HomeComponent } from "./pages/home/home.component";
+import '@angular/localize/init'
 import { AIPromptModule } from '@progress/kendo-angular-conversational-ui';
 import {
   MsalService,
@@ -24,21 +18,22 @@ import {
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { NgApexchartsModule } from 'ng-apexcharts';
+
+import { NgApexchartsModule } from "ng-apexcharts";
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    HomeComponent,
-    MsalModule,
-    AIPromptModule,
-    NgApexchartsModule,
-  ],
-  schemas: [NO_ERRORS_SCHEMA],
+    selector: 'app-root',
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    imports: [
+      CommonModule,
+      RouterOutlet,
+      HomeComponent,
+      MsalModule,
+      AIPromptModule,
+      NgApexchartsModule,
+    ],
+    schemas: [NO_ERRORS_SCHEMA]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'medsecure-fe';
@@ -110,4 +105,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this._destroying$.next(undefined);
     this._destroying$.complete();
   }
+
+
 }

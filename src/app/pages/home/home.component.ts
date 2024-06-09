@@ -1,9 +1,10 @@
+import { Component ,OnInit} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { FooterComponent } from '../../partials/footer/footer.component';
-import { NavbarComponent } from '../../partials/navbar/navbar.component';
-import { SettingsPanelComponent } from '../../partials/settings-panel/settings-panel.component';
+import { FooterComponent } from "../../partials/footer/footer.component";
+import { NavbarComponent } from "../../partials/navbar/navbar.component";
+import { SettingsPanelComponent } from "../../partials/settings-panel/settings-panel.component";
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { Component, OnInit } from '@angular/core';
+import { SnackBarMessagesComponent } from '../../components/snack-bar-messages/snack-bar-messages.component';
 import { CommonModule } from '@angular/common';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import {
@@ -15,17 +16,17 @@ import {
 import { filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
-  providers: [provideNativeDateAdapter()],
+    selector: 'app-home',
+    standalone: true,
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.css',
+    providers: [provideNativeDateAdapter()],
   imports: [
     RouterModule,
     FooterComponent,
     NavbarComponent,
     SettingsPanelComponent,
-    CommonModule,
+    SnackBarMessagesComponent
   ],
 })
 export class HomeComponent implements OnInit {

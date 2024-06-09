@@ -1,0 +1,53 @@
+[
+    {
+      "id": 1,
+      "name": "Dr. Alice Martin",
+      "image": "assets/images/faces/face1.jpg",
+      "leave_start_date": "2024-05-01",
+      "leave_end_date": "2024-05-15",
+      "reason": "Medical leave",
+      "status": "Available",
+      "available" : "In the Office"
+    },
+    {
+      "id": 2,
+      "name": "Nurse John Doe",
+      "image": "assets/images/faces/face3.jpg", 
+      "leave_start_date": "2024-05-10",
+      "leave_end_date": "2024-05-20",
+      "reason": "Family leave",
+      "status": "Available",
+      "available" : "Remote"
+    },
+    {
+      "id": 3,
+      "name": "Dr. Emma Brown",
+      "image": "assets/images/faces/face2.jpg",  
+      "leave_start_date": "2024-05-12",
+      "leave_end_date": "2024-05-18",
+      "reason": "Vacation",
+      "status": "Not Available",
+      "available" : "Remote"
+    },
+    {
+      "id": 4,
+      "name": "Dr. Emma Brown",
+      "image": "assets/images/faces/face2.jpg",  
+      "leave_start_date": "2024-05-12",
+      "leave_end_date": "2024-05-18",
+      "reason": "Vacation",
+      "status": "Not Available",
+      "available" : "Remote"
+    },
+    {
+      "id": 5,
+      "name": "Dr. Emma Brown",
+      "image": "assets/images/faces/face2.jpg",  
+      "leave_start_date": "2024-05-12",
+      "leave_end_date": "2024-05-18",
+      "reason": "Vacation",
+      "status": "Not Available",
+      "available" : "Remote"
+    }
+  ]
+  

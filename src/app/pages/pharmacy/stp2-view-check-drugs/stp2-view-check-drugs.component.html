@@ -1,0 +1,137 @@
+<div *ngIf="isLoading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>
+<!-- Table of Medications -->
+<table *ngIf="!isLoading" class="table table-responsive autoFit">
+  <div class="row flex-grow mt-2">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card card-rounded">
+        <div class="card-body">
+          <div class="table-responsive mt-1">
+            <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="custom-table">
+              <ng-container matColumnDef="header">
+                <div class="date" style="display: flex; align-items: flex-start">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns.length" class="py-0">
+                    <mat-chip class="uc  py-3" style="margin-right: 20px"> Medsecure: Filter Medications</mat-chip>
+
+                    <mat-form-field appearance="outline" style="width: 300px; position: relative; border-radius: 50px; margin-top: 20px">
+                      <input style="width: 300px; border-radius: 50px" matInput (keyup)="applyFilter($event)" placeholder="Search..." #input style="width: 200px; color: gray" />
+                    </mat-form-field>
+                  </th>
+                </div>
+                <tr mat-header-row *matHeaderRowDef="['header']"></tr>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Name</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.Name }}
+                </td>
+              </ng-container>
+
+              <!-- Dosage Column -->
+              <ng-container matColumnDef="dosage">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Dosage</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  <input *ngIf="element.IsDosageValid === false" [ngStyle]="getDosageStyle(element.IsDosageValid)" [value]="element.Dosage" (input)="onDosageChange(element, $event)" />
+                  <span *ngIf="element.IsDosageValid !== false" [ngStyle]="getDosageStyle(element.IsDosageValid)">{{ element.Dosage }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Forme Column -->
+              <ng-container matColumnDef="form">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Form</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.Form }}
+                </td>
+              </ng-container>
+
+              <!-- Code Column -->
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Code</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.Code }}
+                </td>
+              </ng-container>
+
+              <!-- Expired At Column -->
+              <ng-container matColumnDef="expired At">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Expired At</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.ExpiredAt }}
+                </td>
+              </ng-container>
+
+              <!-- Unit Column -->
+              <ng-container matColumnDef="unit">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Unit</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.Unit }}
+                </td>
+              </ng-container>
+
+              <!-- Stock Column -->
+              <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Stock</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.Stock }}
+                </td>
+              </ng-container>
+
+              <!-- Alert Stock Column -->
+              <ng-container matColumnDef="alert Stock">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Alert Stock</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.AlertStock }}
+                </td>
+              </ng-container>
+
+              <!-- Average Stock Column -->
+              <ng-container matColumnDef="average Stock">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Average Stock</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.AverageStock }}
+                </td>
+              </ng-container>
+
+              <!-- Minimum Stock Column -->
+              <ng-container matColumnDef="minimum Stock">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Minimum Stock</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.MinimumStock }}
+                </td>
+              </ng-container>
+
+              <!-- Safety Stock Column -->
+              <ng-container matColumnDef="safety Stock">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Safety Stock</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.SafetyStock }}
+                </td>
+              </ng-container>
+
+              <!-- Price Column -->
+              <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Price</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.Price }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef class="vertical-line">Description</th>
+                <td mat-cell *matCellDef="let element" class="vertical-line welcome-sub-text">
+                  {{ element.Description }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="getRowClassStyle(row.IsDrugExist)"></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</table>

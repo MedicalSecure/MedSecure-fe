@@ -3,14 +3,34 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
+  QueryList,
   SimpleChanges,
+  ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MatIcon } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-name-and-id/filter-patient-by-name-and-sn.pipe';
+import {
+  PrescriptionDto,
+  RegisterForPrescription,
+  RegisterWithPrescriptions,
+} from '../../../model/Prescription';
+import { PrescriptionApiService } from '../../../services/prescription/prescription-api.service';
+
+import { PrescriptionStatus, HistoryStatus } from '../../../enums/enum';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  calculateAge,
+  getDateString,
+  getTimeString,
+} from '../../../shared/utilityFunctions';
+import { RegisterDto } from '../../../model/Registration';
+import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensions';
+import { OldPrescriptionViewForPrescriptionListComponent } from '../old-prescription-view-for-prescription-list/old-prescription-view-for-prescription-list.component';
 
 @Component({
   selector: 'app-prescription-list',
@@ -18,106 +38,42 @@ import { FilterPatientByNameAndSnPipe } from '../../../pipes/filter-patient-by-n
   imports: [
     CommonModule,
     FormsModule,
-    FilterPatientByNameAndSnPipe,
     MatIcon,
     RouterModule,
+    MatProgressSpinnerModule,
+    OldPrescriptionViewForPrescriptionListComponent
   ],
   templateUrl: './prescription-list.component.html',
   styleUrl: './prescription-list.component.css',
 })
-export class PrescriptionListComponent {
-  @Input() selectedPrescription: any | undefined = undefined;
+export class PrescriptionListComponent implements OnInit {
+  @Input() selectedPrescription: PrescriptionDto | undefined = undefined;
   @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
+  @Output() onClickUpdatePrescriptionEvent = new EventEmitter<{
+    prescription: PrescriptionDto;
+    register: RegisterForPrescription;
+  }>();
+
+  @ViewChildren('prescriptionRows') prescriptionRows: QueryList<any>;
+  @ViewChild(OldPrescriptionViewForPrescriptionListComponent)
+  oldPrescriptionView!: OldPrescriptionViewForPrescriptionListComponent;
+
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
-  dataList: any[] = [
-    {
-      sn: '001',
-      name: 'John',
-      sex: 'Male',
-      age: 30,
-      height: 180,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '002',
-      name: 'Jane',
-      sex: 'Female',
-      age: 25,
-      height: 165,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '003',
-      name: 'Alice',
-      sex: 'Female',
-      age: 28,
-      height: 170,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '004',
-      name: 'Bob',
-      sex: 'Male',
-      age: 35,
-      height: 175,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '005',
-      name: 'Eve',
-      sex: 'Female',
-      age: 22,
-      height: 160,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '006',
-      name: 'Mike',
-      sex: 'Male',
-      age: 32,
-      height: 185,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '007',
-      name: 'Sarah',
-      sex: 'Female',
-      age: 27,
-      height: 168,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '008',
-      name: 'David',
-      sex: 'Male',
-      age: 29,
-      height: 176,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '009',
-      name: 'Emily',
-      sex: 'Female',
-      age: 31,
-      height: 162,
-      registrationDate: new Date(),
-    },
-    {
-      sn: '010',
-      name: 'Alex',
-      sex: 'Male',
-      age: 26,
-      height: 178,
-      registrationDate: new Date(),
-    },
-  ];
   checked: boolean = true;
-  searchTerm: string = '';
 
-  onClickPrescription(Prescription: any) {
-    this.selectedPrescription = Prescription;
-  }
+  @Input() lastCreatedPrescriptionIdFromResponse: string | undefined;
+
+  selectedRegister: RegisterForPrescription | undefined = undefined;
+  searchTerm: string = '';
+  registrations: RegisterWithPrescriptions[] = [];
+  prescriptionsGroupedByRegisterIds: { [key: string]: PrescriptionDto[] } = {};
+  isLoading: boolean = false;
+  isFailedToLoad: boolean = false;
+
+  prescriptionsViewList:PrescriptionDto[]=[];
+
+  constructor(private prescriptionApiService: PrescriptionApiService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.clearTextAfterEachSearch) return;
@@ -126,9 +82,186 @@ export class PrescriptionListComponent {
       if (this.selectedPrescription === undefined) this.searchTerm = '';
     }
   }
+  ngOnInit() {
+    this.fetchRegistrationsWithPrescriptions();
+  }
+
+  onClickPrescription(prescription: PrescriptionDto) {
+    this.selectedPrescription = prescription;
+    console.log(JSON.stringify(prescription));
+    let regWithPrescriptions = this.registrations.filter(
+      (registerWithPrescription) => registerWithPrescription.register.id == prescription.registerId
+    )[0];
+    this.selectedRegister = mapRegisterWithPrsToRegisterForPrs(regWithPrescriptions);
+  }
+
+  onClickDeselectPrescription() {
+    this.selectedRegister = undefined;
+    this.selectedPrescription = undefined;
+  }
 
   onClickNewPrescription() {
+    // Go to wizard ==>
     this.onClickNewPrescriptionEvent.emit(false);
-    this.onClickPrescription(undefined);
+    // empty this page / reset it
+    this.onClickDeselectPrescription();
+  }
+
+  async fetchRegistrationsWithPrescriptions() {
+    try {
+      this.isFailedToLoad = false;
+      this.isLoading = true;
+      var dictByRegisterIdResponse =
+        await PrescriptionApiService.getRegistrationsWithPrescriptions(
+          this.prescriptionApiService
+        );
+      if(!dictByRegisterIdResponse) throw Error("Cant fetch registers with prescriptions");
+      this.registrations = Object.values(dictByRegisterIdResponse);
+      let extractedPrescriptions:PrescriptionDto[]=[];
+
+      //extract all prescriptions from the dict
+      this.registrations.forEach(registerWithPrescription=>{
+        //get the prescriptions of this register object
+        let newPrescriptions:PrescriptionDto[]=registerWithPrescription.prescriptions? registerWithPrescription.prescriptions.filter(p => !!p ) : []
+        //add the newPrescriptions to the already extracted (accumulate)
+        extractedPrescriptions=[...extractedPrescriptions ,...newPrescriptions]
+      })
+      //display them sorted by date
+      this.prescriptionsViewList=extractedPrescriptions.sort((a,b)=> a.createdAt < b.createdAt ? 1 : -1);
+
+      this.isLoading = false;
+      this.isFailedToLoad = false;
+      this.highlightLastAddedPrescription();
+    } catch (error) {
+      console.error(error);
+      this.isFailedToLoad = true;
+    }
+  }
+
+  highlightLastAddedPrescription() {
+    setTimeout(() => {
+      const element = document.getElementById(
+        'last-selected-prescription'
+      );
+      if (element) {
+        element.classList.add('highlight-animation');
+      }
+      setTimeout(()=>this.lastCreatedPrescriptionIdFromResponse=undefined,3000) // after 3 seconds, disable highlighting again
+    },200)//wait for table to be rendered first
+  }
+
+  suspendPrescription(prescription:PrescriptionDto){  
+    this.isLoading = true;
+
+    prescription.status=PrescriptionStatus.Discontinued;
+    
+    this.prescriptionApiService
+        .putPrescriptionsStatus(prescription)
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            this.lastCreatedPrescriptionIdFromResponse = response.id;
+            this.selectedRegister = undefined;
+            this.selectedPrescription = undefined;
+            this.highlightLastAddedPrescription()
+          },
+          (error) => {
+            this.isLoading = false;
+          }
+        );
+
+  }
+  
+  downloadPdfFromChild(){
+    if(!this.oldPrescriptionView || !this.selectedPrescription)
+      return;
+    this.oldPrescriptionView.printPdf(this.selectedPrescription)
+  }
+
+  onClickRefresh() {
+    //this.fetchPrescriptions();
+    this.fetchRegistrationsWithPrescriptions();
+  }
+
+  getRegister(regId: string):RegisterDto{
+    return this.registrations.filter(
+      (x) => x.register.id == regId
+    )[0].register;
+  }
+
+  getRegisterStatus(registerId:string): HistoryStatus {
+    return getPatientStatusFromRegister(this.getRegister(registerId));
+  }
+
+  getPrescriptionStatus(prescription: PrescriptionDto): {text:string,class:string} {
+    return getPrescriptionStatus(prescription);
+  }
+
+  getDateString(
+    dateToFormat: Date,
+    dateFormat: string = 'dd-mm-yyyy - HH:MM'
+  ): string {
+    return getDateString(dateToFormat, dateFormat);
+  }
+
+  getTimeString(dateToFormat: Date): string {
+    return getTimeString(dateToFormat);
+  }
+
+  getAge(bd: Date | undefined | null): string {
+    if (!bd) return '';
+    let x = calculateAge(bd).toString();
+    return '| ' + x + ' years';
+  }
+
+  
+
+  navigateToUpdatePrescription(
+    prescription: PrescriptionDto,
+    register: RegisterForPrescription | undefined
+  ) {
+    if (register == undefined) return;
+    console.log('sent from list');
+    //add checks of status here before submitting
+    //...
+    this.onClickUpdatePrescriptionEvent.emit({ prescription, register });
+  }
+}
+
+export function getPatientStatusFromRegister(register: RegisterDto): HistoryStatus {
+  if (register.history == undefined || register.history.length == 0)
+    return HistoryStatus.Out;
+
+  let histories = register.history?.sort((a, b) => {
+    // Convert dates to milliseconds since epoch for comparison
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+
+    // Compare the dates
+    return dateB - dateA;
+  });
+
+  // Now `history` is sorted by date
+  let lastOne = histories[0];
+  return lastOne.status;
+}
+
+export function getPrescriptionStatus(prescription: PrescriptionDto): {text:string,class:string} {
+  switch (prescription.status) {
+    case PrescriptionStatus.Draft:
+      return {text:"Draft",class:'text-muted'};
+    case PrescriptionStatus.Pending:
+      return {text:"Pending",class:'text-warning'};
+    case PrescriptionStatus.Active:
+      return {text:"Active",class:'text-success'};// Done: validée
+    case PrescriptionStatus.Rejected:
+      return {text:"Rejected",class:'text-danger'};
+    case PrescriptionStatus.Discontinued:
+      return {text:"Discontinued",class:'text-danger'};
+    case PrescriptionStatus.Completed:
+      return {text:"Completed",class:'text-success'};
+    // Add cases for other statuses if they are uncommented in the enum
+    default:
+      return {text:"Loading",class:'text-muted'};
   }
 }
