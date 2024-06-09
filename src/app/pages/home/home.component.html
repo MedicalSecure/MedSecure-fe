@@ -74,7 +74,7 @@
         </li>
 
         <!-- Pharmacy Link -->
-        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isPharmacist || getRole().isReceptionist">
+        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isPharmacist || getRole().isSupervisor">
           <a class="nav-link" [routerLink]="['/', 'pharmacy']">
             <i class="menu-icon mdi mdi-mortar-pestle-plus"></i>
             <span class="menu-title">Pharmalink</span>

@@ -1,7 +1,6 @@
 import { Component ,OnInit} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FooterComponent } from "../../partials/footer/footer.component";
-import { DOCTOR_ROLE, NURSE_ROLE, NUTRITIONIST_ROLE, NavbarComponent, PHARMACIST_ROLE, RECEPTIONIST_ROLE, SUPERVISOR_ROLE } from "../../partials/navbar/navbar.component";
 import { SettingsPanelComponent } from "../../partials/settings-panel/settings-panel.component";
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SnackBarMessagesComponent } from '../../components/snack-bar-messages/snack-bar-messages.component';
@@ -18,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 import { ProfileType } from '../profile/ProfileType';
 import { environment } from '../../../environments/environment';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NavbarComponent } from '../../partials/navbar/navbar.component';
 
 @Component({
     selector: 'app-home',
@@ -81,12 +81,12 @@ export class HomeComponent implements OnInit {
 
   getRole() {
     return {
-      isReceptionist: this.profile?.jobTitle === RECEPTIONIST_ROLE,
-      isDoctor: this.profile?.jobTitle === DOCTOR_ROLE,
-      isPharmacist: this.profile?.jobTitle === PHARMACIST_ROLE,
-      isNutritionist: this.profile?.jobTitle === NUTRITIONIST_ROLE,
-      isSupervisor: this.profile?.jobTitle === SUPERVISOR_ROLE,
-      isNurse: this.profile?.jobTitle === NURSE_ROLE,
+      isReceptionist: this.profile?.jobTitle === environment.roles.RECEPTIONIST_ROLE,
+      isDoctor: this.profile?.jobTitle === environment.roles.DOCTOR_ROLE,
+      isPharmacist: this.profile?.jobTitle === environment.roles.PHARMACIST_ROLE,
+      isNutritionist: this.profile?.jobTitle === environment.roles.NUTRITIONIST_ROLE,
+      isSupervisor: this.profile?.jobTitle === environment.roles.SUPERVISOR_ROLE,
+      isNurse: this.profile?.jobTitle === environment.roles.NURSE_ROLE,
     };
   }
 }

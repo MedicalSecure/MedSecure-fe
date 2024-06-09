@@ -13,6 +13,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatOption, MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { SnackBarMessagesService } from '../../services/util/snack-bar-messages.service';
+import { snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Component({
   selector: 'app-navbar',
@@ -37,32 +39,35 @@ export class NavbarComponent implements OnInit {
   profile: ProfileType | undefined;
 
   //TO REMOVE AFTER AZURE
-  roles = [
+/*   roles = [
     { value: DOCTOR_ROLE, label: 'Doctor' },
     { value: PHARMACIST_ROLE, label: 'Pharmacist' },
     { value: RECEPTIONIST_ROLE, label: 'Receptionist' },
   ];
-  selectedRole = DOCTOR_ROLE;
+  selectedRole = DOCTOR_ROLE; */
 
   // connect signal r after loading the app by X seconds in seconds
-  connectSignalRAfter = 5;
+  connectSignalRAfter = 3;
 
   constructor(
     private router: Router,
     private prescriptionService: PrescriptionApiService,
     private drugsService: DrugService,
     private http: HttpClient,
-    private authService: MsalService
+    private authService: MsalService,
+    private snackBarMessages: SnackBarMessagesService,
+
   ) {}
 
-  ngAfterViewInit(): void {
+  //TO REMOVE: Testing purpose
+/*   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     setTimeout(() => {
       let role = DOCTOR_ROLE;
       this.ConnectSignalRByRole(role);
     }, this.connectSignalRAfter * 1000);
-  }
+  } */
 
   ngOnInit() {
     this.getProfile(environment.apiConfig.uri);
@@ -71,6 +76,12 @@ export class NavbarComponent implements OnInit {
   getProfile(url: string) {
     this.http.get(url).subscribe((profile) => {
       this.profile = profile;
+      setTimeout(() => {
+        let role = extractRoleFromProfile(profile);
+        if(!role)
+          return this.snackBarMessages.displaySnackBarMessage("Notifications disabled: No suitable role for this user",snackbarMessageType.Warning,3)
+        this.ConnectSignalRByRole(role);
+      }, this.connectSignalRAfter * 1000);
     });
   }
 
@@ -89,16 +100,18 @@ export class NavbarComponent implements OnInit {
 
   async ConnectSignalRByRole(role: string | undefined) {
     if (!role) return;
-    if (role == DOCTOR_ROLE) await this.prescriptionService.connectSignalR();
-    else if (role == PHARMACIST_ROLE) await this.drugsService.connectSignalR();
+    if (role == environment.roles.DOCTOR_ROLE) await this.prescriptionService.connectSignalR();
+    else if (role == environment.roles.PHARMACIST_ROLE) await this.drugsService.connectSignalR();
   }
   async DisconnectSignalRByRole(role: string | undefined) {
     if (!role) return;
-    if (role == DOCTOR_ROLE) await this.prescriptionService.disconnectSignalR();
-    else if (role == PHARMACIST_ROLE) await this.drugsService.disconnectSignalR();
+    if (role == environment.roles.DOCTOR_ROLE) await this.prescriptionService.disconnectSignalR();
+    else if (role == environment.roles.PHARMACIST_ROLE) await this.drugsService.disconnectSignalR();
   }
-  //TO REMOVE
-  async onRoleChange(event: Event) {
+
+
+  //TO REMOVE - testing purposes
+/*   async onRoleChange(event: Event) {
     //disconnect the old role
     await this.DisconnectSignalRByRole(this.selectedRole)
     const selectElement = event.target as HTMLSelectElement;
@@ -108,14 +121,26 @@ export class NavbarComponent implements OnInit {
       this.ConnectSignalRByRole(this.selectedRole);   
     }, 2000);
     
-  }
+  } */
 }
 
-export const DOCTOR_ROLE = 'doctor';
-export const PHARMACIST_ROLE = 'pharmacist';
-export const RECEPTIONIST_ROLE = 'receptionist';
-
-export const NUTRITIONIST_ROLE = 'nutritionist';
-export const SUPERVISOR_ROLE = 'supervisor';
-export const NURSE_ROLE = 'nurse';
-
+export function extractRoleFromProfile(profile: ProfileType | null | undefined): string | null {
+  if (!profile || !profile.jobTitle) return null;
+  let role = profile.jobTitle;
+  switch (role.toLowerCase()) {
+    case environment.roles.DOCTOR_ROLE:
+      return environment.roles.DOCTOR_ROLE;
+    case environment.roles.PHARMACIST_ROLE:
+      return environment.roles.PHARMACIST_ROLE;
+    case environment.roles.RECEPTIONIST_ROLE:
+      return environment.roles.RECEPTIONIST_ROLE;
+    case environment.roles.NUTRITIONIST_ROLE:
+      return environment.roles.NUTRITIONIST_ROLE;
+    case environment.roles.SUPERVISOR_ROLE:
+      return environment.roles.SUPERVISOR_ROLE;
+    case environment.roles.NURSE_ROLE:
+      return environment.roles.NURSE_ROLE;
+    default:
+      return null;
+  }
+}
