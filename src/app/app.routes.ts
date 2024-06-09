@@ -25,8 +25,6 @@ import { PdfPrescriptionToPrintComponent } from './components/pdf-prescription-t
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  // { path: 'dashboard-reception', component: DashboardReceptionComponent },
   { path: 'unit-care', component: UnitCareComponent },
   { path: 'visits', component: Visits },
   { path: 'widgets', component: WidgetsComponent },
@@ -42,10 +40,14 @@ export const routes: Routes = [
   { path: 'register-details', component: MasonryDpiComponent },
   { path: 'register-form', component: RegisterFormComponent },
   { path: 'register', component: RegisterViewComponent },
-  { path: 'DashboardDoctor', component: DashboardDoctorComponent },
   { path: 'LeaveReportComponent', component: LeaveReportComponent },
   { path: 'unitCare-form', component: FormUnitCareComponent },
   {path: 'personels', component : AddPersonelsComponent},
+  //dashboards
+  { path: 'DashboardDoctor', component: DashboardDoctorComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'supervisor-dashboard', component: SupervisorDashboardComponent },
   { path: 'nurse-dashboard', component: NurseDashboardComponent },
-];
+// { path: 'dashboard-reception', component: DashboardReceptionComponent },
+  ];
+  

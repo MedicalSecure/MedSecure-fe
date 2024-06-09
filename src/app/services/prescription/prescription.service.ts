@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Presecription } from '../../model/Presecription'; // Assure-toi que le chemin vers ton modèle est correct
 
 @Injectable({
   providedIn: 'root'
@@ -190,3 +189,15 @@ export class PrescriptionService {
 //   var parsed=JSON.parse(JSON.stringify(response), dateReviver)
 //   return parsed;
 // }
+
+
+export type Presecription= {
+  medication_name: string;
+  dosage: string;
+  quantity :number;
+  date_prescribed : string
+  patient_name :string
+  doctor_name :string
+  status:string;
+  image?:string
+}
