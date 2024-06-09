@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Prescription  , PrescriptionResponse} from '../../model/BacPatient';
 import { HttpClient } from '@angular/common/http';
+import { Diet } from '../../model/Diet';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +29,18 @@ prescription : Prescription[] = [];
         }
       );
  return this.prescription ;
+  }
+  
+  postDiet(diet: Diet): void {
+    const formData = { "Diet": diet };
+    const url = 'http://localhost:6003/v1/diets';
+    this.http.post<any>(url, formData).subscribe(
+      response => {
+        console.log('Response from postDiet:', response);
+      },
+      error => {
+        console.error('Error posting diet:', error);
+      }
+    );
   }
 }

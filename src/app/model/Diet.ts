@@ -1,9 +1,7 @@
-import { PrescriptionDto } from "./Prescription";
 
 export interface Diet {
-    id: string; // Assuming DietId is a string
     meals: Meal[];
-    prescription: PrescriptionDto;
+    register: SimpleRegisterDto;
     dietType: number;
     startDate: Date;
     endDate: Date;
@@ -12,16 +10,31 @@ export interface Diet {
 
   
   export interface Meal {
-    id: string; 
     foods: Food[];
     name: string;
     mealType: number;
   }
   
   export interface Food {
-    id: string;
     name: string;
     calories: number;
     description: string;
     foodCategory: number;
   }
+  export interface SimplePatientDto  {
+    FirstName: string;
+    LastName?: string;
+    DateOfBirth?: Date;
+    Gender?: number;
+  };
+  
+  export interface SimpleRiskFactorDto  {
+    Value: string;
+    Type: string;
+  };
+  
+  export interface SimpleRegisterDto {
+    Patient: SimplePatientDto;
+    Allergies: SimpleRiskFactorDto[];
+    Disease: SimpleRiskFactorDto[];
+  };

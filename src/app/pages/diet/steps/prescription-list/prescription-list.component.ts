@@ -60,8 +60,9 @@ export class PrescriptionListComponent implements OnChanges {
   @Output() selectedRegisterChange = new EventEmitter<RegisterForPrescription | undefined>();
   @Output() onIsPatientSelectPageValidChange = new EventEmitter<boolean>();
   @Input() clearTextAfterEachSearch: boolean = false;
-  @Input()
-  RegistrationsList: RegisterForPrescription[] = [];
+  @Input() RegistrationsList: RegisterForPrescription[] = [];
+  @Output() canNavigateEmmitter =  new EventEmitter<boolean>() ;
+  canNavigate : boolean = false ;
   IsPatientListLoading = false;
   isFailedToLoad = false;
   selectedDate: Date = new Date();
@@ -87,6 +88,7 @@ export class PrescriptionListComponent implements OnChanges {
   constructor(private prescriptionApiService: PrescriptionApiService) { }
   ngOnInit() {
     this.fetchRegistrationsWithPrescriptions();
+   
   }
 
   ngOnChanges(changes: SimpleChanges) {

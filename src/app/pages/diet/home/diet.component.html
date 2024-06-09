@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <app-wizard-header [steps]="steps" (currentStepChange)="SwitchToStep($event)"
-                        [currentStep]="stepNumber" [size]="3" [IconSizeRatio]="0.5"></app-wizard-header>
+                        [currentStep]="stepNumber" [size]="3" [IconSizeRatio]="0.5"   [switchCondition]="false"></app-wizard-header>
                     <div class="wizard-container" style="height: 490px; overflow-y: auto">
                         <div [className]="stepNumber != 1 && 'd-none'">
                             <app-prescription-list-for-diet   [stepNumber]="stepNumber"
@@ -36,13 +36,16 @@
                             <div style="display: flex; align-items: center;">
                                 <div style="display: table; height: 200px;">
                                     <div style="display: table-cell; vertical-align: left; width: 60%;">
-                                        <app-add-diet (mealsEmitter)="onMealsEmitter($event)" [inputRegister]="selectedRegister" ></app-add-diet>
+                                        <app-add-diet [stepNumber]="stepNumber" (mealsEmitter)="onMealsEmitter($event)" [inputRegister]="selectedRegister" ></app-add-diet>
                                     </div>
                                     <div style="display: table-cell; vertical-align: right; width: 40%;">
                                         <app-patient-detail  [meal]="emittedMeals" [inputRegister]="selectedRegister" ></app-patient-detail>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div *ngIf="stepNumber === 3 ">
+                                <app-meals-list></app-meals-list>
                         </div>
                     </div>
                     <div class="d-flex">

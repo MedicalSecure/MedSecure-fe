@@ -10,9 +10,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Diet, Food, Meal } from '../../../../model/Diet';
+import { Diet, Food, Meal, SimpleRegisterDto , SimplePatientDto , SimpleRiskFactorDto} from '../../../../model/Diet';
 import { PrescriptionDto, RegisterForPrescription } from '../../../../model/Prescription';
 import { PrescriptionApiService } from '../../../../services/prescription/prescription-api.service';
+import { DietsService } from '../../../../services/diets/diets.service';
 
 @Component({
   selector: 'app-add-diet',
@@ -24,8 +25,11 @@ import { PrescriptionApiService } from '../../../../services/prescription/prescr
 export class AddDietComponent implements OnInit {
   @Input() inputRegister: RegisterForPrescription | undefined = undefined;
   @Input() note: string[];
-  @Input()
-  CardBodyClass: string = 'card-body pb-0 pt-3';
+  @Input()CardBodyClass: string = 'card-body pb-0 pt-3';
+  @Input() canNavigate : boolean ;
+  @Input() stepNumber: number;
+  @Output() stepNumberChange = new EventEmitter<number>();
+
   liststring: Comment[] = [];
   selectedMealType: number;
   isMealSelected: boolean[] = [];
@@ -52,7 +56,7 @@ export class AddDietComponent implements OnInit {
     label: '',
   })
 
-  constructor(private PescriptionService: PrescriptionApiService) {
+  constructor(private PescriptionService: PrescriptionApiService , private DietService : DietsService) {
     this.selectedMealType = this.MealType[0];
 
   }
@@ -62,6 +66,7 @@ export class AddDietComponent implements OnInit {
     this.DietForm.controls.meals.valueChanges.subscribe(() => {
       this.isMealSelected = Array(this.DietForm.controls.meals.length).fill(false);
     });
+    this.canNavigate = false ; 
 
 
   }
@@ -173,27 +178,48 @@ export class AddDietComponent implements OnInit {
     const newId = this.cards.length ? this.cards[this.cards.length - 1].id + 1 : 1;
     this.cards.push({ id: newId });
   }
+  fromRegisterToregisterDto (register: RegisterForPrescription):SimpleRegisterDto {
+    const simplePatientDto:SimplePatientDto = {
+      FirstName : register.patient_firstName ,
+      LastName : register.patient_lastName ,
+      DateOfBirth : register.patient_dateOfBirth ,
+      Gender:register.patient_gender
+    }
+    const mapAllergy = register.allergies?.map((rf) => ({
+      Value: rf.value,
+      Type: rf.type ?? '',
+    })) || [];
+    
+    const mapDisease = register.diseases?.map((rf) => ({
+      Value: rf.value,
+      Type: rf.type ?? '',
+    })) || [];
+    
+    const simpleRegisterDto: SimpleRegisterDto = {
+      Patient: simplePatientDto,
+      Allergies: mapAllergy,
+      Disease: mapDisease,
+    };
+    return simpleRegisterDto ;
 
+  }
   addCardFromChild() {
     const newId = this.cards.length ? this.cards[this.cards.length - 1].id + 1 : 1;
     this.cards.push({ id: newId });
   }
   Submit() {
-    console.log(this.DietForm.value);
-
+this.canNavigate = true
     this.Diet = this.DietForm.value
-    let mappeddiet = this.Diet
+    let mappeddiet: Diet = this.Diet
     if (mappeddiet.meals) {
       mappeddiet.meals = mappeddiet.meals.map((meal: Meal) => {
         return {
           ...meal,
-          id: '',
           name: meal.name,
           mealType: meal.mealType,
           foods: meal.foods.map((food: Food) => {
             return {
               ...food,
-              id: '',
               name: food.name,
               calories: food.calories,
               description: food.description,
@@ -202,10 +228,31 @@ export class AddDietComponent implements OnInit {
           }),
         };
       });
-
     }
-    this.mealsEmitter.emit(mappeddiet.meals);
+   
+    if (this.inputRegister && this.inputRegister.prescriptions ) {
+      mappeddiet.endDate = this.inputRegister.prescriptions[0].diet?.endDate || new Date();
+      mappeddiet.startDate = this.inputRegister.prescriptions[0].diet?.startDate || new Date();
 
+      mappeddiet.register = this.fromRegisterToregisterDto(this.inputRegister);
+    } else {
+      console.error('inputRegister is undefined');
+    }
+   
+      
+    if (this.DietForm.value.label !== undefined) {
+      mappeddiet.label = this.DietForm.value.label;
+  } else {
+      mappeddiet.label = ''; // or handle as needed
+  }    this.mealsEmitter.emit(mappeddiet.meals);
+    this.stepNumber = 3 ; 
+    this.stepNumberChange.emit(this.stepNumber);
+    this.DietService.postDiet(mappeddiet);
+
+    console.log("mappeddiet" + mappeddiet.meals);
+    console.log("form values" + this.DietForm.value.meals);
+    
+    
 
   }
 
