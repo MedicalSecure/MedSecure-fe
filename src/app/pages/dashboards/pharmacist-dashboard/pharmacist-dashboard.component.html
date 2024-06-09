@@ -9,7 +9,7 @@
             <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>prescriptions</span></p>
           </div>
           <div>
-            <p class="statistics-title">Pending Prescription</p>
+            <p class="statistics-title">Pending Prescriptions</p>
             <h3 class="rate-percentage">{{ pendingPrescriptions }}</h3>
             <p class="text-warning d-flex"><i class="mdi mdi-menu-down"></i><span>pending</span></p>
           </div>
@@ -19,9 +19,9 @@
             <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>valid</span></p>
           </div>
           <div class="d-none d-md-block">
-            <p class="statistics-title">Invalid Prescription</p>
+            <p class="statistics-title">Rejected Prescription</p>
             <h3 class="rate-percentage">{{ invalidPrescription }}</h3>
-            <p class="text-danger d-flex"><i class="mdi mdi-menu-up"></i><span>invalid</span></p>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-up"></i><span>rejected</span></p>
           </div>
           <div class="d-none d-md-block">
             <p class="statistics-title">Reserved Stock</p>
@@ -61,7 +61,7 @@
       </div>
       <div class="col-lg-4 d-flex flex-column">
         <div class="row flex-grow">
-          <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+          <!-- <div class="col-md-6 col-lg-12 grid-margin stretch-card">
             <div class="card bg-primary card-rounded">
               <div class="card-body pb-0">
                 <div class="col-sm-8">
@@ -73,11 +73,11 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="col-md-6 col-lg-12 grid-margin stretch-card">
             <div class="card card-rounded">
               <div class="card-body">
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col-sm-6">
                     <div class="d-flex justify-content-between align-items-center mb-2 mb-sm-0">
                       <div class="circle-progress-width">
@@ -100,7 +100,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -161,7 +161,7 @@
             </div>
           </div>
 
-          <!-- <app-activities [service]="test" [className]="'col-md-6 col-lg-6 grid-margin stretch-card'"></app-activities> -->
+          <app-activities [service]="test" [className]="'col-md-6 col-lg-6 grid-margin stretch-card'"></app-activities>
         </div>
       </div>
       <div class="col-lg-4 d-flex flex-column">

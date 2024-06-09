@@ -7,6 +7,8 @@ import { WidgetsListePrescriptionComponent } from '../../../components/list-widg
 import { MultiSenseWidgetComponent } from '../../../components/widgets/multisense-widget/multisense-widget.component';
 import { TaskComponent } from '../../../components/task/task.component';
 import { ActivitiesComponent } from '../../../components/activities/activities.component';
+import { DrugService } from '../../../services/medication/medication.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-pharmacist-dashboard',
@@ -32,5 +34,11 @@ export class PharmacistDashboardComponent {
   reservedStock: number = 40;
   availableStock: number = 70;
 
+
+  constructor(public  test: DrugService, private http: HttpClient) { }
+
+  ngOnInit():void {
+    this.test.getActivities()
+    }
 }
 

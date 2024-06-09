@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   CheckDrugRequest,
@@ -12,6 +12,8 @@ import { Observable, map } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MedicationType } from '../../pages/pharmacy/stp1-import-map-drugs/stp1-import-map-drugs.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { GetActivitiesResponse } from '../../types';
+import { parseDates } from '../bacPatient/bac-patient-services.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +23,27 @@ export class DrugService {
 
   constructor(private http: HttpClient) {}
 
-  apiCheck = 'http://localhost:5008/api/v1/drugsChecked';
+  apiCheck = 'http://localhost:6008/api/v1/drugsChecked';
 
-  apiCreate = 'http://localhost:5008/api/v1/drugs';
+  apiCreate = 'http://localhost:6008/api/v1/drugs';
+
+  getActivities(
+    pageIndex: number = 0,
+    pageSize: number = 7
+  ): Observable<GetActivitiesResponse> {
+    const params = new HttpParams()
+      .set('PageIndex', pageIndex.toString())
+      .set('PageSize', pageSize.toString());
+    let x = this.http.get<GetActivitiesResponse>("http://localhost:6008/api/v1/Activities", {
+      params,
+    }).pipe(
+      map((response) => {
+        //still testing dates
+        return parseDates(response);
+      })
+    );
+    return x;
+  }
 
   getMedications() {
     return this.http.get<any>('./../../assets/data/medications.json');
@@ -60,7 +80,7 @@ export class DrugService {
 
   getData(dataSource: MatTableDataSource<MedicationType, MatPaginator>) {
     this.http
-      .get<GetDrugsResponse>('http://localhost:5008/api/v1/drugs')
+      .get<GetDrugsResponse>('http://localhost:6008/api/v1/drugs')
       .subscribe(
         (response: GetDrugsResponse) => {
           if (response && response.drugs.data) {
