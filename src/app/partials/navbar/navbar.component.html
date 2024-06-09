@@ -33,6 +33,12 @@ class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-t
   </ul>
    <!-- tabs nav bar -->
   <ul class="navbar-nav ms-auto">
+
+    <!--  TODO REMOVE THIS ROLE SELECTOR -->
+    <select class="form-select" [value]="selectedRole" (change)="onRoleChange($event)">
+      <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+    </select>
+
     <!-- Search -->
     <li class="nav-item">
       <form class="search-form" style="margin-bottom: 4px;" action="#">
