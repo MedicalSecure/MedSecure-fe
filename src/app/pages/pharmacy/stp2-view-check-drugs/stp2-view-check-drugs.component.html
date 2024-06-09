@@ -11,8 +11,8 @@
             <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="custom-table">
               <ng-container matColumnDef="header">
                 <div class="date" style="display: flex; align-items: flex-start">
-                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns.length">
-                    <!-- <mat-chip class="uc" style="margin-right: 20px"> Manufacturer : Roche </mat-chip> -->
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns.length" class="py-0">
+                    <mat-chip class="uc  py-3" style="margin-right: 20px"> Medsecure: Filter Medications</mat-chip>
 
                     <mat-form-field appearance="outline" style="width: 300px; position: relative; border-radius: 50px; margin-top: 20px">
                       <input style="width: 300px; border-radius: 50px" matInput (keyup)="applyFilter($event)" placeholder="Search..." #input style="width: 200px; color: gray" />
@@ -135,4 +135,3 @@
     </div>
   </div>
 </table>
-<app-error-message></app-error-message>

@@ -26,7 +26,6 @@ export class RadialbarChartsComponent {
       series: [],
       chart: {
         height: 200,
-
         type: "radialBar"
       },
       plotOptions: {

@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
-import { MedicationType } from '../../../partials/navbar/navbar.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { DrugService } from '../../../services/medication/medication.service';
+import { MedicationType } from '../stp1-import-map-drugs/stp1-import-map-drugs.component';
 @Component({
   selector: 'app-pharmacy-list',
   standalone: true,
@@ -30,7 +30,8 @@ export class PharmacyListComponent implements OnInit {
   @Input() mappedMedications: MedicationType[] = [];
   
   @Input() selectedPrescription: any | undefined = undefined;
-  @Output() onClickNewPrescriptionEvent = new EventEmitter<boolean>();
+  @Output() onClickNewMedicationEvent = new EventEmitter<boolean>();
+  @Output() onClickViewPrescriptionsEvent = new EventEmitter<boolean>();
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   
@@ -85,12 +86,16 @@ export class PharmacyListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  onClickPrescription(Prescription: any) {
-    this.selectedPrescription = Prescription;
+  onClickMedication(Medication: any) {
+    this.selectedPrescription = Medication;
   }
 
-  onClickNewPrescription() {
-    this.onClickNewPrescriptionEvent.emit(false);
-    this.onClickPrescription(undefined);
+  onClickNewMedication() {
+    this.onClickNewMedicationEvent.emit(false);
+    this.onClickMedication(undefined);
+  }
+
+  onClickViewPrescriptions() {
+    this.onClickViewPrescriptionsEvent.emit(true);
   }
 }

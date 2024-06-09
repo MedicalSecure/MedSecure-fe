@@ -14,7 +14,9 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PharmacyListComponent } from '../pharmacy-list/pharmacy-list.component';
 import { Stp3ConfirmUpdateDrugs } from '../stp3-confirm-update-drugs/stp3-confirm-update-drugs.component';
-import { DrugDTO } from '../../../types/DrugDTOs';
+import { DrugDTO } from '../../../model/Drugs';
+import { PrescriptonToValidateComponent } from '../prescripton-to-validate/prescripton-to-validate.component';
+
 
 @Component({
   selector: 'app-add-pharmacy',
@@ -28,6 +30,7 @@ import { DrugDTO } from '../../../types/DrugDTOs';
     RouterModule,
     CommonModule,
     PharmacyListComponent,
+    PrescriptonToValidateComponent
   ],
   templateUrl: './add-pharmacy.component.html',
   styleUrl: './add-pharmacy.component.css',
@@ -47,6 +50,7 @@ export class AddPharmacyComponent implements OnInit {
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
   ShowMedicationList: boolean = false;
+  ShowPrescriptionList: boolean = true;
   wizardSteps: wizardStepType[] = _steps;
   eventsSubject: Subject<number> = new Subject<number>();
 
@@ -57,9 +61,21 @@ export class AddPharmacyComponent implements OnInit {
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
   backButtonContent: { label: string; class: string } = _backButtonContent;
 
+  private hubConnection: signalR.HubConnection;
+
+
   ngOnInit() {
     this._updateButtonsState();
     this.mappedMedications;
+  }
+  
+  ngAfterViewInit() {
+    // This ensures that the view is initialized before trying to access the child component
+  }
+
+
+  handleDownloadButtonClick() {
+    this.stp2ViewCheckDrugs.ExportExcel(); // Directly call the method in the child component
   }
 
   validatePageSwitch = (index: number): boolean => {
@@ -114,23 +130,36 @@ export class AddPharmacyComponent implements OnInit {
   }
 
   onClickFinish() {
-    this.ShowMedicationList = true;
     this.clearWizard();
+    this.ShowMedicationList = true;
   }
 
   onClickMedicationListEventHandler(viewMedications: boolean) {
     this.ShowMedicationList = viewMedications;
+    if(viewMedications==true)
+      this.ShowPrescriptionList = false;
   }
 
   onClickViewMedications() {
     this.ShowMedicationList = !this.ShowMedicationList;
   }
 
+  onClickNewPrescriptionEventHandler(viewPrescriptions: boolean) {
+    this.clearWizard();
+    this.ShowPrescriptionList = viewPrescriptions;
+  }
+
+  onClickViewPrescriptions(show : boolean = true) {
+    this.ShowPrescriptionList = show;
+    if(show)
+      this.ShowMedicationList=false;
+  }
+
   /* wizard buttons */
   SwitchToStep(index: number) {
     //INDEX is the next page we are trying to go to.
     if (this.validatePageSwitch(index) == false) return;
-    if (index > this.stepsLimit) this.onClickFinish();
+    if (index > this.stepsLimit) return this.onClickFinish();
 
     if (index === 2 && this.stepNumber === 1)
       return this.handleSubmitStep1ThenSwitchToStep2();
@@ -160,8 +189,6 @@ export class AddPharmacyComponent implements OnInit {
       this._updateButtonsState();
     }
   }
-
-  
 
   isStepNumber(step: number): boolean {
     return this.stepNumber === step;
@@ -222,7 +249,7 @@ export class AddPharmacyComponent implements OnInit {
   }
 
   private _updateButtonsState() {
-     if (!this.validatePageSwitch(this.stepNumber + 1)) {
+    if (!this.validatePageSwitch(this.stepNumber + 1)) {
       this.setNextButtonClass('', 'disabled');
     } else {
       //reset styles
@@ -250,6 +277,7 @@ export class AddPharmacyComponent implements OnInit {
       this.setBackButtonClass('', '', true);
     }
   }
+
 }
 
 const _nextButtonContent = {
@@ -261,6 +289,7 @@ const _backButtonContent = {
   label: 'back',
   class: 'btn btn-primary text-white',
 };
+
 
 const _steps: wizardStepType[] = [
   {

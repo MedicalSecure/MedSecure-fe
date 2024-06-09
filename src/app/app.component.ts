@@ -14,7 +14,6 @@ import { NgApexchartsModule } from "ng-apexcharts";
     schemas: [NO_ERRORS_SCHEMA]
 })
 export class AppComponent {
-
   constructor() { }
   title = 'medsecure-fe';
 

@@ -1,0 +1,27 @@
+body {
+    background-color: #f7f7f7;
+}
+
+.card {
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+.card-header {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-footer {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.list-group-item {
+    background-color: #f9f9f9;
+}
+
+td, th{
+    padding: 0.3rem;
+    text-align: center;
+}
