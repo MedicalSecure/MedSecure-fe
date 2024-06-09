@@ -60,6 +60,6 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent , canActivate: [MsalGuard] },
   { path: 'supervisor-dashboard', component: SupervisorDashboardComponent , canActivate: [MsalGuard] },
   { path: 'nurse-dashboard', component: NurseDashboardComponent , canActivate: [MsalGuard] },
-// { path: 'dashboard-reception', component: DashboardReceptionComponent },
+// { path: 'reception-dashboard', component: DashboardReceptionComponent },
   ];
   

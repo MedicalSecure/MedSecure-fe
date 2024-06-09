@@ -1,7 +1,7 @@
 import { Component ,OnInit} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FooterComponent } from "../../partials/footer/footer.component";
-import { NavbarComponent } from "../../partials/navbar/navbar.component";
+import { DOCTOR_ROLE, NURSE_ROLE, NUTRITIONIST_ROLE, NavbarComponent, PHARMACIST_ROLE, RECEPTIONIST_ROLE, SUPERVISOR_ROLE } from "../../partials/navbar/navbar.component";
 import { SettingsPanelComponent } from "../../partials/settings-panel/settings-panel.component";
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SnackBarMessagesComponent } from '../../components/snack-bar-messages/snack-bar-messages.component';
@@ -17,6 +17,7 @@ import { filter } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { ProfileType } from '../profile/ProfileType';
 import { environment } from '../../../environments/environment';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-home',
@@ -26,10 +27,12 @@ import { environment } from '../../../environments/environment';
     providers: [provideNativeDateAdapter()],
   imports: [
     RouterModule,
+    CommonModule,
     FooterComponent,
     NavbarComponent,
     SettingsPanelComponent,
-    SnackBarMessagesComponent
+    SnackBarMessagesComponent,
+    MatProgressSpinner
   ],
 })
 export class HomeComponent implements OnInit {
@@ -52,7 +55,7 @@ export class HomeComponent implements OnInit {
         console.log(result);
         const payload = result.payload as AuthenticationResult;
         this.authService.instance.setActiveAccount(payload.account);
-        this.getProfile(environment.apiConfig.uri);
+        
       });
 
     this.msalBroadcastService.inProgress$
@@ -66,6 +69,7 @@ export class HomeComponent implements OnInit {
 
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+    this.getProfile(environment.apiConfig.uri);
   }
 
   getProfile(url: string) {
@@ -73,5 +77,16 @@ export class HomeComponent implements OnInit {
       .subscribe(profile => {
         this.profile = profile;
       });
+  }
+
+  getRole() {
+    return {
+      isReceptionist: this.profile?.jobTitle === RECEPTIONIST_ROLE,
+      isDoctor: this.profile?.jobTitle === DOCTOR_ROLE,
+      isPharmacist: this.profile?.jobTitle === PHARMACIST_ROLE,
+      isNutritionist: this.profile?.jobTitle === NUTRITIONIST_ROLE,
+      isSupervisor: this.profile?.jobTitle === SUPERVISOR_ROLE,
+      isNurse: this.profile?.jobTitle === NURSE_ROLE,
+    };
   }
 }

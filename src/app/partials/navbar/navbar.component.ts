@@ -114,3 +114,8 @@ export class NavbarComponent implements OnInit {
 export const DOCTOR_ROLE = 'doctor';
 export const PHARMACIST_ROLE = 'pharmacist';
 export const RECEPTIONIST_ROLE = 'receptionist';
+
+export const NUTRITIONIST_ROLE = 'nutritionist';
+export const SUPERVISOR_ROLE = 'supervisor';
+export const NURSE_ROLE = 'nurse';
+
