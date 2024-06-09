@@ -24,6 +24,8 @@ import { parseGenderEnum } from '../../registration/register-form/register-form.
 import { getGender } from '../../registration/register-details/register-details.component';
 import { Gender } from '../../../enums/enum';
 import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData';
+import { PdfPrescriptionToPrintComponent } from '../../../components/pdf-prescription-to-print/pdf-prescription-to-print.component';
+import { RegisterDto } from '../../../model/Registration';
 
 @Component({
   selector: 'app-old-prescription-view-for-prescription-list',
@@ -36,6 +38,7 @@ import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData'
     RouterModule,
     MatProgressSpinnerModule,
     HumanBodyViewerComponent,
+    PdfPrescriptionToPrintComponent
   ],
   templateUrl: './old-prescription-view-for-prescription-list.component.html',
   styleUrl: './old-prescription-view-for-prescription-list.component.css'
@@ -50,6 +53,9 @@ export class OldPrescriptionViewForPrescriptionListComponent {
 
   @Output() onClickUpdatePrescription = new EventEmitter<void>();
   @Output() onClickSuspendPrescription = new EventEmitter<void>();
+
+  @ViewChild(PdfPrescriptionToPrintComponent)
+  printPdfComponent!: PdfPrescriptionToPrintComponent;
 
   selectedUnitCare: UnitCare | undefined;
   selectedDiet: DietDto | undefined;
@@ -212,6 +218,14 @@ export class OldPrescriptionViewForPrescriptionListComponent {
     this.onClickSuspendPrescription.emit();
   }
 
+  printPdf(prescription:PrescriptionDto,register?:RegisterDto | undefined){
+    if(this.printPdfComponent)
+      this.printPdfComponent.downloadPrescriptionPDF(prescription,register);
+    else{
+      console.error("print pdf component not initialized");
+    }
+  }
+  
   mapMedicationsToPrescriptions() {
     this.selectedPrescription?.posologies.forEach((posology) => {
       //the new medication is coming from the pharmacy microservice => its updated

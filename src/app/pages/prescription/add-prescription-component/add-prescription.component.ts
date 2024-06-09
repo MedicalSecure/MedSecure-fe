@@ -42,8 +42,9 @@ import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { UnitCare } from '../../../model/unitCare/UnitCareData';
-import { SnackBarMessagesComponent, snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
+import { SnackBarMessageProps, SnackBarMessagesComponent, snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
+import { PdfPrescriptionToPrintComponent } from '../../../components/pdf-prescription-to-print/pdf-prescription-to-print.component';
 
 @Component({
   selector: 'app-add-prescription',
@@ -60,7 +61,8 @@ import { SnackBarMessagesService } from '../../../services/util/snack-bar-messag
     CommonModule,
     PrescriptionListComponent,
     SnackBarMessagesComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    PdfPrescriptionToPrintComponent
   ],
   templateUrl: './add-prescription.component.html',
   styleUrl: './add-prescription.component.css',
@@ -70,6 +72,8 @@ export class AddPrescriptionComponent implements DoCheck {
   stp5HospitalizationComponent!: Stp5HospitalizationComponent;
   @ViewChild(Stp3AddDiagnosticComponent)
   stp3AddDiagnosticComponent!: Stp3AddDiagnosticComponent;
+  @ViewChild(PdfPrescriptionToPrintComponent)
+  printPdfComponent!: PdfPrescriptionToPrintComponent;
 
   stepNumber: number = 1;
   stepsLimit: number = _steps.length;
@@ -99,7 +103,7 @@ export class AddPrescriptionComponent implements DoCheck {
     private drugService: DrugService,
     private unitCareService: UnitCareService,
     private dietService: DietService,
-    private snackBarMessagesService:SnackBarMessagesService
+    private snackBarMessagesService:SnackBarMessagesService,
   )
   {}
 
@@ -183,12 +187,20 @@ export class AddPrescriptionComponent implements DoCheck {
       finalPrescription.id = this.oldPrescriptionToUpdate.id;
       this.prescriptionApiService.putPrescriptions(finalPrescription).subscribe(
         (response) => {
+          //export pdf in case of not hospitalized patient
+          if(finalPrescription.unitCare == null)
+            this.printPdf(response.id,this.selectedRegister?.id )
           this.clearWizard();
           this.ShowPrescriptionList = true;
           this.lastCreatedPrescriptionIdFromResponse = response.id;
           console.log(response);
           this.onSubmitLoading = false;
-
+          //confirmation messages
+          const props: SnackBarMessageProps = {
+            messageContent: 'Prescription has been updated',
+            messageType: snackbarMessageType.Success,
+          };
+          this.snackBarMessagesService.displaySnackBarMessage(props);
         },
         (error) => {
           console.error(error.error);
@@ -203,11 +215,21 @@ export class AddPrescriptionComponent implements DoCheck {
         .postPrescriptions(finalPrescription)
         .subscribe(
           (response) => {
+            //export pdf in case of not hospitalized patient
+            if(finalPrescription.unitCare == null)
+              this.printPdf(response.id,this.selectedRegister?.id )
             this.clearWizard();
             this.lastCreatedPrescriptionIdFromResponse = response.id;
             this.ShowPrescriptionList = true;
             console.log(response);
             this.onSubmitLoading = false;
+            
+            //confirmation messages
+            const props: SnackBarMessageProps = {
+              messageContent: 'Prescription has been added',
+              messageType: snackbarMessageType.Success,
+            };
+            this.snackBarMessagesService.displaySnackBarMessage(props);
           },
           (error) => {
             console.error(error.error);
@@ -219,6 +241,15 @@ export class AddPrescriptionComponent implements DoCheck {
     }
   }
 
+  printPdf(prescriptionId:string,registerId:string | undefined){
+    if(this.printPdfComponent)
+      this.printPdfComponent.downloadPrescriptionPDF(prescriptionId,registerId);
+    else{
+      console.error("print pdf component not initialized");
+    }
+  }
+
+  
   async handleUpdatePrescription({prescription,register,}
     : { prescription: PrescriptionDto;register: RegisterForPrescription;})
    {

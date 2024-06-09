@@ -19,6 +19,7 @@ import {FormUnitCareComponent} from './components/form-unit-care/form-unit-care.
 import { AddPersonelsComponent } from './components/add-personels/add-personels.component';
 import{SupervisorDashboardComponent} from './components/supervisor-dashboard/supervisor-dashboard.component';
 import { PrescriptionViewForPrescriptionToValidateComponent } from './pages/pharmacy/prescription-view-for-prescription-to-validate/prescription-view-for-prescription-to-validate.component';
+import { PdfPrescriptionToPrintComponent } from './components/pdf-prescription-to-print/pdf-prescription-to-print.component';
 
 
 export const routes: Routes = [
@@ -36,6 +37,7 @@ export const routes: Routes = [
   { path: 'pharmacy', component: AddPharmacyComponent },
   { path: 'pharmacyValidation', component: PrescriptionViewForPrescriptionToValidateComponent },
   { path: 'prescribe', component: AddPrescriptionComponent },
+  { path: 'prescribePDF', component: PdfPrescriptionToPrintComponent },
   { path: 'register-details', component: MasonryDpiComponent },
   { path: 'register-form', component: RegisterFormComponent },
   { path: 'register', component: RegisterViewComponent },

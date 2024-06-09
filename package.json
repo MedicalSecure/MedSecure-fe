@@ -70,6 +70,7 @@
     "highcharts": "^11.3.0",
     "highcharts-angular": "^4.0.0",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.1",
     "masonry-layout": "^4.2.2",
     "mdb-ui-kit": "^7.1.0",
     "ng-apexcharts": "^1.9.0",

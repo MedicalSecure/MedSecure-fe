@@ -229,21 +229,28 @@
           </p>
         </div>
       </div>
-      <div class="mt-2 d-flex justify-content-evenly">
+      <div class="mt-2 d-flex justify-content-evenly gap-1">
         <button
-          class="col-5 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+          class="col-4 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
           [disabled]="![1, 2].includes(selectedPrescription.status) || !enableActions"
           (click)="onClickUpdatePrescriptionHandler()"
         >
           <i class="fa fa-pencil-square-o m-0" aria-hidden="true"></i><span>Update</span>
         </button>
         <button
-          class="col-5 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+          class="col-4 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
           style="border-color: red"
           [disabled]="![1, 2].includes(selectedPrescription.status) || !enableActions"
           (click)="onClickSuspendPrescriptionHandler()"
         >
           <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Suspend</span>
+        </button>
+        <button
+          class="col-4 btn d-flex gap-2 align-items-center py-2 px-3 m-0"
+          [disabled]="!selectedPrescription"
+          (click)="printPdf(selectedPrescription)"
+        >
+          <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Print</span>
         </button>
       </div>
       <p *ngIf="enableActions==false" class="mt-1"> <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; "  /> You are currently in Read-Only mode</p>
@@ -251,3 +258,7 @@
   </div>
 </ngx-masonry>
 }
+<!-- Print pdf -->
+<div class="d-none">
+  <app-pdf-prescription-to-print></app-pdf-prescription-to-print>
+</div>

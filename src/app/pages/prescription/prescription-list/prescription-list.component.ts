@@ -7,6 +7,7 @@ import {
   Output,
   QueryList,
   SimpleChanges,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -54,6 +55,8 @@ export class PrescriptionListComponent implements OnInit {
   }>();
 
   @ViewChildren('prescriptionRows') prescriptionRows: QueryList<any>;
+  @ViewChild(OldPrescriptionViewForPrescriptionListComponent)
+  oldPrescriptionView!: OldPrescriptionViewForPrescriptionListComponent;
 
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
@@ -169,6 +172,11 @@ export class PrescriptionListComponent implements OnInit {
 
   }
   
+  downloadPdfFromChild(){
+    if(!this.oldPrescriptionView || !this.selectedPrescription)
+      return;
+    this.oldPrescriptionView.printPdf(this.selectedPrescription)
+  }
 
   onClickRefresh() {
     //this.fetchPrescriptions();
