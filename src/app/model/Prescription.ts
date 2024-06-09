@@ -53,6 +53,7 @@ export type PrescriptionDto = {
   symptoms: SymptomDto[];
   diagnoses: DiagnosisDto[];
   posologies: PosologyDto[];
+  validation?: ValidationForPrescriptionDto | null;
   bedId?: string | null; //match these types
   status: PrescriptionStatus;
   diet?: DietForPrescriptionDTO | null;
@@ -61,6 +62,16 @@ export type PrescriptionDto = {
   createdBy: string;
   lastModifiedBy?: string | null;
 };
+
+export type ValidationForPrescriptionDto = {
+  id: string; 
+  pharmacistId: string;
+  prescriptionId: string;
+  pharmacistName?: string | null; 
+  isValid: boolean;
+  notes: string;
+  createdAt: Date; 
+}
 
 export type PrescriptionCreateDto = {
   id?: string;

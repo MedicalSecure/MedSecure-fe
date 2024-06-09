@@ -1,0 +1,345 @@
+<div class="row flex-grow mt-2">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card card-rounded">
+      <div class="card-body">
+        @if (true) {}
+        <!-- Tools bar (report issue, forward ...) -->
+        <div class="d-sm-flex justify-content-between align-items-start">
+          <div>
+            <h4 class="card-title card-title-dash">Pharmacy</h4>
+            <p class="card-subtitle card-subtitle-dash">Import & Map & Check & Insert Medication List</p>
+          </div>
+
+          <div class="btn-wrapper">
+            <a class="btn btn-primary text-white align-items-center" [routerLink]="['/', 'pharmacy']"> <i class="fa fa-qrcode" aria-hidden="true"></i> List Prescriptions </a>
+
+            <a href="#" class="btn btn-danger text-white align-items-center" [routerLink]="['/', 'report-issue-csv']" style="border-color: red">
+              <i class="fa fa-flag" aria-hidden="true"></i> Report an issue
+            </a>
+          </div>
+        </div>
+        <!-- /* This component will be deleted, its duplicated due to an angular error when calling them both */
+ -->
+
+        @if (selectedPrescription && !isPrescriptionLoading) {
+        <div class="row">
+          <!-- Posologies // Medications -->
+          <div class="card masonry-item-big col-12 col-md-6 col-lg-5">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h5 class="card-title"><strong> Medications</strong></h5>
+                <p style="cursor: pointer" (click)="onToggleShowDetails()">{{ showDetails ? "Hide" : "Show" }} details</p>
+              </div>
+              <div class="card-text">
+                @if(isPrescriptionLoading==false){
+                <ul class="p-1 m-0 ps-3">
+                  <li *ngFor="let posology of selectedPrescription.posologies; let $index = index">
+                    <div class="mb-0">
+                      <div class="mb-0 d-flex justify-content-start align-middle align-items-center">
+                        <span style="cursor: pointer" class="text-primary fw-bold fs-5">
+                          {{ posology?.medication?.name ?? posology.medicationId.slice(0, 20) + "..." }}
+                        </span>
+                      </div>
+                      <p class="text-black-50 fw-bolder fs-6">
+                        Requested a total of <strong class="text-decoration-underline">{{ getPosologySummary(posology).beforeFoodCounter + getPosologySummary(posology).afterFoodCounter }}</strong>
+                        <span class="text-danger">{{ " *" + posology.medication.dosage }} Units</span>
+                      </p>
+                      <p class="fw-light mb-0">
+                        {{ posology.isPermanent === true ? "Permanent" : getNumberOfDaysInRange([posology.startDate, posology.endDate]) + " Days" }}
+                        <span style="font-size: small">{{ getDateString(posology.startDate, "dd/mm/yyyy") }}</span>
+                        @if (posology.isPermanent ===false) {
+                        <span style="font-size: small">{{ " - " + getDateString(posology.endDate!, "dd/mm/yyyy") }}</span>
+                        } @if (getPosologySummary(posology).numberOfCautions > 0) {
+                        <span style="position: relative; margin-left: 6px" [title]="getPosologySummary(posology).numberOfCautions + ' Total caution comments for this posology'">
+                          <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                          <span class="icon-counter">{{ getPosologySummary(posology).numberOfCautions }}</span>
+                        </span>
+                        } @if (getPosologySummary(posology).numberOfComments > 0) {
+                        <span style="position: relative; margin-left: 8px" [title]="getPosologySummary(posology).numberOfComments + ' Total comments for this posology'">
+                          <i class="fa fa-comments-o" aria-hidden="true"></i>
+                          <span class="icon-counter">{{ getPosologySummary(posology).numberOfComments }}</span>
+                        </span>
+                        }
+                      </p>
+
+                      <p class="text-dark fw-bold" style="font-size: small; margin-top: -0.2rem">
+                        <!--  {{ medication.dispenseValue + " " + medication.dispenseUnit }} -->
+                        @if (true) {
+                        {{ getPosologySummary(posology).timesADay }}
+                        <!--   {{ getPosologySummary(posology).average }} units on avg | -->
+                        max dose: {{ getPosologySummary(posology).maximumDispenseQuantity }} } * <span class="text-danger">{{ posology.medication.dosage }}</span>
+                      </p>
+                      <app-schedule *ngIf="showDetails && posology.dispenses.length > 0" [partsOfDayHours]="posology.dispenses"></app-schedule>
+                      <ul *ngIf="showDetails && posology.comments">
+                        <li *ngFor="let comment of posology.comments; let i = index">
+                          <p>
+                            <strong class="{{ comment.label == 'Caution' ? ' text-warning fs-6 fw-bold' : '' }}">{{ comment.label }}:</strong> {{ " " + comment.content }}
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                    <hr />
+                  </li>
+                </ul>
+                } @if(isPrescriptionLoading){
+                <mat-spinner></mat-spinner>
+                }
+              </div>
+            </div>
+          </div>
+          <!-- Display Other cards details component -->
+          <div class="col">
+            <ngx-masonry [options]="masonryOptions" className="py-2">
+              <!-- Actions -->
+              <div ngxMasonryItem class="card masonry-item no-wrap">
+                <div class="card-body">
+                  <h5 class="card-title"><strong>Actions</strong></h5>
+                  <div class="card-text row">
+                    <div class="col-5">
+                      <p>Prescription Status :</p>
+                      <p>Prescription Date :</p>
+                      <p>Validation Status :</p>
+                      <p>Editing Status :</p>
+                      <p>Received At :</p>
+                      <p>Validated At :</p>
+                      <p>Pharmacist :</p>
+                      <p>Notes :</p>
+                    </div>
+                    <div class="col-7">
+                      <p>
+                        <strong [class]="getPrescriptionStatus(selectedPrescription).class">{{ getPrescriptionStatus(selectedPrescription).text }}</strong>
+                      </p>
+                      <p>
+                        <strong>{{ getDateString(selectedPrescription.createdAt, "dd/mm - HH:MM") }}</strong>
+                      </p>
+                      <ng-container *ngIf="isValidationLoading == false; else ValidationIsLoading">
+                        <p><!-- Validation status -->
+                          <strong [className]="getValidationStatusInfo().class">{{ getValidationStatusInfo().text }}</strong>
+                        </p>
+                        <p><!-- Editing Status : -->
+                          <strong>{{ selectedPrescription.status == 1  && enableActions ? "Enabled" : "Disabled" }}</strong>
+                        </p>
+                        <p>
+                          <strong>{{ getDateString(selectedValidation?.createdAt ?? selectedPrescription.createdAt , "dd/mm - HH:MM")}}</strong>
+                        </p>
+                        <p>
+                          <strong>{{ getValidationActionInfo().validatedAt}}</strong>
+                        </p>
+                        <p>
+                          <strong>{{ getValidationActionInfo().pharmacist}}</strong>
+                        </p>
+                        <p>
+                          <strong *ngIf="!getValidationActionInfo().notes">No notes</strong>
+                          <strong *ngIf="getValidationActionInfo().notes" 
+                          [title]="getValidationActionInfo().notes"
+                          style="text-decoration: underline;">
+                            View Notes 
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                          </strong>
+                        </p>
+                      </ng-container>
+                      <ng-template #ValidationIsLoading>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="mt-2 d-flex justify-content-evenly">
+                    <button
+                      class="col-5 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+                      [disabled]="selectedPrescription.status != 1  || !enableActions"
+                      (click)="onClickValidate()"
+                    >
+                      <i class="fa fa-pencil-square-o m-0" aria-hidden="true"></i><span>Confirm</span>
+                    </button>
+                    <button
+                      class="col-5 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+                      style="border-color: red"
+                      [disabled]="selectedPrescription.status != 1 || !enableActions"
+                      (click)="onClickReject()"
+                    >
+                      <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Reject</span>
+                    </button>
+                  </div>
+                  <p *ngIf="enableActions == false" class="mt-1"><img src="assets/info.svg" alt="info" style="height: 15px; width: 15px" /> You are currently in Read-Only mode</p>
+                </div>
+              </div>
+
+              <!-- Human Body Viewer -->
+              <div ngxMasonryItem class="card masonry-item" *ngIf="selectedBodyParts.size > 0">
+                <div class="card-body me-1">
+                  <app-human-body-viewer [handleClicksByParent]="true" [viewFilterButton]="false" [selectedParts]="selectedBodyParts"></app-human-body-viewer>
+                </div>
+              </div>
+
+              <!-- Patient info -->
+              <div ngxMasonryItem class="card masonry-item">
+                <div class="card-body">
+                  <h5 class="card-title"><strong> Patient information</strong></h5>
+                  <div class="card-text row">
+                    <div class="col-4">
+                      <p>Gender :</p>
+                      <p>Age :</p>
+                    </div>
+                    <div class="col-8">
+                      <!--  <p>{{ getGender(selectedRegister?.patient_gender) ?? "Not-Given" }}</p>
+                  <p>{{ getAge(selectedRegister?.patient_dateOfBirth) }}</p> -->
+                      <p>{{ "Not-available" }}</p>
+                      <p>{{ "Not-available" }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Symptoms -->
+              <div ngxMasonryItem class="card masonry-item">
+                <div class="card-body">
+                  <h5 class="card-title"><strong> Symptoms</strong></h5>
+                  <div class="card-text">
+                    <ul>
+                      <li *ngFor="let symptom of selectedPrescription.symptoms">
+                        <strong>{{ symptom.name }}</strong>
+                      </li>
+                      <li *ngIf="!selectedPrescription.symptoms.length">There are no symptoms added for this prescription</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Diagnosis -->
+              <div ngxMasonryItem class="card masonry-item">
+                <div class="card-body">
+                  <h5 class="card-title"><strong> Diagnosis</strong></h5>
+                  <div class="card-text">
+                    <ul>
+                      <li *ngFor="let diag of selectedPrescription.diagnoses">
+                        <strong>{{ diag.name }}</strong>
+                      </li>
+                      <li *ngIf="!selectedPrescription.diagnoses.length">There are no Diagnosis added for this prescription</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hospitalization -->
+              <div ngxMasonryItem class="card masonry-item">
+                <div class="card-body">
+                  <h5 class="card-title"><strong>Hospitalization Decision</strong></h5>
+                  <div class="card-text row">
+                    <div class="col-5">
+                      <p>Hospitalized :</p>
+                      <p>Unit care :</p>
+                      <p>Room :</p>
+                      <p>Bed :</p>
+                    </div>
+                    <div class="col-7">
+                      <p>
+                        <strong  class="text-success" *ngIf="selectedPrescription.bedId">Resident</strong>
+                        <strong class="text-danger" *ngIf="!selectedPrescription.bedId">Out</strong>
+                      </p>
+                      <ng-container *ngIf="isUnitCareLoading == false; else elseUnitCareLoading">
+                        <p>
+                          <strong>{{ !selectedPrescription.bedId ? "Not Applicable" : selectedUnitCare?.title ?? "Not Found" }}</strong>
+                        </p>
+                        <p>
+                          <strong>{{ !selectedPrescription.bedId ? "Not Applicable" : selectedRoom?.roomNumber ?? "Not Found" }}</strong>
+                        </p>
+                        <p>
+                          <strong>{{ !selectedPrescription.bedId ? "Not Applicable" : selectedBed?.reference ?? "Not Found" }}</strong>
+                        </p>
+                      </ng-container>
+                      <ng-template #elseUnitCareLoading>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="card-text row">
+                    <div class="col-3">
+                      <p>Diet :</p>
+                      <p>Period :</p>
+                    </div>
+                    <div class="col-9">
+                      <ng-container *ngIf="isDietLoading == false; else elseDietLoading">
+                        <p>
+                          <strong>{{ !selectedPrescription.bedId ? "Not Applicable" : selectedDiet?.dietTypeString ?? "Not Found" }}</strong>
+                        </p>
+                        <p>
+                          <strong>{{ !selectedPrescription.bedId ? "Not Applicable" : getDietRange(selectedDiet) ?? "Not Found" }}</strong>
+                        </p>
+                      </ng-container>
+                      <ng-template #elseDietLoading>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                        <mat-spinner [style]="{ height: '1rem', width: '1rem', marginTop: '0.7rem' }"></mat-spinner>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ngx-masonry>
+          </div>
+        </div>
+        }
+        @else{
+          <div class="spinner-container">
+            <mat-spinner></mat-spinner>
+          </div> 
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- ********************************  CONFIRMATION  POPUP  ********************************  -->
+<div *ngIf="isConfirmationPopUp != undefined" class="modal d-block d-flex justify-content-center blur-background clickable" (click)="isConfirmationPopUp=undefined">
+  <!-- (click)="isConfirmationPopUp=undefined" : is the background => to handle clicks outside the modal -->
+  <!-- (click)="$event.stopPropagation() prevent clicks inside the modal to close the modal (prevent the outer click : (click)="isConfirmationPopUp=undefined") -->
+  <div class="card card-rounded shadow-lg col-11 col-md-8 col-lg-6 my-auto not-clickable" style="height:fit-content;max-height: 80vh;min-height: 50vh;" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h4 class="modal-title">Confirm the {{isConfirmationPopUp ? "validation" : "rejection "}}for prescription id : {{selectedPrescription?.id}}</h4>
+      <mat-icon class="align-self-center text-danger fw-bold fs-4 clickable" (click)="isConfirmationPopUp=undefined">close</mat-icon>
+    </div>
+    <div class="modal-body overflow-scroll no-scrollbar">
+      <div [formGroup]="ConfirmationForm">
+        <h6 class="text-primary">Add Notes for the {{isConfirmationPopUp ? "Confirmation" : "Rejection "}}</h6>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="height: 100%;">Notes</span>
+          </div>
+          <textarea  style="min-height: 7rem" id="notesInput" formControlName="notesInput" type="text" class="form-control" aria-label="Notes"></textarea>
+        </div>
+      
+        <div *ngIf="ConfirmationForm.get('notesInput')?.invalid && (ConfirmationForm.get('notesInput')?.dirty || ConfirmationForm.get('notesInput')?.touched)">
+          <div *ngIf="ConfirmationForm.get('notesInput')?.errors" class="text-danger fw-bolder">
+           <p> Input for rejection must be at least 20 characters long.</p>
+          </div>
+        </div>
+        <p></p>
+        <p> <img src="assets/info.svg" alt="info" style="height: 15px; width: 15px;margin-right: 2px;padding-bottom: 2px;" /><span> Notes are required for rejection only</span> </p>
+        
+      </div>
+    </div>
+    <div class="modal-footer justify-content-between px-0 px-md-4">
+      <button class="btn text-black px-5 " (click)="isConfirmationPopUp=undefined">Cancel</button>
+      <button *ngIf="isConfirmationPopUp === true" 
+        class="btn btn-primary text-white px-5" 
+        (click)="onClickConfirmPrescriptionHandler()">
+          Validate
+      </button>
+      <button *ngIf="isConfirmationPopUp === false"
+       class="btn btn-danger text-white px-5"
+        (click)="onClickRejectPrescriptionHandler()"
+        [disabled]="ConfirmationForm.get('notesInput')?.errors">
+          Reject
+      </button>
+    </div>
+  </div>
+</div>

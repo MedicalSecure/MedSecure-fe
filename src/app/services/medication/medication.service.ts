@@ -10,20 +10,66 @@ import { CheckDrugRequest,
   CreateDrugRequest,
   CreateDrugResponse,
   DrugDTO,
-  GetDrugsResponse, } from '../../model/Drugs';
+  GetDrugsResponse,
+  GetValidationsResponse,
+  ValidationDto,
+  putValidationRequest, } from '../../model/Drugs';
+  import { Subject } from 'rxjs';
+  import * as signalR from '@microsoft/signalr';
+import { SnackBarMessagesService } from '../util/snack-bar-messages.service';
+import { SnackBarMessageProps, snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DrugService {
   data_source: DrugDTO[] = [];
+  private hubConnection: signalR.HubConnection;
+  private messageSubject = new Subject<any>();
+  message$ = this.messageSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient , private snackBarMessages:SnackBarMessagesService) {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+    //.withUrl('http://localhost:6004/medication-service/pharmacist') // 
+    .withUrl('http://localhost:6008/pharmacist')
+      .build();
+    this.hubConnection.on('ReceiveMessage', (message: string) => {
+      this.messageSubject.next(message);
+    });
+    this.startConnection();
+  }
 
   apiUrl="http://localhost:6004/medication-service/api/v1";
+  
   apiCheck = this.apiUrl+'/drugsChecked';
-
   apiCrud = this.apiUrl+'/drugs';
+  
+
+  private startConnection() {
+    
+
+    this.hubConnection.start().then(() => {
+      console.log('SignalR connection established');
+    }).catch(err => {
+      console.error('Error establishing SignalR connection:', err);
+    });
+
+    this.hubConnection.on('PrescriptionToValidateEvent', (message: any) => {
+      console.log('Received PrescriptionToValidateEvent: ', message);
+      var props:SnackBarMessageProps={
+        messageContent:"A New prescription is waiting for your confirmation",
+        messageType:snackbarMessageType.Warning,
+        durationInSeconds:10,
+        redirectionPath:"pharmacyValidation",
+        queryParams:{
+          //validationId:message.validationId,//TODO still missing
+          prescriptionId:message.id
+        }
+      }
+      this.snackBarMessages.displaySnackBarMessage(props)
+      // Handle the received prescription message here
+    });
+  }
 
   getMedications() {
     return this.http.get<GetDrugsResponse>(this.apiCrud).pipe(
@@ -31,6 +77,33 @@ export class DrugService {
         return parseDates(response);
       })
     );;
+  }
+
+  getValidations() {
+    return this.http.get<GetValidationsResponse>(this.apiUrl + "/Validations").pipe(
+      map((response) => {
+        return parseDates(response);
+      })
+    );;
+  }
+
+  getPendingValidations() {
+    return this.http.get<GetValidationsResponse>(this.apiUrl + "/PendingValidations").pipe(
+      map((response) => {
+        return parseDates(response);
+      })
+    );;
+  }
+
+  putValidation(validation: ValidationDto) {
+    const putValidationRequest: putValidationRequest = {
+      validation: validation,
+    };
+    let x = this.http.put<putValidationRequest>(
+      this.apiUrl + "/Validations",
+      putValidationRequest
+    );
+    return x;
   }
 
   checkDrugs(

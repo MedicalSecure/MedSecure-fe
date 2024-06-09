@@ -101,8 +101,8 @@
       <h5 class="card-title"><strong> Symptoms</strong></h5>
       <div class="card-text">
         <ul>
-          <li *ngFor="let symptom of selectedPrescription.symptoms">
-            <strong>{{ symptom.name }}</strong>
+          <li *ngFor="let symptom of selectedPrescription.symptoms" [title]="symptom.longDescription">
+            <strong>{{ symptom.name }}</strong><i class="fa fa-info-circle ms-2" aria-hidden="true"></i>
           </li>
           <li *ngIf="!selectedPrescription.symptoms.length">There are no symptoms added for this prescription</li>
         </ul>
@@ -116,8 +116,8 @@
       <h5 class="card-title"><strong> Diagnosis</strong></h5>
       <div class="card-text">
         <ul>
-          <li *ngFor="let diag of selectedPrescription.diagnoses">
-            <strong>{{ diag.name }}</strong>
+          <li *ngFor="let diag of selectedPrescription.diagnoses" [title]="diag.longDescription">
+            <strong >{{ diag.name }}</strong><i class="fa fa-info-circle ms-2" aria-hidden="true"></i>
           </li>
           <li *ngIf="!selectedPrescription.diagnoses.length">There are no Diagnosis added for this prescription</li>
         </ul>
@@ -138,7 +138,8 @@
         </div>
         <div class="col-7">
           <p>
-            <strong>{{ selectedPrescription.bedId ? "Resident" : "Out" }}</strong>
+            <strong  class="text-success" *ngIf="selectedPrescription.bedId">Resident</strong>
+            <strong class="text-danger" *ngIf="!selectedPrescription.bedId">Out</strong>
           </p>
           <ng-container *ngIf="isUnitCareLoading==false; else elseUnitCareLoading">
             <p>
@@ -185,38 +186,71 @@
   </div>
 
   <!-- Actions -->
-  <div ngxMasonryItem class="card masonry-item">
+  <div ngxMasonryItem class="card masonry-item no-wrap">
     <div class="card-body">
       <h5 class="card-title"><strong>Actions</strong></h5>
       <div class="card-text row">
-        <div class="col-7">
-          <p>Prescription Status :</p>
-          <p>Editing Status :</p>
-        </div>
         <div class="col-5">
+          <p>Prescription :</p>
+          <p>Editing Status:</p>
+          <p>Prescription Date :</p>
+          <p>Validation Status :</p>
+          <p>Validated At :</p>
+          <p>Validated By :</p>
+          <p>Notes :</p>
+        </div>
+        <div class="col-7 ">
           <p>
-            <strong>{{ getPrescriptionStatus(selectedPrescription) }}</strong>
+            <strong [class]="getPrescriptionStatus(selectedPrescription).class">{{ getPrescriptionStatus(selectedPrescription).text }}</strong>
           </p>
           <p>
             <strong>{{ [0, 1, 2].includes(selectedPrescription.status) && enableActions ? "Enabled" : "Disabled" }}</strong>
           </p>
+          <p>
+            <strong>{{ getDateString(selectedPrescription.createdAt, "dd/mm - HH:MM") }}</strong>
+          </p>
+          <p><!-- Validation status -->
+            <strong [className]="getValidationStatusInfo().class">{{ getValidationStatusInfo().text }}</strong>
+          </p>
+          <p>
+            <strong>{{ getValidationActionInfo().validatedAt}}</strong>
+          </p>
+          <p>
+            <strong>{{ getValidationActionInfo().pharmacist}}</strong>
+          </p>
+          <p>
+            <strong *ngIf="!getValidationActionInfo().notes">No notes</strong>
+            <strong *ngIf="getValidationActionInfo().notes" 
+            [title]="getValidationActionInfo().notes"
+            style="text-decoration: underline;">
+              View Notes 
+              <i class="fa fa-info-circle" aria-hidden="true"></i>
+            </strong>
+          </p>
         </div>
       </div>
-      <div class="mt-2 d-flex justify-content-evenly">
+      <div class="mt-2 d-flex justify-content-evenly gap-1">
         <button
-          class="col-5 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+          class="col-4 btn btn-primary text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
           [disabled]="![1, 2].includes(selectedPrescription.status) || !enableActions"
           (click)="onClickUpdatePrescriptionHandler()"
         >
           <i class="fa fa-pencil-square-o m-0" aria-hidden="true"></i><span>Update</span>
         </button>
         <button
-          class="col-5 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
+          class="col-4 btn btn-danger text-white d-flex gap-2 align-items-center py-2 px-3 m-0"
           style="border-color: red"
           [disabled]="![1, 2].includes(selectedPrescription.status) || !enableActions"
           (click)="onClickSuspendPrescriptionHandler()"
         >
           <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Suspend</span>
+        </button>
+        <button
+          class="col-4 btn d-flex gap-2 align-items-center py-2 px-3 m-0"
+          [disabled]="!selectedPrescription"
+          (click)="printPdf(selectedPrescription)"
+        >
+          <i class="fa fa-pause m-0" aria-hidden="true"></i><span>Print</span>
         </button>
       </div>
       <p *ngIf="enableActions==false" class="mt-1"> <img src="assets/info.svg" alt="info"  style="height: 15px; width: 15px; "  /> You are currently in Read-Only mode</p>
@@ -224,3 +258,7 @@
   </div>
 </ngx-masonry>
 }
+<!-- Print pdf -->
+<div class="d-none">
+  <app-pdf-prescription-to-print></app-pdf-prescription-to-print>
+</div>

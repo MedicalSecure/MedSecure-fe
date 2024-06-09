@@ -24,6 +24,8 @@ import { parseGenderEnum } from '../../registration/register-form/register-form.
 import { getGender } from '../../registration/register-details/register-details.component';
 import { Gender } from '../../../enums/enum';
 import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData';
+import { PdfPrescriptionToPrintComponent } from '../../../components/pdf-prescription-to-print/pdf-prescription-to-print.component';
+import { RegisterDto } from '../../../model/Registration';
 
 @Component({
   selector: 'app-old-prescription-view',
@@ -36,6 +38,7 @@ import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData'
     RouterModule,
     MatProgressSpinnerModule,
     HumanBodyViewerComponent,
+    PdfPrescriptionToPrintComponent
   ],
   templateUrl: './old-prescription-view.component.html',
   styleUrl: './old-prescription-view.component.css',
@@ -47,6 +50,9 @@ export class OldPrescriptionViewComponent {
 
   @Output() onClickUpdatePrescription = new EventEmitter<void>();
   @Output() onClickSuspendPrescription = new EventEmitter<void>();
+
+  @ViewChild(PdfPrescriptionToPrintComponent)
+  printPdfComponent!: PdfPrescriptionToPrintComponent;
 
   selectedUnitCare: UnitCare | undefined;
   selectedDiet: DietDto | undefined;
@@ -74,7 +80,8 @@ export class OldPrescriptionViewComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    console.log(this.selectedRegister);
+  
+    console.log(this.selectedPrescription);
 
     this.fetchMedications();
     this.mapSymptomsToBodyParts();
@@ -179,6 +186,39 @@ export class OldPrescriptionViewComponent {
     return equipmentFound;
   }
 
+  getValidationStatusInfo():{text:string,class:string}{
+    if(!this.selectedPrescription)
+      return {text:"Loading",class:'text-danger'};
+    
+    if(!this.selectedPrescription.validation)
+      return {text:"Pending",class:'text-warning'};
+    
+    if(this.selectedPrescription.validation.isValid)
+      return {text:"Validated",class:'text-success'};
+    else
+      return {text:"Rejected",class:'text-danger'};
+  }
+
+  getValidationActionInfo():{notes:string | undefined,pharmacist:string,validatedAt:string}{
+    if(!this.selectedPrescription)
+      return {notes:"Loading",pharmacist:"Loading",validatedAt:"Loading"}
+
+    if(!this.selectedPrescription.validation){
+      return {notes:undefined,pharmacist:"Not applicable",validatedAt:"Not applicable"}
+    }
+    let validatedAt="Not applicable"
+    
+    validatedAt = getDateString(this.selectedPrescription.validation.createdAt,"dd/mm - HH:MM")
+    
+
+    let pharmacist = this.selectedPrescription.validation.pharmacistName ?? "Not applicable";
+    let notes = this.selectedPrescription.validation.notes;
+    
+    return{
+      notes,pharmacist,validatedAt
+    }
+  }
+
   getDietRange(diet:DietDto | undefined | null):string | null{
     if(!diet || !diet.startDate || !diet.endDate) return null;
     let start=getDateString(diet.startDate, "dd/mm/yyyy");
@@ -207,6 +247,14 @@ export class OldPrescriptionViewComponent {
   }
   onClickSuspendPrescriptionHandler() {
     this.onClickSuspendPrescription.emit();
+  }
+
+  printPdf(prescription:PrescriptionDto,register?:RegisterDto | undefined){
+    if(this.printPdfComponent)
+      this.printPdfComponent.downloadPrescriptionPDF(prescription,register);
+    else{
+      console.error("print pdf component not initialized");
+    }
   }
 
   mapMedicationsToPrescriptions() {

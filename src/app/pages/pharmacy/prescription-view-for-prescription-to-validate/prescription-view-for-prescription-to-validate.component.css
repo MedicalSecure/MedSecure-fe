@@ -1,0 +1,74 @@
+.masonry-item {
+  justify-content: center;
+  width: 330px;
+  margin-bottom: 10px;
+  transition: top 0.2s ease-in-out, left 0.2s ease-in-out;
+}
+.masonry-item-big {
+  justify-content: center;
+  margin-bottom: 10px;
+  transition: top 0.2s ease-in-out, left 0.2s ease-in-out;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #333;
+  background-image: linear-gradient(to right, #ccc, #333, #ccc);
+  margin: 10px 0;
+}
+
+.spinner-container {
+  display: flex;
+  margin: 100px;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-scrollbar {
+  overflow: scroll; /* or overflow: auto; */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Webkit browsers (Chrome, Safari) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.blur-background {
+  background: rgba(255, 255, 255, 0.5); /* Adjust color and opacity as needed */
+  backdrop-filter: blur(5px); /* Adjust blur intensity */
+}
+
+.clickable {
+  cursor: pointer;
+  padding: 0.1rem;
+  margin: 0;
+}
+
+.clickable:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.068);
+  padding-right: 0.4;
+  padding-left: 0.4;
+}
+
+.not-clickable {
+  cursor: default;
+}
+
+.not-clickable:hover {
+  cursor : default;
+}
+
+.no-wrap {
+  white-space: nowrap;
+  overflow: hidden; /* Optional: Hides overflow text */
+  text-overflow: ellipsis; /* Optional: Adds ellipsis for overflow text */
+}
