@@ -7,7 +7,10 @@
         "quantity": 30,
         "date_prescribed": "2024-03-10",
         "patient_name": "John Doe",
-        "doctor_name": "Dr. Smith"
+        "doctor_name": "Dr. Smith",
+        "status":"valide",
+        "image": "assets/images/faces/face1.jpg" 
+
       },
       {
         "id": 2,
@@ -15,8 +18,10 @@
         "dosage": "250mg",
         "quantity": 20,
         "date_prescribed": "2024-03-09",
-        "patient_name": "Jane Smith",
-        "doctor_name": "Dr. Johnson"
+        "patient_name": "John Doe",
+        "doctor_name": "Dr. Johnson",
+        "status":"invalide",
+        "image": "assets/images/faces/face2.jpg" 
       },
       {
         "id": 3,
@@ -25,7 +30,9 @@
         "quantity": 60,
         "date_prescribed": "2024-03-08",
         "patient_name": "Michael Johnson",
-        "doctor_name": "Dr. Williams"
+        "doctor_name": "Dr. Williams",
+        "status":"valide",
+        "image": "assets/images/faces/face3.jpg" 
       },
       {
         "id": 4,
@@ -34,7 +41,9 @@
         "quantity": 90,
         "date_prescribed": "2024-03-07",
         "patient_name": "Emily Brown",
-        "doctor_name": "Dr. Martinez"
+        "doctor_name": "Dr. Martinez",
+        "status":"valide",
+        "image": "assets/images/faces/face4.jpg" 
       },
       {
         "id":5,
@@ -43,7 +52,9 @@
         "quantity": 30,
         "date_prescribed": "2024-03-07",
         "patient_name": "John vb",
-        "doctor_name": "Dr.xxx"
+        "doctor_name": "Dr.xxx",
+        "status":"valide",
+        "image": "assets/images/faces/face5.jpg" 
       },
       {
         "id":6,
@@ -52,7 +63,9 @@
         "quantity": 10,
         "date_prescribed": "2024-03-08",
         "patient_name": "John vb",
-        "doctor_name": "Dr.xxx"
+        "doctor_name": "Dr.xxx",
+        "status":"valide",
+        "image": "assets/images/faces/face6.jpg" 
       },
       {
         "id":7,
@@ -61,7 +74,9 @@
         "quantity": 60,
         "date_prescribed": "2024-03-08",
         "patient_name": "chadha",
-        "doctor_name": "Dr.xxx"
+        "doctor_name": "Dr.xxx",
+        "status":"invalide",
+        "image": "assets/images/faces/face7.jpg" 
       },
       {
         "id": 8,
@@ -70,7 +85,9 @@
         "quantity": 15,
         "date_prescribed": "2024-03-09",
         "patient_name": "Emily Brown",
-        "doctor_name": "Dr. Martinez"
+        "doctor_name": "Dr. Martinez",
+        "status":"valide",
+        "image": "assets/images/faces/face8.jpg" 
       }
       ]
 

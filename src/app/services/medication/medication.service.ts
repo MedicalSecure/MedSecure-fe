@@ -44,6 +44,10 @@ export class DrugService {
   apiCheck = this.apiUrl+'/drugsChecked';
   apiCrud = this.apiUrl+'/drugs';
   
+  private dataUrlDashboard = 'assets/data/MedicationData.json'; // Path to your JSON file
+  getMedicationsNews(): Observable<any> {
+    return this.http.get<any>(this.dataUrlDashboard);
+  }
 
   private startConnection() {
     
@@ -105,7 +109,6 @@ export class DrugService {
     );
     return x;
   }
-
   checkDrugs(
     checkDrugRequest: CheckDrugRequest
   ): Observable<CheckDrugResponse> {

@@ -100,3 +100,9 @@ export enum RegisterStatus {
   Active = 0,
   Archived = 1,
 }
+
+export enum Status {
+  Resident = 'Resident',
+  Out = 'Out',
+  Registered = 'Registered'
+}
