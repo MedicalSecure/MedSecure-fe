@@ -18,6 +18,7 @@ import { ProfileType } from '../profile/ProfileType';
 import { environment } from '../../../environments/environment';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NavbarComponent } from '../../partials/navbar/navbar.component';
+import { getRole } from '../../role-auth.guard';
 
 @Component({
     selector: 'app-home',
@@ -80,13 +81,6 @@ export class HomeComponent implements OnInit {
   }
 
   getRole() {
-    return {
-      isReceptionist: this.profile?.jobTitle === environment.roles.RECEPTIONIST_ROLE,
-      isDoctor: this.profile?.jobTitle === environment.roles.DOCTOR_ROLE,
-      isPharmacist: this.profile?.jobTitle === environment.roles.PHARMACIST_ROLE,
-      isNutritionist: this.profile?.jobTitle === environment.roles.NUTRITIONIST_ROLE,
-      isSupervisor: this.profile?.jobTitle === environment.roles.SUPERVISOR_ROLE,
-      isNurse: this.profile?.jobTitle === environment.roles.NURSE_ROLE,
-    };
+    return getRole(this.profile);
   }
 }
