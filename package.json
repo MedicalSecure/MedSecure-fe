@@ -22,7 +22,7 @@
     "@angular/platform-server": "^17.3.9",
     "@angular/router": "^17.3.9",
     "@mdi/font": "^7.4.47",
-    "@microsoft/signalr": "^8.0.0",
+    "@microsoft/signalr": "7.0.14",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@progress/kendo-angular-buttons": "15.0.1",
     "@progress/kendo-angular-common": "15.0.1",
