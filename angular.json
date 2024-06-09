@@ -93,7 +93,12 @@
               "buildTarget": "medsecure-fe:build:production"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "ssl": true,
+            "sslKey": "ssl/localhost+2-key.pem",
+            "sslCert": "ssl/localhost+2.pem"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

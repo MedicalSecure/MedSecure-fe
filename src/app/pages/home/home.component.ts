@@ -14,6 +14,9 @@ import {
   InteractionStatus,
 } from '@azure/msal-browser';
 import { filter } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { ProfileType } from '../profile/ProfileType';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-home',
@@ -31,11 +34,13 @@ import { filter } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit {
   loginDisplay = false;
-
+  profile: ProfileType | undefined;
+  
   constructor(
     private router: Router,
     private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
+    private msalBroadcastService: MsalBroadcastService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +52,7 @@ export class HomeComponent implements OnInit {
         console.log(result);
         const payload = result.payload as AuthenticationResult;
         this.authService.instance.setActiveAccount(payload.account);
+        this.getProfile(environment.apiConfig.uri);
       });
 
     this.msalBroadcastService.inProgress$
@@ -60,5 +66,12 @@ export class HomeComponent implements OnInit {
 
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+  }
+
+  getProfile(url: string) {
+    this.http.get(url)
+      .subscribe(profile => {
+        this.profile = profile;
+      });
   }
 }

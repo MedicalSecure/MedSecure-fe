@@ -1,4 +1,4 @@
-import { Component, NO_ERRORS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, NO_ERRORS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HomeComponent } from "./pages/home/home.component";
 import '@angular/localize/init'

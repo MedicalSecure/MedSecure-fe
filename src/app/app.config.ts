@@ -29,8 +29,13 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi(), withFetch()),
     {
         provide: HTTP_INTERCEPTORS,
-        useClass: MsalInterceptor,
+        useClass: RetryInterceptor,
         multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MsalInterceptor,
+      multi: true
     },
     {
         provide: MSAL_INSTANCE,
@@ -44,6 +49,7 @@ export const appConfig: ApplicationConfig = {
         provide: MSAL_INTERCEPTOR_CONFIG,
         useFactory: MSALInterceptorConfigFactory
     },
+
     MsalService,
     MsalGuard,
     MsalBroadcastService
@@ -51,3 +57,48 @@ export const appConfig: ApplicationConfig = {
 };
 
 
+export function loggerCallback(logLevel: LogLevel, message: string) {
+  console.log(message);
+}
+
+export function MSALInstanceFactory(): IPublicClientApplication {
+  return new PublicClientApplication({
+    auth: {
+      clientId: environment.msalConfig.auth.clientId,
+      authority: environment.msalConfig.auth.authority,
+      redirectUri: '/',
+      postLogoutRedirectUri: '/'
+    },
+    cache: {
+      cacheLocation: BrowserCacheLocation.LocalStorage
+    },
+    system: {
+      allowNativeBroker: false, // Disables WAM Broker
+      loggerOptions: {
+        loggerCallback,
+        logLevel: LogLevel.Info,
+        piiLoggingEnabled: false
+      }
+    }
+  });
+}
+
+export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
+  const protectedResourceMap = new Map<string, Array<string>>();
+  protectedResourceMap.set(environment.apiConfig.uri, environment.apiConfig.scopes);
+
+  return {
+    interactionType: InteractionType.Redirect,
+    protectedResourceMap,
+  };
+}
+
+export function MSALGuardConfigFactory(): MsalGuardConfiguration {
+  return { 
+    interactionType: InteractionType.Redirect,
+    authRequest: {
+      scopes: [...environment.apiConfig.scopes]
+    },
+    loginFailedRoute: '/login-failed'
+  };
+}

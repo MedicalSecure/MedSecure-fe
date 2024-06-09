@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { BacPatientComponent } from './pages/bacPatient/bacPatient.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AddPharmacyComponent } from './pages/pharmacy/add-pharmacy-component/add-pharmacy.component';
-import { Visits } from './pages/visits/visits.component';
+import { VisitsComponent } from './pages/visits/visits.component';
 import { UnitSelectorComponent } from './components/unitselector/unitselector.component';
 import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
@@ -32,34 +32,34 @@ import { AccountComponent } from './pages/account/account.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'unit-care', component: UnitCareComponent },
-  { path: 'visits', component: Visits },
-  { path: 'widgets', component: WidgetsComponent },
-  { path: 'UnitSelector', component: UnitSelectorComponent },
-  { path: 'bac-patient', component: BacPatientComponent },
-  { path: 'timeline', component: TimelineComponent },
-  { path: 'tasks', component: TasksComponent },
-  { path: 'search', component: SearchBarComponent },
-  { path: 'pharmacy', component: AddPharmacyComponent },
-  { path: 'pharmacyValidation', component: PrescriptionViewForPrescriptionToValidateComponent },
-  { path: 'prescribe', component: AddPrescriptionComponent },
-  { path: 'prescribePDF', component: PdfPrescriptionToPrintComponent },
-  { path: 'register-details', component: MasonryDpiComponent },
-  { path: 'register-form', component: RegisterFormComponent },
-  { path: 'register', component: RegisterViewComponent },
-  { path: 'LeaveReportComponent', component: LeaveReportComponent },
-  { path: 'unitCare-form', component: FormUnitCareComponent },
-  {path: 'personels', component : AddPersonelsComponent},
+  { path: 'unit-care', component: UnitCareComponent , canActivate: [MsalGuard] },
+  { path: 'visits', component: VisitsComponent , canActivate: [MsalGuard] },
+  { path: 'widgets', component: WidgetsComponent , canActivate: [MsalGuard] },
+  { path: 'UnitSelector', component: UnitSelectorComponent , canActivate: [MsalGuard] },
+  { path: 'bac-patient', component: BacPatientComponent , canActivate: [MsalGuard] },
+  { path: 'timeline', component: TimelineComponent , canActivate: [MsalGuard] },
+  { path: 'tasks', component: TasksComponent , canActivate: [MsalGuard] },
+  { path: 'search', component: SearchBarComponent , canActivate: [MsalGuard] },
+  { path: 'pharmacy', component: AddPharmacyComponent , canActivate: [MsalGuard] },
+  { path: 'pharmacyValidation', component: PrescriptionViewForPrescriptionToValidateComponent , canActivate: [MsalGuard] },
+  { path: 'prescribe', component: AddPrescriptionComponent , canActivate: [MsalGuard] },
+  { path: 'prescribePDF', component: PdfPrescriptionToPrintComponent , canActivate: [MsalGuard] },
+  { path: 'register-details', component: MasonryDpiComponent , canActivate: [MsalGuard] },
+  { path: 'register-form', component: RegisterFormComponent , canActivate: [MsalGuard] },
+  { path: 'register', component: RegisterViewComponent , canActivate: [MsalGuard] },
+  { path: 'LeaveReportComponent', component: LeaveReportComponent , canActivate: [MsalGuard] },
+  { path: 'unitCare-form', component: FormUnitCareComponent , canActivate: [MsalGuard] },
+  {path: 'personels', component : AddPersonelsComponent, canActivate: [MsalGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [MsalGuard] },
   { path: 'account', component: AccountComponent, canActivate: [MsalGuard] },
   { path: 'login-failed', component: FailedComponent },
   { path: 'diet', component: DietComponent },
   { path: 'waste', component: WasteComponent , canActivate: [RoleAuthGuard] },
   //dashboards
-  { path: 'DashboardDoctor', component: DashboardDoctorComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'supervisor-dashboard', component: SupervisorDashboardComponent },
-  { path: 'nurse-dashboard', component: NurseDashboardComponent },
+  { path: 'DashboardDoctor', component: DashboardDoctorComponent , canActivate: [MsalGuard] },
+  { path: 'dashboard', component: DashboardComponent , canActivate: [MsalGuard] },
+  { path: 'supervisor-dashboard', component: SupervisorDashboardComponent , canActivate: [MsalGuard] },
+  { path: 'nurse-dashboard', component: NurseDashboardComponent , canActivate: [MsalGuard] },
 // { path: 'dashboard-reception', component: DashboardReceptionComponent },
   ];
   

@@ -91,6 +91,12 @@ export const protectedResources = {
         read: ['https://medsecure.onmicrosoft.com/medsecure/api/Waste.Read'],
         write: ['https://medsecure.onmicrosoft.com/medsecure/api/Waste.Write']
       }
+    },
+    prescriptionHub: {
+      hubEndpoint: 'http://localhost:6007/doctor',
+      scopes: {
+        connect: ['https://medsecure.onmicrosoft.com/medsecure/api/SignalR.Connect']
+      }
     }
   };
   
