@@ -18,7 +18,7 @@
       <ul class="nav">
         <!-- Dashboard Links -->
         <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isDoctor">
-          <a class="nav-link" [routerLink]="['/', 'DashboardDoctor']">
+          <a class="nav-link" [routerLink]="['/', 'doctor-dashboard']">
             <i class="mdi mdi-grid-large menu-icon"></i>
             <span class="menu-title">Dashboard</span>
           </a>
@@ -56,7 +56,7 @@
 
         <!-- Reception Section -->
         <li class="nav-item nav-category" *ngIf="getRole().isDoctor">RECEPTION</li>
-        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isReceptionist || getRole().isReceptionist">
+        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isReceptionist || getRole().isSupervisor">
           <a class="nav-link" [routerLink]="['/', 'register']">
             <i class="menu-icon mdi mdi-account-circle-outline"></i>
             <span class="menu-title">Registration</span>
