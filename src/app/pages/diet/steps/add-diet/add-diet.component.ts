@@ -45,12 +45,12 @@ export class AddDietComponent implements OnInit {
   @Output() FoodEmitter = new EventEmitter<Food>();
   Foods:Food;
   Diet: Diet | any;
-  MealType: number[] = [0, 1, 2, 3];
+  MealType: number[] = [1, 2, 3, 4];
   foodCategory: number[];
-  StarterList = ['Soup', 'Salad', 'Bruschetta', 'Garlic Bread', 'Spring Rolls', 'Stuffed Mushrooms', 'Nachos'];
-  MainDishList = ['Pizza', 'Burger', 'Pasta', 'Steak', 'Grilled Chicken', 'Fish and Chips', 'Tacos', 'Sushi', 'BBQ Ribs', 'Lasagna'];
-  DessertList = ['Cake', 'Ice Cream', 'Pie', 'Brownies', 'Cheesecake', 'Pudding', 'Mousse', 'Cookies', 'Tiramisu', 'Macarons'];
-  DrinkList = ['Soda', 'Juice', 'Water', 'Coffee', 'Tea', 'Milkshake', 'Smoothie', 'Wine', 'Beer', 'Cocktail'];
+  StarterList : string[] = [];
+  MainDishList : string[] = [];
+  DessertList : string[] = [];
+  DrinkList : string[] = [];
   FoodList: { [key: number]: { [key: number]: string[] } } = { 0: { 0: ["Please select a food option"] } };
   disableChipState: { [key: number]: { [key: number]: boolean } } = {};
   fb = inject(NonNullableFormBuilder);
@@ -72,11 +72,24 @@ export class AddDietComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.foodCategory = [0, 1, 2, 3];
+    this.foodCategory = [1,2,3,4];
     this.DietForm.controls.meals.valueChanges.subscribe(() => {
       this.isMealSelected = Array(this.DietForm.controls.meals.length).fill(false);
     });
-
+foods.forEach(food=>{
+  if(food.foodCategory == 1){
+    this.StarterList.push(food.name)
+  }
+  if(food.foodCategory == 2){
+    this.MainDishList.push(food.name)
+  }
+  if(food.foodCategory == 3){
+    this.DrinkList.push(food.name)
+  }
+  if(food.foodCategory == 4){
+    this.DessertList.push(food.name)
+  }
+})
 
   }
 
@@ -130,16 +143,16 @@ export class AddDietComponent implements OnInit {
     }
 
     switch (food) {
-      case 0:
+      case 1:
         this.FoodList[mealIndex][foodIndex] = this.MainDishList;
         break;
-      case 1:
+      case 2:
         this.FoodList[mealIndex][foodIndex] = this.DessertList;
         break;
-      case 2:
+      case 3:
         this.FoodList[mealIndex][foodIndex] = this.DrinkList;
         break;
-      case 3:
+      case 4:
         this.FoodList[mealIndex][foodIndex] = this.StarterList;
         break;
       default:
