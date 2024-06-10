@@ -21,7 +21,7 @@ export class BacPatientService implements ActivityService {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
-    let x = this.http.get<GetActivitiesResponse>("https://localhost:5055/api/v1/Prescription/Activities", {
+    let x = this.http.get<GetActivitiesResponse>("https://localhost:6064/bacpatient-service/api/v1/Prescription/Activities", {
       params,
     }).pipe(
       map((response) => {
@@ -32,7 +32,7 @@ export class BacPatientService implements ActivityService {
     return x;
   }
   getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) : bacpatient[] {
-    this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
+    this.http.get<BacPatientResponse>('https://localhost:6064/bacpatient-service/v1/bacPatient')
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
@@ -56,7 +56,7 @@ export class BacPatientService implements ActivityService {
   }
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('https://localhost:6064/bacpatient-service/v1/bacPatient', body).subscribe(response => {
  
     },
     error => {
@@ -73,7 +73,7 @@ export class BacPatientService implements ActivityService {
       
   });
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('https://localhost:6004/bacpatient-service/v1/bacPatient', body).subscribe(response => {
  console.log(response);
  
     },
