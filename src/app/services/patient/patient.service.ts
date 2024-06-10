@@ -19,9 +19,12 @@ export class PatientService {
 
     constructor(private http: HttpClient) { }
 
-    getPatients(): Observable<Patients[]> {
-        return this.http.get<any>('assets/data/patients.json');
+    
+    getPatients(): Observable<any> {
+        return this.http.get<any[]>('http://localhost:6010/registers');
     }
+
+   
 
     getPatientsload(): Observable<Patients[]> {
         return this.http.get<PatientResponse>('assets/data/patients.json').pipe(

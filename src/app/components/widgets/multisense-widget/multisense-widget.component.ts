@@ -5,15 +5,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { SensorThingspeakService } from '../../../services/sensor-thingspeak/sensor-thingspeak.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-multisense-widget',
   standalone: true,
-  imports: [MatProgressSpinnerModule,HttpClientModule,RadialbarChartsComponent],
+  imports: [MatProgressSpinnerModule,HttpClientModule,RadialbarChartsComponent,CommonModule],
   templateUrl: './multisense-widget.component.html',
   styleUrl: './multisense-widget.component.css'
 })
 export class MultiSenseWidgetComponent {
+  temperatureThreshold: number = 25; 
+  humidityThreshold: number = 60;    
+  luminosityThreshold: number = 1000; 
+  electricityThreshold: number = 5;  
+
+  alertMessages: string[] = [];
 
   TemperatureOptionsCircle: ChartOptionsCircle = {
    series: [],
@@ -165,8 +172,28 @@ HumidityOptionsCircle: ChartOptionsCircle = {
       this.HumidityOptionsCircle.series = [parseFloat(currenthumidity)];
       this.LuminosityOptionsCircle.series = [parseFloat(currentluminosity)];
       this.ElectricityOptionsCircle.series = [parseFloat(currentlelectricity)];
+      
+      this.checkThresholds(parseFloat(currenttemperature), parseFloat(currenthumidity), parseFloat(currentluminosity), parseFloat(currentlelectricity));
+  
     }
   });
+}
+
+checkThresholds(temp: number, humidity: number, luminosity: number, electricity: number) {
+  this.alertMessages = [];
+
+  if (temp > this.temperatureThreshold) {
+    this.alertMessages.push(`Temperature is too high: ${temp}°C`);
+  }
+  if (humidity > this.humidityThreshold) {
+    this.alertMessages.push(`Humidity is too high: ${humidity}%`);
+  }
+  if (luminosity > this.luminosityThreshold) {
+    this.alertMessages.push(`Luminosity is too high: ${luminosity}A`);
+  }
+  if (electricity > this.electricityThreshold) {
+    this.alertMessages.push(`Electricity is too high: ${electricity}C`);
+  }
 }
 
 }

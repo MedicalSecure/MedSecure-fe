@@ -60,8 +60,8 @@
               color: selectedPatient === patient ? '#130615' : ''
             }"
           >
-            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
-            {{ patient.lastName}} <br />
+            <i class="fa-solid fa-hospital"></i> {{  patient.patient.firstName  }}
+            {{  patient.patient.lastName}} <br />
             <span *ngIf="selectedPatient === patient">
               <i class="fas fa-check"></i>
             </span>
@@ -293,8 +293,8 @@
               color: selectedPatient === patient ? '#130615' : ''
             }"
           >
-            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
-            {{ patient.lastName}} <br />
+            <i class="fa-solid fa-hospital"></i> {{  patient.patient.firstName }}
+            {{  patient.patient.lastName}} <br />
             <span *ngIf="selectedPatient === patient">
               <i class="fas fa-check"></i>
             </span>
