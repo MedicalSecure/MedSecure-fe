@@ -95,7 +95,9 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "ssl": true
+            "ssl": true,
+            "sslKey": "ssl/localhost+2-key.pem",
+            "sslCert": "ssl/localhost+2.pem"
           }
         },
         "extract-i18n": {
