@@ -14,7 +14,7 @@ import { RegisterFormComponent } from './pages/registration/register-form/regist
 import { RegisterViewComponent } from './pages/registration/register-list/register-list.component';
 // import { DashboardReceptionComponent } from './pages/dashboard-reception/dashboard-reception/dashboard-reception.component';
 import { NurseTasksComponent } from './pages/nurseTasks/nurseTasks.component';
-
+import { MealsListComponent } from './pages/diet/steps/meals-list/meals-list.component';
 import { NurseDashboardComponent } from './pages/dashboards/nurse-dashboard/nurse-dashboard.component';
 import {FormUnitCareComponent} from './components/form-unit-care/form-unit-care.component';
 import { AddPersonelsComponent } from './components/add-personels/add-personels.component';
@@ -42,4 +42,6 @@ export const routes: Routes = [
   {path: 'personels', component : AddPersonelsComponent},
   { path: 'supervisor-dashboard', component: SupervisorDashboardComponent },
   { path: 'diets', component: DietComponent },
+  { path: 'mealsList', component: MealsListComponent },
+
 ];

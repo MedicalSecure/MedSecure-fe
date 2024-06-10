@@ -1,195 +1,48 @@
-<div class="d-flex flex-row gap-1 " style="width: 100%;">
-    <div>
-      <div class="d-flex">
-        <div class="card mb-3 py-2  custom-shadow" style="width: 300px; margin-left: 2%;" >
-          <div class="card-body pb-0 pt-3">
-            <h4 class="card-title fs-6 mb-1"> Patient Name </h4>
-        
-            <ul>
-              <li>
-                <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                     <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                    </p>
-              </li>
-            </ul>
-            
-            <ul>
-                <li>
-                  <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                       <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                      </p>
-                </li>
-              </ul>
-              
-            <ul>
-                <li>
-                  <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                       <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                      </p>
-                </li>
-              </ul>
-              
-            <ul>
-                <li>
-                  <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                       <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                      </p>
-                </li>
-              </ul>
-          </div>
+<ngx-masonry [options]="masonryOptions" style=" margin-top: 5%;">
+
+  @for (d of diet; track $index) {
+  <div ngxMasonryItem class="card" style="border: 1px solid black; margin-bottom:2% ;">
+    <div class="card-body">
+      <h5 class="card-title"><strong> Patient : {{ d.register.patient.firstName}} {{
+          d.register.patient.lastName}}</strong></h5>
+      <div class="card-text row">
+        <div class="col-10">
+          <p><i class="fa fa-utensils"></i> Type: {{getDietTypeLabel(d.dietType)}}</p>
+          @for (meal of d.meals; track $index) {
+            @if (meal.mealType == 1) {
+              <p><i class="fa fa-utensil-spoon"></i>Meals:BreakFast</p>
+            }
+            @else if (meal.mealType == 2) {
+              <p><i class="fa fa-utensil-spoon"></i>Meals:Lunch</p>
+            }
+            @else if (meal.mealType == 3) {
+              <p><i class="fa fa-utensil-spoon"></i>Meals:Dinner</p>
+            }
+            @else if (meal.mealType == 4) {
+              <p><i class="fa fa-utensil-spoon"></i>Meals:Snack</p>
+            }
+         
+          <dl>
+            <dt><i class="fa fa-apple-alt"></i> Food:</dt>
+            <dd><span class="food-items">
+                @for (food of meal.foods; track $index) {
+                <p> - {{food.name}}</p>
+                }
+              </span>
+            </dd>
+          </dl>
+          }
+
+          <p style="display: flex; justify-content: flex-start;">
+            <i class="fa fa-calendar"></i> 
+            <span style="margin-right: auto;">StartDate:</span>
+            {{formatDate(d.startDate) }}
+          </p>
         </div>
-        <div class="card mb-3 py-2  custom-shadow" style="width: 300px;margin-left: 2%;" >
-            <div class="card-body pb-0 pt-3">
-              <h4 class="card-title fs-6 mb-1"> Patient Name </h4>
-          
-              <ul>
-                <li>
-                  <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                       <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                      </p>
-                </li>
-              </ul>
-              
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-            </div>
-          </div>
-          <div class="card mb-3 py-2  custom-shadow" style="width: 300px;margin-left: 2%;" >
-            <div class="card-body pb-0 pt-3">
-              <h4 class="card-title fs-6 mb-1"> Patient Name </h4>
-          
-              <ul>
-                <li>
-                  <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                       <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                      </p>
-                </li>
-              </ul>
-              
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex">
-          <div class="card mb-3 py-2  custom-shadow" style="width: 300px;margin-left: 2%;" >
-            <div class="card-body pb-0 pt-3">
-              <h4 class="card-title fs-6 mb-1"> Patient Name </h4>
-          
-              <ul>
-                <li>
-                  <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                       <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                      </p>
-                </li>
-              </ul>
-              
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-            </div>
-          </div>
-          <div class="card mb-3 py-2  custom-shadow" style="width: 300px;margin-left: 2%;" >
-            <div class="card-body pb-0 pt-3">
-              <h4 class="card-title fs-6 mb-1"> Patient Name </h4>
-          
-              <ul>
-                <li>
-                  <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                       <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                      </p>
-                </li>
-              </ul>
-              
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-                
-              <ul>
-                  <li>
-                    <p class="fw-bold fs-6 text-primary mb-0">Meals name  :
-                         <span class="fw-light fs-6 text-dark mb-0">list of foods  </span>
-                        </p>
-                  </li>
-                </ul>
-            </div>
-          </div>
+
       </div>
- >
     </div>
   </div>
-  
+  }
+
+</ngx-masonry>

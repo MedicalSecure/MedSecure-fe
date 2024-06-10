@@ -6,7 +6,7 @@ import { AddDietComponent } from "../steps/add-diet/add-diet.component";
  import {PrescriptionListComponent} from"../steps/prescription-list/prescription-list.component"
  import{PatientDetailComponent} from "../steps/patient-detail/patient-detail.component"
 import { RegisterForPrescription } from '../../../model/Prescription';
-import { Meal } from '../../../model/Diet';
+import foods, { Food, Meal } from '../../../model/Diet';
 import { MealsListComponent } from '../steps/meals-list/meals-list.component';
 @Component({
     selector: 'app-diet',
@@ -17,7 +17,6 @@ import { MealsListComponent } from '../steps/meals-list/meals-list.component';
 })
 
 export class DietComponent implements OnInit {
-
   stepNumber: number = 1;
   updatingOldPrescriptionMode = false;
   ShowPrescriptionList: boolean = false;
@@ -28,6 +27,9 @@ export class DietComponent implements OnInit {
   nextButtonContent: { label: string; class: string } = _nextButtonContent;
   backButtonContent: { label: string; class: string } = _backButtonContent;
   emittedMeals: Meal[];
+  emmitedFoods:Food;
+  emittedShowMeal : boolean ;
+  emittedShowFood : boolean = false;
   canNavigate:boolean=false ; 
   @Output() emitCanValidate =  new EventEmitter<boolean>();
   ngOnInit(): void {
@@ -68,9 +70,19 @@ export class DietComponent implements OnInit {
   }
   onMealsEmitter(meals: Meal[]) {
     this.emittedMeals = meals;
+    this.emittedShowMeal = true ; 
+    this.canNavigate = true
+    this.emitCanValidate.emit(this.canNavigate);
   
     
   }
+  onFoodEmmited(food:Food){
+    
+    this.emmitedFoods = food ;
+    this.emittedShowFood = true ;
+  }
+ 
+    
   
 }
 const _nextButtonContent = {

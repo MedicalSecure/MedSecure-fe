@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { medicationType } from '../../../../types';
 import { CardMedicationComponent } from "../../../../components/card-medication/card-medication.component";
 import { RegisterForPrescription } from '../../../../model/Prescription';
-import { Meal } from '../../../../model/Diet';
+import { Food, Meal } from '../../../../model/Diet';
 
 @Component({
     selector: 'app-patient-detail',
@@ -15,7 +15,13 @@ export class PatientDetailComponent implements OnChanges{
 
   @Input() inputRegister: RegisterForPrescription | undefined = undefined;
   @Input() meal:Meal[];
+  @Input() showMeal:boolean = false ;  
+  @Input() showFoodInfo:boolean = false ;
+  @Input() food:Food ;
+
+  
   currentmeals : Meal[];
+  currentfood : Food ;
 
 
   ngOnInit(): void {
@@ -23,6 +29,8 @@ export class PatientDetailComponent implements OnChanges{
   }
   ngOnChanges() {
     this.currentmeals = this.meal ;
+    this.currentfood = this.food
+
 
   }
 maxWidth: { [klass: string]: string; };

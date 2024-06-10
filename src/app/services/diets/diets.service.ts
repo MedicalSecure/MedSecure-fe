@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Prescription  , PrescriptionResponse} from '../../model/BacPatient';
 import { HttpClient } from '@angular/common/http';
-import { Diet } from '../../model/Diet';
+import { Diet, DietResponse } from '../../model/Diet';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 })
 export class DietsService {
 prescription : Prescription[] = [];
+
+diet : Diet[] = [];
   constructor(private http: HttpClient) { }
 
   getPrescritios(  ) : Prescription[] {
@@ -43,4 +45,11 @@ prescription : Prescription[] = [];
       }
     );
   }
+
+  getDiet() : Observable<DietResponse> {
+    
+
+ return this.http.get<DietResponse>('http://localhost:6003/v1/diets');
+  }
+  
 }

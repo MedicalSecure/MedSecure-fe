@@ -10,10 +10,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Diet, Food, Meal, SimpleRegisterDto , SimplePatientDto , SimpleRiskFactorDto} from '../../../../model/Diet';
+import foods, { Diet, Food, Meal, SimpleRegisterDto , SimplePatientDto , SimpleRiskFactorDto} from '../../../../model/Diet';
 import { PrescriptionDto, RegisterForPrescription } from '../../../../model/Prescription';
 import { PrescriptionApiService } from '../../../../services/prescription/prescription-api.service';
 import { DietsService } from '../../../../services/diets/diets.service';
+import { Router } from '@angular/router';
+import { MealsListComponent } from '../meals-list/meals-list.component';
 
 @Component({
   selector: 'app-add-diet',
@@ -23,10 +25,10 @@ import { DietsService } from '../../../../services/diets/diets.service';
   imports: [CommonModule, MatSelectModule, MatMenuModule, RouterModule, MatChipsModule, ReactiveFormsModule, MatIconModule, CommentComponent, MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule]
 })
 export class AddDietComponent implements OnInit {
+
   @Input() inputRegister: RegisterForPrescription | undefined = undefined;
   @Input() note: string[];
   @Input()CardBodyClass: string = 'card-body pb-0 pt-3';
-  @Input() canNavigate : boolean ;
   @Input() stepNumber: number;
   @Output() stepNumberChange = new EventEmitter<number>();
 
@@ -36,6 +38,12 @@ export class AddDietComponent implements OnInit {
   diet: Diet;
   Prescrotion: PrescriptionDto;
   @Output() mealsEmitter = new EventEmitter<Meal[]>();
+  @Output() showMealImiiter = new EventEmitter<boolean>();
+  showMeal:boolean = false ;
+  @Output() showFoodInfoEmitter = new EventEmitter<boolean>();
+  showFoodInfo:boolean = false ;
+  @Output() FoodEmitter = new EventEmitter<Food>();
+  Foods:Food;
   Diet: Diet | any;
   MealType: number[] = [0, 1, 2, 3];
   foodCategory: number[];
@@ -56,7 +64,9 @@ export class AddDietComponent implements OnInit {
     label: '',
   })
 
-  constructor(private PescriptionService: PrescriptionApiService , private DietService : DietsService) {
+  nextButtonContent: { label: string; class: string } = _nextButtonContent;
+  backButtonContent: { label: string; class: string } = _backButtonContent;
+  constructor(private PescriptionService: PrescriptionApiService , private DietService : DietsService , private router : Router) {
     this.selectedMealType = this.MealType[0];
 
   }
@@ -66,7 +76,6 @@ export class AddDietComponent implements OnInit {
     this.DietForm.controls.meals.valueChanges.subscribe(() => {
       this.isMealSelected = Array(this.DietForm.controls.meals.length).fill(false);
     });
-    this.canNavigate = false ; 
 
 
   }
@@ -78,11 +87,13 @@ export class AddDietComponent implements OnInit {
     this.disableChipState[mealIndex][foodIndex] = true;
     this.onOptionChange(food, mealIndex, foodIndex);
   }
-
+ 
   isChipDisabled(mealIndex: number, foodIndex: number): boolean {
     return this.disableChipState[mealIndex]?.[foodIndex] ?? false;
   }
-
+  onPreviousClick() {
+    throw new Error('Method not implemented.');
+    }
   generateMeal(): FormMeal {
     return this.fb.group({
       foods: this.fb.array<FormFood>([]),
@@ -107,7 +118,9 @@ export class AddDietComponent implements OnInit {
     this.DietForm.controls.meals.removeAt(mealIndex);
     delete this.disableChipState[mealIndex];
   }
-
+  resetForm() {
+    this.DietForm.reset(); 
+  }
   onOptionChange(food: number, mealIndex: number, foodIndex: number): void {
     if (!this.FoodList[mealIndex]) {
       this.FoodList[mealIndex] = {};
@@ -165,8 +178,23 @@ export class AddDietComponent implements OnInit {
     const value = parseInt((event.target as HTMLInputElement).value);
     this.DietForm.controls.meals.at(mealIndex).patchValue({ mealType: value });
     this.isMealSelected[mealIndex] = true;
-  }
 
+  }
+  onFoodChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedFoodName = selectElement.value;
+
+    console.log('Selected food name:', selectedFoodName);
+  foods.forEach(f=>{
+    if(f.name==selectedFoodName){
+      this.Foods = f ;
+      this.showFoodInfo = true ;
+      this.showFoodInfoEmitter.emit(this.showFoodInfo);
+      this.FoodEmitter.emit(this.Foods);
+    }
+  })
+
+}
   isMealTypeSelected(mealIndex: number): boolean {
     const mealGroup = this.DietForm.controls.meals.at(mealIndex) as FormGroup;
     return mealGroup.get('type')?.value !== '';
@@ -180,10 +208,10 @@ export class AddDietComponent implements OnInit {
   }
   fromRegisterToregisterDto (register: RegisterForPrescription):SimpleRegisterDto {
     const simplePatientDto:SimplePatientDto = {
-      FirstName : register.patient_firstName ,
-      LastName : register.patient_lastName ,
-      DateOfBirth : register.patient_dateOfBirth ,
-      Gender:register.patient_gender
+      firstName : register.patient_firstName ,
+      lastName : register.patient_lastName ,
+      dateOfBirth : register.patient_dateOfBirth ,
+      gender:register.patient_gender
     }
     const mapAllergy = register.allergies?.map((rf) => ({
       Value: rf.value,
@@ -196,9 +224,9 @@ export class AddDietComponent implements OnInit {
     })) || [];
     
     const simpleRegisterDto: SimpleRegisterDto = {
-      Patient: simplePatientDto,
-      Allergies: mapAllergy,
-      Disease: mapDisease,
+      patient: simplePatientDto,
+      allergies: mapAllergy,
+      disease: mapDisease,
     };
     return simpleRegisterDto ;
 
@@ -208,7 +236,6 @@ export class AddDietComponent implements OnInit {
     this.cards.push({ id: newId });
   }
   Submit() {
-this.canNavigate = true
     this.Diet = this.DietForm.value
     let mappeddiet: Diet = this.Diet
     if (mappeddiet.meals) {
@@ -245,6 +272,8 @@ this.canNavigate = true
   } else {
       mappeddiet.label = ''; // or handle as needed
   }    this.mealsEmitter.emit(mappeddiet.meals);
+  this.showMeal = true ;
+  this.showMealImiiter.emit(this.showMeal);
     this.stepNumber = 3 ; 
     this.stepNumberChange.emit(this.stepNumber);
     this.DietService.postDiet(mappeddiet);
@@ -253,10 +282,19 @@ this.canNavigate = true
     console.log("form values" + this.DietForm.value.meals);
     
     
-
+this.resetForm();
   }
 
 }
+const _nextButtonContent = {
+  label: 'next',
+  class: 'btn btn-primary text-white',
+};
+
+const _backButtonContent = {
+  label: 'Previous',
+  class: 'btn btn-primary text-white',
+};
 type Form = FormGroup<{
   meals: FormArray<FormMeal>,
   dietType: FormControl<number>;
