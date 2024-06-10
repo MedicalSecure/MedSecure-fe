@@ -14,7 +14,6 @@ import {VisitService} from '../../services/visits/visits.service';
 import {PatientService} from '../../services/patient/patient.service'
 
 
-
 @Component({
   selector: 'app-appointment',
   standalone: true,
@@ -277,11 +276,11 @@ export class AppointmentComponent implements OnInit {
 
   loadPatients() {
     this.patientService.getPatients().subscribe(
-      (data:any) => {
-        this.patients = data.patients.data;
+      (response) => {
+        this.patients = response.registers.data;
         this.filteredPatients = this.patients;
         //  this.selectPatient(this.patients);
-        console.log('backends file dataPatients:', data);
+        console.log('backends file dataPatients:', response);
       },
       (error) => {
         console.error('Error loading JSON file:', error);
@@ -289,14 +288,27 @@ export class AppointmentComponent implements OnInit {
     );
   }
 
+  // search(event: any): void {
+  //   if (event && event.target && event.target.value) {
+  //     this.searchQuery = event.target.value;
+  //     this.filteredPatients = this.patients.filter(
+  //       (patient: any) =>
+  //         patient.firstName.toLowerCase().includes(this.searchQuery) ||
+  //         patient.lastName.toLowerCase().includes(this.searchQuery)
+  //     );
+  //   }
+  // }
+
   search(event: any): void {
-    if (event && event.target && event.target.value) {
-      this.searchQuery = event.target.value;
-      this.filteredPatients = this.patients.filter(
-        (patient: any) =>
-          patient.firstName.toLowerCase().includes(this.searchQuery) ||
-          patient.lastName.toLowerCase().includes(this.searchQuery)
-      );
+    if (this.patients) { // Check if 'this.patients' is defined
+      if (event && event.target && event.target.value) {
+        this.searchQuery = event.target.value.toLowerCase(); // Convert search query to lowercase
+        this.filteredPatients = this.patients.filter(
+          (register: any) =>
+            register.patient.firstName.toLowerCase().includes(this.searchQuery) ||
+            register.patient.lastName.toLowerCase().includes(this.searchQuery)
+        );
+      }
     }
   }
 
@@ -306,7 +318,7 @@ export class AppointmentComponent implements OnInit {
     } else {
       this.selectedPatient = patient;
       this.NamePatient = patient.firstName + ' ' + patient.lastName;
-      this.formData.patient = this.selectedPatient;
+      this.formData.patient = this.selectedPatient.patient;
       console.log('this.selectedPatient:', this.selectedPatient);
       console.log('this.NamePatient:', this.NamePatient);
       console.log('this.formData.patient:', this.formData.patient);
