@@ -1,30 +1,13 @@
-import { AzureGraphService } from '../azure-graph.service';
+import { AzureGraphService } from '../../azure-graph.service';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, inject } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MsalService } from '@azure/msal-angular';
-import { loginRequest } from '../../auth-config';
-
-interface Claim {
-  type: string;
-  value: string;
-}
-
-interface UserProfile {
-  UserId: string;
-  Name: string;
-  isAuthenticated: boolean;
-  NameClaimType: string;
-  RoleClaimType: string;
-  Claims: Claim[];
-}
 
 interface Role {
   name: string;
@@ -34,23 +17,25 @@ interface Permission {
   name: string;
 }
 
-interface CreateUserRequest {
-  DisplayName: string;
-  GivenName: string;
-  MailNickname: string;
-  Surname: string;
-  Username: string;
-  Domain: string;
-  Password: string;
-  Roles: Role[];
-  Permissions: Permission[];
+interface GraphAPIResponse {
+  '@odata.context': string;
+  value: User[];
 }
 
-interface InviteUserRequest {
-  emailAddress: string;
+interface User {
+  businessPhones: string[];
   displayName: string;
-  roles: Role[];
-  permissions: Permission[];
+  givenName: string | null;
+  jobTitle: string | null;
+  mail: string | null;
+  mobilePhone: string | null;
+  officeLocation: string | null;
+  preferredLanguage: string | null;
+  surname: string | null;
+  userPrincipalName: string;
+  id: string;
+  roles?: string[];
+  permissions?: string[];
 }
 
 @Component({
@@ -61,22 +46,25 @@ interface InviteUserRequest {
   styleUrl: './account.component.css'
 })
 export class AccountComponent implements OnInit {
-  dataFromAzureProtectedApi$: Observable<string[]>;
-  dataGraphApiCalls$: Observable<string[]>;
-  userProfileClaims$: Observable<UserProfile>;
-  userProfile$: Observable<Claim>;
   userForm: FormGroup;
   inviteUserForm: FormGroup;
   forecastSubject = new BehaviorSubject<Object>(new Object());
-  roles: Role[] = [{ name: 'Doctor' }, { name: 'Admin' }];
+  roles: Role[] = [
+    { name: 'doctor' },
+    { name: 'pharmacist' },
+    { name: 'receptionist' },
+    { name: 'nutritionist' },
+    { name: 'supervisor' },
+    { name: 'nurse' }
+  ];
   permissions: Permission[] = [{ name: 'Read' }, { name: 'Write' }];
+  users: any[] | undefined;
+  response: GraphAPIResponse | any;
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private azureGraphService: AzureGraphService,
-    private msalService: MsalService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.userForm = this.fb.group({
@@ -85,7 +73,6 @@ export class AccountComponent implements OnInit {
       mailNickname: ['', Validators.required],
       surname: ['', Validators.required],
       username: ['', Validators.required],
-      domain: ['', Validators.required],
       password: ['', Validators.required],
       roles: [[]],
       permissions: [[]],
@@ -97,58 +84,153 @@ export class AccountComponent implements OnInit {
       roles: [[]],
       permissions: [[]],
     });
+
+    // Fetch all users and their roles and permissions on component initialization
+    this.getAllUsers();
   }
 
-  onSubmit() {
+
+  async getAllUsers(): Promise<User[]> {
+
+    // const rolesExtension = await this.azureGraphService.getExtension('c59c45c8-4692-43f4-98c0-9d903b969562', 'extension_Roles');
+    // console.log("Test rolesExtension");
+    // console.log(rolesExtension);
+
+    // const permissionsExtension = await this.azureGraphService.getExtension('c59c45c8-4692-43f4-98c0-9d903b969562', 'extension_Permissions');
+    // console.log("Test rolesExtension");
+    // console.log(permissionsExtension);
+
+    try {
+      this.response = await this.azureGraphService.getUsers().toPromise();
+      const users: User[] = Array.isArray(this.response?.value) ? this.response.value : [];
+
+      this.users = await Promise.all(users.map(async (user: User) => {
+        {
+          try {
+            const rolesExtension = await this.azureGraphService.getExtension(user.id, 'extension_Roles');
+            const permissionsExtension = await this.azureGraphService.getExtension(user.id, 'extension_Permissions');
+
+            const roles = rolesExtension?.customValue?.additionalData?.Roles?.map((role: Role) => role.name) || [];
+            const permissions = permissionsExtension?.customValue?.additionalData?.Permissions?.map((permission: Permission) => permission.name) || [];
+
+            return {
+              ...user,
+              roles,
+              permissions
+            };
+          } catch (extensionError) {
+            console.error(`Error fetching extensions for user ${user.id}`, extensionError);
+            // Handle extension fetching error if needed
+            return { ...user, roles: [], permissions: [] }; // Return user without extensions
+          }
+        }
+      }));
+
+      // Filter out null values (users that do not match the specified ID)
+      this.users = this.users.filter(user => user !== null);
+
+      console.log('Users with roles and permissions:', this.users);
+      return this.users;
+    } catch (error) {
+      console.error('Error fetching users', error);
+      throw error; // Propagate the error
+    }
+  }
+
+
+
+  async createUser() {
     if (this.userForm.valid) {
       const user = this.userForm.value;
       const createUserRequest = {
-        DisplayName: user.displayName,
-        GivenName: user.givenName,
-        MailNickname: user.mailNickname,
-        Surname: user.surname,
-        Username: user.username,
-        Domain: user.domain,
-        Password: user.password,
-        Roles: user.roles,
-        Permissions: user.permissions,
+        accountEnabled: true,
+        displayName: user.displayName,
+        mailNickname: user.mailNickname,
+        userPrincipalName: `${user.username}@medsecure.onmicrosoft.com`,
+        passwordProfile: {
+          forceChangePasswordNextSignIn: true,
+          password: user.password
+        },
+        givenName: user.givenName,
+        jobTitle: user.roles.join(', '),
+        surname: user.surname,
+        businessPhones: user.businessPhones,
+        mobilePhone: user.mobilePhone,
+        department: 'Health Care',
+        officeLocation: 'Tunis'
       };
 
-      this.azureGraphService.createUser(createUserRequest).subscribe(
-        response => {
-          console.log('User created:', response);
-        },
-        error => {
-          console.error('Error creating user:', error);
+      try {
+        const response = await this.azureGraphService.createUser(createUserRequest);
+        console.log('User created successfully', response);
+
+        // Adding custom attributes after user creation
+        const userId = response.id;
+        const rolesExtension = {
+          extensionName: 'extension_Roles',
+          additionalData: { Roles: user.roles }
+        };
+        const permissionsExtension = {
+          extensionName: 'extension_Permissions',
+          additionalData: { Permissions: user.permissions }
+        };
+
+        try {
+          await this.azureGraphService.addCustomExtension(userId, rolesExtension, 'extension_Roles');
+          console.log('Roles extension added successfully');
+        } catch (error) {
+          console.error('Error adding roles extension:', error);
         }
-      );
+
+        try {
+          await this.azureGraphService.addCustomExtension(userId, permissionsExtension, 'extension_Permissions');
+          console.log('Permissions extension added successfully');
+        } catch (error) {
+          console.error('Error adding permissions extension:', error);
+        }
+      } catch (error) {
+        console.error('Error creating user', error);
+      }
     }
   }
 
-  inviteUserByEmail() {
+  async inviteUserByEmail() {
     if (this.inviteUserForm.valid) {
       const inviteUser = this.inviteUserForm.value;
       const inviteUserRequest = {
-        emailAddress: inviteUser.emailAddress,
-        displayName: inviteUser.displayName,
-        roles: inviteUser.roles,
-        permissions: inviteUser.permissions,
+        invitedUserEmailAddress: inviteUser.emailAddress,
+        inviteRedirectUrl: 'https://localhost:4200/',
+        invitedUserDisplayName: inviteUser.displayName,
+        sendInvitationMessage: true,
+        invitedUserMessageInfo: {
+          customizedMessageBody: 'Welcome to Medsecure organization! Please join us using the following link.'
+        },
+        // Invite As Member
+        invitedUserType: 'Member'
       };
 
-      this.azureGraphService.inviteUserByEmail(inviteUserRequest).subscribe(
-        response => {
-          console.log('User invited:', response);
-        },
-        error => {
-          console.error('Error inviting user:', error);
-        }
-      );
+      try {
+        const response = await this.azureGraphService.inviteUserAsMember(inviteUserRequest);
+        console.log('User invited successfully', response);
+
+        // Adding custom attributes after user creation
+        const userId = response.invitedUser.id;
+        const rolesExtension = {
+          extensionName: 'extension_Roles',
+          additionalData: { Roles: inviteUser.roles }
+        };
+        const permissionsExtension = {
+          extensionName: 'extension_Permissions',
+          additionalData: { Permissions: inviteUser.permissions }
+        };
+
+        await this.azureGraphService.addCustomExtension(userId, rolesExtension, 'extension_Roles');
+        await this.azureGraphService.addCustomExtension(userId, permissionsExtension, 'extension_Permissions');
+
+        console.log('Custom extensions added successfully');
+      } catch (error) {
+        console.error('Error inviting user or adding custom extensions', error);
+      }
     }
-  }
-
-  getDirectApiData() {
-  }
-
-  getGraphApiDataUsingApi() {
   }
 }

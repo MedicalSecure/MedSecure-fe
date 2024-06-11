@@ -16,6 +16,7 @@ export const environment = {
       'user.read',
       'User.ReadWrite.All',
       'Directory.ReadWrite.All',
+      'User.Invite.All', 
     ],
     uri: 'https://graph.microsoft.com/v1.0/me',
   },

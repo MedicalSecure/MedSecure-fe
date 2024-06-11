@@ -8,7 +8,7 @@ import { protectedResources } from './auth-config';
 })
 
 export class ApiService {
-  constructor(private authService: MsalService, private http: HttpClient) {}
+  constructor(private authService: MsalService, private http: HttpClient) { }
 
   // Function to acquire access token for a specific scope
   private acquireToken(scope: string): Promise<string> {
@@ -39,29 +39,28 @@ export class ApiService {
   }
 
   // Function to fetch patients data
-getPatients(): Promise<any> {
-  // Extracting endpoint and scope from protectedResources for patientsApi
-  const patientsEndpoint = protectedResources.diet.patientsApi.endpoint;
-  const patientsScope = protectedResources.diet.scopes.read[0];
-  
-  // Logging the endpoint from which patients data is fetched
-  console.log('Fetching patients from:', patientsEndpoint);
-  
-  // Returning a promise for fetching patients data with authenticated request
-  return this.getAuthenticatedRequest(patientsEndpoint, patientsScope);
-}
+  getPatients(): Promise<any> {
+    // Extracting endpoint and scope from protectedResources for patientsApi
+    const patientsEndpoint = protectedResources.diet.patientsApi.endpoint;
+    const patientsScope = protectedResources.diet.scopes.read[0];
 
-// Function to fetch diets data
-getDiets(): Promise<any> {
-  // Extracting endpoint and scope from protectedResources for dietsApi
-  const dietsEndpoint = protectedResources.diet.dietsApi.endpoint;
-  const dietsScope = protectedResources.diet.scopes.read[0];
-  
-  // Logging the endpoint from which diets data is fetched
-  console.log('Fetching diets from:', dietsEndpoint);
-  
-  // Returning a promise for fetching diets data with authenticated request
-  return this.getAuthenticatedRequest(dietsEndpoint, dietsScope);
-}
+    // Logging the endpoint from which patients data is fetched
+    console.log('Fetching patients from:', patientsEndpoint);
 
+    // Returning a promise for fetching patients data with authenticated request
+    return this.getAuthenticatedRequest(patientsEndpoint, patientsScope);
+  }
+
+  // Function to fetch diets data
+  getDiets(): Promise<any> {
+    // Extracting endpoint and scope from protectedResources for dietsApi
+    const dietsEndpoint = protectedResources.diet.dietsApi.endpoint;
+    const dietsScope = protectedResources.diet.scopes.read[0];
+
+    // Logging the endpoint from which diets data is fetched
+    console.log('Fetching diets from:', dietsEndpoint);
+
+    // Returning a promise for fetching diets data with authenticated request
+    return this.getAuthenticatedRequest(dietsEndpoint, dietsScope);
+  }
 }
