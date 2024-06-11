@@ -7,13 +7,17 @@ import { InteractionStatus } from '@azure/msal-browser';
 import { HttpClient } from '@angular/common/http';
 import { ProfileType } from './pages/profile/ProfileType';
 import { environment } from '../environments/environment';
+import { User } from './pages/account/account.component';
+import { AzureGraphService } from './azure-graph.service';
+import { SnackBarMessagesService } from './services/util/snack-bar-messages.service';
+import { snackbarMessageType } from './components/snack-bar-messages/snack-bar-messages.component';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoleAuthGuard implements CanActivate {
-    constructor(private authService: MsalService, private msalBroadcastService: MsalBroadcastService, private router: Router,private http: HttpClient) { }
-    profile:ProfileType|undefined;
+    constructor(private authService: MsalService, private msalBroadcastService: MsalBroadcastService, private router: Router,private http: HttpClient,private graphService: AzureGraphService,private snackBarMessages : SnackBarMessagesService) { }
+    profile:User|undefined;
     
     canActivate(
         route: ActivatedRouteSnapshot,
@@ -32,15 +36,19 @@ export class RoleAuthGuard implements CanActivate {
                 }
                 const account = this.authService.instance.getActiveAccount();
                 console.log('Active account:', account);
-                
                 if (account && account.idTokenClaims) {
-                    return this.getProfile(environment.apiConfig.uri).pipe(
-                        map(() => {
-                            
-                            if (!this.profile) {
+                    return this.graphService.getCurrentUserWithRole().pipe(
+                        map((user) => {
+                            if (!user) {
                                 return false;
+                                
                             }
-                            return isAuthorized(this.profile,route.routeConfig?.path ?? "Error");
+                            this.profile =user;
+                            var hasAccess= isAuthorized(user,route.routeConfig?.path ?? "Error");
+
+                            if(!hasAccess)
+                                this.snackBarMessages.displaySnackBarMessage("Unauthorized to access that page",snackbarMessageType.Warning,1)
+                            return hasAccess;
 
                         }),
                         catchError(() => {
@@ -57,64 +65,102 @@ export class RoleAuthGuard implements CanActivate {
             })
         );
     }
-    
-    getProfile(url: string): Observable<any> {
-        return this.http.get(url).pipe(
-            tap(profile => this.profile = profile)
-        );
+}
+
+export function isAuthorized(profile: User, nextPath: string): boolean {
+    if (nextPath === "login-failed") {
+        return true; // Allow access to login-failed route
+    }
+
+    // If user has no roles, deny access
+    if (!profile.roles) {
+        return false;
+    }
+
+    const roles = getRoles(profile);
+
+    switch (nextPath) {
+        case "unit-care":
+            return roles.isSupervisor;
+        case "visits":
+            return roles.isDoctor || roles.isSupervisor;
+        case "widgets":
+            return true;
+        case "UnitSelector":
+            return true;
+        case "timeline":
+            return true;
+        case "tasks":
+            return true;
+        case "search":
+            return true;
+        case "register-details":
+            return roles.isReceptionist || roles.isSupervisor;
+        case "register-form":
+            return roles.isReceptionist || roles.isSupervisor;
+        case "LeaveReportComponent":
+            return true
+        case "unitCare-form":
+            return roles.isSupervisor;
+        case "personels":
+            return roles.isSupervisor;
+        case "profile":
+            return true;
+        case "account":
+            return true;
+        case "pharmacyValidation":
+            return roles.isPharmacist || roles.isSupervisor;
+        case "pharmacy":
+            return roles.isPharmacist || roles.isSupervisor;
+        case "prescribe":
+            return roles.isDoctor || roles.isSupervisor;
+        case "prescribePDF":
+            return roles.isDoctor || roles.isSupervisor; 
+        case "register":
+            return roles.isReceptionist || roles.isSupervisor;
+        case "doctor-dashboard":
+            return roles.isDoctor;
+        case "supervisor-dashboard":
+            return roles.isSupervisor;
+        case "nurse-dashboard":
+            return roles.isNurse;
+        case "bac-patient":
+            return roles.isNurse || roles.isDoctor || roles.isSupervisor;
+        case "diet":
+            return true; // Allow access to diet for all authenticated users
+        case "waste":
+            return roles.isSupervisor; // Maybe only supervisors can access waste management?
+        case "dashboard":
+            return true;
+        case "":
+            return true; // Allow access to dashboard for all authenticated users
+        default:
+            return false; // Deny access to unknown routes
     }
 }
 
-export function isAuthorized(profile:ProfileType,nextPath:string):boolean{
-    
-    if(!profile.jobTitle)
-        return false;
-    let job=profile;
-    if(nextPath == "doctor-dashboard")
-        return getRole(job).isDoctor
-    if(nextPath == "nutritionist-dashboard")
-        return getRole(job).isNutritionist;
-    if(nextPath == "supervisor-dashboard")
-        return getRole(job).isSupervisor;
-    if(nextPath == "nurse-dashboard")
-    return getRole(job).isNurse;
-    if(nextPath == "reception-dashboard")
-        return getRole(job).isReceptionist;
-    if(nextPath == "pharmacist-dashboard")
-        return getRole(job).isPharmacist;
 
-    if(nextPath == "register")
-        return getRole(job).isReceptionist || getRole(job).isSupervisor;
-
-    if(nextPath == "unit-care")
-        return getRole(job).isSupervisor;
-    if(nextPath == "pharmacy")
-        return getRole(job).isPharmacist || getRole(job).isSupervisor;
-    
-    if(nextPath == "prescribe")
-        return getRole(job).isDoctor || getRole(job).isSupervisor;
-    if(nextPath == "bac-patient")
-        return getRole(job).isNurse || getRole(job).isSupervisor;
-    if(nextPath == "visits")
-        return getRole(job).isDoctor || getRole(job).isSupervisor;
-    if(nextPath == "tasks")
-        return true;
-
-    //normally false in unknown route
-    return true;
-
-}
-
-export function getRole(profile:ProfileType | undefined){
+export function getRoles(profile: User | undefined) {
+    const roles = profile?.roles || [];
+    const envRoles = [
+      environment.roles.RECEPTIONIST_ROLE,
+      environment.roles.DOCTOR_ROLE,
+      environment.roles.PHARMACIST_ROLE,
+      environment.roles.NUTRITIONIST_ROLE,
+      environment.roles.SUPERVISOR_ROLE,
+      environment.roles.NURSE_ROLE,
+    ];
+  
     return {
-        isReceptionist: profile?.jobTitle === environment.roles.RECEPTIONIST_ROLE,
-        isDoctor: profile?.jobTitle === environment.roles.DOCTOR_ROLE,
-        isPharmacist: profile?.jobTitle === environment.roles.PHARMACIST_ROLE,
-        isNutritionist: profile?.jobTitle === environment.roles.NUTRITIONIST_ROLE,
-        isSupervisor: profile?.jobTitle === environment.roles.SUPERVISOR_ROLE,
-        isNurse: profile?.jobTitle === environment.roles.NURSE_ROLE,
-      };
-}
+      isReceptionist: roles.includes(environment.roles.RECEPTIONIST_ROLE),
+      isDoctor: roles.includes(environment.roles.DOCTOR_ROLE),
+      isPharmacist: roles.includes(environment.roles.PHARMACIST_ROLE),
+      isNutritionist: roles.includes(environment.roles.NUTRITIONIST_ROLE),
+      isSupervisor: roles.includes(environment.roles.SUPERVISOR_ROLE),
+      isNurse: roles.includes(environment.roles.NURSE_ROLE),
+      hasAnyRole: roles.some(role => envRoles.includes(role)),
+    };
+  }
 
 
 

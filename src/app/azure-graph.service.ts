@@ -2,7 +2,8 @@
 import { MsalService } from '@azure/msal-angular';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, mergeMap, switchMap, throwError,pipe, catchError, from } from 'rxjs';
+import { Permission, Role, User } from './pages/account/account.component';
 
 @Injectable({
   providedIn: 'root'
@@ -115,8 +116,8 @@ export class AzureGraphService {
     }
   }
 
-  getUsers(): Observable<any[]> {
-    return new Observable<any[]>(observer => {
+  getUsers(): Observable<{value:any[]}> {
+    return new Observable<{value:any[]}>(observer => {
       this.acquireToken('User.ReadWrite.All').then(token => {
         const headers = new HttpHeaders({
           'Authorization': `Bearer ${token}`,
@@ -124,7 +125,7 @@ export class AzureGraphService {
         });
 
         const url = `${this.apiUrl}/users`;
-        this.http.get<any[]>(url, { headers }).subscribe(
+        this.http.get<{value:any[]}>(url, { headers }).subscribe(
           (response) => observer.next(response),
           (error) => observer.error(error),
           () => observer.complete()
@@ -135,4 +136,112 @@ export class AzureGraphService {
     });
   }
 
+  getUsersWithRoles(): Observable<User[]> {
+    return this.getUsers().pipe(
+      mergeMap(response => {
+        const users: User[] = Array.isArray(response.value) ? response.value : [];
+        const usersWithRoles$ = users.map(async user => {
+          try {
+            const rolesExtension = await this.getExtension(user.id, 'extension_Roles');
+            const permissionsExtension = await this.getExtension(user.id, 'extension_Permissions');
+  
+            const roles = rolesExtension?.customValue?.additionalData?.Roles?.map((role: Role) => role.name) || [];
+            const permissions = permissionsExtension?.customValue?.additionalData?.Permissions?.map((permission: Permission) => permission.name) || [];
+  
+            return {
+              ...user,
+              roles,
+              permissions
+            };
+          } catch (extensionError) {
+            console.error(`Error fetching extensions for user ${user.id}`, extensionError);
+            return { ...user, roles: [], permissions: [] }; // Return user without extensions
+          }
+        });
+  
+        return forkJoin(usersWithRoles$);
+      })
+    );
+  }
+
+  getUserWithRoleById(userId: string): Observable<User> {
+    return new Observable<User>(observer => {
+      this.acquireToken('User.ReadWrite.All').then(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+  
+        const url = `${this.apiUrl}/users/${userId}`;
+        this.http.get<User>(url, { headers }).subscribe(
+          (response) => {
+            // Fetch roles and permissions for the user
+            this.getUserWithRoles(response).subscribe(
+              (userWithRoles) => observer.next(userWithRoles),
+              (error) => observer.error(error)
+            );
+          },
+          (error) => observer.error(error),
+          () => observer.complete()
+        );
+      }).catch(error => {
+        observer.error(error);
+      });
+    });
+  }
+
+  getCurrentUserWithRole(): Observable<User> {
+    const account = this.authService.instance.getActiveAccount();
+  
+    if (!account || !account.idTokenClaims?.oid) {
+      return throwError('No active account found');
+    }
+  
+    return from(this.acquireToken('User.ReadWrite.All')).pipe(
+      mergeMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+  
+        const url = `https://graph.microsoft.com/v1.0/me`;
+        return this.http.get<User>(url, { headers }).pipe(
+          mergeMap(user => this.getUserWithRoles(user))
+        );
+      }),
+      catchError(error => {
+        console.error('Error fetching user:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  private getUserWithRoles(user: User): Observable<User> {
+    return new Observable<User>(observer => {
+      const fetchUserWithRoles = async () => {
+        try {
+          const rolesExtension = await this.getExtension(user.id, 'extension_Roles');
+          const permissionsExtension = await this.getExtension(user.id, 'extension_Permissions');
+  
+          const roles = rolesExtension?.customValue?.additionalData?.Roles?.map((role: Role) => role.name) || [];
+          const permissions = permissionsExtension?.customValue?.additionalData?.Permissions?.map((permission: Permission) => permission.name) || [];
+  
+          const userWithRoles = {
+            ...user,
+            roles,
+            permissions
+          };
+          observer.next(userWithRoles);
+          observer.complete();
+        } catch (extensionError) {
+          console.error(`Error fetching extensions for user ${user.id}`, extensionError);
+          const userWithRoles = { ...user, roles: [], permissions: [] };
+          observer.next(userWithRoles);
+          observer.complete();
+        }
+      };
+  
+      fetchUserWithRoles();
+    });
+  }
 }

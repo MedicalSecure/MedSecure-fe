@@ -1,7 +1,7 @@
 import { AzureGraphService } from '../../azure-graph.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import {
   FormBuilder,
   FormGroup,
@@ -9,20 +9,20 @@ import {
   Validators,
 } from '@angular/forms';
 
-interface Role {
+export interface Role {
   name: string;
 }
 
-interface Permission {
+export interface Permission {
   name: string;
 }
 
-interface GraphAPIResponse {
+export interface GraphAPIResponse {
   '@odata.context': string;
   value: User[];
 }
 
-interface User {
+export interface User {
   businessPhones: string[];
   displayName: string;
   givenName: string | null;
@@ -66,7 +66,7 @@ export class AccountComponent implements OnInit {
     private azureGraphService: AzureGraphService,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.userForm = this.fb.group({
       displayName: ['', Validators.required],
       givenName: ['', Validators.required],
@@ -86,56 +86,9 @@ export class AccountComponent implements OnInit {
     });
 
     // Fetch all users and their roles and permissions on component initialization
-    this.getAllUsers();
+    this.users =  await firstValueFrom(this.azureGraphService.getUsersWithRoles());
   }
 
-
-  async getAllUsers(): Promise<User[]> {
-
-    // const rolesExtension = await this.azureGraphService.getExtension('c59c45c8-4692-43f4-98c0-9d903b969562', 'extension_Roles');
-    // console.log("Test rolesExtension");
-    // console.log(rolesExtension);
-
-    // const permissionsExtension = await this.azureGraphService.getExtension('c59c45c8-4692-43f4-98c0-9d903b969562', 'extension_Permissions');
-    // console.log("Test rolesExtension");
-    // console.log(permissionsExtension);
-
-    try {
-      this.response = await this.azureGraphService.getUsers().toPromise();
-      const users: User[] = Array.isArray(this.response?.value) ? this.response.value : [];
-
-      this.users = await Promise.all(users.map(async (user: User) => {
-        {
-          try {
-            const rolesExtension = await this.azureGraphService.getExtension(user.id, 'extension_Roles');
-            const permissionsExtension = await this.azureGraphService.getExtension(user.id, 'extension_Permissions');
-
-            const roles = rolesExtension?.customValue?.additionalData?.Roles?.map((role: Role) => role.name) || [];
-            const permissions = permissionsExtension?.customValue?.additionalData?.Permissions?.map((permission: Permission) => permission.name) || [];
-
-            return {
-              ...user,
-              roles,
-              permissions
-            };
-          } catch (extensionError) {
-            console.error(`Error fetching extensions for user ${user.id}`, extensionError);
-            // Handle extension fetching error if needed
-            return { ...user, roles: [], permissions: [] }; // Return user without extensions
-          }
-        }
-      }));
-
-      // Filter out null values (users that do not match the specified ID)
-      this.users = this.users.filter(user => user !== null);
-
-      console.log('Users with roles and permissions:', this.users);
-      return this.users;
-    } catch (error) {
-      console.error('Error fetching users', error);
-      throw error; // Propagate the error
-    }
-  }
 
 
 

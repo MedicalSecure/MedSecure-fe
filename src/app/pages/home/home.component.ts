@@ -14,11 +14,13 @@ import {
 } from '@azure/msal-browser';
 import { filter } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { ProfileType } from '../profile/ProfileType';
-import { environment } from '../../../environments/environment';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NavbarComponent } from '../../partials/navbar/navbar.component';
-import { getRole } from '../../role-auth.guard';
+import { User } from '../account/account.component';
+import { AzureGraphService } from '../../azure-graph.service';
+import { getRoles } from '../../role-auth.guard';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-home',
@@ -38,12 +40,13 @@ import { getRole } from '../../role-auth.guard';
 })
 export class HomeComponent implements OnInit {
   loginDisplay = false;
-  profile: ProfileType | undefined;
+  currentUser: User | undefined;
   
   constructor(
     private router: Router,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
+    private graphService: AzureGraphService,
     private http: HttpClient
   ) {}
 
@@ -70,17 +73,21 @@ export class HomeComponent implements OnInit {
 
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+     this.graphService.getCurrentUserWithRole().subscribe((account) => {
+      this.currentUser=account
+    }); 
     this.getProfile(environment.apiConfig.uri);
   }
+
 
   getProfile(url: string) {
     this.http.get(url)
       .subscribe(profile => {
-        this.profile = profile;
+        //@ts-ignore
+        //this.currentUser = profile;
       });
   }
-
   getRole() {
-    return getRole(this.profile);
+    return getRoles(this.currentUser);
   }
 }
