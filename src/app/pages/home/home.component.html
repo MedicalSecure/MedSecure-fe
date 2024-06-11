@@ -6,11 +6,11 @@
 @if (loginDisplay) { @if(profile){
 <div class="container-scroller">
   <!-- Include the navbar component -->
-  <app-navbar></app-navbar>
+  <app-navbar [profile]="profile"></app-navbar>
 
   <div class="container-fluid page-body-wrapper">
     <!-- Include the settings panel component -->
-    <app-settings-panel></app-settings-panel>
+    <!-- <app-settings-panel></app-settings-panel> -->
 
     <!-- Include the sidebar component -->
     <!-- <app-sidebar></app-sidebar> -->

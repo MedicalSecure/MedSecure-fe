@@ -60,6 +60,6 @@ export const routes: Routes = [
   { path: 'doctor-dashboard', component: DashboardDoctorComponent , canActivate: [RoleAuthGuard] },
   { path: 'supervisor-dashboard', component: SupervisorDashboardComponent , canActivate: [RoleAuthGuard] },
   { path: 'nurse-dashboard', component: NurseDashboardComponent , canActivate: [RoleAuthGuard] },
-// { path: 'reception-dashboard', component: DashboardReceptionComponent },
+ { path: 'reception-dashboard', component: DashboardComponent },
   ];
   

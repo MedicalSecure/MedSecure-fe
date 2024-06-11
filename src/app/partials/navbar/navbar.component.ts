@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { PrescriptionApiService } from '../../services/prescription/prescription-api.service';
 import { DrugService } from '../../services/medication/medication.service';
@@ -35,7 +35,7 @@ import { snackbarMessageType } from '../../components/snack-bar-messages/snack-b
   ],
 })
 export class NavbarComponent implements OnInit {
-
+  @Input()
   profile: ProfileType | undefined;
 
   //TO REMOVE AFTER AZURE
@@ -70,7 +70,7 @@ export class NavbarComponent implements OnInit {
   } */
 
   ngOnInit() {
-    this.getProfile(environment.apiConfig.uri);
+    //this.getProfile(environment.apiConfig.uri);
   }
 
   getProfile(url: string) {

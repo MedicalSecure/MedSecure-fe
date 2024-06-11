@@ -15,7 +15,7 @@
   </div>
 </div>
 <!-- content -->
-<div class="wizard-container" style="height: 490px; overflow-y: auto">
+<div class="wizard-container" style="height: 33rem; overflow-y: auto">
   <!-- If no prescription is selected: Search + table part -->
   <div [className]="selectedPrescription != undefined && 'd-none'">
     <!-- Table of Medications -->
@@ -32,7 +32,7 @@
                   <ng-container matColumnDef="header">
                     <div class="date" style="display: flex; align-items: flex-start">
                       <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns.length">
-                        <mat-chip class="uc" style="margin-right: 20px"> Manufacturer : Roche </mat-chip>
+                        <mat-chip class="uc" style="margin-right: 20px"> medSecure: PharmaLink </mat-chip>
 
                         <mat-form-field appearance="outline" style="width: 300px; position: relative; border-radius: 50px; margin-top: 20px">
                           <input style="width: 300px; border-radius: 50px" matInput (keyup)="applyFilter($event)" placeholder="Search..." #input style="width: 200px; color: gray" />

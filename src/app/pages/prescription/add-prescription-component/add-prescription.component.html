@@ -39,13 +39,13 @@
             <!-- Wizard content if loading  -->
             @if(onSubmitLoading || isPageLoading){
               <!-- on submit loading for not resetting the whole wizard if its loading, @If reset the wizard, d-none doesn't, so i did a d-none only for the 5th step with onSubmitLoading  -->
-              <div class="wizard-container" style="height: 490px; overflow-y: auto" >
+              <div class="wizard-container" style="height: 30rem; overflow-y: auto" >
                 <div class="mx-auto pe-5 mt-5" style="width: fit-content"><mat-spinner></mat-spinner></div>
               </div>
             }
             @if(isPageLoading == false){
               <!-- Wizard content if not loading -->
-              <div class="wizard-container" style="height: 490px; overflow-y: auto">
+              <div class="wizard-container" style="height: 33rem; overflow-y: auto">
                 <!-- Step 1 : Patient Selection -->
                 <div [className]="stepNumber != 1 && 'd-none'">
                   <app-stp1-patient-selection [selectedRegister]="selectedRegister" (selectedRegisterChange)="onSelectPatientChange($event)" />
