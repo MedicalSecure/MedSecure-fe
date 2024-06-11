@@ -1,7 +1,7 @@
-import { Component ,OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { FooterComponent } from "../../partials/footer/footer.component";
-import { SettingsPanelComponent } from "../../partials/settings-panel/settings-panel.component";
+import { FooterComponent } from '../../partials/footer/footer.component';
+import { SettingsPanelComponent } from '../../partials/settings-panel/settings-panel.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SnackBarMessagesComponent } from '../../components/snack-bar-messages/snack-bar-messages.component';
 import { CommonModule } from '@angular/common';
@@ -23,11 +23,11 @@ import { getRoles } from '../../role-auth.guard';
 import { environment } from '../../../environments/environment';
 
 @Component({
-    selector: 'app-home',
-    standalone: true,
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.css',
-    providers: [provideNativeDateAdapter()],
+  selector: 'app-home',
+  standalone: true,
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
+  providers: [provideNativeDateAdapter()],
   imports: [
     RouterModule,
     CommonModule,
@@ -35,13 +35,13 @@ import { environment } from '../../../environments/environment';
     NavbarComponent,
     SettingsPanelComponent,
     SnackBarMessagesComponent,
-    MatProgressSpinner
+    MatProgressSpinner,
   ],
 })
 export class HomeComponent implements OnInit {
   loginDisplay = false;
   currentUser: User | undefined;
-  
+
   constructor(
     private router: Router,
     private authService: MsalService,
@@ -59,7 +59,6 @@ export class HomeComponent implements OnInit {
         console.log(result);
         const payload = result.payload as AuthenticationResult;
         this.authService.instance.setActiveAccount(payload.account);
-        
       });
 
     this.msalBroadcastService.inProgress$
@@ -73,19 +72,17 @@ export class HomeComponent implements OnInit {
 
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
-     this.graphService.getCurrentUserWithRole().subscribe((account) => {
-      this.currentUser=account
-    }); 
-    this.getProfile(environment.apiConfig.uri);
+    if (!this.loginDisplay) {
+      this.authService.loginRedirect();
+    } else {
+      this.graphService.getCurrentUserWithRole().subscribe((account) => {
+        this.currentUser = account;
+      });
+    }
   }
 
-
-  getProfile(url: string) {
-    this.http.get(url)
-      .subscribe(profile => {
-        //@ts-ignore
-        //this.currentUser = profile;
-      });
+  thisRedirectsToLoginSomehow(url: string) {
+    this.http.get(url).subscribe();
   }
   getRole() {
     return getRoles(this.currentUser);

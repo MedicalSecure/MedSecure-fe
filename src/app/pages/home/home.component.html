@@ -35,7 +35,7 @@
             <span class="menu-title">Dashboard</span>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isNurse || getRole().isDoctor">
+        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isNurse">
           <a class="nav-link" [routerLink]="['/', 'nurse-dashboard']">
             <i class="mdi mdi-grid-large menu-icon"></i>
             <span class="menu-title">Dashboard</span>
