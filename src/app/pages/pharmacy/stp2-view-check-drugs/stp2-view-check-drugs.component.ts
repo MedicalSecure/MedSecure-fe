@@ -57,10 +57,6 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
     'expired At',
     'unit',
     'stock',
-    'alert Stock',
-    'average Stock',
-    'minimum Stock',
-    'safety Stock',
     'price',
     'description',
   ];
@@ -122,13 +118,15 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
       description: drug.Description,
       expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt),
       stock: Number(drug.Stock),
-      alertStock: Number(drug.AlertStock),
-      avrgStock: Number(drug.AverageStock),
-      minStock: Number(drug.MinimumStock),
-      safetyStock: Number(drug.SafetyStock),
+      alertStock: Number(0),
+      reservedStock:Number(0),
+      avrgStock: Number(0),
+      minStock: Number(0),
+      safetyStock: Number(0),
       price: Number(drug.Price),
     }));
-
+    console.log(JSON.stringify(drugsToAdd));
+    
 
     try {
       let postDrugsResponse = await firstValueFrom(this.drugService.postDrugs(drugsToAdd))
@@ -161,10 +159,10 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
         description: drug.Description,
         expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt),
         stock: Number(drug.Stock),
-        alertStock: Number(drug.AlertStock),
-        avrgStock: Number(drug.AverageStock),
-        minStock: Number(drug.MinimumStock),
-        safetyStock: Number(drug.SafetyStock),
+        alertStock: Number(0),
+        avrgStock: Number(0),
+        minStock: Number(0),
+        safetyStock: Number(0),
         price: Number(drug.Price),
       }));
   

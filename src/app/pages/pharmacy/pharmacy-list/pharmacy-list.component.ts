@@ -47,8 +47,8 @@ export class PharmacyListComponent implements OnInit {
     'available Stock',
     'reserved Stock',
     'alert Stock',
-    'average Stock',
-    'minimum Stock',
+    //'average Stock',
+    //'minimum Stock',
     'safety Stock',
     'price',
     'description'

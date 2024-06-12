@@ -45,7 +45,7 @@
                   [attr.colspan]="columnsToDisplay.length"
                 >
                   <mat-chip class="uc" style="margin-right: 20px">
-                    Unit Care: Emergency Department
+                    Medsecure: Reception
                   </mat-chip>
 
                   <!-- <div class="form-group" style="width: 300px;  position: relative; border-radius: 50px;">
@@ -138,10 +138,17 @@
             <ng-container matColumnDef="age">
               <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
               <td mat-cell *matCellDef="let element">
-                {{ element.patient.dateOfBirth | date : "yyyy-MM-dd" }}
-                <strong> ({{calculateAge(element.patient.dateOfBirth)}}</strong> years
-                old)
+                <ng-container *ngIf="calculateAge(element.patient.dateOfBirth) < 200">
+                  {{ element.patient.dateOfBirth | date : "yyyy-MM-dd" }}
+                  <strong> ({{calculateAge(element.patient.dateOfBirth)}}</strong> years
+                  old)
+                </ng-container>
+                <ng-container *ngIf="calculateAge(element.patient.dateOfBirth) >= 200">
+                  Not-Available
+                </ng-container>
+                
               </td>
+              
             </ng-container>
 
             <!-- registerDate Column -->

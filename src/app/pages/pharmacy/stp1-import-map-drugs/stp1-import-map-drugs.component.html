@@ -15,7 +15,7 @@
       <div class="m-3">
         <div class="d-flex flex-wrap gap-3 form-group ms-3">
           @for (dbColumn of dbHeaders; track dbColumn){
-          <div style="width: 13rem">
+          <div style="width: 13rem" *ngIf="!propsToIgnore.includes(dbColumn)">
             <!-- Dropdown select for mapping columns using Angular Material -->
             <mat-form-field>
               <mat-label>{{ dbColumn }}</mat-label>
