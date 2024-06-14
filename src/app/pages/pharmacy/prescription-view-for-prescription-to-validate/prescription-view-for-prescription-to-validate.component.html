@@ -44,6 +44,11 @@
                         Requested a total of <strong class="text-decoration-underline">{{ getPosologySummary(posology).beforeFoodCounter + getPosologySummary(posology).afterFoodCounter }}</strong>
                         <span class="text-danger">{{ " *" + posology.medication.dosage }} Units</span>
                       </p>
+                      <p class="text-success fw-bolder fs-6">Available Stock: <strong>{{posology.medication.availableStock ??  ((posology.medication.stock - (posology.medication.reservedStock ?? 0)) )}}</strong> 
+                        <span class="text-black-50 fw-bolder fs-6" *ngIf="posology.medication.reservedStock != null && posology.medication.reservedStock != undefined && posology.medication.stock != undefined && posology.medication.stock != null"> 
+                          [Total: {{posology.medication.stock+ " | Reserved : "+posology.medication.reservedStock}}]
+                        </span>
+                      </p>
                       <p class="fw-light mb-0">
                         {{ posology.isPermanent === true ? "Permanent" : getNumberOfDaysInRange([posology.startDate, posology.endDate]) + " Days" }}
                         <span style="font-size: small">{{ getDateString(posology.startDate, "dd/mm/yyyy") }}</span>

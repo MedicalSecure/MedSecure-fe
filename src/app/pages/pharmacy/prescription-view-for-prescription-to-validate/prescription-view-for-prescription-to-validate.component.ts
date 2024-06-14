@@ -77,6 +77,8 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   fetchedMedications: DrugDTO[] = [];
   selectedBodyParts: Set<string> = new Set<string>();
 
+  
+
   //true : confirmation popup / false: rejection popup, undefined: hide popup
   isConfirmationPopUp :boolean|undefined = undefined;
 
@@ -226,6 +228,7 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
         this.mapSymptomsToBodyParts();
         this.fetchUnitCareByBedId(this.selectedPrescription?.bedId);
         this.fetchDietById(this.selectedPrescription?.diet?.dietsId[0]);
+        this.fetchMedications();
       },
       (error) => console.error(error),
       () => (this.isPrescriptionLoading = false)
@@ -235,6 +238,18 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   getGender(gender: undefined | null | Gender): null | string {
     return getGender(gender);
   }
+
+  async fetchMedications(){
+    this.drugService.getMedications().subscribe(
+      (response) => {
+        this.fetchedMedications = response.drugs.data;
+        this.mapMedicationsToPrescriptions();
+      },
+      null
+    );
+  }
+
+  
 
   getRoomFromUnitCare(unitCare: UnitCare | undefined): Room | null {
     //using cache to optimize performance, the msonary is rerendering too much so this getFunction will be called many times

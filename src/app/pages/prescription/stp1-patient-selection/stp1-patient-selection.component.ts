@@ -92,7 +92,7 @@ export class Stp1PatientSelection implements OnChanges {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
 
-  constructor(private prescriptionApiService:PrescriptionApiService) {}
+  constructor(private prescriptionApiService: PrescriptionApiService) {}
 
   ngOnInit() {
     this.fetchRegistrationsWithPrescriptions();
@@ -120,13 +120,18 @@ export class Stp1PatientSelection implements OnChanges {
         await PrescriptionApiService.getRegistrationsWithPrescriptions(
           this.prescriptionApiService
         );
-      if(!dictByRegisterIdResponse) throw Error("Cant fetch registers with prescriptions");
-      let registerWithPrescriptionsList = Object.values(dictByRegisterIdResponse);
-      this.RegistrationsList=registerWithPrescriptionsList.map(item=>mapRegisterWithPrsToRegisterForPrs(item))
-      
-      //refresh the filter
-      this.changeDate((new Date()).toDateString())
-      
+      if (!dictByRegisterIdResponse)
+        throw Error('Cant fetch registers with prescriptions');
+      let registerWithPrescriptionsList = Object.values(
+        dictByRegisterIdResponse
+      );
+      this.RegistrationsList = registerWithPrescriptionsList.map((item) =>
+        mapRegisterWithPrsToRegisterForPrs(item)
+      );
+
+      //refresh the filter and remove it
+      this.changeDate(undefined);
+
       this.IsPatientListLoading = false;
       this.isFailedToLoad = false;
       this.ErrorMessage = '';
@@ -137,7 +142,12 @@ export class Stp1PatientSelection implements OnChanges {
     }
   }
 
-  changeDate(selectedDate: string) {
+  changeDate(selectedDate: string | undefined) {
+    if (selectedDate == undefined) {
+      //remove the filter
+      this.dataSource.data = this.RegistrationsList;
+      return;
+    }
     this.selectedDate = new Date(selectedDate);
     let newSelectedDate = this.selectedDate.getDate();
     this.dataSource.data = this.RegistrationsList.filter(
@@ -166,17 +176,20 @@ export class Stp1PatientSelection implements OnChanges {
 
   Filter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filterPredicate = (data: RegisterForPrescription, filter: string) => {
+    this.dataSource.filterPredicate = (
+      data: RegisterForPrescription,
+      filter: string
+    ) => {
       const p1 = data.patient_firstName.toString().toLowerCase();
       const p2 = data.patient_lastName.toString().toLowerCase();
       const byMRN = data.id?.toString().toLowerCase().includes(filter);
-      if(byMRN) return true;
+      if (byMRN) return true;
 
-      const byName1 = (p1 + " " + p2).includes(filter)
-      if(byName1) return true;
+      const byName1 = (p1 + ' ' + p2).includes(filter);
+      if (byName1) return true;
 
-      const byName2 = (p2 + " " + p1).includes(filter)
-      if(byName2) return true;
+      const byName2 = (p2 + ' ' + p1).includes(filter);
+      if (byName2) return true;
 
       return false;
     };
@@ -205,7 +218,7 @@ const registerForPrescriptionMock: RegisterForPrescription = {
   patient_lastName: 'Doe',
   patient_fullName: 'John Doe',
   patient_dateOfBirth: new Date('1980-01-01'),
-  patient_identity: "1234567890",
+  patient_identity: '1234567890',
   patient_cnam: 9876543210,
   patient_assurance: 'Health Insurance',
   patient_gender: Gender.Male,
