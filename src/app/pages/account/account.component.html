@@ -1,0 +1,90 @@
+<ng-template #noClaims>
+  <p>No claims available</p>
+</ng-template>
+<ng-container>
+  <hr/>
+  <h2>All Users</h2>
+<div *ngIf="users">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Display Name</th>
+        <th>Email</th>
+        <th>Roles</th>
+        <th>Permissions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.displayName }}</td>
+        <td>{{ user.mail }}</td>
+        <td>{{ user.roles.join(', ') }}</td>
+        <td>{{ user.permissions.join(', ') }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="!users">
+  <p>No users found.</p>
+</div>
+
+  <hr />
+
+  <!-- Add User Registration Form -->
+  <h2>Create User</h2>
+  <form [formGroup]="userForm" (ngSubmit)="createUser()" class="container mt-5">
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="displayName" placeholder="Enter display name" />
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="givenName" placeholder="Enter given name" />
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="mailNickname" placeholder="Enter mail nickname" />
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="surname" placeholder="Enter surname" />
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="username" placeholder="Enter username" />
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" formControlName="password" placeholder="Enter password" />
+    </div>
+    <div class="form-group">
+      <select multiple class="form-control" formControlName="roles">
+        <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <select multiple class="form-control" formControlName="permissions">
+        <option *ngFor="let permission of permissions" [value]="permission">{{ permission.name }}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Submit</button>
+  </form>
+  
+  
+
+  <!-- Invite User by Email Form -->
+  <h2>Invite User by Email</h2>
+  <form [formGroup]="inviteUserForm" (ngSubmit)="inviteUserByEmail()" class="container mt-5">
+    <div class="form-group">
+      <input type="email" class="form-control" formControlName="emailAddress" placeholder="Enter email address" />
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="displayName" placeholder="Enter display name" />
+    </div>
+    <div class="form-group">
+      <select multiple class="form-control" formControlName="roles">
+        <option *ngFor="let role of roles" [value]="role">{{ role.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <select multiple class="form-control" formControlName="permissions">
+        <option *ngFor="let permission of permissions" [value]="permission">{{ permission.name }}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="inviteUserForm.invalid">Invite</button>
+  </form>
+</ng-container>

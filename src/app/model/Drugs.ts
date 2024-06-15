@@ -1,7 +1,13 @@
+import { ValidationStatus } from "../enums/enum";
 import { PaginatedResult } from "../types";
+import { CommentsDto, DispenseDto } from "./Prescription";
 
 export type GetDrugsResponse = {
   drugs: PaginatedResult<DrugDTO>;
+};
+
+export type GetValidationsResponse = {
+  validations: PaginatedResult<ValidationDto>;
 };
 
 export type DrugDTO = {
@@ -38,6 +44,31 @@ export type CreateDrugRequest = {
 
 export type CreateDrugResponse = {
   ids: Array<string>;
+}
+
+export type putValidationRequest = {
+  validation: ValidationDto;
 };
 
 
+
+export type ValidationPosologyDto = {
+  id: string; // Guid equivalent in TypeScript
+  drugId: string; // Guid equivalent in TypeScript
+  drug?: DrugDTO;
+  dispenses: DispenseDto[];
+  comments: CommentsDto[];
+};
+
+export type ValidationDto = {
+  id: string; // Guid equivalent in TypeScript
+  prescriptionId: string; // Guid equivalent in TypeScript
+  pharmacistId: string; // Guid equivalent in TypeScript
+  unitCareJson: string;
+  posologies: ValidationPosologyDto[];
+  pharmacistName?: string;
+  status: ValidationStatus;
+  notes?: string;
+  createdAt: Date;
+  modifiedAt:Date;
+};

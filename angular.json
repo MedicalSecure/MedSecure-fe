@@ -21,7 +21,6 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
@@ -84,7 +83,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "development": {
-              "buildTarget": "medsecure-fe:build:development"
+              "buildTarget": "medsecure-fe:build:development",
+              "ssl": true
             },
             "staging": {
               "buildTarget": "medsecure-fe:build:staging"
@@ -93,7 +93,10 @@
               "buildTarget": "medsecure-fe:build:production"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "ssl": true
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -110,7 +113,6 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
@@ -118,7 +120,8 @@
                 "input": "node_modules/@progress/kendo-theme-default/dist/all.css"
               },
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/intro.js/minified/introjs.min.css"
             ],
             "scripts": [
       

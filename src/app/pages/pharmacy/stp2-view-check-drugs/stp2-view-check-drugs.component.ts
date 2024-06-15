@@ -23,6 +23,8 @@ import { DrugDTO } from '../../../model/Drugs';
 import { firstValueFrom } from 'rxjs';
 import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-stp2-view-check-drugs',
@@ -44,6 +46,7 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
   @Input() mappedMedications: MedicationType[] = [];
   @Output() onIsStep2PageValidChange = new EventEmitter<boolean>();
   @Output() ValidDrugsEvent = new EventEmitter<DrugDTO[]>();
+
 
 
   displayedColumns: string[] = [
@@ -137,6 +140,43 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
     } catch (error) {
       console.error('Error adding drug', error);
         return false;
+    }
+  }
+
+  ExportExcel() {
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
+  
+    // Filter out invalid drugs
+    const invalidDrugs: MedicationType[] = this.mappedMedications.filter(drug => !this.isDrugValide(drug));
+  
+    if (invalidDrugs.length > 0) {
+      // Prepare data for export
+      const exportData: DrugDTO[] = invalidDrugs.map((drug) => ({
+        name: drug.Name,
+        dosage: drug.Dosage,
+        form: drug.Form,
+        code: drug.Code,
+        unit: drug.Unit,
+        description: drug.Description,
+        expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt),
+        stock: Number(drug.Stock),
+        alertStock: Number(drug.AlertStock),
+        avrgStock: Number(drug.AverageStock),
+        minStock: Number(drug.MinimumStock),
+        safetyStock: Number(drug.SafetyStock),
+        price: Number(drug.Price),
+      }));
+  
+      const ws = XLSX.utils.json_to_sheet(exportData);
+      const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+      const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const dataBlob = new Blob([excelBuffer], { type: fileType });
+  
+      FileSaver.saveAs(dataBlob, 'invalid_drugs' + fileExtension);
+    } else {
+      // Handle case where there are no invalid drugs to export
+      console.log('No invalid drugs to export.');
     }
   }
 

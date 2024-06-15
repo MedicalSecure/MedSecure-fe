@@ -28,7 +28,9 @@ export class SnackBarMessagesService {
     messageType?: snackbarMessageType,
     duration?: number,
     showIcon?: boolean,
-    title?: string | null
+    title?: string | null,
+    redirectionPath?: string | undefined,
+    queryParams?: { [key: string]: string }
   ): void;
 
   /**
@@ -43,7 +45,9 @@ export class SnackBarMessagesService {
     messageType?: snackbarMessageType,
     duration: number = 4,
     showIcon: boolean = true,
-    title: string | null = null
+    title: string | null = null,
+    redirectionPath?: string | undefined,
+    queryParams?: { [key: string]: string }
   ) {
     let props: SnackBarMessageProps;
 
@@ -55,6 +59,8 @@ export class SnackBarMessagesService {
         durationInSeconds: duration,
         showIcon: showIcon,
         title: title ?? undefined,
+        redirectionPath: redirectionPath,
+        queryParams: queryParams,
       };
     } else {
       //using First overload => => propsOrMessage is the type SnackBarMessageProps

@@ -7,6 +7,7 @@ import {
   Output,
   QueryList,
   SimpleChanges,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -54,6 +55,8 @@ export class PrescriptionListComponent implements OnInit {
   }>();
 
   @ViewChildren('prescriptionRows') prescriptionRows: QueryList<any>;
+  @ViewChild(OldPrescriptionViewForPrescriptionListComponent)
+  oldPrescriptionView!: OldPrescriptionViewForPrescriptionListComponent;
 
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
@@ -169,6 +172,11 @@ export class PrescriptionListComponent implements OnInit {
 
   }
   
+  downloadPdfFromChild(){
+    if(!this.oldPrescriptionView || !this.selectedPrescription)
+      return;
+    this.oldPrescriptionView.printPdf(this.selectedPrescription)
+  }
 
   onClickRefresh() {
     //this.fetchPrescriptions();
@@ -185,7 +193,7 @@ export class PrescriptionListComponent implements OnInit {
     return getPatientStatusFromRegister(this.getRegister(registerId));
   }
 
-  getPrescriptionStatus(prescription: PrescriptionDto): string {
+  getPrescriptionStatus(prescription: PrescriptionDto): {text:string,class:string} {
     return getPrescriptionStatus(prescription);
   }
 
@@ -238,22 +246,22 @@ export function getPatientStatusFromRegister(register: RegisterDto): HistoryStat
   return lastOne.status;
 }
 
-export function getPrescriptionStatus(prescription: PrescriptionDto): string {
+export function getPrescriptionStatus(prescription: PrescriptionDto): {text:string,class:string} {
   switch (prescription.status) {
     case PrescriptionStatus.Draft:
-      return 'Draft';
+      return {text:"Draft",class:'text-muted'};
     case PrescriptionStatus.Pending:
-      return 'Pending';
+      return {text:"Pending",class:'text-warning'};
     case PrescriptionStatus.Active:
-      return 'Active'; // Done: validée
+      return {text:"Active",class:'text-success'};// Done: validée
     case PrescriptionStatus.Rejected:
-      return 'Rejected';
+      return {text:"Rejected",class:'text-danger'};
     case PrescriptionStatus.Discontinued:
-      return 'Discontinued';
+      return {text:"Discontinued",class:'text-danger'};
     case PrescriptionStatus.Completed:
-      return 'Completed';
+      return {text:"Completed",class:'text-success'};
     // Add cases for other statuses if they are uncommented in the enum
     default:
-      return 'Unknown Status';
+      return {text:"Loading",class:'text-muted'};
   }
 }
