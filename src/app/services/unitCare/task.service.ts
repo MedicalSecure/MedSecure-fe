@@ -8,17 +8,22 @@ import { Task, TaskData } from '../../model/unitCare/TaskData';
 })
 export class TaskService {
 
+  link = "https://localhost:6064/unitcare-service/tasks";
+
   constructor(private http: HttpClient) {}
 
   getTasks(): Observable<TaskData> {
 
-    return this.http.get<TaskData>('http://localhost:5102/tasks');
+    return this.http.get<TaskData>(this.link);
   }
 
   postTask(task: Task): Observable<any> {
     const formData = { "Task": task };
-    console.log ('tt',formData)
-    const url = 'http://localhost:5102/tasks'; // URL for POST request
-    return this.http.post<any>(url, formData);
+    return this.http.post<any>(this.link, formData);
+  }
+
+
+  updateTask(task: Task): Observable<any> {
+    return this.http.put<any>(`${this.link}/${task.id}`, task);
   }
 }

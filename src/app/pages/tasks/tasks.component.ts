@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import {FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Task } from '../../model/unitCare/TaskData';
 import { TaskService } from '../../services/unitCare/task.service';
 
@@ -9,27 +9,26 @@ type Form = FormGroup<{
   content: FormControl;
   taskState: FormControl;
   taskAction: FormControl;
-
-
 }>;
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [RouterModule, CommonModule,ReactiveFormsModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
 })
 export class TasksComponent implements OnInit {
 
   showTextarea: boolean = false;
+  data_list: Task[];
 
-  constructor(private taskService: TaskService) {}
-  data_list: Task[] ;
+  constructor(private taskService: TaskService, private router: Router) {}
+
   ngOnInit(): void {
     this.taskService.getTasks().subscribe((response) => {
       this.data_list = response.tasks.data;
-      console.log('test', this.data_list)
+      console.log('test', this.data_list);
     });
   }
 
@@ -43,15 +42,27 @@ export class TasksComponent implements OnInit {
     { value: 'Proceeding', icon: 'proceeding', label: 'Proceeding' },
   ];
 
-  onActionClick(actionType: string, item: Task) {
-    switch (actionType) {
-      case 'proceeding':
-        // Handle close action for the item
-        break;
-      case 'Done':
-        // Handle done action for the item
-        break;
+  onActionChange(event: any, item: Task) {
+    const selectedAction = event.target.value;
+    console.log('Action selected:', selectedAction, 'for task:', item);
+
+    if (selectedAction === 'Proceeding') {
+      item.taskState = 2;
+    } else if (selectedAction === 'Done') {
+      item.taskState = 3;
     }
+
+    this.updateTask(item);
+    console.log('item updated',item)
+  }
+
+  updateTask(updatedTask: Task): void {
+    this.taskService.updateTask(updatedTask).subscribe(response => {
+      console.log('Task updated successfully:', response);
+      this.data_list = this.data_list.map(task => task.id === updatedTask.id ? updatedTask : task);
+    }, error => {
+      console.error('Error updating task:', error);
+    });
   }
 
   // form
@@ -59,8 +70,7 @@ export class TasksComponent implements OnInit {
   taskForm: Form = this.fb.group({
     content: '',
     taskAction: 1,
-    taskState:1,
-
+    taskState: 1,
   });
 
   Task: Task | any;
@@ -69,25 +79,22 @@ export class TasksComponent implements OnInit {
     console.log('test', this.taskForm.value);
 
     if (this.taskForm.valid) {
-
       this.Task = this.taskForm.value;
 
-     this.taskService.postTask(this.Task)
-       .subscribe(response => {
-         console.log('Backend response:', response);
-         this.showTextarea = !this.showTextarea;
+      this.taskService.postTask(this.Task).subscribe(response => {
+        this.showTextarea = !this.showTextarea;
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['tasks']);
+        });
+      }, error => {
+        console.error('Error submitting data:', error);
+      });
+    } else {
+      console.error('Form is invalid!');
+    }
+  }
 
-       }, error => {
-         console.error('Error submitting data:', error);
-       });
-   } else {
-     console.error('Form is invalid!');
-
-   }
- }
-
- toggleTextarea(): void {
-  this.showTextarea = !this.showTextarea;
-}
-
+  toggleTextarea(): void {
+    this.showTextarea = !this.showTextarea;
+  }
 }
