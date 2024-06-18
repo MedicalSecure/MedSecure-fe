@@ -5,13 +5,13 @@ import { RouterModule } from '@angular/router';
 
 
 @Component({
-  selector: 'app-visits-home-page',
+  selector: 'app-visits',
   standalone: true,
   imports: [CalendarShedulerComponent, RouterModule],
   templateUrl: './visits.component.html',
   styleUrl: './visits.component.css'
 })
-export class Visits  {
+export class VisitsComponent  {
   
   events: CalendarEventType[] = [];
   selectedDate: Date = new Date();
