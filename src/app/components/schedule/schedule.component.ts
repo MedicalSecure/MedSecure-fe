@@ -39,9 +39,6 @@ export class ScheduleComponent implements OnInit {
   persistCache: boolean = true;
   private _partsOfDayHoursMapped: Dispense[][];
 
-  get hourClasses() {
-    return _hourClassesMap;
-  }
   get partsOfDayNames() {
     return _partsOfDayNamesMap;
   }
@@ -57,7 +54,7 @@ export class ScheduleComponent implements OnInit {
       const timezoneHours: Dispense[] = [];
       for (const hoursNumber of timezone) {
         for (const hourObj of this.partsOfDayHours) {
-          if (hoursNumber === hourObj.hour) {
+          if (hoursNumber == hourObj.hour) {
             timezoneHours.push(hourObj);
           }
         }
@@ -102,6 +99,14 @@ export class ScheduleComponent implements OnInit {
     let increment = event.deltaY < 0 ? 1 : -1;
     this.updateHourValue(HourObject, isBeforeFood, increment);
     this._emitChanges();
+  }
+
+  GetHourClasses(hour:string|number){
+    for (const key of Object.keys(_hourClassesMap)) {
+      if(key==hour)
+        return _hourClassesMap[key];
+    }
+    return "Pre-Dawn/Dawn";
   }
 
   updateHourValue(

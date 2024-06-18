@@ -29,7 +29,7 @@ export class RegistrationService {
     pageIndex: number = 0,
     pageSize: number = 10,
     maxRetries: number = 3,
-    retryDelayInMs: number = 1000,
+    retryDelayInMs: number = 3000,
     displayErrorMessages: boolean = true
   ): Observable<GetRegistrationResponse> {
     const params = new HttpParams()
@@ -57,7 +57,7 @@ export class RegistrationService {
   getRegisterById(
     registerId: string,
     maxRetries: number = 3,
-    retryDelayInMs: number = 1000,
+    retryDelayInMs: number = 3000,
     displayErrorMessages: boolean = true
   ): Observable<GetRegisterByIdResponse> {
     let url = this.url ;

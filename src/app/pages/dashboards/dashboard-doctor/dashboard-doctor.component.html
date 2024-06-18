@@ -1,0 +1,319 @@
+
+<div class="tab-content tab-content-basic">
+  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="statistics-details d-flex align-items-center justify-content-between">
+          <div class="statistics-title1">
+            <p class="statistics-title">Non-prescribed patients</p>
+            <h3 class="rate-percentage">{{registeredPatientsCount}}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>Patient</span></p>
+          </div>
+          <div class="statistics-title2">
+            <p class="statistics-title">Prescribed patients</p>
+            <h3 class="rate-percentage">{{PatientPrescribedcount}}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>Patient</span></p>
+          </div>
+          <div class="statistics-title3">
+            <p class="statistics-title">Patient visit count</p>
+            <h3 class="rate-percentage">{{totalVisitsCount}}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>Visit</span></p>
+          
+          </div >
+          <div class="d-none d-md-block statistics-title4">
+            <p class="statistics-title">Unitcare available</p>
+            <h3 class="rate-percentage">{{ActivatedUnitCaresCount}}/{{UnitCaresCount}}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>UnitCares</span></p>
+          </div>
+          <div class="d-none d-md-block d-md-block statistics-title5">
+            <p class="statistics-title">Valid prescriptions</p>
+            <h3 class="rate-percentage">{{ValidPrescription}}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>Prescription</span></p>
+          </div>
+          <div class="d-none d-md-block d-md-block statistics-title6">
+            <p class="statistics-title">Invalid prescriptions</p>
+            <h3 class="rate-percentage">{{InValidPrescription}}</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>Prescription</span></p>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="row">
+      <div class="col-lg-8 d-flex flex-column">
+        <div class="row flex-grow">
+          <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body card1">
+                <div class="d-sm-flex justify-content-between align-items-start">
+                  <div>
+                   <h4 class="card-title card-title-dash">Recommended Medications</h4>
+                   <h5 class="card-subtitle card-subtitle-dash">This widget displays the recommended medications, i.e., the medications along with their stock</h5>
+                  </div>
+                  <div id="performance-line-legend"></div>
+                </div>
+                <div class="chartjs-bar-wrapper mt-3">
+                 <app-recommended-medications/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex flex-column">
+        <div class="row flex-grow">
+          <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+            <div class="card bg-primary card-rounded">
+              <div class="card-body card2 pb-0">
+                <h4 class="card-title card-title-dash text-white mb-4">nbre prescription /j</h4>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <p class="status-summary-ight-white mb-1">Totale Prescriptions</p>
+                    <h2 class="text-info">{{totalPrescriptionCount}}</h2>
+                  </div>
+                  <div class="col-sm-12">
+                    
+                     <app-rendement-prescription/>
+            
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body card3">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2 mb-sm-0">
+                      <div class="circle-progress-width">
+                        <div id="totalVisitors" class="progressbar-js-circle pr-2"></div>
+                      </div>
+                      <div>
+                        <p class="text-small mb-2">Total Visits</p>
+                        <h4 class="mb-0 fw-bold">{{totalVisitsCount}}</h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="circle-progress-width">
+                        <div id="visitperday" class="progressbar-js-circle pr-2"></div>
+                      </div>
+                      <div>
+                        <p class="text-small mb-2">Visits per day</p>
+                        <h4 class="mb-0 fw-bold">{{visitsCountByDay}}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 d-flex flex-column">
+        <div class="row flex-grow">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body card4">
+                <div class="d-sm-flex justify-content-between align-items-start">
+                  <div>
+                    <h4 class="card-title card-title-dash"> Medications administered</h4>
+                    <p class="card-subtitle card-subtitle-dash">This widget displays a list of medications prescribed </p>
+                  </div>
+                  <div>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> This month </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                        <h6 class="dropdown-header">Settings</h6>
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Separated link</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               
+                <div class="chartjs-bar-wrapper mt-3">
+                  <app-medications-prescribed/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row flex-grow card5">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card  card-rounded">
+              <div class="card-body">
+                <div class="d-sm-flex justify-content-between align-items-start">
+                  <div>
+                    <h4 class="card-title card-title-dash ">Liste Prescriptions</h4>
+                   <p class="card-subtitle card-subtitle-dash"> You have + {{ totalPrescriptionCount }} new prescriptions available.</p>
+                  </div>
+                 
+                </div>
+    
+                <div class="table-responsive mt-1">
+                  <table class="table select-table">
+                    <thead>
+                      <tr>
+                        <th>
+                          <div class="form-check form-check-flat mt-0">
+                            <label class="form-check-label">
+                              <input type="checkbox" class="form-check-input" aria-checked="false"><i class="input-helper"></i></label>
+                          </div>
+                        </th>
+                        <th>Prescription</th>
+                        <th>Patient</th>
+                        <th>Medication</th>
+                        <th>Dosage</th>
+                        <th>Date Prescribed</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let prescription of prescriptions | paginate: { itemsPerPage: 5, currentPage: page };let i =index">
+                        <td>
+                          <div class="form-check form-check-flat mt-0">
+                            <label class="form-check-label">
+                              <input type="checkbox" class="form-check-input" aria-checked="false"><i class="input-helper"></i></label>
+                          </div>
+                        </td>
+                        <td>Prescription {{ i + 1 }}</td> <!-- Ajout de la colonne "Prescription" -->
+                        <td>
+                          <div class="d-flex">
+                            <img [src]="prescription.image" alt="" >
+                            <div>
+                              <h6>{{ prescription.patient_name }}</h6>
+                              <p>Patient ID: {{ prescription.id }}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>{{ prescription.medication_name }}</td>
+                        <td>{{ prescription.dosage }}</td>
+                        <td>{{ prescription.date_prescribed }}</td>
+                        <td>
+                          <div class="badge" [ngClass]="{'badge-opacity-warning': prescription.status === 'invalide',
+                                                          'badge-opacity-success': prescription.status === 'valide',
+                                                          'badge-opacity-danger': prescription.status === 'pending'}">
+                            {{ prescription.status }}
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                
+                </div>
+               
+                
+              </div>
+
+              <div>  <pagination-controls (pageChange)="page = $event" ></pagination-controls></div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="row flex-grow ">
+          <div class="col-md-6 col-lg-6 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body card-rounded card6">
+                <h4 class="card-title  card-title-dash ">Recent Events</h4>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Change in Directors
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Other Events
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Quarterly Report
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Change in Directors
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="list align-items-center pt-3">
+                  <div class="wrapper w-100">
+                    <p class="mb-0">
+                      <a href="#" class="fw-bold text-primary">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <app-activities  class="card7" [service]="visitService" [className]='"col-md-6 col-lg-6 grid-margin stretch-card"'></app-activities>
+
+  
+        
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex flex-column">
+        <!-- cards to do liste -->
+        <div class="card8"> <app-to-do/></div>
+        <!-- cards Leave Report -->
+       <div class="card9"><app-leave-report/>  </div> 
+        <!-- topUrgencyPatients liste -->
+        <div class="row flex-grow card10">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+              <div class="card-body">
+                <div class="row">
+                  <app-top-urgency-cases/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+     
+    </div>
+  </div>
+</div>

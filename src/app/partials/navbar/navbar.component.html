@@ -33,125 +33,11 @@ class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-t
   </ul>
    <!-- tabs nav bar -->
   <ul class="navbar-nav ms-auto">
-    @if(displayTabs) {
-    <!-- File management interface -->
-    <li class="nav-item">
-      <div class="d-sm-flex align-items-center justify-content-between">
-        <div
-          class="btn-group btn-group-sm"
-          role="group"
-          aria-label="File actions"
-        >
-          <!-- Download button -->
-          <a href="#" for="fileOutputPharmacy" class="btn btn-outline-dark">
-            <i class="icon-download nav-link"></i> Download
-          </a>
 
-          <!-- Upload button -->
-          <a
-            href="#"
-            onclick="document.getElementById('fileInputPharmacy').click()"
-            class="btn btn-outline-dark"
-          >
-            <i class="icon-upload nav-link"></i> Upload
-          </a>
-        </div>
-        <!-- File input for uploading -->
-        <input
-          type="file"
-          label="Import"
-          id="fileInputPharmacy"
-          style="display: none"
-          (change)="importExcelData($event)"
-          accept=".xls, .xlsx"
-        />
-        <!-- Import and map data modal -->
-        <div
-          class="modal fade"
-          style="background-color: rgba(0, 0, 0, 0.7)"
-          id="exampleModal"
-          tabindex="8"
-          [style]="
-            isShowImportModal
-              ? 'display:block;opacity:100'
-              : 'display:none;opacity:0'
-          "
-        >
-          <div
-            class="modal-dialog justify-content-center modal-dialog-centered"
-            role="document"
-            (click)="stopPropagation($event)"
-          >
-            <div
-              class="modal-content"
-              style="height: 480px; margin-right: 75px"
-            >
-              <!-- Modal header -->
-              <div class="modal-header p-2">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  <strong>Import and map data</strong>
-                </h5>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                  (click)="onClickCloseModal()"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <!-- Modal body -->
-              <div
-                class="modal-body d-flex flex-wrap gap-3 form-group ms-3"
-              >
-                <!-- Loop through database columns -->
-                @for(dbColumn of dbHeaders;track $index){
-                <div style="width: 10rem">
-                  <!-- Dropdown select for mapping columns -->
-                  <select
-                    [value]="columnMappings[dbColumn]"
-                    class="form-select"
-                    (change)="onSelectchange($event, dbColumn)"
-                    required
-                  >
-                    <!-- Placeholder option -->
-                    <option value="" hidden>{{ dbColumn }}</option>
-                    <!-- Loop through imported data headers -->
-                    @for(impHeader of importedDataHeaders;track impHeader){
-                    <option [value]="impHeader" style="width: 100%">
-                      {{ impHeader }}
-                    </option>
-                    }
-                  </select>
-                </div>
-                <!-- End of column mapping select -->
-                }
-                <!-- Modal footer with buttons -->
-                <div class="mt-3">
-                  <button
-                    type="button"
-                    class="btn btn-primary text-white"
-                    (click)="onClickFinishModal()"
-                  >
-                    Save changes
-                  </button>
-
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    (click)="onClickCloseModal()"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-    }
+    <!--  TODO REMOVE THIS ROLE SELECTOR -->
+    <select class="form-select" [value]="selectedRole" (change)="onRoleChange($event)">
+      <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+    </select>
 
     <!-- Search -->
     <li class="nav-item">
@@ -167,7 +53,7 @@ class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-t
         <i class="icon-bell"></i>
         <span class="count"></span>
       </a>
-      <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
+      <!-- <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
         aria-labelledby="notificationDropdown">
         <a class="dropdown-item py-3 border-bottom">
           <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
@@ -200,7 +86,7 @@ class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-t
             <p class="fw-light small-text mb-0"> 2 days ago </p>
           </div>
         </a>
-      </div>
+      </div> -->
     </li>
     
 

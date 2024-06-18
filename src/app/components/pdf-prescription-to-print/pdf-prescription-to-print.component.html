@@ -1,0 +1,96 @@
+<div #contentToPrint class="m-0 p-0">
+<div class="container px-3">
+  <div class="card shadow-sm">
+    <div class="card-header text-center bg-secondary text-primary d-flex justify-content-between align-items-center">
+      <img src="assets/images/logo.svg" alt="Doctor's Logo" class="img-fluid" style="max-height: 100px" />
+      <h1 style="margin-right: 3%">Prescription</h1>
+    </div>
+    <div class="card-body">
+      <div class="d-flex mb-2 justify-content-between me-auto col-5">
+        <div>
+          <h4>Patient Information</h4>
+          <p><strong>Name:</strong> {{getFullName()}}</p>
+          <p><strong>Age:</strong>  {{GetAge(register?.patient?.dateOfBirth)}}</p>
+          <p><strong>Gender:</strong> {{register?.patient?.gender == undefined ? (register?.patient?.gender === 0 ? "Male":"Female"):"Error"}}</p>
+          <p><strong>Date:</strong> {{GetDate(register?.patient?.dateOfBirth)}}</p>
+        </div>
+        <div>
+            <h4>Doctor Information</h4>
+            <p>Name : {{doctor.name}}</p>
+            <p>{{doctor.address}}</p>
+            <p>Phone: {{doctor.phone}}</p>
+            <p>Email: {{doctor.email}}</p>
+          </div>
+      </div>
+      <h3>Prescription Details</h3>
+
+      <!-- symptoms -->
+      <div class="mb-3">
+        <h4>Symptoms</h4>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let symptom of prescription?.symptoms">
+            <p>
+              <strong>{{symptom.name}}:</strong>
+              {{symptom.longDescription}}
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- diagnosis -->
+      <div class="mb-3">
+        <h4>Diagnosis</h4>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let symptom of prescription?.diagnoses">
+            <p>
+              <strong>{{symptom.name}}:</strong>
+              {{symptom.longDescription}}
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Medications table -->
+      <div>
+        <h4>Medications</h4>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let posology of prescriptionMapped?.posologies">
+            <h6 class="fw-bold">{{posology.medication.name}} {{posology.medication.dosage}}</h6>
+            <p *ngIf="posology.endDate && !posology.isPermanent"> Take for 7 days, starting from <strong>{{GetDate(posology.startDate)}}</strong> to <strong>{{GetDate(posology.endDate)}}</strong></p>
+            <p *ngIf="posology.isPermanent"> Take for the rest of your life. starting from <strong>{{GetDate(posology.startDate)}}</strong></p>
+            <table class="table table-bordered" style="width: fit-content">
+              <thead>
+                <tr>
+                  <th>Hour</th>
+                  <th *ngFor="let d of posology.dispenses">{{d.hour.length == 1 ? ("0"+d.hour) : d.hour }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dose</td>
+                  <td *ngFor="let d of posology.dispenses">
+                    <p *ngIf="d.beforeMeal">{{"BM: "+d.beforeMeal.quantity}}</p>
+                    <p *ngIf="d.afterMeal">{{"AM: "+d.afterMeal.quantity}}</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="list-group-item" *ngFor="let comment of posology.comments">
+                <strong>{{comment.label == "Comment" ? "Note": comment.label}}: </strong>{{comment.content}}
+            </p>
+          </li>
+          <p class="list-group-item">
+            <strong>*BM</strong> Consume your dose before Meal
+            <strong>*AM</strong> Consume your dose after Meal
+          </p>
+          
+        </ul>
+      </div>
+    </div>
+    <p class="ms-auto me-5 px-3 mb-4">MedSecure on <strong>{{GetDateNow()}}</strong></p>
+    <div class="card-footer text-center">
+      <p class="mb-0"><em>Note: Take medications as prescribed and consult your doctor if you have any questions or adverse reactions.</em></p>
+    </div>
+  </div>
+</div>
+</div>

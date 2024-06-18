@@ -1,157 +1,67 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatOption, provideNativeDateAdapter } from '@angular/material/core';
-import { NgIf } from '@angular/common';
-import * as XLSX from 'xlsx';
-import { MatSelectModule } from '@angular/material/select';
-import { FormsModule } from '@angular/forms';
+import { PrescriptionApiService } from '../../services/prescription/prescription-api.service';
+import { DrugService } from '../../services/medication/medication.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   templateUrl: './navbar.component.html',
-  providers: [provideNativeDateAdapter()],
-  imports: [
-    RouterModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    NgIf,
-    RouterModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatOption,
-    FormsModule,
-    NavbarComponent,
-  ],
+  providers: [],
+  imports: [RouterModule, CommonModule],
 })
 export class NavbarComponent {
-  constructor(private router: Router) {}
+  //TO REMOVE AFTER AZURE
+  roles = [
+    { value: DOCTOR_ROLE, label: 'Doctor' },
+    { value: PHARMACIST_ROLE, label: 'Pharmacist' },
+    { value: RECEPTIONIST_ROLE, label: 'Receptionist' },
+  ];
+  selectedRole = DOCTOR_ROLE;
 
-  displayTabs: boolean = true;
-  importedData: { [key: string]: any }[] = [];
-  //after mapping :
-  mappedData: MedicationType[] = [];
-  importedDataHeaders: string[] = [];
-  isImportValid: boolean = false;
-  isShowImportModal = false;
+  // connect signal r after loading the app by X seconds in seconds
+  connectSignalRAfter = 5;
 
-  columnMappings: MedicationType = {
-    Name: NOT_ASSIGNED,
-    Dosage: NOT_ASSIGNED,
-    Form: NOT_ASSIGNED,
-    Code: NOT_ASSIGNED,
-    ExpiredAt: NOT_ASSIGNED,
-    Unit: NOT_ASSIGNED,
-    Stock: NOT_ASSIGNED,
-    AlertStock: NOT_ASSIGNED,
-    AverageStock: NOT_ASSIGNED,
-    MinimumStock: NOT_ASSIGNED,
-    SafetyStock: NOT_ASSIGNED,
-    Price: NOT_ASSIGNED,
-    Description: NOT_ASSIGNED,
-  };
-  dbHeaders: (keyof MedicationType)[] = Object.keys(
-    this.columnMappings
-  ) as (keyof MedicationType)[];
+  constructor(
+    private router: Router,
+    private prescriptionService: PrescriptionApiService,
+    private drugsService: DrugService
+  ) {}
 
-  importExcelData(event: any) {
-    const fileList: FileList = event.target.files;
-    if (fileList && fileList.length > 0) {
-      this.isShowImportModal = true;
-      const file = fileList[0];
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-      reader.onload = (e: any) => {
-        const arrayBuffer = e.target.result;
-        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const data = XLSX.utils.sheet_to_json(worksheet) as object[] | null;
-        // Use the parsed data here, e.g., display it in a table
-
-        if (data && data.length > 0 && Object.keys(data[0]).length > 0) {
-          this.importedData = data;
-          this.isImportValid = true;
-          this.importedDataHeaders = [NOT_ASSIGNED];
-          this.importedDataHeaders.push(...Object.keys(data[0]));
-          console.log(this.importedData);
-          console.log(this.isShowImportModal);
-        }
-      };
-    }
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    setTimeout(() => {
+      let role = DOCTOR_ROLE;
+      this.ConnectSignalRByRole(role);
+    }, this.connectSignalRAfter * 1000);
   }
 
-  onClickFinishModal() {
-    let result: MedicationType[] = [];
-    for (let importedObj of this.importedData) {
-      const newMappedObject: MedicationType = {
-        Name: NOT_ASSIGNED,
-        Dosage: NOT_ASSIGNED,
-        Form: NOT_ASSIGNED,
-        Code: NOT_ASSIGNED,
-        ExpiredAt: NOT_ASSIGNED,
-        Unit: NOT_ASSIGNED,
-        Stock: NOT_ASSIGNED,
-        AlertStock: NOT_ASSIGNED,
-        AverageStock: NOT_ASSIGNED,
-        MinimumStock: NOT_ASSIGNED,
-        SafetyStock: NOT_ASSIGNED,
-        Price: NOT_ASSIGNED,
-        Description: NOT_ASSIGNED,
-      };
-      for (const dbHead of this.dbHeaders) {
-        const oldHeader = this.columnMappings[dbHead as keyof MedicationType];
-        if (importedObj[oldHeader] !== undefined) {
-          newMappedObject[dbHead as keyof MedicationType] =
-            importedObj[oldHeader];
-        } else {
-          newMappedObject[dbHead as keyof MedicationType] = NOT_ASSIGNED;
-        }
-      }
-      result.push(newMappedObject);
-    }
-    this.mappedData = result;
-    console.log('mappedData', this.mappedData);
-    console.log('test', this.columnMappings);
-    this.onClickCloseModal();
-    this.router.navigate(['/', 'pharmacy'], { state: { mappedData: result } });
+  async ConnectSignalRByRole(role: string | undefined) {
+    if (!role) return;
+    if (role == DOCTOR_ROLE) await this.prescriptionService.connectSignalR();
+    else if (role == PHARMACIST_ROLE) await this.drugsService.connectSignalR();
   }
-
-  onClickCloseModal() {
-    this.isShowImportModal = false;
+  async DisconnectSignalRByRole(role: string | undefined) {
+    if (!role) return;
+    if (role == DOCTOR_ROLE) await this.prescriptionService.disconnectSignalR();
+    else if (role == PHARMACIST_ROLE) await this.drugsService.disconnectSignalR();
   }
-
-  stopPropagation($event: any) {
-    $event.stopPropagation();
-  }
-
-  onSelectchange(event: any, dbColumn: keyof MedicationType) {
-    this.columnMappings[dbColumn] = event.target.value;
-    if (event.target.value == NOT_ASSIGNED) {
-      this.columnMappings[dbColumn] = '';
-    }
-    console.log(this.columnMappings);
+  //TO REMOVE
+  async onRoleChange(event: Event) {
+    //disconnect the old role
+    await this.DisconnectSignalRByRole(this.selectedRole)
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedRole = selectElement.value;
+    console.log(`Selected role: ${this.selectedRole}`);
+    setTimeout(() => {
+      this.ConnectSignalRByRole(this.selectedRole);   
+    }, 2000);
+    
   }
 }
-export const NOT_ASSIGNED = '---';
 
-export type MedicationType = {
-  Name: string;
-  Dosage: string;
-  Form: string;
-  Code: string;
-  ExpiredAt: string;
-  Unit: string;
-  Stock: string;
-  AlertStock: string;
-  AverageStock: string;
-  MinimumStock: string;
-  SafetyStock: string;
-  Price: string;
-  Description: string;
-};
+export const DOCTOR_ROLE = 'doctor';
+export const PHARMACIST_ROLE = 'pharmacist';
+export const RECEPTIONIST_ROLE = 'receptionist';
