@@ -100,19 +100,19 @@
           </a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/', 'tasks']">
+          <a class="nav-link" [routerLink]="['/', 'nurseTasks']">
             <i class="menu-icon mdi mdi-card-text-outline"></i>
             <span class="menu-title">Tasks</span>
             <i class="menu-arrow"></i>
           </a>
         </li>
-        <!--         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/', 'timeline']">
-            <i class="menu-icon mdi mdi-chart-line"></i>
+                 <li class="nav-item" routerLinkActive="active">
+                  <a class="nav-link" [routerLink]="['/', 'timeline']" *ngIf="getRole().isNurse || getRole().isSupervisor ">
+                    <i class="menu-icon mdi mdi-chart-line"></i>
             <span class="menu-title">Time Line</span>
             <i class="menu-arrow"></i>
           </a>
-        </li> -->
+        </li> 
 
         <!-- Visits Link -->
         <li class="nav-item" routerLinkActive="active">
@@ -133,7 +133,7 @@
         </li>
 
         <!-- Waste Link -->
-        <li class="nav-item" *ngIf="getRole().isNurse || getRole().isSupervisor">
+        <li class="nav-item" *ngIf="getRole().isSupervisor">
           <a class="nav-link">
             <i class="menu-icon fa fa-trash-o"></i>
             <span class="menu-title">Waste</span>

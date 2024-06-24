@@ -95,7 +95,10 @@ export function isAuthorized(profile:ProfileType,nextPath:string):boolean{
         return getRole(job).isDoctor || getRole(job).isSupervisor;
     if(nextPath == "bac-patient")
         return getRole(job).isNurse || getRole(job).isSupervisor;
+    if(nextPath == "timeline")
+        return getRole(job).isNurse || getRole(job).isSupervisor;
     if(nextPath == "visits")
+
         return getRole(job).isDoctor || getRole(job).isSupervisor;
     if(nextPath == "tasks")
         return true;

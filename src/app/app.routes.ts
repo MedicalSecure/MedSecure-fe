@@ -38,7 +38,7 @@ export const routes: Routes = [
   { path: 'UnitSelector', component: UnitSelectorComponent , canActivate: [RoleAuthGuard] },
   { path: 'bac-patient', component: BacPatientComponent , canActivate: [RoleAuthGuard] },
   { path: 'timeline', component: TimelineComponent , canActivate: [RoleAuthGuard] },
-  { path: 'tasks', component: TasksComponent , canActivate: [RoleAuthGuard] },
+  { path: 'nurseTasks', component: TasksComponent , canActivate: [RoleAuthGuard] },
   { path: 'search', component: SearchBarComponent , canActivate: [RoleAuthGuard] },
   { path: 'pharmacy', component: AddPharmacyComponent , canActivate: [RoleAuthGuard] },
   { path: 'pharmacyValidation', component: PrescriptionViewForPrescriptionToValidateComponent , canActivate: [RoleAuthGuard] },
