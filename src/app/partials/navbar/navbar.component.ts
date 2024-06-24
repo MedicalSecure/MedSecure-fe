@@ -16,7 +16,8 @@ export class NavbarComponent {
   roles = [
     { value: DOCTOR_ROLE, label: 'Doctor' },
     { value: PHARMACIST_ROLE, label: 'Pharmacist' },
-    { value: RECEPTIONIST_ROLE, label: 'Receptionist' },
+    { value: RECEPTIONIST_ROLE, label: 'Receptionist' }, 
+    { value: NURSE_ROLE, label: 'Nurse' },
   ];
   selectedRole = DOCTOR_ROLE;
 
@@ -65,3 +66,4 @@ export class NavbarComponent {
 export const DOCTOR_ROLE = 'doctor';
 export const PHARMACIST_ROLE = 'pharmacist';
 export const RECEPTIONIST_ROLE = 'receptionist';
+export const NURSE_ROLE = 'Nurse';
