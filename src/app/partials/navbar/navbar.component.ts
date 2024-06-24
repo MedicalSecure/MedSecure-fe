@@ -42,8 +42,7 @@ export class NavbarComponent implements OnInit {
 /*   roles = [
     { value: DOCTOR_ROLE, label: 'Doctor' },
     { value: PHARMACIST_ROLE, label: 'Pharmacist' },
-    { value: RECEPTIONIST_ROLE, label: 'Receptionist' }, 
-    { value: NURSE_ROLE, label: 'Nurse' },
+    { value: RECEPTIONIST_ROLE, label: 'Receptionist' },
   ];
   selectedRole = DOCTOR_ROLE; */
 
@@ -125,12 +124,6 @@ export class NavbarComponent implements OnInit {
   } */
 }
 
-<<<<<<< HEAD
-export const DOCTOR_ROLE = 'doctor';
-export const PHARMACIST_ROLE = 'pharmacist';
-export const RECEPTIONIST_ROLE = 'receptionist';
-export const NURSE_ROLE = 'Nurse';
-=======
 export function extractRoleFromProfile(profile: ProfileType | null | undefined): string | null {
   if (!profile || !profile.jobTitle) return null;
   let role = profile.jobTitle;
@@ -151,4 +144,3 @@ export function extractRoleFromProfile(profile: ProfileType | null | undefined):
       return null;
   }
 }
->>>>>>> azure-ad-connection

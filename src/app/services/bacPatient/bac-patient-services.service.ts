@@ -31,8 +31,20 @@ export class BacPatientService implements ActivityService {
     );
     return x;
   }
+  getTimeline():bacpatient[] {
+    this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
+    .subscribe(
+      (response: BacPatientResponse) => {
+        console.log('Response:', response);
+         this.data_source = response.bacPatients.data },
+      error => {
+        console.error('Error fetching data:', error);
+      }
+    );
+    return this.data_source ;
+  }
   getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ,isLoading :boolean) : bacpatient[] {
-    this.http.get<BacPatientResponse>('http://localhost:6005/v1/bacPatient')
+    this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
@@ -56,7 +68,7 @@ export class BacPatientService implements ActivityService {
   }
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
-    return this.http.put('http://localhost:6005/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
  
     },
     error => {
@@ -73,7 +85,7 @@ export class BacPatientService implements ActivityService {
       
   });
     const body = { "bacPatient": bacPatient };
-    return this.http.put('http://localhost:6005/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
  console.log(response);
  
     },
