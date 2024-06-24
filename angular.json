@@ -21,7 +21,6 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
@@ -94,7 +93,7 @@
               "buildTarget": "medsecure-fe:build:production"
             }
           },
-          "defaultConfiguration": "development" ,
+          "defaultConfiguration": "development",
           "options": {
             "ssl": true,
             "sslKey": "ssl/key.pem",
@@ -116,7 +115,6 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
