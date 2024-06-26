@@ -1,4 +1,3 @@
-import { Component ,OnInit} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FooterComponent } from "../../partials/footer/footer.component";
 import { SettingsPanelComponent } from "../../partials/settings-panel/settings-panel.component";
@@ -19,14 +18,15 @@ import { environment } from '../../../environments/environment';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NavbarComponent } from '../../partials/navbar/navbar.component';
 import { getRole } from '../../role-auth.guard';
-import {RoleAuthGuard} from '../../../app/role-auth.guard'
+import { RoleAuthGuard } from '../../../app/role-auth.guard'
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'app-home',
-    standalone: true,
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.css',
-    providers: [provideNativeDateAdapter()],
+  selector: 'app-home',
+  standalone: true,
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
+  providers: [provideNativeDateAdapter()],
   imports: [
     RouterModule,
     CommonModule,
@@ -39,27 +39,29 @@ import {RoleAuthGuard} from '../../../app/role-auth.guard'
 })
 export class HomeComponent implements OnInit {
   loginDisplay = false;
-  profile: ProfileType | undefined;
+  profile: ProfileType | undefined; role: string;
+  @Output() roleEmitter = new EventEmitter<string>();
+  userJob: string;
   constructor(
     private router: Router,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
     private http: HttpClient,
-    public  roleAuth : RoleAuthGuard
+    public roleAuth: RoleAuthGuard,
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS)
-      )
-      .subscribe((result: EventMessage) => {
-        console.log(result);
-        const payload = result.payload as AuthenticationResult;
-        this.authService.instance.setActiveAccount(payload.account);
-        
-      });
+    .pipe(
+      filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS)
+    )
+    .subscribe((result: EventMessage) => {
+      console.log(result);
+      const payload = result.payload as AuthenticationResult;
+      this.authService.instance.setActiveAccount(payload.account);
+
+    });
 
     this.msalBroadcastService.inProgress$
       .pipe(
@@ -68,6 +70,9 @@ export class HomeComponent implements OnInit {
       .subscribe(() => {
         this.setLoginDisplay();
       });
+    this.userJob = this.roleAuth.profile?.jobTitle as string;
+    this.roleEmitter.emit(this.userJob);
+    console.log("role fil home ", this.userJob);
   }
 
   setLoginDisplay() {

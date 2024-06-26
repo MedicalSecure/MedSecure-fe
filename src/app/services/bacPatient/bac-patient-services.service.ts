@@ -77,10 +77,10 @@ export class BacPatientService implements ActivityService {
   );
 
    }
-   updateBacPatientComment(bacPatient : bacpatient , Content : string){
+   updateBacPatientComment(bacPatient : bacpatient , Content : string , username : string){
     bacPatient.prescription.posologies.forEach(pos => {
       pos.comments.forEach(com=>{
-        pos.comments.push({ id : com.id , posologyId : com.posologyId , label : com.label ,content: Content });
+        pos.comments.push({ id : com.id , posologyId : com.posologyId , label : username ,content: Content });
       })
       
   });
