@@ -3,25 +3,38 @@
   @for (d of diet; track $index) {
   <div ngxMasonryItem class="card" style="border: 1px solid black; margin-bottom:2% ;">
     <div class="card-body">
-      <h5 class="card-title"><strong> Patient : {{ d.register.patient.firstName}} {{
-          d.register.patient.lastName}}</strong></h5>
+      <div class="d-flex align-items-center">
+        <h5 class="card-title mb-0">
+          <strong>Patient: {{ d.register.patient.firstName }} {{ d.register.patient.lastName }}</strong>
+        </h5>
+        <div class="d-flex align-items-center" style=" margin-top: 2px; margin-left : 30%">
+          <button style="border-color: transparent; background-color: transparent; " class="btn btn-link p-0 ms-2"
+            (click)="editMeals()">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button style="border-color: transparent; background-color: transparent; " class="btn btn-link p-0 ms-2"
+            (click)="deleteMeal(d.id)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+
+      </div>
       <div class="card-text row">
         <div class="col-10">
           <p><i class="fa fa-utensils"></i> Type: {{getDietTypeLabel(d.dietType)}}</p>
           @for (meal of d.meals; track $index) {
-            @if (meal.mealType == 1) {
-              <p><i class="fa fa-utensil-spoon"></i>Meals:BreakFast</p>
-            }
-            @else if (meal.mealType == 2) {
-              <p><i class="fa fa-utensil-spoon"></i>Meals:Lunch</p>
-            }
-            @else if (meal.mealType == 3) {
-              <p><i class="fa fa-utensil-spoon"></i>Meals:Dinner</p>
-            }
-            @else if (meal.mealType == 4) {
-              <p><i class="fa fa-utensil-spoon"></i>Meals:Snack</p>
-            }
-         
+          @if (meal.mealType == 1) {
+          <p><i class="fa fa-utensil-spoon"></i>Meals:BreakFast</p>
+          }
+          @else if (meal.mealType == 2) {
+          <p><i class="fa fa-utensil-spoon"></i>Meals:Lunch</p>
+          }
+          @else if (meal.mealType == 3) {
+          <p><i class="fa fa-utensil-spoon"></i>Meals:Dinner</p>
+          }
+          @else if (meal.mealType == 4) {
+          <p><i class="fa fa-utensil-spoon"></i>Meals:Snack</p>
+          }
           <dl>
             <dt><i class="fa fa-apple-alt"></i> Food:</dt>
             <dd><span class="food-items">
@@ -32,9 +45,8 @@
             </dd>
           </dl>
           }
-
           <p style="display: flex; justify-content: flex-start;">
-            <i class="fa fa-calendar"></i> 
+            <i class="fa fa-calendar"></i>
             <span style="margin-right: auto;">StartDate:</span>
             {{formatDate(d.startDate) }}
           </p>

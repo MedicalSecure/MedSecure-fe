@@ -51,4 +51,17 @@ diet : Diet[] = [];
  return this.http.get<DietResponse>('http://localhost:6003/v1/diets');
   }
   
+ 
+  deleteDiet(id: number|string|undefined):void {
+      const url = `http://localhost:6003/v1/diets/${id}`; // Construct URL with ID
+       this.http.delete(url).subscribe(
+        response => {
+          console.log('Response from delete Diet:', response);
+        },
+        error => {
+          console.error('Error deleting diet:', error);
+        }
+      );
+   
+  }
 }

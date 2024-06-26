@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxMasonryOptions , NgxMasonryModule } from 'ngx-masonry';
+import { NgxMasonryOptions, NgxMasonryModule } from 'ngx-masonry';
 import { DietsService } from '../../../../services/diets/diets.service';
 import { Diet, DietResponse } from '../../../../model/Diet';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
+import { identity } from 'rxjs';
 
 @Component({
   selector: 'app-meals-list',
   standalone: true,
-  imports: [NgxMasonryModule , MatProgressSpinnerModule],
+  imports: [NgxMasonryModule, MatProgressSpinnerModule],
   templateUrl: './meals-list.component.html',
   styleUrl: './meals-list.component.css'
 })
@@ -17,11 +19,11 @@ export class MealsListComponent implements OnInit {
     fitWidth: true,
     horizontalOrder: true,
   };
-  diet:Diet[] = []
-  IsPatientListLoading:boolean = false ;
+  diet: Diet[] = []
+  IsPatientListLoading: boolean = false;
 
-  constructor(private dietsService : DietsService){
-    
+  constructor(private dietsService: DietsService, private router: Router) {
+
   }
 
   ngOnInit(): void {
@@ -34,7 +36,7 @@ export class MealsListComponent implements OnInit {
     this.dietsService.getDiet().subscribe(
       (response: DietResponse) => {
         console.log('Response:', response.diets);
-        this.diet = response.diets.data || []; // Reset and set the diet array
+        this.diet = response.diets.data || [];
         console.log('this.diet', this.diet);
         this.IsPatientListLoading = false;
       },
@@ -44,8 +46,22 @@ export class MealsListComponent implements OnInit {
       }
     );
   }
-  formatDate(date:Date) {
+  formatDate(date: Date) {
     return date.toString();
+  }
+  editMeals() {
+    this.router.navigate(['/add-diet']);
+
+  }
+  deleteMeal(id : string){
+    this.dietsService.deleteDiet(id);
+
+    console.log("idididididid",id);
+   // window.location.reload();
+   this.diet = this.diet.filter(diet => diet.id !== id);
+
+    
+    
   }
   getDietTypeLabel(dietType: number): string {
     switch (dietType) {

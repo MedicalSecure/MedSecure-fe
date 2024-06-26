@@ -94,14 +94,14 @@ export function isAuthorized(profile:ProfileType,nextPath:string):boolean{
     if(nextPath == "prescribe")
         return getRole(job).isDoctor || getRole(job).isSupervisor;
     if(nextPath == "bac-patient")
-        return getRole(job).isNurse || getRole(job).isSupervisor;
+        return getRole(job).isNurse || getRole(job).isSupervisor || getRole(job).isDoctor;
     if(nextPath == "timeline")
         return getRole(job).isNurse || getRole(job).isSupervisor;
     if(nextPath == "visits")
         return getRole(job).isDoctor || getRole(job).isSupervisor;
  
     if(nextPath == "diet")
-        return getRole(job).isNutritionist || getRole(job).isSupervisor;
+        return getRole(job).isNutritionist || getRole(job).isSupervisor || getRole(job).isDoctor;
     if(nextPath == "meals")
         return getRole(job).isNutritionist || getRole(job).isSupervisor;
 

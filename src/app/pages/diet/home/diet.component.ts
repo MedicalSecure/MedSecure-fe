@@ -8,6 +8,8 @@ import { AddDietComponent } from "../steps/add-diet/add-diet.component";
 import { RegisterForPrescription } from '../../../model/Prescription';
 import foods, { Food, Meal } from '../../../model/Diet';
 import { MealsListComponent } from '../steps/meals-list/meals-list.component';
+import {RoleAuthGuard} from '../../../../app/role-auth.guard'
+
 @Component({
     selector: 'app-diet',
     standalone: true,
@@ -30,10 +32,12 @@ export class DietComponent implements OnInit {
   emmitedFoods:Food;
   emittedShowMeal : boolean ;
   emittedShowFood : boolean = false;
-  canNavigate:boolean=false ; 
+  canNavigate:boolean=false ;
+  url : string ;  
   @Output() emitCanValidate =  new EventEmitter<boolean>();
+  constructor(public roleAuth:RoleAuthGuard) {}
   ngOnInit(): void {
-  
+    this.url = this.roleAuth.profile?.jobTitle as string;
   }
   steps: wizardStepType[] = [
     {

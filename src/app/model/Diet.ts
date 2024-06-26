@@ -1,5 +1,6 @@
 
 export interface Diet {
+  id : string , 
     meals: Meal[];
     register: SimpleRegisterDto;
     dietType: number;

@@ -92,7 +92,7 @@
             <i class="menu-arrow"></i>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isNurse || getRole().isSupervisor">
+        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isNurse || getRole().isSupervisor || getRole().isDoctor">
           <a class="nav-link" [routerLink]="['/', 'bac-patient']">
             <i class="menu-icon mdi mdi-chart-line"></i>
             <span class="menu-title">Bac Patient</span>
@@ -125,7 +125,7 @@
 
         <!-- Diet Link -->
         <li class="nav-item" routerLinkActive="active" >
-          <a class="nav-link"  [routerLink]="['/', 'diet']" *ngIf="getRole().isNutritionist || getRole().isSupervisor">
+          <a class="nav-link"  [routerLink]="['/', 'diet']" *ngIf="getRole().isNutritionist || getRole().isSupervisor || getRole().isDoctor">
             <i class="menu-icon fa fa-apple"></i>
             <span class="menu-title">Diet</span>
             <i class="menu-arrow"></i>
