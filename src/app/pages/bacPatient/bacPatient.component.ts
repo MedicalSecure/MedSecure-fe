@@ -24,7 +24,7 @@ import { Dispense, ScheduleComponent } from "../../components/schedule/schedule.
 import { bacpatient } from '../../model/BacPatient';
 import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import {RoleAuthGuard} from '../../../app/role-auth.guard'
 
 @Component({
   selector: 'table-pagination-example',
@@ -60,7 +60,7 @@ export class BacPatientComponent implements AfterViewInit {
   yesterday = new Date();
   uniqueRooms: any;
   isLoading: boolean = true;
-
+url : string ;
   boxcheked: Dispense[] = [];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
@@ -70,7 +70,7 @@ export class BacPatientComponent implements AfterViewInit {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate()));
 
   }
-  constructor(public dialog: MatDialog, private http: HttpClient, private bacPatientService: BacPatientService) {
+  constructor(public dialog: MatDialog, private http: HttpClient, private bacPatientService: BacPatientService ,public roleAuth:RoleAuthGuard) {
     const filteredData = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).toLocaleDateString() === this.todayDate);
     this.dataSource.data = filteredData;
     this.uniqueRooms = this.getRoom(ELEMENT_DATA);
@@ -78,6 +78,10 @@ export class BacPatientComponent implements AfterViewInit {
   }
   ngOnInit() {
 
+    this.url = this.roleAuth.profile?.jobTitle as string;
+
+    console.log(this.url);
+    
 
     this.bacPatientService.getData(this.dataSource , this.isLoading);
     setTimeout(() => {
@@ -85,6 +89,7 @@ export class BacPatientComponent implements AfterViewInit {
     }, 1000);
 
   }
+  
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate() - 1));
     this.today.setDate(this.today.getDate() - 1);
@@ -191,7 +196,7 @@ export class BacPatientComponent implements AfterViewInit {
       allAfterMealChecked = true;
     
   }
-  
+
 
   getRouteImage(route: number): string {
     switch (route) {

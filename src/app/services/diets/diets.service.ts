@@ -48,7 +48,6 @@ diet : Diet[] = [];
 
   getDiet() : Observable<DietResponse> {
     
-
  return this.http.get<DietResponse>('http://localhost:6003/v1/diets');
   }
   

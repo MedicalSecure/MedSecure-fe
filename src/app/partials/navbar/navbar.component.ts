@@ -15,6 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SnackBarMessagesService } from '../../services/util/snack-bar-messages.service';
 import { snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
+import {RoleAuthGuard} from '../../../app/role-auth.guard'
+import { log } from 'console';
 
 @Component({
   selector: 'app-navbar',
@@ -49,6 +51,7 @@ export class NavbarComponent implements OnInit {
   // connect signal r after loading the app by X seconds in seconds
   connectSignalRAfter = 3;
 
+
   constructor(
     private router: Router,
     private prescriptionService: PrescriptionApiService,
@@ -56,9 +59,10 @@ export class NavbarComponent implements OnInit {
     private http: HttpClient,
     private authService: MsalService,
     private snackBarMessages: SnackBarMessagesService,
+    public  roleAuth : RoleAuthGuard
 
   ) {}
-
+  role : string ;
   //TO REMOVE: Testing purpose
 /*   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -71,6 +75,10 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.getProfile(environment.apiConfig.uri);
+    this.role = this.roleAuth.profile?.jobTitle as string;
+    console.log(this.role);
+    
+
   }
 
   getProfile(url: string) {

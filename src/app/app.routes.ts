@@ -26,7 +26,7 @@ import { PdfPrescriptionToPrintComponent } from './components/pdf-prescription-t
 import { ProfileComponent } from './pages/profile/profile.component';
 import { FailedComponent } from './pages/failed/failed.component';
 import { MsalGuard } from '@azure/msal-angular';
-import { DietComponent } from './pages/diet/diet.component';
+import { DietComponent } from './pages/diet/home/diet.component';
 import { WasteComponent } from './pages/waste/waste.component';
 import { RoleAuthGuard } from './role-auth.guard';
 import { AccountComponent } from './pages/account/account.component';
@@ -53,9 +53,10 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [RoleAuthGuard] },
   { path: 'account', component: AccountComponent, canActivate: [RoleAuthGuard] },
   { path: 'login-failed', component: FailedComponent },
-  { path: 'diet', component: DietComponent },
+  { path: 'diet', component: DietComponent , canActivate: [RoleAuthGuard]},
   { path: 'waste', component: WasteComponent , canActivate: [RoleAuthGuard] },
   { path: 'nurseTasks', component: NurseTasksComponent , canActivate: [RoleAuthGuard] },
+  { path: 'meals', component: MealsListComponent , canActivate: [RoleAuthGuard] },
 
   //dashboards
   { path: 'dashboard', component: DashboardComponent , canActivate: [RoleAuthGuard] },

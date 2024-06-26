@@ -19,6 +19,7 @@ import { environment } from '../../../environments/environment';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NavbarComponent } from '../../partials/navbar/navbar.component';
 import { getRole } from '../../role-auth.guard';
+import {RoleAuthGuard} from '../../../app/role-auth.guard'
 
 @Component({
     selector: 'app-home',
@@ -39,12 +40,13 @@ import { getRole } from '../../role-auth.guard';
 export class HomeComponent implements OnInit {
   loginDisplay = false;
   profile: ProfileType | undefined;
-  
   constructor(
     private router: Router,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
-    private http: HttpClient
+    private http: HttpClient,
+    public  roleAuth : RoleAuthGuard
+
   ) {}
 
   ngOnInit(): void {
