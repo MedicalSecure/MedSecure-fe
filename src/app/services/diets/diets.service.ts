@@ -64,4 +64,17 @@ diet : Diet[] = [];
       );
    
   }
+
+  putDiet(diet: Diet): void {
+    const formData = { "Diet": diet };
+    const url = `http://localhost:6003/v1/diets`;
+    this.http.put<any>(url, formData).subscribe(
+      response => {
+        console.log('Response from putDiet:', response);
+      },
+      error => {
+        console.error('Error putting diet:', error);
+      }
+    );
+  }
 }

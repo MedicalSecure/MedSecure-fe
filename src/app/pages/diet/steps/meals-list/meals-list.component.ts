@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgxMasonryOptions, NgxMasonryModule } from 'ngx-masonry';
 import { DietsService } from '../../../../services/diets/diets.service';
 import { Diet, DietResponse } from '../../../../model/Diet';
@@ -14,6 +14,11 @@ import { identity } from 'rxjs';
   styleUrl: './meals-list.component.css'
 })
 export class MealsListComponent implements OnInit {
+  @Input() stepNumber: number = 0;
+  @Output() stepNumberChange = new EventEmitter<number>();
+  dietToEmit : Diet | undefined ;
+  @Output() dietEmmitter = new EventEmitter<Diet>();
+
   public masonryOptions: NgxMasonryOptions = {
     gutter: 50,
     fitWidth: true,
@@ -21,16 +26,11 @@ export class MealsListComponent implements OnInit {
   };
   diet: Diet[] = []
   IsPatientListLoading: boolean = false;
-
   constructor(private dietsService: DietsService, private router: Router) {
-
   }
-
   ngOnInit(): void {
     this.fetchDiet();
   }
-
-
   fetchDiet() {
     this.IsPatientListLoading = true;
     this.dietsService.getDiet().subscribe(
@@ -48,10 +48,13 @@ export class MealsListComponent implements OnInit {
   }
   formatDate(date: Date) {
     return date.toString();
-  }
-  editMeals() {
-    this.router.navigate(['/add-diet']);
 
+  }
+  editMeals(id : string) {
+    this.stepNumber = 2 ; 
+    this.stepNumberChange.emit(this.stepNumber);
+    this.dietToEmit = this.diet.find(diet => diet.id === id);
+    this.dietEmmitter.emit(this.dietToEmit ) ; 
   }
   deleteMeal(id : string){
     this.dietsService.deleteDiet(id);
@@ -59,6 +62,7 @@ export class MealsListComponent implements OnInit {
     console.log("idididididid",id);
    // window.location.reload();
    this.diet = this.diet.filter(diet => diet.id !== id);
+
 
     
     

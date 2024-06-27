@@ -16,6 +16,8 @@ import { PrescriptionApiService } from '../../../../services/prescription/prescr
 import { DietsService } from '../../../../services/diets/diets.service';
 import { Router } from '@angular/router';
 import { MealsListComponent } from '../meals-list/meals-list.component';
+import { log } from 'console';
+import { S } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-add-diet',
@@ -31,7 +33,7 @@ export class AddDietComponent implements OnInit {
   @Input()CardBodyClass: string = 'card-body pb-0 pt-3';
   @Input() stepNumber: number;
   @Output() stepNumberChange = new EventEmitter<number>();
-
+  @Input() dietToEdit: Diet | undefined ;
   liststring: Comment[] = [];
   selectedMealType: number;
   isMealSelected: boolean[] = [];
@@ -289,7 +291,47 @@ foods.forEach(food=>{
   this.showMealImiiter.emit(this.showMeal);
     this.stepNumber = 3 ; 
     this.stepNumberChange.emit(this.stepNumber);
-    this.DietService.postDiet(mappeddiet);
+    if(this.dietToEdit == undefined){
+      this.DietService.postDiet(mappeddiet);
+
+    }
+    else {
+      let mappeddietToEdit: Diet = this.Diet
+      mappeddietToEdit.id = this.dietToEdit.id
+    if (mappeddietToEdit.meals) {
+      mappeddietToEdit.meals = mappeddietToEdit.meals.map((meal: Meal) => {
+        return {
+          ...meal,
+          name: meal.name,
+          mealType: meal.mealType,
+          foods: meal.foods.map((food: Food) => {
+            return {
+              ...food,
+              name: food.name,
+              calories: food.calories,
+              description: food.description,
+              foodCategory: food.foodCategory
+            };
+          }),
+        };
+      });
+    }
+    if (this.inputRegister && this.inputRegister.prescriptions ) {
+      mappeddietToEdit.endDate = this.inputRegister.prescriptions[0].diet?.endDate || new Date();
+      mappeddiet.startDate = this.inputRegister.prescriptions[0].diet?.startDate || new Date();
+
+      mappeddietToEdit.register = this.fromRegisterToregisterDto(this.inputRegister);
+    } else {
+      console.error('inputRegister is undefined');
+    }
+    if (this.DietForm.value.label !== undefined) {
+      mappeddietToEdit.label = this.DietForm.value.label;
+  } else {
+    mappeddietToEdit.label = ''; 
+  } 
+      this.DietService.putDiet(mappeddietToEdit);      
+   }
+
 
     console.log("mappeddiet" + mappeddiet.meals);
     console.log("form values" + this.DietForm.value.meals);
