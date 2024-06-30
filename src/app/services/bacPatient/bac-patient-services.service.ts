@@ -21,7 +21,7 @@ export class BacPatientService implements ActivityService {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
-    let x = this.http.get<GetActivitiesResponse>("https://localhost:5055/api/v1/Prescription/Activities", {
+    let x = this.http.get<GetActivitiesResponse>("https://localhost:6005/api/v1/Prescription/Activities", {
       params,
     }).pipe(
       map((response) => {
@@ -31,15 +31,27 @@ export class BacPatientService implements ActivityService {
     );
     return x;
   }
-  getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ) : bacpatient[] {
-    this.http.get<BacPatientResponse>('https://localhost:5055/v1/bacPatient')
+  getTimeline():bacpatient[] {
+    this.http.get<BacPatientResponse>('https://localhost:6005/v1/bacPatient')
+    .subscribe(
+      (response: BacPatientResponse) => {
+        console.log('Response:', response);
+         this.data_source = response.bacPatients.data },
+      error => {
+        console.error('Error fetching data:', error);
+      }
+    );
+    return this.data_source ;
+  }
+  getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ,isLoading :boolean) : bacpatient[] {
+    this.http.get<BacPatientResponse>('https://localhost:6005/v1/bacPatient')
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
           if (response && response.bacPatients.data) {
            dataSource.data = response.bacPatients.data;
            this.data_source = response.bacPatients.data
-           
+           isLoading = true ;
            response.bacPatients.data.forEach(element => {
               console.log(element);
               ELEMENT_DATA.push(element);
@@ -56,7 +68,7 @@ export class BacPatientService implements ActivityService {
   }
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('https://localhost:6005/v1/bacPatient', body).subscribe(response => {
  
     },
     error => {
@@ -65,15 +77,15 @@ export class BacPatientService implements ActivityService {
   );
 
    }
-   updateBacPatientComment(bacPatient : bacpatient , Content : string){
+   updateBacPatientComment(bacPatient : bacpatient , Content : string , username : string){
     bacPatient.prescription.posologies.forEach(pos => {
       pos.comments.forEach(com=>{
-        pos.comments.push({ id : com.id , posologyId : com.posologyId , label : com.label ,content: Content });
+        pos.comments.push({ id : com.id , posologyId : com.posologyId , label : username ,content: Content });
       })
       
   });
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:5055/v1/bacPatient', body).subscribe(response => {
+    return this.http.put('https://localhost:6005/v1/bacPatient', body).subscribe(response => {
  console.log(response);
  
     },
@@ -84,6 +96,7 @@ export class BacPatientService implements ActivityService {
 
    }
 }
+
 export function parseDates<T>(response:T):T{
 
   const dateReviver = (key: string, value: any) => {

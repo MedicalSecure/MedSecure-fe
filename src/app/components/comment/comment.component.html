@@ -7,7 +7,7 @@
         class="form-control form-control-sm"
         type="text"
         placeholder="Add a comment.."
-        (keydown.enter)="bacPatientService.updateBacPatientComment(DATA,commentInput.value)"
+        (keydown.enter)="bacPatientService.updateBacPatientComment(DATA,commentInput.value , username)"
        />
     </div>
   </div>
@@ -16,8 +16,7 @@
   <div class="comment comment-level-1" >
     <div style="text-align: left; margin-left: 4%;">
       <div class="comment-label">
-        <span class="comment-name">Uchiha Itachi</span>
-        <span class="comment-time"> - 5 days ago</span>
+        <span class="comment-name">{{note[$index].label}}</span>
       </div>
       <div class="comment-content">
         {{ note[$index].content}}

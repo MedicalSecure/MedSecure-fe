@@ -35,6 +35,8 @@ import {
   NewRegisterSharedEvent,
   RegisterEvent,
 } from '../../model/events/RegisterEvents';
+import { MsalService } from '@azure/msal-angular';
+import { protectedResources } from '../../auth-config';
 @Injectable({
   providedIn: 'root',
 })
@@ -52,8 +54,12 @@ export class PrescriptionApiService implements ActivityService {
   constructor(
     private http: HttpClient,
     private snackBarMessages: SnackBarMessagesService,
-    public registrationService: RegistrationService
+    public registrationService: RegistrationService,
+    private msalService: MsalService
   ) {
+    const instance = this.msalService.instance;
+    // Now you can use `instance` to call MSAL methods
+
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.hubUrl)
       .build();

@@ -8,10 +8,17 @@ export interface BacPatientResponse {
       data: bacpatient[];
     };
   }
+  export interface PrescriptionResponse {
+    prescriptions: {
+      pageIndex: number;
+      pageSize: number;
+      count: number;
+      data: Prescription[];
+    };
+  }
   export interface bacpatient {
     id: string;
     prescription: Prescription;
-   
     nurseId: string;
     served: number;
     toServe: number;

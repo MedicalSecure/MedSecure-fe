@@ -1,0 +1,117 @@
+<div class="card-body">
+  <form [formGroup]="DietForm" class="form-container mt-3">
+    <div class="row">
+      <div class="col-12">
+        <h4 class="card-title mt-3">
+          Add New Meal
+        </h4>
+      </div>
+      <div class="col-12">
+        <div formArrayName="meals">
+          @for (meal of DietForm.controls.meals.controls; track meal; let mealIndex = $index) {
+          <div class="question mb-4" [formGroupName]="mealIndex">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              @for (type of MealType; track type) {
+                <label class="d-flex align-items-center me-3">
+                  <input class="form-check-input me-2" type="radio" [defaultValue]="0"
+                  [name]="'mealType_' + mealIndex" [id]="'mealType_' + mealIndex + '_' + type" [value]="type"
+                   (change)="onMealTypeChange($event, mealIndex)"
+                   [checked]="DietForm.controls.meals.at(mealIndex).value.mealType === type" required />
+                   @if (type == 1) {
+                  Break Fast
+                   } @else if (type == 2) {
+                    Lunch
+                     } 
+                     @else if (type == 3) {
+                      Dinner
+                       } 
+                       @else if (type == 4) {
+                        Snack
+                         } 
+                
+                </label>
+                }
+            </div>
+
+            <app-comment [note]="liststring" class="ms-3"></app-comment>
+            <div formArrayName="foods" class="answers mt-3">
+              @for (food of meal.controls.foods.controls; track food; let FoodIndex = $index) {
+              <div class="d-flex flex-wrap"  [formGroupName]="FoodIndex">
+                @for (option of foodCategory; track $index) {
+                  <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <label class="d-flex align-items-center me-3">
+
+                    <input class="form-check-input me-2" type="radio" [defaultValue]="0"
+                 formControlName="foodCategory"     [id]="'foodCategory' + FoodIndex + '_' + option" [defaultChecked]="0" [value]="option"
+                  (click)="chipSelected(option, mealIndex, FoodIndex)"
+                      [disabled]="isChipDisabled(mealIndex, FoodIndex)" required />
+                      @if (option == 1) {
+                       main dish
+                         } @else if (option == 2) {
+                          starter
+                           } 
+                           @else if (option == 3) {
+                            drinks
+                             } 
+                             @else if (option == 4) {
+                              dessert
+                               } 
+                              </label>
+
+                </div> 
+                }
+             
+              <div class="invalid-feedback">
+                Please select a Food.
+              </div>
+              <div class="d-flex align-items-center mt-3">
+                <mat-form-field  class="me-2 flex-grow-1">
+                  <mat-label>select food here !</mat-label>
+                  <select class="field"  formControlName="name" matNativeControl  required class="w-100"  (selectionchange)="onFoodChange($event)" >
+                    @for (food of FoodList[mealIndex][FoodIndex]; track food) {
+                    <option   mat-menu-item [value]="food">{{food}}</option>
+                    }
+                  </select>
+                </mat-form-field>
+              
+                <div class="icon-button" (click)="removeFood(mealIndex, FoodIndex)" style="cursor: pointer;">
+                  <i class="fas fa-trash" style="font-size: 1.5rem;"></i>
+                </div>
+              </div>
+            </div>
+              }
+              <button type="button" class="btn btn-primary mt-3" style="color: white;" (click)="addFood(mealIndex)"
+               >
+                Add Food
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+        <div style="display: flex; align-items: center;">
+          <div style="display: table; height: 200px;">
+            <div style="display: table-cell; vertical-align: left;">
+              <div class="add-question">
+                <button type="button" class="btn btn-primary"  style="color: white;" (click)="addMeal()">Add meal</button>
+              </div>
+            </div>
+            <div style="display: table-cell; vertical-align: right; ">
+              <div class="add-question">
+                <button type="button" class="btn btn-primary" style="color: white;" (click)="Submit()">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </form>
+  <div class="d-flex">
+    <div class="col-12 col-lg-8">
+      <button type="button" class="btn btn-outline-primary"  (click)="resetForm()">Cancel</button>
+    </div>
+   
+  </div>  
+</div>

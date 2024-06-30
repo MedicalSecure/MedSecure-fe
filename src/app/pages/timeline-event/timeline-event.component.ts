@@ -5,6 +5,7 @@ import { Medication } from '../../model/BacPatient';
 import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dispense } from '../../components/schedule/schedule.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-timeline-event',
@@ -13,10 +14,12 @@ import { Dispense } from '../../components/schedule/schedule.component';
   templateUrl: './timeline-event.component.html',
   styleUrl: './timeline-event.component.css'
 })
-export class GanttChartComponent implements AfterViewInit {
+export class GanttChartComponent implements OnInit {
   constructor(private bacPatientService: BacPatientService) { }
-  ngAfterViewInit(): void {
-    this.dataList = this.bacPatientService.getData(this.dataSource);
+  ngOnInit(): void {
+
+
+    this.dataList =  this.bacPatientService.getTimeline();
 
     this.getUniqueRooms();
   }
@@ -49,9 +52,8 @@ export class GanttChartComponent implements AfterViewInit {
  
     return (beParsed.toString()  + "," + aeParsed.toString())
 }
-dataSource = new MatTableDataSource(ELEMENT_DATA);
   @Input() targetHours: string[];
-  dataList: bacpatient[] = ELEMENT_DATA ;
+  dataList: bacpatient[] = [] ;
   uniqueroom: number[] = [];
   tableElements: bacpatient[] = [];
   medicines: Medication[] = [];
@@ -61,6 +63,8 @@ dataSource = new MatTableDataSource(ELEMENT_DATA);
   medicinesByHourMap: Map<string, Medication[]> = new Map();
   uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
   getUniqueRooms(): Map<number, bacpatient[]> {
+
+      
     const uniqueRoomsMap: Map<number, bacpatient[]> = new Map();
     this.dataList.forEach(item => {
       if (!uniqueRoomsMap.has(item.prescription.unitCare.room.roomNumber)) {
@@ -85,7 +89,7 @@ dataSource = new MatTableDataSource(ELEMENT_DATA);
   getMedicineByHour(hour: string, name: string): Medication[] {
     const medicines: Medication[] = [];
     for (const patient of this.dataList) {
-      if (patient.prescription.register.patient.firstName === name) {
+      if (patient.prescription.register.patient.lastName === name) {
         for (const posology of patient.prescription.posologies) {
           for (const dispense of posology.dispenses) {
             if (dispense.hour === hour) {

@@ -1,0 +1,11 @@
+<div [ngClass]="containerClass" [ngStyle]="containerStyle">
+  <div [ngClass]="CardBodyClass">
+    <h4 [ngClass]="CardTitleClass">{{ title }}</h4>
+    <ul [ngClass]="ULClass">
+      @for (medication of medicationList; track $index) {
+        <li>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

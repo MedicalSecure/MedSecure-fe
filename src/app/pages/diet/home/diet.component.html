@@ -1,0 +1,55 @@
+<div class="row flex-grow mt-2">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+            <div class="card-body">
+                <div id="add-prescription-body">
+                    <!-- Tools bar (report issue, forward ...) -->
+                    <div class="d-sm-flex justify-content-between align-items-start">
+                        <div>
+                            <h4 class="card-title card-title-dash">Diets</h4>
+                        </div>
+
+                        <div class="btn-wrapper">
+                            <a href="#" class="btn btn-primary text-white align-items-center"
+                                [routerLink]="['/', 'meals']" routerLinkActive="active">
+                                <i class="fa fa-qrcode" aria-hidden="true"></i> show prescribed meals 
+                            </a>
+                        
+                        </div>
+                    </div>
+                   @if (url == "supervisor" || url == "doctor") {
+                      <app-meals-list></app-meals-list>
+                        }
+                        @else if (url == "nutritionist") {
+                            <app-wizard-header [steps]="steps" (currentStepChange)="SwitchToStep($event)"
+                            [currentStep]="stepNumber" [size]="3" [IconSizeRatio]="0.5"   [switchCondition]="canNavigate"></app-wizard-header>
+                        <div class="wizard-container" style="height: 490px; overflow-y: auto">
+                     <div [className]="stepNumber != 1 && 'd-none'">
+                                <app-prescription-list-for-diet   [stepNumber]="stepNumber"
+                                (selectedRegisterChange)="onSelectPatientChange($event)" >
+                            </app-prescription-list-for-diet>
+                            </div>  
+                              <div *ngIf="stepNumber === 2 ">
+                                <div style="display: flex; align-items: center;">
+                                    <div style="display: table; height: 200px;">
+                                        <div style="display: table-cell; vertical-align: left;">
+                                            <app-add-diet  [dietToEdit]="currentDiet"  [stepNumber]="stepNumber" (FoodEmitter)="onFoodEmmited($event)" (mealsEmitter)="onMealsEmitter($event)" [inputRegister]="selectedRegister" ></app-add-diet>
+                                        </div>
+                                        <div style="display: table-cell; vertical-align: right; width: 40%;">
+                              <app-patient-detail [showMeal]="emittedShowMeal" [showFoodInfo]="emittedShowFood" [food]="emmitedFoods"  [meal]="emittedMeals" [inputRegister]="selectedRegister" ></app-patient-detail>     
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        <div *ngIf="stepNumber === 3">
+                                    <app-meals-list (dietEmmitter)="onDietEmmitted($event)" [(stepNumber)]="stepNumber" ></app-meals-list>
+                            </div>
+                        </div>
+                          }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
