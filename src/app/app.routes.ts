@@ -31,6 +31,8 @@ import { WasteComponent } from './pages/waste/waste.component';
 import { RoleAuthGuard } from './role-auth.guard';
 import { AccountComponent } from './pages/account/account.component';
 import {AddDietComponent} from './pages/diet/steps/add-diet/add-diet.component'
+import {NutritionistDashboardComponent } from './pages/dashboards/nutritionist-dashboard/nutritionist-dashboard.component';
+
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'unit-care', component: UnitCareComponent , canActivate: [RoleAuthGuard] },
@@ -64,7 +66,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent , canActivate: [RoleAuthGuard] },
   { path: 'doctor-dashboard', component: DashboardDoctorComponent , canActivate: [RoleAuthGuard] },
   { path: 'supervisor-dashboard', component: SupervisorDashboardComponent , canActivate: [RoleAuthGuard] },
-  { path: 'nurse-dashboard', component: NurseDashboardComponent , canActivate: [RoleAuthGuard] },
+  { path: 'nutritionist-dashboard', component: NutritionistDashboardComponent , canActivate: [RoleAuthGuard] },
 // { path: 'reception-dashboard', component: DashboardReceptionComponent },
   ];
   
