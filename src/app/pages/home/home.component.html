@@ -3,14 +3,14 @@
 <router-outlet></router-outlet>
 }
 <!-- Content area for different routes -->
-@if (loginDisplay) { @if(profile){
+@if (loginDisplay) { @if(currentUser){
 <div class="container-scroller">
   <!-- Include the navbar component -->
-  <app-navbar></app-navbar>
+  <app-navbar [currentUser]="currentUser"></app-navbar>
 
   <div class="container-fluid page-body-wrapper">
     <!-- Include the settings panel component -->
-    <app-settings-panel></app-settings-panel>
+    <!-- <app-settings-panel></app-settings-panel> -->
 
     <!-- Include the sidebar component -->
     <!-- <app-sidebar></app-sidebar> -->
@@ -92,7 +92,7 @@
             <i class="menu-arrow"></i>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isNurse || getRole().isSupervisor">
+        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isNurse || getRole().isSupervisor || getRole().isDoctor">
           <a class="nav-link" [routerLink]="['/', 'bac-patient']">
             <i class="menu-icon mdi mdi-chart-line"></i>
             <span class="menu-title">Bac Patient</span>
