@@ -31,6 +31,7 @@ import {
 import { RegisterDto } from '../../../model/Registration';
 import { mapRegisterWithPrsToRegisterForPrs } from '../../../shared/DTOsExtensions';
 import { OldPrescriptionViewForPrescriptionListComponent } from '../old-prescription-view-for-prescription-list/old-prescription-view-for-prescription-list.component';
+import { ProfileType } from '../../profile/ProfileType';
 
 @Component({
   selector: 'app-prescription-list',
@@ -61,7 +62,8 @@ export class PrescriptionListComponent implements OnInit {
   @Input() clearTextAfterEachSearch: boolean = false;
   @Input()
   checked: boolean = true;
-
+  @Input()
+  profile: ProfileType | undefined;
   @Input() lastCreatedPrescriptionIdFromResponse: string | undefined;
 
   selectedRegister: RegisterForPrescription | undefined = undefined;

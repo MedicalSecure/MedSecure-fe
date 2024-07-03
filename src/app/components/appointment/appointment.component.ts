@@ -12,7 +12,7 @@ import { visits } from '../../model/visits';
 import { Router } from '@angular/router';
 import {VisitService} from '../../services/visits/visits.service';
 import {PatientService} from '../../services/patient/patient.service'
-
+import { ProfileType } from '../../pages/profile/ProfileType';
 
 @Component({
   selector: 'app-appointment',
@@ -46,6 +46,7 @@ export class AppointmentComponent implements OnInit {
   ];
 
 
+
   @Input() modalTitle: string = '';
   @Input() modalbutton: string = '';
   @Input() modalAction: string = '';
@@ -65,6 +66,8 @@ export class AppointmentComponent implements OnInit {
   @Output() eventDeleted: EventEmitter<any> = new EventEmitter<any>();
   @Output() eventCreated: EventEmitter<any> = new EventEmitter<any>();
   @Output() eventUpdated: EventEmitter<any> = new EventEmitter<any>();
+  @Input() profile: ProfileType | undefined;
+
   constructor(private modal: NgbModal, private visitService: VisitService, private router: Router, private patientService :PatientService) { }
 
 
@@ -73,7 +76,6 @@ export class AppointmentComponent implements OnInit {
     if (this.modalData) {
       console.log('Données de l\'événement sélectionné :', this.modalData);
     }
-
   }
 
 

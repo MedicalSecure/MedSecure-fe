@@ -56,8 +56,8 @@ export const routes: Routes = [
   { path: 'diet', component: DietComponent },
   { path: 'waste', component: WasteComponent , canActivate: [RoleAuthGuard] },
   //dashboards
-  { path: 'dashboard', component: DashboardComponent , canActivate: [RoleAuthGuard] },
-  { path: 'doctor-dashboard', component: DashboardDoctorComponent , canActivate: [RoleAuthGuard] },
+  { path: 'dashboard', component: DashboardComponent , canActivate: [RoleAuthGuard]  },
+  { path: 'doctor-dashboard', component: DashboardDoctorComponent , canActivate: [MsalGuard]},
   { path: 'supervisor-dashboard', component: SupervisorDashboardComponent , canActivate: [RoleAuthGuard] },
   { path: 'nurse-dashboard', component: NurseDashboardComponent , canActivate: [RoleAuthGuard] },
 // { path: 'reception-dashboard', component: DashboardReceptionComponent },

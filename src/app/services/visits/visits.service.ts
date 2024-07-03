@@ -17,7 +17,7 @@ export class VisitService implements ActivityService {
     
 
   getVisits(): Observable<any> {
-      return this.http.get<any>('http://localhost:6012/v1/visits');
+      return this.http.get<any>('http://localhost:6004/visit-service/v1/visits');
     }
 
   creatVisits(formData:any) {
@@ -48,7 +48,7 @@ export class VisitService implements ActivityService {
       const VisitDtoWrapper = {
         Visit: visit1
       };
-      return this.http.post<any>('http://localhost:6012/v1/visits', VisitDtoWrapper);
+      return this.http.post<any>('http://localhost:6004/visit-service/v1/visits', VisitDtoWrapper);
   }
 
   updateVisits(formData:any) {
@@ -81,13 +81,13 @@ export class VisitService implements ActivityService {
       const VisitDtoWrapper = {
         Visit: visitupdate
       };
-      return this.http.put<any>("http://localhost:6012/v1/visits", VisitDtoWrapper);
+      return this.http.put<any>("http://localhost:6004/visit-service/v1/visits", VisitDtoWrapper);
   }
 
 
   
   deleteVisits(visitId: string | number | undefined){
-      return this.http.delete(`http://localhost:6012/v1/visits/${visitId}?Id=${visitId}`);
+      return this.http.delete(`http://localhost:6004/visit-service/v1/visits/${visitId}?Id=${visitId}`);
   }
 
      // Obtenir liste de nbre vistes par jour
@@ -139,7 +139,7 @@ export class VisitService implements ActivityService {
         const params = new HttpParams()
           .set('PageIndex', pageIndex.toString())
           .set('PageSize', pageSize.toString());
-        let x = this.http.get<GetActivitiesResponse>('http://localhost:5004/v1/visits' + '/Activities', {
+        let x = this.http.get<GetActivitiesResponse>('http://localhost:6004/visit-service/v1/visits' + '/Activities', {
           params,
         }).pipe(
           map((response) => {

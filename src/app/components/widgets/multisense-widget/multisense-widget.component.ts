@@ -182,18 +182,19 @@ HumidityOptionsCircle: ChartOptionsCircle = {
 checkThresholds(temp: number, humidity: number, luminosity: number, electricity: number) {
   this.alertMessages = [];
 
+
   if (temp > this.temperatureThreshold) {
     this.alertMessages.push(`Temperature is too high: ${temp}°C`);
   }
-  if (humidity > this.humidityThreshold) {
-    this.alertMessages.push(`Humidity is too high: ${humidity}%`);
-  }
-  if (luminosity > this.luminosityThreshold) {
-    this.alertMessages.push(`Luminosity is too high: ${luminosity}A`);
-  }
-  if (electricity > this.electricityThreshold) {
-    this.alertMessages.push(`Electricity is too high: ${electricity}C`);
-  }
+  // if (humidity > this.humidityThreshold) {
+  //   this.alertMessages.push(`Humidity is too high: ${humidity}%`);
+  // }
+  // if (luminosity > this.luminosityThreshold) {
+  //   this.alertMessages.push(`Luminosity is too high: ${luminosity}A`);
+  // }
+  // if (electricity > this.electricityThreshold) {
+  //   this.alertMessages.push(`Electricity is too high: ${electricity}C`);
+  // }
 }
 
 }
