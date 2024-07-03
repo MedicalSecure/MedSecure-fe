@@ -1,0 +1,34 @@
+/* Pour les navigateurs WebKit (Chrome, Safari, etc.) */
+input::placeholder {
+  color: black;
+  opacity: 1; /* Pour s'assurer que la couleur est bien appliquée */
+}
+
+/* Pour Mozilla Firefox */
+input:-moz-placeholder {
+  color: black;
+  opacity: 1;
+}
+
+/* Pour Mozilla Firefox */
+input::-moz-placeholder {
+  color: black;
+  opacity: 1;
+}
+
+/* Pour Microsoft Edge */
+input:-ms-input-placeholder {
+  color: black;
+  opacity: 1;
+}
+
+/* Pour Internet Explorer 10-11 */
+input::-ms-input-placeholder {
+  color: black;
+  opacity: 1;
+}
+
+/* Couleur de l'option désactivée dans le select */
+select.form-select.field option:disabled {
+  color: black;
+}
