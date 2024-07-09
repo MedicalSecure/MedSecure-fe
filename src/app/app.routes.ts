@@ -60,6 +60,8 @@ export const routes: Routes = [
   { path: 'nurseTasks', component: NurseTasksComponent , canActivate: [RoleAuthGuard] },
   { path: 'meals', component: MealsListComponent , canActivate: [RoleAuthGuard] },
   { path: 'add-diet', component: AddDietComponent },
+  { path: 'nurse-dashboard', component: NurseDashboardComponent , canActivate: [RoleAuthGuard] },
+
 
 
   //dashboards

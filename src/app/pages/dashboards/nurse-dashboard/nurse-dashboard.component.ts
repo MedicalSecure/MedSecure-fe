@@ -20,8 +20,8 @@ export class NurseDashboardComponent implements OnInit {
 patientNumber: number = 100;
 checkedIn: number = 80;
 checkedOut: number = 20;
-pending: number = 0;
-onProgress: number = 0;
+pending: number =4 ;
+onProgress: number = 2;
 completed: number = 0;
 data : bacpatient[] = [] ;
 

@@ -12,6 +12,9 @@ import { GetActivitiesResponse } from '../../types';
   providedIn: 'root'
 })
 export class BacPatientService implements ActivityService {
+    //private apiUrl = `http://localhost:5007/api/v1/bacPatient`; // swagger
+  //private apiUrl = `http://localhost:6007/api/v1/bacPatient`; // Docker
+  private apiUrl = `https://localhost:6064/bacpatient-service/v1/bacPatient`; // api gateway
   data_source : bacpatient[];
   constructor(private http: HttpClient) { }
   getActivities(
@@ -21,7 +24,7 @@ export class BacPatientService implements ActivityService {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
-    let x = this.http.get<GetActivitiesResponse>("https://localhost:6005/api/v1/Prescription/Activities", {
+    let x = this.http.get<GetActivitiesResponse>(this.apiUrl, {
       params,
     }).pipe(
       map((response) => {
@@ -32,7 +35,7 @@ export class BacPatientService implements ActivityService {
     return x;
   }
   getTimeline():bacpatient[] {
-    this.http.get<BacPatientResponse>('https://localhost:6005/v1/bacPatient')
+    this.http.get<BacPatientResponse>(this.apiUrl)
     .subscribe(
       (response: BacPatientResponse) => {
         console.log('Response:', response);
@@ -44,7 +47,7 @@ export class BacPatientService implements ActivityService {
     return this.data_source ;
   }
   getData( dataSource :  MatTableDataSource<bacpatient, MatPaginator> ,isLoading :boolean) : bacpatient[] {
-    this.http.get<BacPatientResponse>('https://localhost:6005/v1/bacPatient')
+    this.http.get<BacPatientResponse>(this.apiUrl)
       .subscribe(
         (response: BacPatientResponse) => {
           console.log('Response:', response);
@@ -68,7 +71,7 @@ export class BacPatientService implements ActivityService {
   }
    updateBacPatient(bacPatient : bacpatient){
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:6005/v1/bacPatient', body).subscribe(response => {
+    return this.http.put(this.apiUrl, body).subscribe(response => {
  
     },
     error => {
@@ -85,7 +88,7 @@ export class BacPatientService implements ActivityService {
       
   });
     const body = { "bacPatient": bacPatient };
-    return this.http.put('https://localhost:6005/v1/bacPatient', body).subscribe(response => {
+    return this.http.put(this.apiUrl, body).subscribe(response => {
  console.log(response);
  
     },
