@@ -17,6 +17,7 @@ import { SnackBarMessagesService } from '../../services/util/snack-bar-messages.
 import { snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
 import {RoleAuthGuard} from '../../../app/role-auth.guard'
 import { log } from 'console';
+import { getRole } from '../../role-auth.guard';
 
 @Component({
   selector: 'app-navbar',
@@ -92,7 +93,9 @@ export class NavbarComponent implements OnInit {
       }, this.connectSignalRAfter * 1000);
     });
   }
-
+  getJob() {
+    return getRole(this.profile);
+  }
   loginDisplay = false;
   logout(popup?: boolean) {
     if (popup) {
@@ -131,6 +134,7 @@ export class NavbarComponent implements OnInit {
     
   } */
 }
+
 
 export function extractRoleFromProfile(profile: ProfileType | null | undefined): string | null {
   if (!profile || !profile.jobTitle) return null;

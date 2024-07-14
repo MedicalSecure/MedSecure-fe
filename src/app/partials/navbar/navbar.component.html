@@ -26,7 +26,30 @@ class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-t
   <ul class="navbar-nav">
     <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
       <h1 class="welcome-text">
-        Hello, <span class="text-black fw-bold"> Supervisor </span>
+        @if (getJob().isDoctor) {
+          Hello, <span class="text-black fw-bold"> Doctor </span>
+
+        }
+        @else if (getJob().isNurse) {
+          Hello, <span class="text-black fw-bold"> Nurse </span>
+
+        }
+        @else if (getJob().isNutritionist) {
+          Hello, <span class="text-black fw-bold"> Nutritionist </span>
+
+        }
+        @else if (getJob().isPharmacist) {
+          Hello, <span class="text-black fw-bold"> Pharmacist </span>
+
+        }
+        @else if (getJob().isReceptionist) {
+          Hello, <span class="text-black fw-bold"> Receptionist </span>
+
+        }
+        @else if (getJob().isSupervisor) {
+          Hello, <span class="text-black fw-bold"> Supervisor </span>
+
+        }
       </h1>
       <!-- <h3 class="welcome-sub-text">Your performance summary this week</h3> -->
     </li>

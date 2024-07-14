@@ -58,7 +58,7 @@ export const appConfig: ApplicationConfig = {
 
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
-  console.log(message);
+//  console.log(message);
 }
 
 export function MSALInstanceFactory(): IPublicClientApplication {
