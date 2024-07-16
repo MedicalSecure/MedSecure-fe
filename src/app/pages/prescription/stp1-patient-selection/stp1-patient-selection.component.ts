@@ -139,6 +139,7 @@ export class Stp1PatientSelection implements OnChanges {
       this.ErrorMessage = "Can't fetch registrations";
       console.error(error);
       this.isFailedToLoad = true;
+      this.IsPatientListLoading = false;
     }
   }
 

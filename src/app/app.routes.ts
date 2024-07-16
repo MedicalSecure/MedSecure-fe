@@ -9,7 +9,8 @@ import { UnitCareComponent } from './pages/unit-care/unit-care.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { WidgetsComponent } from './pages/widgets/widgets.component';
 import { AddPrescriptionComponent } from './pages/prescription/add-prescription-component/add-prescription.component';
-import { TasksComponent } from './pages/nurseTasks/nurseTasks.component';
+import { NurseTasksComponent } from './pages/nurseTasks/nurseTasks.component';
+import { TasksComponent } from './pages/tasks/tasks.component';
 import { MasonryDpiComponent } from './pages/registration/register-details/register-details.component';
 import { RegisterFormComponent } from './pages/registration/register-form/register-form.component';
 import { RegisterViewComponent } from './pages/registration/register-list/register-list.component';
@@ -39,6 +40,7 @@ export const routes: Routes = [
   { path: 'bac-patient', component: BacPatientComponent , canActivate: [RoleAuthGuard] },
   { path: 'timeline', component: TimelineComponent , canActivate: [RoleAuthGuard] },
   { path: 'tasks', component: TasksComponent , canActivate: [RoleAuthGuard] },
+  { path: 'nurse-tasks', component: NurseTasksComponent ,canActivate: [RoleAuthGuard] },
   { path: 'search', component: SearchBarComponent , canActivate: [RoleAuthGuard] },
   { path: 'pharmacy', component: AddPharmacyComponent , canActivate: [RoleAuthGuard] },
   { path: 'pharmacyValidation', component: PrescriptionViewForPrescriptionToValidateComponent , canActivate: [RoleAuthGuard] },
@@ -62,4 +64,3 @@ export const routes: Routes = [
   { path: 'nurse-dashboard', component: NurseDashboardComponent , canActivate: [RoleAuthGuard] },
  { path: 'reception-dashboard', component: DashboardComponent },
   ];
-  

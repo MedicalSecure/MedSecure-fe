@@ -11,7 +11,7 @@ import { BacPatientService } from '../../services/bacPatient/bac-patient-service
   templateUrl: './nurseTasks.component.html',
   styleUrl: './nurseTasks.component.css'
 })
-export class TasksComponent implements AfterViewInit {
+export class NurseTasksComponent implements AfterViewInit {
 
   constructor(private bacPatientService: BacPatientService) { }
   ngAfterViewInit(): void {

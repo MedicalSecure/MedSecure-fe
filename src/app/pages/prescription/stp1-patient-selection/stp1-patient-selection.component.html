@@ -158,9 +158,11 @@
 
   </table>
   <!-- shown when LOADING-->
-  <ng-container *ngIf="IsPatientListLoading">
+  <ng-container *ngIf="IsPatientListLoading && isFailedToLoad ==  false">
     <div class="mx-auto px-auto my-4" style="width: fit-content;" >
       <mat-spinner  />
     </div>
   </ng-container>
+
+
 </div>

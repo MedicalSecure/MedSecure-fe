@@ -286,6 +286,8 @@ export class PrescriptionApiService implements ActivityService {
   ): Observable<GetPrescriptionsByRegisterIdResponse> {
     let url = this.apiUrl + '/Register';
 
+    if(registerIds.length == 0)
+      throw Error('No registers were given for fetching their prescriptions')
     let params = new HttpParams();
     registerIds.forEach((id) => {
       params = params.append('registerIds', id);
@@ -329,6 +331,7 @@ export class PrescriptionApiService implements ActivityService {
     const ids = registrations.registers.data
       .map((item) => item.id)
       .filter((id) => id != null && id != undefined) as string[];
+      
     let prescriptionsByRegistrationsId = await service
       .getPrescriptionsByRegisterIds(
         ids,
