@@ -163,6 +163,7 @@ export class AccountComponent implements OnInit {
       };
 
       try {
+
         const response = await this.azureGraphService.inviteUserAsMember(inviteUserRequest);
         console.log('User invited successfully', response);
 
@@ -170,11 +171,14 @@ export class AccountComponent implements OnInit {
         const userId = response.invitedUser.id;
         const rolesExtension = {
           extensionName: 'extension_Roles',
-          additionalData: { Roles: inviteUser.roles }
+          // additionalData: { Roles: [inviteUser.roles] }
+          //doctor TODO
+          additionalData: { Roles: [this.roles[5]] }
         };
         const permissionsExtension = {
           extensionName: 'extension_Permissions',
-          additionalData: { Permissions: inviteUser.permissions }
+          // additionalData: { Permissions: [inviteUser.permissions] } TODO
+          additionalData: { Permissions: [this.permissions[1]] }
         };
 
         await this.azureGraphService.addCustomExtension(userId, rolesExtension, 'extension_Roles');

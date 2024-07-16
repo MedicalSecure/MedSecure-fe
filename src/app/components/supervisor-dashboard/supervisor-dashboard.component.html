@@ -20,16 +20,16 @@
           </div>
           <div class="d-none d-md-block">
             <p class="statistics-title">Available bed</p>
-            <h3 class="rate-percentage">50</h3>
+            <h3 class="rate-percentage">20</h3>
             <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>bed</span></p>
           </div>
           <div class="d-none d-md-block">
-            <p class="statistics-title">Pick Up Waste</p>
-            <h3 class="rate-percentage">68</h3>
-            <p class="text-danger d-flex"><i class="mdi mdi-menu-up"></i><span>waste</span></p>
+            <p class="statistics-title">Meals/day</p>
+            <h3 class="rate-percentage">30</h3>
+            <p class="text-danger d-flex"><i class="mdi mdi-menu-up"></i><span>meal</span></p>
           </div>
           <div class="d-none d-md-block">
-            <p class="statistics-title">equipment down</p>
+            <p class="statistics-title">equipments down</p>
             <h3 class="rate-percentage">2</h3>
             <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>equipment</span></p>
           </div>
@@ -69,7 +69,8 @@
                     Medsecure - Doing now what
                     <span class="fw-bold">patients</span> need next
                   </h3>
-                  <a href="#" class="btn btn-info upgrade-btn">Invite User </a>
+                  <!-- <a routerLinkActive="active" class="btn btn-info upgrade-btn" [routerLink]="['/','account']">Invite User </a> -->
+                  <button  routerLinkActive="active" class="btn btn-info upgrade-btn"[routerLink]="['/','account']" > Invite User</button>
                 </div>
               </div>
             </div>
@@ -155,8 +156,68 @@
         <div class="row flex-grow">
           <div class="col-md-6 col-lg-6 grid-margin stretch-card">
             <div class="card card-rounded">
-              <div class="card-body card-rounded">
-                <h4 class="card-title card-title-dash">Recent Events</h4>
+              <div class="card-body card-rounded card6">
+                <h4 class="card-title  card-title-dash ">Recent Events</h4>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Change in Directors
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Other Events
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Quarterly Report
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list align-items-center border-bottom py-2">
+                  <div class="wrapper w-100">
+                    <p class="mb-2 font-weight-medium">
+                      Change in Directors
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i class="mdi mdi-calendar text-muted me-1"></i>
+                        <p class="mb-0 text-small text-muted">Mar 14, 2019</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list align-items-center pt-3">
+                  <div class="wrapper w-100">
+                    <p class="mb-0">
+                      <a href="#" class="fw-bold text-primary">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

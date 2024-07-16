@@ -13,6 +13,7 @@ import { WidgetsListeMedicationsComponent } from "../list-widget/widgets-liste-m
 import { WidgetsListeReptureComponent } from "../list-widget/widgets-liste-repture/widgets-liste-repture.component";
 import { WidgetsArmoireMedComponent } from "../list-widget/widgets-armoire-med/widgets-armoire-med.component";
 import { LeaveReportComponent } from "../leave-report/leave-report.component";
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { LeaveReportComponent } from "../leave-report/leave-report.component";
     standalone: true,
     templateUrl: './supervisor-dashboard.component.html',
     styleUrl: './supervisor-dashboard.component.css',
-    imports: [CommonModule, ActivitiesComponent, WidgetsListePrescriptionComponent, WidgetsAllDataComponent, TaskComponent, MultiSenseWidgetComponent, WidgetsListeMedicationsComponent, WidgetsListeReptureComponent, WidgetsArmoireMedComponent, LeaveReportComponent]
+    imports: [CommonModule, ActivitiesComponent,RouterModule, WidgetsListePrescriptionComponent, WidgetsAllDataComponent, TaskComponent, MultiSenseWidgetComponent, WidgetsListeMedicationsComponent, WidgetsListeReptureComponent, WidgetsArmoireMedComponent, LeaveReportComponent]
 })
 export class SupervisorDashboardComponent implements OnInit {
   patients: Patient[] = [];

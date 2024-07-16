@@ -110,7 +110,7 @@ export function isAuthorized(profile: User, nextPath: string): boolean {
     case 'UnitSelector':
       return true;
     case 'timeline':
-      return true;
+      return roles.isNurse;
     case 'tasks':
       return true;
     case 'search':
