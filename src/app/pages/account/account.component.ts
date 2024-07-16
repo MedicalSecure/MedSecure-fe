@@ -169,16 +169,19 @@ export class AccountComponent implements OnInit {
 
         // Adding custom attributes after user creation
         const userId = response.invitedUser.id;
+        debugger;
+        const role = this.inviteUserForm.getRawValue().roles;
+        const permission = this.inviteUserForm.getRawValue().permissions;
         const rolesExtension = {
           extensionName: 'extension_Roles',
           // additionalData: { Roles: [inviteUser.roles] }
           //doctor TODO
-          additionalData: { Roles: [this.roles[5]] }
+          additionalData: { Roles: [this.roles.filter(r=>r.name == role)[0]] }
         };
         const permissionsExtension = {
           extensionName: 'extension_Permissions',
           // additionalData: { Permissions: [inviteUser.permissions] } TODO
-          additionalData: { Permissions: [this.permissions[1]] }
+          additionalData: { Permissions: [this.permissions.filter(r=>r.name == permission)[0]] }
         };
 
         await this.azureGraphService.addCustomExtension(userId, rolesExtension, 'extension_Roles');

@@ -63,13 +63,13 @@
             <div class="form-group">
               <select class="form-select field" formControlName="roles">
                 <option selected disabled value="">Choose role...</option>
-                <option *ngFor="let role of roles" [value]="role">{{ role.name }}</option>
+                <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
               </select>
             </div>
             <div class="form-group">
               <select class="form-select field" formControlName="permissions">
                 <option selected disabled value="">Choose permission...</option>
-                <option *ngFor="let permission of permissions" [value]="permission">{{ permission.name }}</option>
+                <option *ngFor="let permission of permissions" [value]="permission.name">{{ permission.name }}</option>
               </select>
             </div>
             <button type="submit" class="btn btn-primary text-white align-items-center" [disabled]="inviteUserForm.invalid">Invite</button>
