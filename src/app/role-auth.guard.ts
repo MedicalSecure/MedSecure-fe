@@ -173,6 +173,17 @@ export function getRoles(profile: User | undefined) {
     environment.roles.NURSE_ROLE,
   ];
 
+  //TODO : comment this !!!
+  return {
+    isReceptionist: true,
+    isDoctor: true || roles.includes(environment.roles.DOCTOR_ROLE),
+    isPharmacist: true || roles.includes(environment.roles.PHARMACIST_ROLE),
+    isNutritionist: true || roles.includes(environment.roles.NUTRITIONIST_ROLE),
+    isSupervisor: true || roles.includes(environment.roles.SUPERVISOR_ROLE),
+    isNurse: true || roles.includes(environment.roles.NURSE_ROLE),
+    hasAnyRole: true || roles.some((role) => envRoles.includes(role)),
+  };
+
   return {
     isReceptionist: roles.includes(environment.roles.RECEPTIONIST_ROLE),
     isDoctor: roles.includes(environment.roles.DOCTOR_ROLE),
