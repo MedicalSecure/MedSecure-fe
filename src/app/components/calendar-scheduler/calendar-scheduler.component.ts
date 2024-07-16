@@ -40,6 +40,8 @@ import { ActionType } from '../../interface/ActionType';
 import {CalendarEventType} from '../../interface/CalendarEventType';
 import {TypeVisit} from '../../interface/TypeVisit'
 import {LocationVisit} from '../../interface/LocationVisit'
+import { ProfileType } from '../../pages/profile/ProfileType';
+import { environment } from '../../../environments/environment';
 const colors: Record<string, EventColor> = {
   red: { primary: '#ad2121', secondary: '#FAE3E3', },
   blue: { primary: '#1e90ff', secondary: '#D1E8FF', },
@@ -93,6 +95,9 @@ export class CalendarShedulerComponent implements OnInit {
   viewday: CalendarView = CalendarView.Day;
   // @Input() events: CalendarEventType[] = [];
   @Input() events: CalendarEvent[] = [];
+  @Input() profile: ProfileType | undefined;
+
+
 
   CastedEvents = this.events as CalendarEventType[];
   @Input() selectedDate: Date = new Date();
@@ -153,6 +158,11 @@ export class CalendarShedulerComponent implements OnInit {
   constructor(private modal: NgbModal, private visitService: VisitService, private router: Router) {
     this.modalData = { action: '', event: {} as CalendarEventType<any> };
   }
+
+
+
+
+  
 
   modalOpen: boolean = true;
 

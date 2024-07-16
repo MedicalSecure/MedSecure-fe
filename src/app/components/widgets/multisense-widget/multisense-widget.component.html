@@ -1,6 +1,12 @@
 <div class="row">
+  <div *ngIf="alertMessages.length > 0" class="alert-container">
+    <div *ngFor="let message of alertMessages" class="alert-message">
+      <span class="alert-icon"><i class="fas fa-exclamation-triangle"></i></span>
+      {{ message }}
+    </div>
+  </div>
+  
     <div class="col-md-6">
-
       <div >
         <!-- Spinner component or loading animation -->
         <!-- <mat-spinner></mat-spinner> -->
