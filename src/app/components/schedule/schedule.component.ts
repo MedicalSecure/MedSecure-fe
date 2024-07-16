@@ -327,16 +327,16 @@ export function filterScheduleDoses(unFilteredList: Dispense[]): Dispense[] {
 }
 
 const _initialPartsOfDayHours: Dispense[] = [
-  { hour: '00' },
-  { hour: '01' },
-  { hour: '02' },
-  { hour: '03' },
-  { hour: '04' },
-  { hour: '05' },
-  { hour: '06' },
-  { hour: '07' },
-  { hour: '08' },
-  { hour: '09' },
+  { hour: '0' },
+  { hour: '1' },
+  { hour: '2' },
+  { hour: '3' },
+  { hour: '4' },
+  { hour: '5' },
+  { hour: '6' },
+  { hour: '7' },
+  { hour: '8' },
+  { hour: '9' },
   { hour: '10' },
   { hour: '11' },
   { hour: '12' },
@@ -354,16 +354,16 @@ const _initialPartsOfDayHours: Dispense[] = [
 ];
 
 const _partsOfDayNamesMap: { [hour: string]: string } = {
-  '00': 'Late Night',
-  '01': 'Late Night',
-  '02': 'Late Night',
-  '03': 'Pre-Dawn/Dawn',
-  '04': 'Pre-Dawn/Dawn',
-  '05': 'Pre-Dawn/Dawn',
-  '06': 'Early Morning',
-  '07': 'Early Morning',
-  '08': 'Early Morning',
-  '09': 'Mid-Morning',
+  '0': 'Late Night',
+  '1': 'Late Night',
+  '2': 'Late Night',
+  '3': 'Pre-Dawn/Dawn',
+  '4': 'Pre-Dawn/Dawn',
+  '5': 'Pre-Dawn/Dawn',
+  '6': 'Early Morning',
+  '7': 'Early Morning',
+  '8': 'Early Morning',
+  '9': 'Mid-Morning',
   '10': 'Mid-Morning',
   '11': 'Mid-Morning',
   '12': 'Noon/Midday',
@@ -381,16 +381,16 @@ const _partsOfDayNamesMap: { [hour: string]: string } = {
 };
 
 const _hourClassesMap: { [hour: string]: string } = {
-  '00': 'bg-dark',
-  '01': 'bg-dark',
-  '02': 'bg-dark',
-  '03': 'bg-info',
-  '04': 'bg-info',
-  '05': 'bg-info',
-  '06': 'bg-info',
-  '07': 'bg-info',
-  '08': 'bg-info',
-  '09': 'bg-success',
+  '0': 'bg-dark',
+  '1': 'bg-dark',
+  '2': 'bg-dark',
+  '3': 'bg-info',
+  '4': 'bg-info',
+  '5': 'bg-info',
+  '6': 'bg-info',
+  '7': 'bg-info',
+  '8': 'bg-info',
+  '9': 'bg-success',
   '10': 'bg-success',
   '11': 'bg-success',
   '12': 'bg-warning',
@@ -408,10 +408,10 @@ const _hourClassesMap: { [hour: string]: string } = {
 };
 
 const hoursCategorized = [
-  ['00', '01', '02'], // Late Night
-  ['03', '04', '05'], // Pre-Dawn/Dawn
-  ['06', '07', '08'], // Early Morning
-  ['09', '10', '11'], // Mid-Morning
+  ['0', '1', '2'], // Late Night
+  ['3', '4', '5'], // Pre-Dawn/Dawn
+  ['6', '7', '8'], // Early Morning
+  ['9', '10', '11'], // Mid-Morning
   ['12'], // Noon/Midday
   ['13', '14', '15'], // Afternoon
   ['16', '17'], // Mid-Afternoon

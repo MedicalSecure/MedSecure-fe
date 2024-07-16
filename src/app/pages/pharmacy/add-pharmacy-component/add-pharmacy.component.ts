@@ -73,7 +73,6 @@ export class AddPharmacyComponent implements OnInit {
     // This ensures that the view is initialized before trying to access the child component
   }
 
-
   handleDownloadButtonClick() {
     this.stp2ViewCheckDrugs.ExportExcel(); // Directly call the method in the child component
   }

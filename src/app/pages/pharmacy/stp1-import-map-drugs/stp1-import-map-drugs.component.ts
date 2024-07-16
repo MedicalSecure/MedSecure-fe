@@ -17,6 +17,7 @@ import { DrugService } from '../../../services/medication/medication.service';
 import { CheckDrugRequest, CheckDrugResponse } from '../../../model/Drugs';
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
 import { snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
+import { medicationType } from '../../../types';
 
 @Component({
   selector: 'app-stp1-import-map-drugs',
@@ -34,10 +35,9 @@ export class Stp1ImportMapDrugs implements OnInit {
   @Output() onIsStep1PageValidChange = new EventEmitter<boolean>();
   @Output() areAllCheckedDrugsValid = new EventEmitter<boolean>();
 
-
   importedData: { [key: string]: any }[] = [];
   excelDateFormat = 'dd-mm-yyyy';
- 
+
   mappedDataBeforeCheck: MedicationType[] = [];
   mappedDataAfterCheck: MedicationType[] = [];
   importedDataHeaders: string[] = [];
@@ -45,6 +45,14 @@ export class Stp1ImportMapDrugs implements OnInit {
 
   drugsChecked: CheckDrugResponse;
 
+  propsToIgnore: (keyof MedicationType)[] = [
+    'AvailableStock',
+    'ReservedStock',
+    'AlertStock',
+    'AverageStock',
+    'MinimumStock',
+    'SafetyStock',
+  ];
   columnMappings: Partial<MedicationType> = {
     Name: '',
     Dosage: '',
@@ -52,19 +60,18 @@ export class Stp1ImportMapDrugs implements OnInit {
     Code: '',
     Unit: '',
     Stock: '',
-    AlertStock: '',
-    AverageStock: '',
-    MinimumStock: '',
-    SafetyStock: '',
     ExpiredAt: '',
     Price: '',
     Description: '',
   };
   dbHeaders: (keyof MedicationType)[] = Object.keys(
     this.columnMappings
-  ) as (keyof MedicationType)[];
+  ).filter(key=>!this.propsToIgnore.includes(key as keyof MedicationType)) as (keyof MedicationType)[];
 
-  constructor(private drugService: DrugService,private snackBarMessagesService:SnackBarMessagesService) {}
+  constructor(
+    private drugService: DrugService,
+    private snackBarMessagesService: SnackBarMessagesService
+  ) {}
 
   ngOnInit() {
     this.dbHeaders = Object.keys(
@@ -101,7 +108,7 @@ export class Stp1ImportMapDrugs implements OnInit {
     }
   }
 
-  async handleSubmit() :Promise<Boolean>{
+  async handleSubmit(): Promise<Boolean> {
     //Map medication from file format to our database format
     this.MapMedications();
     // Check the mapped data before displaying it in the table
@@ -197,7 +204,7 @@ export class Stp1ImportMapDrugs implements OnInit {
   ): Promise<boolean> {
     let request: CheckDrugRequest | undefined;
     try {
-      request= {
+      request = {
         drugs: mappedDataBeforeCheck.map((drug) => {
           return {
             name: drug.Name,
@@ -206,23 +213,26 @@ export class Stp1ImportMapDrugs implements OnInit {
             code: drug.Code,
             unit: drug.Unit,
             description: drug.Description,
-            expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt,this.excelDateFormat),
+            expiredAt: tryParseDateOnlyFromExcel(
+              drug.ExpiredAt,
+              this.excelDateFormat
+            ),
             stock: tryParseInt(drug.Stock),
-            alertStock: tryParseInt(drug.AlertStock),
-            avrgStock: tryParseInt(drug.AverageStock),
-            minStock: tryParseInt(drug.MinimumStock),
-            safetyStock: tryParseInt(drug.SafetyStock),
+            alertStock: tryParseInt("0"),
+            avrgStock: tryParseInt("0"),
+            minStock: tryParseInt("0"),
+            safetyStock: tryParseInt("0"),
             price: tryParseInt(drug.Price),
           };
         }),
       };
     } catch (error) {
-      this.displayNewErrorMessage(error+"")
+      this.displayNewErrorMessage(error + '');
 
       console.error('Error in mapping data, types are incompatible:', error);
       return false;
     }
-     
+
     console.log(request);
     try {
       let responseObservable = this.drugService.checkDrugs(request);
@@ -239,18 +249,20 @@ export class Stp1ImportMapDrugs implements OnInit {
     }
   }
 
-  displayNewErrorMessage(
-    content: string,
-    duration = 4,
-  ) {
-    this.snackBarMessagesService.displaySnackBarMessage(content,snackbarMessageType.Error,duration,true)
+  displayNewErrorMessage(content: string, duration = 4) {
+    this.snackBarMessagesService.displaySnackBarMessage(
+      content,
+      snackbarMessageType.Error,
+      duration,
+      true
+    );
   }
 
   onSelectchange(event: any, dbColumn: keyof MedicationType) {
-    let areAllColumnsMapped=true;
-    Object.values(this.columnMappings).forEach(column=>{
-      if(column == "" || !column) areAllColumnsMapped=false;
-    })
+    let areAllColumnsMapped = true;
+    Object.values(this.columnMappings).forEach((column) => {
+      if (column == '' || !column) areAllColumnsMapped = false;
+    });
     this.onIsStep1PageValidChange.emit(areAllColumnsMapped);
   }
 }
@@ -291,7 +303,7 @@ export function tryParseDateOnlyFromExcel(
     }
 
     try {
-      let aTry=new Date(inputParsed)
+      let aTry = new Date(inputParsed);
       if (!isNaN(aTry.getTime())) {
         return aTry;
       }
@@ -355,6 +367,7 @@ export function tryParseInt(input: string): number {
   try {
     result = parseInt(input);
   } catch (error) {}
-  if (isNaN(result) || result == undefined || result == null)  throw new Error('Invalid Number : '+ input);
+  if (isNaN(result) || result == undefined || result == null)
+    throw new Error('Invalid Number : ' + input);
   return result;
 }

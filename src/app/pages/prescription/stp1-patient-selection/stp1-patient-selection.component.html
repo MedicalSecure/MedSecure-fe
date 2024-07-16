@@ -14,7 +14,7 @@
           [attr.colspan]="columnsToDisplay.length"
         >
           <mat-chip class="uc" style="margin-right: 20px">
-            Unit Care: Emergency Department
+            MedSecure: Prescription
           </mat-chip>
 
           <!-- <div class="form-group" style="width: 300px;  position: relative; border-radius: 50px;">
@@ -158,9 +158,11 @@
 
   </table>
   <!-- shown when LOADING-->
-  <ng-container *ngIf="IsPatientListLoading">
+  <ng-container *ngIf="IsPatientListLoading && isFailedToLoad ==  false">
     <div class="mx-auto px-auto my-4" style="width: fit-content;" >
       <mat-spinner  />
     </div>
   </ng-container>
+
+
 </div>

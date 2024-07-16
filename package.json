@@ -21,6 +21,8 @@
     "@angular/platform-browser-dynamic": "^17.3.9",
     "@angular/platform-server": "^17.3.9",
     "@angular/router": "^17.3.9",
+    "@azure/msal-angular": "^3.0.13",
+    "@azure/msal-browser": "^3.10.0",
     "@mdi/font": "^7.4.47",
     "@microsoft/signalr": "7.0.14",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",

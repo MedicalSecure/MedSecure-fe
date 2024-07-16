@@ -580,7 +580,7 @@ const _steps: wizardStepType[] = [
   },
   {
     id: 3,
-    title: 'Add Diagnostic',
+    title: 'Add Diagnosis',
     matIconName: '',
     iconClass: 'fa fa-stethoscope',
   },

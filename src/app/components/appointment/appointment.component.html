@@ -29,13 +29,12 @@
         <label type="label">
           <img
             class="img-md rounded-circle"
-            src="../assets/images/faces/face8.jpg"
+            src="../assets/images/faces/chadha.jpg"
             alt="Profile image"
             width="30"
             height="30"
           />
-          <b> Dr.Allen Moreno</b></label
-        >
+          <b>Dr.chadhajamel</b></label>
       </div>
 
       <div class="form-group m-0">
@@ -60,8 +59,8 @@
               color: selectedPatient === patient ? '#130615' : ''
             }"
           >
-            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
-            {{ patient.lastName}} <br />
+            <i class="fa-solid fa-hospital"></i> {{  patient.patient.firstName  }}
+            {{  patient.patient.lastName}} <br />
             <span *ngIf="selectedPatient === patient">
               <i class="fas fa-check"></i>
             </span>
@@ -250,12 +249,13 @@
         <label type="label">
           <img
             class="img-md rounded-circle"
-            src="../assets/images/faces/face8.jpg"
+            src="../assets/images/faces/chadha.jpg"
             alt="Profile image"
             width="30"
             height="30"
           />
-          <b> Dr.Allen Moreno</b></label
+          <!-- {{profile?.displayName}} -->
+          <b> Dr.chadhajamel</b></label
         >
       </div>
 
@@ -293,8 +293,8 @@
               color: selectedPatient === patient ? '#130615' : ''
             }"
           >
-            <i class="fa-solid fa-hospital"></i> {{ patient.firstName }}
-            {{ patient.lastName}} <br />
+            <i class="fa-solid fa-hospital"></i> {{  patient.patient.firstName }}
+            {{  patient.patient.lastName}} <br />
             <span *ngIf="selectedPatient === patient">
               <i class="fas fa-check"></i>
             </span>

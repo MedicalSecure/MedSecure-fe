@@ -35,6 +35,8 @@ import {
   NewRegisterSharedEvent,
   RegisterEvent,
 } from '../../model/events/RegisterEvents';
+import { MsalService } from '@azure/msal-angular';
+import { protectedResources } from '../../auth-config';
 @Injectable({
   providedIn: 'root',
 })
@@ -52,8 +54,12 @@ export class PrescriptionApiService implements ActivityService {
   constructor(
     private http: HttpClient,
     private snackBarMessages: SnackBarMessagesService,
-    public registrationService: RegistrationService
+    public registrationService: RegistrationService,
+    private msalService: MsalService
   ) {
+    const instance = this.msalService.instance;
+    // Now you can use `instance` to call MSAL methods
+
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.hubUrl)
       .build();
@@ -280,6 +286,8 @@ export class PrescriptionApiService implements ActivityService {
   ): Observable<GetPrescriptionsByRegisterIdResponse> {
     let url = this.apiUrl + '/Register';
 
+    if(registerIds.length == 0)
+      throw Error('No registers were given for fetching their prescriptions')
     let params = new HttpParams();
     registerIds.forEach((id) => {
       params = params.append('registerIds', id);
@@ -323,6 +331,7 @@ export class PrescriptionApiService implements ActivityService {
     const ids = registrations.registers.data
       .map((item) => item.id)
       .filter((id) => id != null && id != undefined) as string[];
+      
     let prescriptionsByRegistrationsId = await service
       .getPrescriptionsByRegisterIds(
         ids,

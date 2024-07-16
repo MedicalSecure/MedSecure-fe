@@ -25,6 +25,7 @@ import { snackbarMessageType } from '../../../components/snack-bar-messages/snac
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { getDateString } from '../../../shared/utilityFunctions';
 
 @Component({
   selector: 'app-stp2-view-check-drugs',
@@ -57,10 +58,6 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
     'expired At',
     'unit',
     'stock',
-    'alert Stock',
-    'average Stock',
-    'minimum Stock',
-    'safety Stock',
     'price',
     'description',
   ];
@@ -122,13 +119,15 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
       description: drug.Description,
       expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt),
       stock: Number(drug.Stock),
-      alertStock: Number(drug.AlertStock),
-      avrgStock: Number(drug.AverageStock),
-      minStock: Number(drug.MinimumStock),
-      safetyStock: Number(drug.SafetyStock),
+      alertStock: Number(0),
+      reservedStock:Number(0),
+      avrgStock: Number(0),
+      minStock: Number(0),
+      safetyStock: Number(0),
       price: Number(drug.Price),
     }));
-
+    console.log(JSON.stringify(drugsToAdd));
+    
 
     try {
       let postDrugsResponse = await firstValueFrom(this.drugService.postDrugs(drugsToAdd))
@@ -151,6 +150,7 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
     const invalidDrugs: MedicationType[] = this.mappedMedications.filter(drug => !this.isDrugValide(drug));
   
     if (invalidDrugs.length > 0) {
+      this.snackBarMessagesService.displaySnackBarMessage("Preparing your file",snackbarMessageType.Info,1)
       // Prepare data for export
       const exportData: DrugDTO[] = invalidDrugs.map((drug) => ({
         name: drug.Name,
@@ -161,10 +161,10 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
         description: drug.Description,
         expiredAt: tryParseDateOnlyFromExcel(drug.ExpiredAt),
         stock: Number(drug.Stock),
-        alertStock: Number(drug.AlertStock),
-        avrgStock: Number(drug.AverageStock),
-        minStock: Number(drug.MinimumStock),
-        safetyStock: Number(drug.SafetyStock),
+        alertStock: Number(0),
+        avrgStock: Number(0),
+        minStock: Number(0),
+        safetyStock: Number(0),
         price: Number(drug.Price),
       }));
   
@@ -173,9 +173,13 @@ export class Stp2ViewCheckDrugs implements OnInit, OnChanges {
       const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
       const dataBlob = new Blob([excelBuffer], { type: fileType });
   
-      FileSaver.saveAs(dataBlob, 'invalid_drugs' + fileExtension);
+      setTimeout(() => {
+        FileSaver.saveAs(dataBlob, `invalid_drugs_${getDateString(new Date,"ddmmH_HHMM")}` + fileExtension);
+        this.snackBarMessagesService.displaySnackBarMessage(`File exported: invalid_drugs_${getDateString(new Date,"ddmmH_HHMM")}`,snackbarMessageType.Success,2)
+      }, 1000);
     } else {
       // Handle case where there are no invalid drugs to export
+      this.snackBarMessagesService.displaySnackBarMessage('No invalid drugs to export.',snackbarMessageType.Error,2)
       console.log('No invalid drugs to export.');
     }
   }
