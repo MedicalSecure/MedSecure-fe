@@ -173,8 +173,8 @@ export function getRoles(profile: User | undefined) {
     environment.roles.NURSE_ROLE,
   ];
 
-  //TODO : comment this !!!
-  return {
+  //TODO : comment this !!! enable this to view all pages
+  /* return {
     isReceptionist: true,
     isDoctor: true || roles.includes(environment.roles.DOCTOR_ROLE),
     isPharmacist: true || roles.includes(environment.roles.PHARMACIST_ROLE),
@@ -182,7 +182,7 @@ export function getRoles(profile: User | undefined) {
     isSupervisor: true || roles.includes(environment.roles.SUPERVISOR_ROLE),
     isNurse: true || roles.includes(environment.roles.NURSE_ROLE),
     hasAnyRole: true || roles.some((role) => envRoles.includes(role)),
-  };
+  }; */
 
   return {
     isReceptionist: roles.includes(environment.roles.RECEPTIONIST_ROLE),
