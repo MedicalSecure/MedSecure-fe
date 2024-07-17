@@ -105,7 +105,7 @@ export class AccountComponent implements OnInit {
           password: user.password
         },
         givenName: user.givenName,
-        jobTitle: user.roles.join(', '),
+        jobTitle: user.roles,
         surname: user.surname,
         businessPhones: user.businessPhones,
         mobilePhone: user.mobilePhone,
@@ -119,13 +119,19 @@ export class AccountComponent implements OnInit {
 
         // Adding custom attributes after user creation
         const userId = response.id;
+        const role = user.roles;
+        const permission = user.permissions;
+
         const rolesExtension = {
           extensionName: 'extension_Roles',
-          additionalData: { Roles: user.roles }
+          // additionalData: { Roles: [inviteUser.roles] }
+          //doctor TODO
+          additionalData: { Roles: [this.roles.filter(r=>r.name == role)[0]] }
         };
         const permissionsExtension = {
           extensionName: 'extension_Permissions',
-          additionalData: { Permissions: user.permissions }
+          // additionalData: { Permissions: [inviteUser.permissions] } TODO
+          additionalData: { Permissions: [this.permissions.filter(r=>r.name == permission)[0]] }
         };
 
         try {
