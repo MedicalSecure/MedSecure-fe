@@ -9,7 +9,7 @@
               <h4 class="card-title card-title-dash">Diets</h4>
             </div>
 
-            <div class="btn-wrapper">
+            <div class="btn-wrapper" *ngIf="getRoles().isNutritionist">
               <a href="#" class="btn btn-primary text-white align-items-center" [routerLink]="['/', 'meals']" routerLinkActive="active">
                 <i class="fa fa-qrcode" aria-hidden="true"></i> show prescribed meals
               </a>

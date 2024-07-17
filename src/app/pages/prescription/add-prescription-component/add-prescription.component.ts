@@ -30,6 +30,7 @@ import {
 } from '../../../model/Prescription';
 import {
   Stp5HospitalizationComponent,
+  getDietTypeString,
   stp5FormsValueEvent,
 } from '../stp5-hospitalization/stp5-hospitalization.component';
 import {
@@ -39,12 +40,12 @@ import { PrescriptionApiService } from '../../../services/prescription/prescript
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DrugService } from '../../../services/medication/medication.service';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
-import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { UnitCare } from '../../../model/unitCare/UnitCareData';
 import { SnackBarMessageProps, SnackBarMessagesComponent, snackbarMessageType } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 import { SnackBarMessagesService } from '../../../services/util/snack-bar-messages.service';
 import { PdfPrescriptionToPrintComponent } from '../../../components/pdf-prescription-to-print/pdf-prescription-to-print.component';
+import { DietsService } from '../../../services/diets/diets.service';
 
 @Component({
   selector: 'app-add-prescription',
@@ -102,7 +103,7 @@ export class AddPrescriptionComponent implements DoCheck {
     private prescriptionApiService: PrescriptionApiService,
     private drugService: DrugService,
     private unitCareService: UnitCareService,
-    private dietService: DietService,
+    private dietService: DietsService,
     private snackBarMessagesService:SnackBarMessagesService,
   )
   {}
@@ -344,7 +345,12 @@ export class AddPrescriptionComponent implements DoCheck {
     }
     let response = this.dietService.getDietsByIdList(DietIds);
     let diet = await firstValueFrom(response);
-    return diet;
+    return diet.map(d=>{
+      return {
+        ...d,
+        dietTypeString:getDietTypeString(d.dietType)
+      }
+    });
   }
 
   displayNewErrorMessage(

@@ -150,7 +150,9 @@ export function isAuthorized(profile: User, nextPath: string): boolean {
     case 'bac-patient':
       return roles.isNurse || roles.isDoctor || roles.isSupervisor;
     case 'diet':
-      return true; // Allow access to diet for all authenticated users
+      return roles.isNutritionist || roles.isDoctor || roles.isSupervisor;
+    case 'meals':
+      return roles.isNutritionist || roles.isDoctor || roles.isSupervisor;
     case 'waste':
       return roles.isSupervisor; // Maybe only supervisors can access waste management?
     case 'dashboard':

@@ -15,7 +15,6 @@ import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
-import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { getGender } from '../../registration/register-details/register-details.component';
 import { Gender, ValidationStatus } from '../../../enums/enum';
@@ -36,6 +35,7 @@ import {
   snackbarMessageType,
 } from '../../../components/snack-bar-messages/snack-bar-messages.component';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DietsService } from '../../../services/diets/diets.service';
 
 @Component({
   selector: 'app-old-prescription-view-for-prescription-to-validate',
@@ -101,7 +101,7 @@ export class PrescriptionViewForPrescriptionToValidateComponent {
   constructor(
     private drugService: DrugService,
     private unitCareService: UnitCareService,
-    private dietService: DietService,
+    private dietService: DietsService,
     private prescriptionService: PrescriptionApiService,
     private route: ActivatedRoute,
     private snackBarMessagesService: SnackBarMessagesService,

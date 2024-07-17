@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Prescription, PrescriptionResponse } from '../../model/BacPatient';
 import { HttpClient } from '@angular/common/http';
 import { Diet, DietResponse } from '../../model/Diet';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { parseDates } from '../prescription/prescription-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +50,26 @@ export class DietsService {
 
   getDiet(): Observable<DietResponse> {
     return this.http.get<DietResponse>('http://localhost:6003/v1/diets');
+  }
+
+  getDietById(dietId: string): Observable<Diet | undefined> {
+    let apiUrl = "http://localhost:6003/v1/diets";
+    return this.http.get<DietResponse>(apiUrl).pipe(
+      map((DietResponse: DietResponse) => DietResponse.diets.data.find(diet => 
+        {
+          return diet.id==dietId;
+        }
+      )),
+      map(parseDates)
+    );
+  }
+
+  getDietsByIdList(dietIdList: string[]): Observable<Diet[]> {
+    let apiUrl = "http://localhost:6003/v1/diets";
+    return this.http.get<DietResponse>(apiUrl).pipe(
+      map((response: DietResponse) => response.diets.data.filter((diet: Diet) => dietIdList.includes(diet.id))),
+      map(parseDates)
+    );
   }
 
   deleteDiet(id: number | string | undefined): void {

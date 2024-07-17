@@ -1,9 +1,11 @@
+import { DietType } from "../enums/DietEnums";
 
 export interface Diet {
   id : string , 
     meals: Meal[];
     register: SimpleRegisterDto;
-    dietType: number;
+    dietType: DietType;
+    //dietTypeString: string;
     startDate: Date;
     endDate: Date;
     label: string;

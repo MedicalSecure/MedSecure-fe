@@ -3,7 +3,6 @@ import { TaskComponent } from "../../../components/task/task.component";
 import { LeaveReportComponent } from "../../../components/leave-report/leave-report.component";
 import { TopUrgencyCasesComponent } from "../../../components/top-urgency-cases/top-urgency-cases.component";
 import { ActivitiesComponent } from "../../../components/activities/activities.component";
-import { DietService } from '../../../services/diet/diet.service';
 import { MultiSenseWidgetComponent } from "../../../components/widgets/multisense-widget/multisense-widget.component";
 import { WidgetsAllDataComponent } from "../../../components/list-widget/widgets-all-data/widgets-all-data.component";
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +10,7 @@ import foods, { Food } from '../../../model/Diet';
 import { RendementPrescriptionComponent } from "../../../components/widgets/rendement-prescription/rendement-prescription.component";
 import { PrescriptionService } from '../../../services/prescription/prescription.service';
 import { VisitService } from '../../../services/visits/visits.service';
+import { DietsService } from '../../../services/diets/diets.service';
 
 @Component({
     selector: 'app-nutritionist-dashboard',
@@ -31,7 +31,7 @@ totalVisitsCount: number = 0;
 totalPrescriptionCount:number =0;
 visitsCountByDay : number =0;
 
-constructor(public dietService : DietService , public prescriptionService : PrescriptionService , public visitService : VisitService ){
+constructor(public dietService : DietsService , public prescriptionService : PrescriptionService , public visitService : VisitService ){
   this.refreshCountries();
 
 }

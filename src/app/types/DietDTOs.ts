@@ -1,5 +1,6 @@
 import { DietType, FoodCategory, MealType } from "../enums/DietEnums";
 import { Gender } from "../enums/enum";
+import { Meal } from "../model/Diet";
 export type GetDietResponse = {
     diets: {
       pageIndex: number;
@@ -12,15 +13,15 @@ export type GetDietResponse = {
   
 export type DietDto = {
     id: string;
-    patientId: string;
+    //patientId: string;
     dietType: DietType;
     dietTypeString: string;
     startDate: Date;
     endDate: Date;
-    meals: MealDto[];
+    meals: Meal[];
 };
 
-export type FoodDto = {
+/* export type FoodDto = {
     Id: string;
     MealId: string;
     Name: string;
@@ -35,7 +36,7 @@ export type MealDto = {
     Name: string;
     MealType: MealType;
     Foods: FoodDto[];
-};
+}; */
 
 export type PatientDto = {
     Id: string;

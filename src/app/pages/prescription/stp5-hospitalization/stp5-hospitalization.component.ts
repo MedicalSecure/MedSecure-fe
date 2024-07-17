@@ -17,7 +17,7 @@ import {
 } from '@angular/forms';
 import { DietDto } from '../../../types/DietDTOs';
 import { Subscription } from 'rxjs';
-import { DietService } from '../../../services/diet/diet.service';
+
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
@@ -32,6 +32,7 @@ import {
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { UnitCare } from '../../../model/unitCare/UnitCareData';
 import { DietType } from '../../../enums/DietEnums';
+import { DietsService } from '../../../services/diets/diets.service';
 
 @Component({
   selector: 'app-stp5-hospitalization',
@@ -78,7 +79,7 @@ export class Stp5HospitalizationComponent {
 
   constructor(
     private fb: FormBuilder,
-    private dietService: DietService,
+    private dietService: DietsService,
     private UnitCareService: UnitCareService
   ) {
     this.myForm = this.fb.group<stp5FormsValueEvent>({
@@ -202,7 +203,7 @@ export class Stp5HospitalizationComponent {
 
   fetchDiets() {
     this.isDietsLoading = true;
-    this.dietService.getDiets().subscribe(
+    this.dietService.getDiet().subscribe(
       (response) => {
         this.DietList = response.diets.data.map(diet=>{
           return {
