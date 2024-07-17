@@ -203,7 +203,7 @@ export class Stp5HospitalizationComponent {
 
   fetchDiets() {
     this.isDietsLoading = true;
-    this.dietService.getDiet().subscribe(
+    this.dietService.getDietsForPrescription().subscribe(
       (response) => {
         this.DietList = response.diets.data.map(diet=>{
           return {

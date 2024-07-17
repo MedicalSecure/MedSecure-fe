@@ -9,31 +9,8 @@ import { parseDates } from '../prescription/prescription-api.service';
   providedIn: 'root',
 })
 export class DietsService {
-  prescription: Prescription[] = [];
-
   diet: Diet[] = [];
   constructor(private http: HttpClient) {}
-
-  getPrescritios(): Prescription[] {
-    this.http
-      .get<PrescriptionResponse>('http://localhost:6007/api/v1/Prescription')
-      .subscribe(
-        (response: PrescriptionResponse) => {
-          console.log('Response:', response);
-          if (response && response.prescriptions.data) {
-            response.prescriptions.data.forEach((element) => {
-              this.prescription.push(element);
-            });
-          } else {
-            console.error('Invalid response format:', response);
-          }
-        },
-        (error) => {
-          console.error('Error fetching data:', error);
-        }
-      );
-    return this.prescription;
-  }
 
   postDiet(diet: Diet): void {
     const formData = { Diet: diet };
@@ -50,6 +27,10 @@ export class DietsService {
 
   getDiet(): Observable<DietResponse> {
     return this.http.get<DietResponse>('http://localhost:6003/v1/diets');
+  }
+
+  getDietsForPrescription(): Observable<DietResponse> {
+    return this.http.get<DietResponse>("../../../assets/data/diets.json");
   }
 
   getDietById(dietId: string): Observable<Diet | undefined> {

@@ -5,7 +5,6 @@ export interface Diet {
     meals: Meal[];
     register: SimpleRegisterDto;
     dietType: DietType;
-    //dietTypeString: string;
     startDate: Date;
     endDate: Date;
     label: string;
