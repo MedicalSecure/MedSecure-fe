@@ -30,49 +30,46 @@
           </div>
         </div>
 
-        <div class="card-body">
-          <form [formGroup]="unitCareForm" (ngSubmit)="onSubmit()" style="margin-top: 5%;" class="form-container">
+          <form [formGroup]="unitCareForm" (ngSubmit)="onSubmit()" style="margin-top: 5%;" >
             <div class="row">
 
                 <!-- Partie 1 -->
                 <div class="col-md-6 col-lg-4 mb-3">
-                  <h4 class="card-title" style="margin-right: auto; margin-top: 15px; margin-left: 5px;" >
-                    add unitCare informations
-
+                  <h4 class="card-title" style="margin-right: auto; margin-top: 15px; margin-left: 5px;">
+                      add unitCare informations
                   </h4>
 
-                  <input type="text" formControlName="title"   class="form-control" class="field" placeholder="Title" style="margin-left: 5px;"/>
-
-                <select class="form-select field" formControlName="type"  style="margin-left: 5px;">
-                    <option selected disabled value="">Choose...</option>
-                    <option value="general">General</option>
-                    <option value="Intensive">Intensive</option>
-                    <option value="Coronary">Coronary</option>
-                    <option value="Surgical">Surgical</option>
-                    <option value="Pediatric">Pediatric</option>
-                    <option value="Obstetrics">Obstetrics</option>
-                  </select>
-
-
-                  <textarea
-                    class="field"
-                    formControlName="description"
-                    style="height: 100px; "
-                    placeholder="Description"
-                    style="margin-left: 5px;"
-                  >
-                 description
-                 </textarea
-                  >
-
-                  <select class="field" formControlName="unitStatus"    style="margin-left: 5px;" >
-                    <option selected disabled value="">Status...</option>
-                    <option [value]="1">activated </option>
-                    <option [value]="2">deactivated </option>
-
-                  </select>
-
+                  <div class="form-group">
+                      <input type="text" class="form-control" formControlName="title" placeholder="Title" />
+                  </div>
+                  <div class="form-group">
+                      <select class="form-select field" formControlName="type">
+                          <option selected disabled value="">Type</option>
+                          <option value="general">General</option>
+                          <option value="Intensive">Intensive</option>
+                          <option value="Coronary">Coronary</option>
+                          <option value="Surgical">Surgical</option>
+                          <option value="Pediatric">Pediatric</option>
+                          <option value="Obstetrics">Obstetrics</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <textarea
+                          class="form-control"
+                          formControlName="description"
+                          style="height: 100px;"
+                          placeholder="Description"
+                      ></textarea>
+                  </div>
+                  <div class="form-group">
+                      <select class="form-select field" formControlName="unitStatus">
+                          <option selected disabled value="">Status...</option>
+                          <option [value]="1">activated</option>
+                          <option [value]="2">deactivated</option>
+                      </select>
+                  </div>
               </div>
+
                 <!-- Fin de la partie 1 -->
 
                 <!-- Partie du room -->
@@ -86,43 +83,63 @@
                 <div formArrayName="rooms">
                   @for ( room of unitCareForm.controls.rooms.controls; track
                   roomIndex; let roomIndex = $index ) {
-                  <div class="question" [formGroupName]="roomIndex" >
+                  <div [formGroupName]="roomIndex" >
                     <div style="display: flex;">
-                    <input
-                        type="number"
+
+                      <div class="form-group">
+                        <input type="number"
+                        class="form-control"
                         formControlName="roomNumber"
                         placeholder="Room number"
-                        class="field"
-                      />
+                        style="width: 600px;"/>
+                      </div>
 
-
-                      <button
+                     <button
                       class="float-left"
                       mat-icon-button
                       color="warn"
                       aria-label="Remove/clear"
                       (click)="removeRoom(roomIndex)"
                       matTooltip="Remove"
-                    >
+                      >
                       <mat-icon>highlight_off</mat-icon>
-                    </button>
-                  </div>
-                  <select class="field" formControlName="status" style="width: 90%;">
-                    <option selected disabled value="">Status...</option>
-                    <option [value]="1">activated </option>
-                    <option [value]="2">deactivated </option>
+                     </button>
 
-                  </select>
-                    <div formArrayName="equipments" class="answers">
-                      <div>equipments</div>
+                    </div>
+                    <div class="form-group">
+                      <select class="form-select field" formControlName="status">
+                        <option selected disabled value="" >Status...</option>
+                        <option [value]="1">activated</option>
+                        <option [value]="2">deactivated</option>
+                      </select>
+                    </div>
+
+
+                    <div formArrayName="equipments">
+                      <div class="d-flex justify-content-between">
+                        <h6 style="font-family: bold;">equipments</h6>
+                        <button
+                        class="add btn btn-icons btn-rounded btn-primary todo-list-add-btn text-white me-0 pl-12p"
+                        (click)="addEquipment(roomIndex)"
+                      >
+                        <i class="mdi mdi-plus"></i>
+                      </button>
+
+                    </div>
+
                       @for ( room of
                       unitCareForm.controls.rooms.controls.at(roomIndex)
                       ?.controls?.equipments?.controls; track equipmentIndex; let equipmentIndex =
                       $index ) {
+                        <div class="row flex-grow">
+                          <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card card-rounded">
+                          <div class="card-body" style="background-color:rgb(246, 230, 240)">
                       <div [formGroupName]="equipmentIndex"  >
                         <div style="display: flex;">
-                          <input type="text" placeholder="equipmentName" formControlName="name" class="field"/>
-
+                          <div class="form-group">
+                            <input type="text" placeholder="equipmentName" formControlName="name"  class="form-control" style="width: 550px;"/>
+                          </div>
                         <button
                         class="float-left"
                         mat-icon-button
@@ -134,17 +151,19 @@
                         <mat-icon>highlight_off</mat-icon>
                       </button>
                         </div>
-
-                        <input type="text" placeholder="reference" formControlName="reference" class="field" style="width: 90%;"/>
-                        <select class="field" formControlName="eqStatus" style="width: 90%;" >
+                        <div class="form-group">
+                        <input type="text" placeholder="reference" formControlName="reference"   class="form-control" style="width: 90%;"/>
+                         </div>
+                        <div class="form-group">
+                        <select class="form-select field" formControlName="eqStatus" style="width: 90%;" >
                           <option selected disabled value="">Status...</option>
                           <option [value]="1">available </option>
                           <option [value]="2">nonAvailable</option>
 
                         </select>
-
-
-                        <select class="field" formControlName="eqType" style="width: 90%;">
+                      </div>
+                      <div class="form-group">
+                        <select class="form-select field" formControlName="eqType" style="width: 90%;">
                           <option selected disabled value="">Equipment Type...</option>
                           <option [value]="1">Bed</option>
                           <option [value]="2">Scanner</option>
@@ -164,22 +183,22 @@
                           <option [value]="16">Hand Sanitizer</option>
                           <option [value]="17">Disinfectant Wipes</option>
                       </select>
-                      
+                    </div>
+
 
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
                       }
-                      <button
-                      type="button" class="btn btn-success"
-                        (click)="addEquipment(roomIndex)"
-                      >
-                        Add Equipment
-                      </button>
+
                     </div>
                   </div>
                   }
                 </div>
                 <div class="add-question">
-                  <button     type="button" class="btn btn-success" (click)="addRoom()" type="button">Add Room</button>
+                  <button     type="button" class="btn btn-outline-primary" (click)="addRoom()" type="button">Add New Room</button>
                 </div>
 
                 </div>
@@ -220,7 +239,7 @@
 
           </form>
 
-      </div>
+
 
 
       </div>

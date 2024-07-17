@@ -3,14 +3,14 @@
 <router-outlet></router-outlet>
 }
 <!-- Content area for different routes -->
-@if (loginDisplay) { @if(profile){
+@if (loginDisplay) { @if(currentUser){
 <div class="container-scroller">
   <!-- Include the navbar component -->
-  <app-navbar></app-navbar>
+  <app-navbar [currentUser]="currentUser"></app-navbar>
 
   <div class="container-fluid page-body-wrapper">
     <!-- Include the settings panel component -->
-    <app-settings-panel></app-settings-panel>
+    <!-- <app-settings-panel></app-settings-panel> -->
 
     <!-- Include the sidebar component -->
     <!-- <app-sidebar></app-sidebar> -->
@@ -99,20 +99,27 @@
             <i class="menu-arrow"></i>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" *ngIf="getRole().isNurse || getRole().isSupervisor">
-          <a class="nav-link" [routerLink]="['/', 'nurseTasks']">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/', 'tasks']" *ngIf="getRole().isNutritionist || getRole().isSupervisor || getRole().isDoctor || getRole().isPharmacist || getRole().isReceptionist" >
             <i class="menu-icon mdi mdi-card-text-outline"></i>
             <span class="menu-title">Tasks</span>
             <i class="menu-arrow"></i>
           </a>
         </li>
-                 <li class="nav-item" routerLinkActive="active">
-                  <a class="nav-link" [routerLink]="['/', 'timeline']" *ngIf="getRole().isNurse || getRole().isSupervisor ">
-                    <i class="menu-icon mdi mdi-chart-line"></i>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/', 'nurse-tasks']" *ngIf="getRole().isNurse" >
+            <i class="menu-icon mdi mdi-card-text-outline"></i>
+            <span class="menu-title">Tasks</span>
+            <i class="menu-arrow"></i>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/', 'timeline']" *ngIf="getRole().isNurse">
+            <i class="menu-icon mdi mdi-chart-line"></i>
             <span class="menu-title">Time Line</span>
             <i class="menu-arrow"></i>
           </a>
-        </li> 
+        </li>
 
         <!-- Visits Link -->
         <li class="nav-item" routerLinkActive="active">
@@ -124,22 +131,22 @@
         </li>
 
         <!-- Diet Link -->
-        <li class="nav-item" routerLinkActive="active" >
-          <a class="nav-link"  [routerLink]="['/', 'diet']" *ngIf="getRole().isNutritionist || getRole().isSupervisor || getRole().isDoctor">
-            <i class="menu-icon fa fa-apple"></i>
+        <li class="nav-item" *ngIf="getRole().isNutritionist || getRole().isSupervisor">
+          <a class="nav-link">
+            <i class="menu-icon fa fa-apple" aria-hidden="true"></i>
             <span class="menu-title">Diet</span>
             <i class="menu-arrow"></i>
           </a>
         </li>
 
         <!-- Waste Link -->
-        <li class="nav-item" *ngIf="getRole().isSupervisor">
+        <!-- <li class="nav-item" *ngIf="getRole().isNurse || getRole().isSupervisor">
           <a class="nav-link">
             <i class="menu-icon fa fa-trash-o"></i>
             <span class="menu-title">Waste</span>
             <i class="menu-arrow"></i>
           </a>
-        </li>
+        </li> -->
       </ul>
     </nav>
 

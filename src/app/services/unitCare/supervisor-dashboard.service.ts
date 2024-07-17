@@ -20,7 +20,7 @@ export class SupervisorDashboardService implements ActivityService {
     const params = new HttpParams()
       .set('PageIndex', pageIndex.toString())
       .set('PageSize', pageSize.toString());
-    let x = this.http.get<GetActivitiesResponse>("http://localhost:5102/Activities", {
+    let x = this.http.get<GetActivitiesResponse>("https://localhost:6064/unitcare-service/Activities", {
       params,
     }).pipe(
       map((response) => {

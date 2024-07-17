@@ -14,6 +14,7 @@ export interface Task {
   content: string;
   taskState: number;
   taskAction: number;
+  createdAt:Date
 }
 
 

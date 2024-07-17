@@ -1,6 +1,7 @@
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { FooterComponent } from "../../partials/footer/footer.component";
-import { SettingsPanelComponent } from "../../partials/settings-panel/settings-panel.component";
+import { FooterComponent } from '../../partials/footer/footer.component';
+import { SettingsPanelComponent } from '../../partials/settings-panel/settings-panel.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SnackBarMessagesComponent } from '../../components/snack-bar-messages/snack-bar-messages.component';
 import { CommonModule } from '@angular/common';
@@ -13,13 +14,13 @@ import {
 } from '@azure/msal-browser';
 import { filter } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { ProfileType } from '../profile/ProfileType';
-import { environment } from '../../../environments/environment';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NavbarComponent } from '../../partials/navbar/navbar.component';
-import { getRole } from '../../role-auth.guard';
-import { RoleAuthGuard } from '../../../app/role-auth.guard'
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { User } from '../account/account.component';
+import { AzureGraphService } from '../../azure-graph.service';
+import { getRoles } from '../../role-auth.guard';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -34,34 +35,31 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
     NavbarComponent,
     SettingsPanelComponent,
     SnackBarMessagesComponent,
-    MatProgressSpinner
+    MatProgressSpinner,
   ],
 })
 export class HomeComponent implements OnInit {
   loginDisplay = false;
-  profile: ProfileType | undefined; role: string;
-  @Output() roleEmitter = new EventEmitter<string>();
-  userJob: string;
+  currentUser: User | undefined;
+
   constructor(
     private router: Router,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
-    private http: HttpClient,
-    public roleAuth: RoleAuthGuard,
-
-  ) { }
+    private graphService: AzureGraphService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.msalBroadcastService.msalSubject$
-    .pipe(
-      filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS)
-    )
-    .subscribe((result: EventMessage) => {
-      console.log(result);
-      const payload = result.payload as AuthenticationResult;
-      this.authService.instance.setActiveAccount(payload.account);
-
-    });
+      .pipe(
+        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS)
+      )
+      .subscribe((result: EventMessage) => {
+        console.log(result);
+        const payload = result.payload as AuthenticationResult;
+        this.authService.instance.setActiveAccount(payload.account);
+      });
 
     this.msalBroadcastService.inProgress$
       .pipe(
@@ -70,24 +68,23 @@ export class HomeComponent implements OnInit {
       .subscribe(() => {
         this.setLoginDisplay();
       });
-    this.userJob = this.roleAuth.profile?.jobTitle as string;
-    this.roleEmitter.emit(this.userJob);
-    console.log("role fil home ", this.userJob);
   }
 
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
-    this.getProfile(environment.apiConfig.uri);
-  }
-
-  getProfile(url: string) {
-    this.http.get(url)
-      .subscribe(profile => {
-        this.profile = profile;
+    if (!this.loginDisplay) {
+      this.authService.loginRedirect();
+    } else {
+      this.graphService.getCurrentUserWithRole().subscribe((account) => {
+        this.currentUser = account;
       });
+    }
   }
 
+  thisRedirectsToLoginSomehow(url: string) {
+    this.http.get(url).subscribe();
+  }
   getRole() {
-    return getRole(this.profile);
+    return getRoles(this.currentUser);
   }
 }

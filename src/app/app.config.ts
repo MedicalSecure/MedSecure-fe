@@ -58,7 +58,7 @@ export const appConfig: ApplicationConfig = {
 
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
-//  console.log(message);
+  // console.log(message);
 }
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -94,7 +94,7 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
 }
 
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
-  return { 
+  return {
     interactionType: InteractionType.Redirect,
     authRequest: {
       scopes: [...environment.apiConfig.scopes]

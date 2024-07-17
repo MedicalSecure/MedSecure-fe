@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { PrescriptionApiService } from '../../services/prescription/prescription-api.service';
 import { DrugService } from '../../services/medication/medication.service';
@@ -15,9 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SnackBarMessagesService } from '../../services/util/snack-bar-messages.service';
 import { snackbarMessageType } from '../../components/snack-bar-messages/snack-bar-messages.component';
-import {RoleAuthGuard} from '../../../app/role-auth.guard'
-import { log } from 'console';
-import { getRole } from '../../role-auth.guard';
+import { AzureGraphService } from '../../azure-graph.service';
+import { User } from '../../pages/account/account.component';
 
 @Component({
   selector: 'app-navbar',
@@ -37,12 +36,12 @@ import { getRole } from '../../role-auth.guard';
     NavbarComponent,
   ],
 })
-export class NavbarComponent implements OnInit {
-
-  profile: ProfileType | undefined;
+export class NavbarComponent implements OnInit, OnDestroy {
+  @Input()
+  currentUser: User | undefined;
 
   //TO REMOVE AFTER AZURE
-/*   roles = [
+  /*   roles = [
     { value: DOCTOR_ROLE, label: 'Doctor' },
     { value: PHARMACIST_ROLE, label: 'Pharmacist' },
     { value: RECEPTIONIST_ROLE, label: 'Receptionist' },
@@ -52,7 +51,6 @@ export class NavbarComponent implements OnInit {
   // connect signal r after loading the app by X seconds in seconds
   connectSignalRAfter = 3;
 
-
   constructor(
     private router: Router,
     private prescriptionService: PrescriptionApiService,
@@ -60,12 +58,11 @@ export class NavbarComponent implements OnInit {
     private http: HttpClient,
     private authService: MsalService,
     private snackBarMessages: SnackBarMessagesService,
-    public  roleAuth : RoleAuthGuard
-
+    private graphService: AzureGraphService
   ) {}
-  role : string ;
+
   //TO REMOVE: Testing purpose
-/*   ngAfterViewInit(): void {
+  /*   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     setTimeout(() => {
@@ -74,28 +71,62 @@ export class NavbarComponent implements OnInit {
     }, this.connectSignalRAfter * 1000);
   } */
 
-  ngOnInit() {
-    this.getProfile(environment.apiConfig.uri);
-    this.role = this.roleAuth.profile?.jobTitle as string;
-    console.log(this.role);
-    
+  async ngOnInit() {
+    //removed for improving performance, already fetched by the parent : Home page
+    //this.getLoginInfo();
+
+    // connect signal r after this.connectSignalRAfter seconds
+    // remove this in case getLoginInfo is called, it's already built in there
+    setTimeout(() => {
+      this.connectSignalR();
+    }, this.connectSignalRAfter * 1000);
 
   }
 
-  getProfile(url: string) {
-    this.http.get(url).subscribe((profile) => {
-      this.profile = profile;
+  ngOnDestroy(): void {
+    this.currentUser?.roles?.forEach((role) =>
+      this.DisconnectSignalRByRole(role)
+    );
+  }
+
+  connectSignalR() {
+    if (!this.currentUser)
+      return this.snackBarMessages.displaySnackBarMessage(
+        'Notifications disabled: No connected user',
+        snackbarMessageType.Warning,
+        3
+      );
+
+    let roles = extractRolesFromProfile(this.currentUser);
+    if (!roles || roles.length == 0)
+      return this.snackBarMessages.displaySnackBarMessage(
+        'Notifications disabled: No suitable role for this user',
+        snackbarMessageType.Warning,
+        3
+      );
+    roles.forEach((role, index) => {
+      //connect the first one immediately
+      if (index == 0) this.ConnectSignalRByRole(role);
+      else
+        setTimeout(() => {
+          //delay others by 2000ms
+          this.ConnectSignalRByRole(role);
+        }, 2000);
+    });
+  }
+
+  //Can be used in case of removing the INPUT currentUser
+  getLoginInfo() {
+    this.graphService.getCurrentUserWithRole().subscribe((account) => {
+      this.currentUser = account;
+
+      // connect signal r after this.connectSignalRAfter seconds
       setTimeout(() => {
-        let role = extractRoleFromProfile(profile);
-        if(!role)
-          return this.snackBarMessages.displaySnackBarMessage("Notifications disabled: No suitable role for this user",snackbarMessageType.Warning,3)
-        this.ConnectSignalRByRole(role);
+        this.connectSignalR();
       }, this.connectSignalRAfter * 1000);
     });
   }
-  getJob() {
-    return getRole(this.profile);
-  }
+ displayTabs: boolean = true;
   loginDisplay = false;
   logout(popup?: boolean) {
     if (popup) {
@@ -107,22 +138,26 @@ export class NavbarComponent implements OnInit {
       this.authService.logout();
     }
   }
-  displayTabs: boolean = true;
+ 
 
   async ConnectSignalRByRole(role: string | undefined) {
     if (!role) return;
-    if (role == environment.roles.DOCTOR_ROLE) await this.prescriptionService.connectSignalR();
-    else if (role == environment.roles.PHARMACIST_ROLE) await this.drugsService.connectSignalR();
+    if (role == environment.roles.DOCTOR_ROLE)
+      await this.prescriptionService.connectSignalR();
+    else if (role == environment.roles.PHARMACIST_ROLE)
+      await this.drugsService.connectSignalR();
   }
+
   async DisconnectSignalRByRole(role: string | undefined) {
     if (!role) return;
-    if (role == environment.roles.DOCTOR_ROLE) await this.prescriptionService.disconnectSignalR();
-    else if (role == environment.roles.PHARMACIST_ROLE) await this.drugsService.disconnectSignalR();
+    if (role == environment.roles.DOCTOR_ROLE)
+      await this.prescriptionService.disconnectSignalR();
+    else if (role == environment.roles.PHARMACIST_ROLE)
+      await this.drugsService.disconnectSignalR();
   }
 
-
   //TO REMOVE - testing purposes
-/*   async onRoleChange(event: Event) {
+  /*   async onRoleChange(event: Event) {
     //disconnect the old role
     await this.DisconnectSignalRByRole(this.selectedRole)
     const selectElement = event.target as HTMLSelectElement;
@@ -135,24 +170,32 @@ export class NavbarComponent implements OnInit {
   } */
 }
 
-
-export function extractRoleFromProfile(profile: ProfileType | null | undefined): string | null {
-  if (!profile || !profile.jobTitle) return null;
-  let role = profile.jobTitle;
-  switch (role.toLowerCase()) {
-    case environment.roles.DOCTOR_ROLE:
-      return environment.roles.DOCTOR_ROLE;
-    case environment.roles.PHARMACIST_ROLE:
-      return environment.roles.PHARMACIST_ROLE;
-    case environment.roles.RECEPTIONIST_ROLE:
-      return environment.roles.RECEPTIONIST_ROLE;
-    case environment.roles.NUTRITIONIST_ROLE:
-      return environment.roles.NUTRITIONIST_ROLE;
-    case environment.roles.SUPERVISOR_ROLE:
-      return environment.roles.SUPERVISOR_ROLE;
-    case environment.roles.NURSE_ROLE:
-      return environment.roles.NURSE_ROLE;
-    default:
-      return null;
-  }
+export function extractRolesFromProfile(
+  profile: User | null | undefined
+): string[] | null {
+  if (!profile || !profile.roles) return null;
+  let roles: Set<string> = new Set<string>();
+  profile.roles.forEach((role) => {
+    switch (role.toLowerCase()) {
+      case environment.roles.DOCTOR_ROLE:
+        roles.add(environment.roles.DOCTOR_ROLE);
+        break;
+      case environment.roles.PHARMACIST_ROLE:
+        roles.add(environment.roles.PHARMACIST_ROLE);
+        break;
+      case environment.roles.RECEPTIONIST_ROLE:
+        roles.add(environment.roles.RECEPTIONIST_ROLE);
+        break;
+      case environment.roles.NUTRITIONIST_ROLE:
+        roles.add(environment.roles.NUTRITIONIST_ROLE);
+        break;
+      case environment.roles.SUPERVISOR_ROLE:
+        roles.add(environment.roles.SUPERVISOR_ROLE);
+        break;
+      case environment.roles.NURSE_ROLE:
+        roles.add(environment.roles.NURSE_ROLE);
+        break;
+    }
+  });
+  return Array.from(roles);
 }
