@@ -1,0 +1,52 @@
+.quiz-form {
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.question {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 15px; /* Rounds the corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.265); /* Adds a shadow */
+}
+
+.answers {
+  margin-top: 10px;
+}
+
+.add-answer {
+  margin-top: 10px;
+}
+
+.add-question {
+  margin-bottom: 10px;
+}
+
+.remove {
+  margin-left: 10px;
+}
+
+.field {
+  width: 100%;
+  border: 2px solid rgba(0, 0, 0, 0);
+  outline: none;
+  background-color: rgba(230, 230, 230, 0.6);
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  margin-bottom: 22px;
+  transition: .3s;
+}
+
+.multiselect-dropdown .dropdown-btn {
+  margin-right: 5px;
+  width: 100%;
+  border: 2px solid rgba(0, 0, 0, 0);
+  outline: none;
+  background-color: rgba(230, 230, 230, 0.6);
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  margin-bottom: 22px;
+  transition: .3s;
+}

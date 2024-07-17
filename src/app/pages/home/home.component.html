@@ -131,8 +131,8 @@
         </li>
 
         <!-- Diet Link -->
-        <li class="nav-item" *ngIf="getRole().isNutritionist || getRole().isSupervisor">
-          <a class="nav-link">
+        <li class="nav-item" *ngIf="getRole().isNutritionist || getRole().isSupervisor || getRole().isDoctor ">
+          <a class="nav-link" [routerLink]="['/', 'diet']">
             <i class="menu-icon fa fa-apple" aria-hidden="true"></i>
             <span class="menu-title">Diet</span>
             <i class="menu-arrow"></i>

@@ -19,13 +19,13 @@
           @for (element of dataList; track element) { @if (element.prescription.unitCare.room.roomNumber ===
           room)
            { @for (medicine of
-          getMedicineByHour(targetHours[0],element.prescription.register.patient.firstName); track medicine) {
+          getMedicineByHour(targetHours[0],element.prescription.register.patient.lastName); track medicine) {
 
           <ul class="list-group mb-3 sticky-top">
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Patient</h6>
-                <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
+                <small class="text-muted">{{ element.prescription.register.patient.lastName }}</small>
               </div>
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Bed</h6>
@@ -53,14 +53,14 @@
         <td [ngStyle]="{'background-color': isCurrentHour(targetHours[1]) ? '#fef6d5' : '#f2f2f2'}">
           @for (element of dataList; track element) {
           @if (element.prescription.unitCare.room.roomNumber === room) {
-          @for (medicine of getMedicineByHour(targetHours[1], element.prescription.register.patient.firstName); track
+          @for (medicine of getMedicineByHour(targetHours[1], element.prescription.register.patient.lastName); track
           medicine) {
 
           <ul class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Name</h6>
-                <small class="text-muted">{{element.prescription.register.patient.firstName }}</small>
+                <small class="text-muted">{{element.prescription.register.patient.lastName }}</small>
               </div>
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Bed</h6>
@@ -90,14 +90,14 @@
         <td [ngStyle]="{'background-color': isCurrentHour(targetHours[2]) ? '#fef6d5' : '#f2f2f2'}">
           @for (element of dataList; track element) {
           @if (element.prescription.unitCare.room.roomNumber === room) {
-          @for (medicine of getMedicineByHour(targetHours[2], element.prescription.register.patient.firstName); track
+          @for (medicine of getMedicineByHour(targetHours[2], element.prescription.register.patient.lastName); track
           medicine)
           {
           <ul class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Name</h6>
-                <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
+                <small class="text-muted">{{ element.prescription.register.patient.lastName }}</small>
               </div>
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Bed</h6>
@@ -127,13 +127,13 @@
           @for (element of dataList; track element) {
           @if (element.prescription.unitCare.room.roomNumber === room) {
           <ul class="list-group mb-3">
-            @for (medicine of getMedicineByHour(targetHours[3], element.prescription.register.patient.firstName); track
+            @for (medicine of getMedicineByHour(targetHours[3], element.prescription.register.patient.lastName); track
             medicine) {
 
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Name</h6>
-                <small class="text-muted">{{ element.prescription.register.patient.firstName }}</small>
+                <small class="text-muted">{{ element.prescription.register.patient.lastName }}</small>
               </div>
               <div>
                 <h6 class="my-0" style="font-size: smaller;">Bed</h6>

@@ -23,7 +23,8 @@ import { HttpClient } from '@angular/common/http';
 import { Dispense, ScheduleComponent } from "../../components/schedule/schedule.component";
 import { bacpatient } from '../../model/BacPatient';
 import { BacPatientService } from '../../services/bacPatient/bac-patient-services.service';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {RoleAuthGuard} from '../../../app/role-auth.guard'
 
 @Component({
   selector: 'table-pagination-example',
@@ -37,7 +38,7 @@ import { BacPatientService } from '../../services/bacPatient/bac-patient-service
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [RouterModule, DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
+  imports: [RouterModule, MatProgressSpinnerModule ,DatePipe, MatTableModule, MatDatepickerModule, MatIconModule, MatTabsModule, MatSortModule, MatSort, MatTooltipModule, MatProgressBarModule, MatGridListModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, JsonPipe, CommentComponent, ScheduleComponent]
 })
 export class BacPatientComponent implements AfterViewInit {
   dispenseQuantity: number = 0;
@@ -58,6 +59,8 @@ export class BacPatientComponent implements AfterViewInit {
   tomorrow = new Date();
   yesterday = new Date();
   uniqueRooms: any;
+  isLoading: boolean = true;
+url : string ;
   boxcheked: Dispense[] = [];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('picker') picker: MatDatepicker<Date>;
@@ -67,7 +70,7 @@ export class BacPatientComponent implements AfterViewInit {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate()));
 
   }
-  constructor(public dialog: MatDialog, private http: HttpClient, private bacPatientService: BacPatientService) {
+  constructor(public dialog: MatDialog, private http: HttpClient, private bacPatientService: BacPatientService ,public roleAuth:RoleAuthGuard) {
     const filteredData = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).toLocaleDateString() === this.todayDate);
     this.dataSource.data = filteredData;
     this.uniqueRooms = this.getRoom(ELEMENT_DATA);
@@ -75,10 +78,18 @@ export class BacPatientComponent implements AfterViewInit {
   }
   ngOnInit() {
 
+    this.url = this.roleAuth.profile?.jobTitle as string;
 
-    this.bacPatientService.getData(this.dataSource);
+    console.log(this.url);
+    
+
+    this.bacPatientService.getData(this.dataSource , this.isLoading);
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
 
   }
+  
   onLeftButtonClick() {
     this.dataSource.data = ELEMENT_DATA.filter(item => new Date(item.prescription.createdAt).getDate() === (this.today.getDate() - 1));
     this.today.setDate(this.today.getDate() - 1);
@@ -120,6 +131,7 @@ export class BacPatientComponent implements AfterViewInit {
 
 
   }
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -137,50 +149,54 @@ export class BacPatientComponent implements AfterViewInit {
     }
     return age;
   }
-  handleCheckBoxClick(eventData: Dispense[]) {
+  handleCheckBoxClick( elementindex: number) {
+    console.log('Element Index:', elementindex);
+
     let allBeforeMealChecked = true;
     let allAfterMealChecked = true;
     let oneCheckBoxIsClicked = false;
-  
-    this.dataSource.data.forEach(bacPatient => {
-      // Reset servedCount for each bacPatient
-      this.servedCount = 0;
-  
-      bacPatient.prescription.posologies.forEach(posology => {
-        posology.dispenses.forEach(dispense => {
-          if (dispense.beforeMeal && dispense.beforeMeal.isValid) {
-            this.servedCount += parseInt(dispense.beforeMeal.quantity, 10) || 0;
-          } else {
-            allBeforeMealChecked = false;
-            oneCheckBoxIsClicked = true;
-          }
-  
-          if (dispense.afterMeal && dispense.afterMeal.isValid) {
-            this.servedCount += parseInt(dispense.afterMeal.quantity, 10) || 0;
-          } else {
-            allAfterMealChecked = false;
-            oneCheckBoxIsClicked = true;
-          }
-        });
+
+    // Access the specific bacPatient using the index
+    let bacPatient = this.dataSource.data[elementindex];
+    let servedCount = 0;
+
+    bacPatient.prescription.posologies.forEach(posology => {
+      posology.dispenses.forEach(dispense => {
+        if (dispense.beforeMeal && dispense.beforeMeal.isValid) {
+          servedCount += parseInt(dispense.beforeMeal.quantity, 10) || 0;
+        } else {
+          allBeforeMealChecked = false;
+          oneCheckBoxIsClicked = true;
+        }
+
+        if (dispense.afterMeal && dispense.afterMeal.isValid) {
+          servedCount += parseInt(dispense.afterMeal.quantity, 10) || 0;
+        } else {
+          allAfterMealChecked = false;
+          oneCheckBoxIsClicked = true;
+        }
       });
-  
-      if (allBeforeMealChecked && allAfterMealChecked) {
-        bacPatient.status = 2;
-      } else if (oneCheckBoxIsClicked) {
-        bacPatient.status = 1;
-      } else {
-        bacPatient.status = 0;
-      }
-  
-      bacPatient.served = this.servedCount;
+    });
+
+    if (allBeforeMealChecked && allAfterMealChecked) {
+      bacPatient.status = 2;
+    } else if (oneCheckBoxIsClicked) {
+      bacPatient.status = 1;
+    } else {
+      bacPatient.status = 0;
+    }
+
+    bacPatient.served = servedCount;
+
+   
       this.bacPatientService.updateBacPatient(bacPatient);
   
       // Reset flags for the next bacPatient
       allBeforeMealChecked = true;
       allAfterMealChecked = true;
-    });
+    
   }
-  
+
 
   getRouteImage(route: number): string {
     switch (route) {

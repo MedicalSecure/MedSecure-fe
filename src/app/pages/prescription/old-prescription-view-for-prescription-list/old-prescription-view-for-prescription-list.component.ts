@@ -17,7 +17,6 @@ import { HumanBodyViewerComponent } from '../human-body-viewer/human-body-viewer
 import { getPrescriptionStatus } from '../prescription-list/prescription-list.component';
 import { symptomsCodeByBodyPart } from '../stp3-add-diagnostic/stp3-add-diagnostic.component';
 import { UnitCareService } from '../../../services/unitCare/unit-care.service';
-import { DietService } from '../../../services/diet/diet.service';
 import { DietDto } from '../../../types/DietDTOs';
 import { getDietTypeString } from '../stp5-hospitalization/stp5-hospitalization.component';
 import { parseGenderEnum } from '../../registration/register-form/register-form.component';
@@ -26,6 +25,7 @@ import { Gender } from '../../../enums/enum';
 import { Equipment, Room, UnitCare } from '../../../model/unitCare/UnitCareData';
 import { PdfPrescriptionToPrintComponent } from '../../../components/pdf-prescription-to-print/pdf-prescription-to-print.component';
 import { RegisterDto } from '../../../model/Registration';
+import { DietsService } from '../../../services/diets/diets.service';
 
 @Component({
   selector: 'app-old-prescription-view-for-prescription-list',
@@ -77,7 +77,7 @@ export class OldPrescriptionViewForPrescriptionListComponent {
   constructor(
     private drugService: DrugService,
     private unitCareService: UnitCareService,
-    private dietService: DietService
+    private dietService: DietsService
   ) {}
 
   ngOnInit(): void {

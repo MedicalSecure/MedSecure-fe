@@ -35,6 +35,7 @@ export class ScheduleComponent implements OnInit {
   @Input() canUncheckBoxAfterChecking: boolean = false;
   @Input() isDispenseQuantityReadOnly: boolean = true;
   @Input() showEmptyCases: boolean = false;
+  @Input () readonly : boolean = false  ; //true for supervisor 
 
   persistCache: boolean = true;
   private _partsOfDayHoursMapped: Dispense[][];
