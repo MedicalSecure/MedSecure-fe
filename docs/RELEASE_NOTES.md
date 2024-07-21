@@ -1,6 +1,6 @@
 # MedSecure Release Notes
 
-## Version 1.0.0 - 2024-07-19
+## MVP1 
 
 ### Introduction
 MedSecure is an integrated system designed to secure the medication circuit in clinics. This system helps pharmacists, doctors, receptionists, nurses, nutritionists, and supervisors manage various aspects of patient care and hospital operations efficiently.
@@ -13,7 +13,7 @@ MedSecure is an integrated system designed to secure the medication circuit in c
 - **diet.api**: Manages diet and nutrition for patients.
 - **bacpatient.api**: Manages patient background information.
 - **prescription.api**: Manages the creation and lifecycle of prescriptions.
-- **medication.api**: Manages medication inventory and stock.
+- **medication.api**: Integrate with the pharmacy stock management system.
 - **visit.api**: Manages patient visits and scheduling.
 - **registration.api**: Handles patient registration and management.
 - **unitcare.api**: Manages unit care services and hospital infrastructure.
