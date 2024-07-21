@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/75d927e5-bc91-4622-8044-31b0b4cb7993/resourceGroups/TestRessourceGroup/providers/Microsoft.Web/sites/MedSecure-Frontend",
+    "appService.deploySubpath": "dist"
+}

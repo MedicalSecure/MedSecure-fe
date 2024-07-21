@@ -62,18 +62,19 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
 }
 
 export function MSALInstanceFactory(): IPublicClientApplication {
+  console.log('MSAL Config', environment.msalConfig);
   return new PublicClientApplication({
     auth: {
       clientId: environment.msalConfig.auth.clientId,
       authority: environment.msalConfig.auth.authority,
-      redirectUri: '/',
-      postLogoutRedirectUri: '/'
+      redirectUri: window.location.origin,
+      postLogoutRedirectUri: window.location.origin
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage
     },
     system: {
-      allowNativeBroker: false, // Disables WAM Broker
+      allowNativeBroker: false,
       loggerOptions: {
         loggerCallback,
         logLevel: LogLevel.Info,
@@ -82,6 +83,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     }
   });
 }
+
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();

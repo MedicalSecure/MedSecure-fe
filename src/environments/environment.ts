@@ -9,13 +9,18 @@ export const environment = {
   environmentName: 'development',
   msalConfig: {
     auth: {
-      clientId: 'ENTER_CLIENT_ID',
-      authority: 'ENTER_AUTHORITY',
+      clientId: '8a55b2b5-6a5c-4f56-97b6-9fa6623e2eba',
+      authority: 'https://login.microsoftonline.com/0d7f968d-56cb-4ebf-b490-ee9e8c8c4566',
     },
   },
   apiConfig: {
-    scopes: ['ENTER_SCOPE'],
-    uri: 'ENTER_URI',
+    scopes: [
+      'User.ReadBasic.All',
+      'user.read',
+      'User.ReadWrite.All',
+      'Directory.ReadWrite.All',
+    ],
+    uri: 'https://graph.microsoft.com/v1.0/me',
   },
   roles: {
     DOCTOR_ROLE: 'doctor',
