@@ -11,7 +11,7 @@ MedSecure is an integrated system designed to secure the medication circuit in c
 - **message-broker**: Handles communication between services.
 - **yarpapigateway**: Routes requests to the appropriate services.
 - **diet.api**: Manages diet and nutrition for patients.
-- **bacpatient.api**: Manages patient background information.
+- **bacpatient.api**: Handle medication administration for hospitalized patients.
 - **prescription.api**: Manages the creation and lifecycle of prescriptions.
 - **medication.api**: Integrate with the pharmacy stock management system.
 - **visit.api**: Manages patient visits and scheduling.
@@ -51,18 +51,18 @@ MedSecure is an integrated system designed to secure the medication circuit in c
    - The receptionist registers a new patient or reactivates an archived patient using the `registration.api`.
   
 2. **Doctor's Consultation**
-   - The doctor reviews the patient's information through the `bacpatient.api` and determines the diagnosis with the help of the AI model.
+   - The doctor reviews the patient's information through the `registration.api` and determines the diagnosis with the help of the AI model.
    - If necessary, the doctor creates a prescription using the `prescription.api`.
 
 3. **Prescription Validation**
-   - The prescription is sent to the pharmacist, who validates or rejects it using the `prescription.api`.
+   - The prescription is sent to the pharmacist, who validates or rejects it using the `medication.api`.
 
 4. **Medication Management**
    - The pharmacist manages the medication stock and verifies the import process through the `medication.api`.
    - Once the prescription is validated, the medication is prepared for the patient.
 
 5. **Patient Care**
-   - If the patient is hospitalized, the nurse administers the prescribed medications on time using the `medication.api`.
+   - If the patient is hospitalized, the nurse administers the prescribed medications on time using the `bacpatient.api`.
    - The nutritionist assigns meals to the patient based on the diet prescribed using the `diet.api`.
 
 6. **Ongoing Management**
