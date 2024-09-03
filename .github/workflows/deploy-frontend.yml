@@ -37,7 +37,7 @@ jobs:
         run: ls -l dist/medsecure-fe/dev
 
       - name: Download Dev Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: dev-artifact
           path: dist/medsecure-fe/dev
@@ -82,7 +82,7 @@ jobs:
         run: ls -l dist/medsecure-fe/staging
 
       - name: Download Staging Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: staging-artifact
           path: dist/medsecure-fe/staging
@@ -127,7 +127,7 @@ jobs:
         run: ls -l dist/medsecure-fe/prod
 
       - name: Download Prod Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: prod-artifact
           path: dist/medsecure-fe/prod
